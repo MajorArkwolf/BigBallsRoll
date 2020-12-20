@@ -56,3 +56,13 @@ ___
 ## License
 This project is licensed under the MIT license. Please see the [LICENSE](LICENSE) file
 for details.
+
+[clang-format-vim]: https://github.com/rhysd/vim-clang-format
+[clang-format-atom]: https://atom.io/packages/clang-format
+[clang-format-vsc]: https://marketplace.visualstudio.com/items?itemName=xaver.clang-format
+[clang-format-vs]: https://marketplace.visualstudio.com/items?itemName=mynkow.FormatdocumentonSave
+[leu-config]: https://i.imgur.com/ZONPHau.png
+[leu-dl]: https://marketplace.visualstudio.com/items?itemName=JakubBielawa.LineEndingsUnifier
+[VS2019-dl]: https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&rel=16
+[vcpkg-dl]: https://github.com/microsoft/vcpkg
+[brew-dl]: https://brew.sh

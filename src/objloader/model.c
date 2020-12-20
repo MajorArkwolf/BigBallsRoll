@@ -1,5 +1,5 @@
 #include "model.h"
-#include<stdio.h>
+
 
 void initModel(Model *model) {
     model->numOfFaces = 0;

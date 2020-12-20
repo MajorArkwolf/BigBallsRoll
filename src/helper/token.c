@@ -21,14 +21,12 @@ int Tokenise(char *inputLine, char *token[], char *separators) {
     return count;
 }
 
-char* GetPathFromTokens(char **tokens, int numTokens, int startToken) {
-    char* output = (char*)calloc(FILENAME_MAX, sizeof(char));
-    if (numTokens > startToken)
-    {
+char *GetPathFromTokens(char **tokens, int numTokens, int startToken) {
+    char *output = (char *) calloc(FILENAME_MAX, sizeof(char));
+    if (numTokens > startToken) {
         for (int i = startToken; i < numTokens; ++i) {
             strcat(output, tokens[i]);
-            if(i + 1 != numTokens)
-            {
+            if (i + 1 != numTokens) {
                 strcat(output, " ");
             }
         }
@@ -39,14 +37,14 @@ char* GetPathFromTokens(char **tokens, int numTokens, int startToken) {
 int ReplaceChar(char *str, char orig, char rep) {
     char *ix = str;
     int n = 0;
-    while((ix = strchr(ix, orig)) != NULL) {
+    while ((ix = strchr(ix, orig)) != NULL) {
         *ix++ = rep;
         n++;
     }
     return n;
 }
 
-char *GetCurrentWorkingDirectory(char* path) {
+char *GetCurrentWorkingDirectory(char *path) {
     const size_t mallocSize = 1000;
     char *newStr = malloc(mallocSize * sizeof(char));
     if (newStr == NULL) {
@@ -54,9 +52,9 @@ char *GetCurrentWorkingDirectory(char* path) {
     }
     strcpy(newStr, path);
     ReplaceChar(newStr, '\\', '/');
-    char* lastSlash = strrchr(newStr, '/');
+    char *lastSlash = strrchr(newStr, '/');
     size_t indexValue = (lastSlash - newStr) / sizeof(char);
-    if (indexValue + 1 > mallocSize) {
+    if (indexValue + 1 >= mallocSize) {
         assert(false);
     }
     lastSlash[1] = '\0';

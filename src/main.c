@@ -1,15 +1,18 @@
 #include "main.h"
+
 #ifdef __APPLE__
 #include <GLUT/freeglut.h>
 #else
+
 #include <GL/freeglut.h>
+
 #endif
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include "helper/token.h"
-
+#include "objloader/objLoader.h"
 
 void changeSize(int w, int h) {
 
@@ -18,7 +21,7 @@ void changeSize(int w, int h) {
     if (h == 0)
         h = 1;
 
-    float ratio =  (float)w / (float)h;
+    float ratio = (float) w / (float) h;
 
     // Use the Projection Matrix
     glMatrixMode(GL_PROJECTION);
@@ -45,9 +48,9 @@ static void Draw(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBegin(GL_TRIANGLES);
-    glVertex3f(-2,-2,-5.0);
-    glVertex3f(2,0.0,-5.0);
-    glVertex3f(0.0,2,-5.0);
+    glVertex3f(-2, -2, -5.0);
+    glVertex3f(2, 0.0, -5.0);
+    glVertex3f(0.0, 2, -5.0);
     glEnd();
 
     glutSwapBuffers();
@@ -114,17 +117,21 @@ void mouseButton(int button, int state, int x, int y) {
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     glutInit(&argc, argv);
 
-    char* cwd = GetCurrentWorkingDirectory(argv[0]);
+    //Get the current working directory
+    char *cwd = GetCurrentWorkingDirectory(argv[0]);
+
+    //This is test code and can be removed later
+    loadModel(cwd, "cat.fbx");
 
     //Set the window position to the centre of the screen.
     int x_offset = glutGet(GLUT_SCREEN_WIDTH) / 2 - width / 2;
     int y_offset = glutGet(GLUT_SCREEN_HEIGHT) / 2 - height / 2;
 
-    glutInitWindowPosition (x_offset,y_offset);
-    glutInitWindowSize ( width, height );
+    glutInitWindowPosition(x_offset, y_offset);
+    glutInitWindowSize(width, height);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutCreateWindow("Plachinko");
     if (!glutExtensionSupported("GL_EXT_abgr")) {

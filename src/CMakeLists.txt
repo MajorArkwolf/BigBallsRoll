@@ -10,6 +10,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     # objloader
     objloader/objLoader.c
+    objloader/model.c
 )
 
 # Include project header files.

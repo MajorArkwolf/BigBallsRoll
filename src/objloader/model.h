@@ -1,4 +1,5 @@
 #pragma once
+#include<stdio.h>
 
 typedef struct Vertices {
     float x;

@@ -1,4 +1,5 @@
 #pragma once
+#include <stdio.h>
 
 //The max number of tokens
 #define MAX_NUM_TOKENS 1024

@@ -2,7 +2,8 @@ language: c
 
 git:
   depth: 1
-  quiet: true
+  quiet: false
+  submodules: true
 
 jobs:
   include:
@@ -21,5 +22,7 @@ jobs:
     env:
       - CC=clang-9 CXX=clang++-9
 
-before_install: ./.travis/install-cmake.sh
+before_install: 
+    - chmod +x ./.travis/install-cmake.sh ./.travis/build.sh
+    - ./.travis/install-cmake.sh
 script: ./.travis/build.sh

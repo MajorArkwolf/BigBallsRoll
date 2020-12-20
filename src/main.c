@@ -40,7 +40,7 @@ static void Update(int vlaue) {
     //printf("update\n");
 }
 
-static void Draw() {
+static void Draw(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBegin(GL_TRIANGLES);
@@ -115,8 +115,6 @@ void mouseButton(int button, int state, int x, int y) {
 
 int main(int argc, char* argv[]) {
     glutInit(&argc, argv);
-    bool is_running = true;
-    //Set the dimensions of the window
 
     //Set the window position to the centre of the screen.
     int x_offset = glutGet(GLUT_SCREEN_WIDTH) / 2 - width / 2;
@@ -152,5 +150,5 @@ int main(int argc, char* argv[]) {
 
     glutMainLoop();
 
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }

@@ -1,8 +1,15 @@
-
 # Add source files.
 target_sources(${PROJECT_NAME} PRIVATE
     #This thing goes brrrrrooooooooommmmmmmm
     main.c
+
+    # helper
+    helper/token.c
+
+    # math
+
+    # objloader
+    objloader/objLoader.c
 )
 
 # Include project header files.

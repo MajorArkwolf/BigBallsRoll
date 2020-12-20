@@ -2,7 +2,7 @@
 #include "math/vec3.h"
 #include <stdbool.h>
 
-struct Camera {
+typedef struct Camera {
     struct vec3 position;
     struct vec3 rotation;
-};
+} Camera;

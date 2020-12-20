@@ -117,7 +117,7 @@ void mouseButton(int button, int state, int x, int y) {
 int main(int argc, char* argv[]) {
     glutInit(&argc, argv);
 
-    char* cwd = GetCurrentWorkingDirectory(argv);
+    char* cwd = GetCurrentWorkingDirectory(argv[0]);
 
     //Set the window position to the centre of the screen.
     int x_offset = glutGet(GLUT_SCREEN_WIDTH) / 2 - width / 2;

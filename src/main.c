@@ -115,7 +115,7 @@ void mouseButton(int button, int state, int x, int y) {
 
 int main(int argc, char* argv[]) {
     glutInit(&argc, argv);
-    bool is_running = TRUE;
+    bool is_running = true;
     //Set the dimensions of the window
 
     //Set the window position to the centre of the screen.

@@ -1,0 +1,25 @@
+language: cpp
+
+git:
+  depth: 1
+  quiet: true
+
+jobs:
+  include:
+  - name: "Linux: Clang 9"
+    os: linux
+    dist: bionic
+    compiler: clang
+    addons:
+      apt:
+        sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+        packages: [clang-9, libstdc++-9-dev, ninja-build, libgl1-mesa-dev, libx11-dev,
+                   libxrandr-dev, libudev-dev, libfreetype6-dev, libopenal-dev,
+                   libflac++-dev, libvorbis-dev, libxinerama-dev, libxcursor-dev,
+                   libxi-dev]
+    env:
+      - CC=clang-9 CXX=clang++-9
+
+before_install: ./.travis/install-cmake.sh
+script: ./.travis/build.sh

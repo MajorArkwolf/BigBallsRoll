@@ -1,3 +1,4 @@
+#include "main.h"
 #ifdef __APPLE__
 #include <GLUT/freeglut.h>
 #else
@@ -7,7 +8,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "main.h"
+#include "helper/token.h"
 
 
 void changeSize(int w, int h) {
@@ -115,6 +116,8 @@ void mouseButton(int button, int state, int x, int y) {
 
 int main(int argc, char* argv[]) {
     glutInit(&argc, argv);
+
+    char* cwd = GetCurrentWorkingDirectory(argv);
 
     //Set the window position to the centre of the screen.
     int x_offset = glutGet(GLUT_SCREEN_WIDTH) / 2 - width / 2;

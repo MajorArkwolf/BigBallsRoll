@@ -1,5 +1,7 @@
 # ICT289 - (Insert Group Name)
 
+[![Build Status](https://www.travis-ci.com/MajorArkwolf/ICT289.svg?token=cpQtXoFFuizqCsLDGgMe&branch=main)](https://www.travis-ci.com/MajorArkwolf/ICT289)
+
 ## Dependencies
 Linux: ``` sudo apt install clang ninja-build freeglut3 freeglut3-dev libglew-dev ```
 

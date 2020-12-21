@@ -5,8 +5,6 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     # helper
     helper/token.c
-    helper/stringHelper.c
-    helper/stringPath.c
 
     # math
 

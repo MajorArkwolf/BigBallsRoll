@@ -2,10 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <stdbool.h>
 
-
-int Tokenise(char *inputLine, char *token[], char *separators) {
+int tokenise(char *inputLine, char *token[], char *separators) {
     char *readToken = strtok(inputLine, separators);
     int count = 0;
 
@@ -21,7 +19,7 @@ int Tokenise(char *inputLine, char *token[], char *separators) {
     return count;
 }
 
-char *GetPathFromTokens(char **tokens, int numTokens, int startToken) {
+char *getPathFromTokens(char **tokens, int numTokens, int startToken) {
     char *output = (char *) calloc(FILENAME_MAX, sizeof(char));
     if (numTokens > startToken) {
         for (int i = startToken; i < numTokens; ++i) {
@@ -32,31 +30,4 @@ char *GetPathFromTokens(char **tokens, int numTokens, int startToken) {
         }
     }
     return output;
-}
-
-int ReplaceChar(char *str, char orig, char rep) {
-    char *ix = str;
-    int n = 0;
-    while ((ix = strchr(ix, orig)) != NULL) {
-        *ix++ = rep;
-        n++;
-    }
-    return n;
-}
-
-char *GetCurrentWorkingDirectory(char *path) {
-    const size_t mallocSize = 1000;
-    char *newStr = malloc(mallocSize * sizeof(char));
-    if (newStr == NULL) {
-        assert(false);
-    }
-    strcpy(newStr, path);
-    ReplaceChar(newStr, '\\', '/');
-    char *lastSlash = strrchr(newStr, '/');
-    size_t indexValue = (lastSlash - newStr) / sizeof(char);
-    if (indexValue + 1 >= mallocSize) {
-        assert(false);
-    }
-    lastSlash[1] = '\0';
-    return newStr;
 }

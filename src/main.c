@@ -10,9 +10,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
-#include "helper/token.h"
-#include "objloader/objLoader.h"
+#include "Helper/stringPath.h"
+#include "ObjLoader/objLoader.h"
 
 void changeSize(int w, int h) {
 
@@ -39,12 +38,12 @@ void changeSize(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
-static void Update(int vlaue) {
-    glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
+static void update(int vlaue) {
+    glutTimerFunc(FRAMERATE_MILLIS, update, 0);
     //printf("update\n");
 }
 
-static void Draw(void) {
+static void draw(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glBegin(GL_TRIANGLES);
@@ -121,10 +120,9 @@ int main(int argc, char *argv[]) {
     glutInit(&argc, argv);
 
     //Get the current working directory
-    char *cwd = GetCurrentWorkingDirectory(argv[0]);
-
+    char *cwd = getCurrentWorkingDirectory(argv[0]);
     //This is test code and can be removed later
-    loadModel(cwd, "cat.fbx");
+    //loadModel(cwd, "cat.obj");
 
     //Set the window position to the centre of the screen.
     int x_offset = glutGet(GLUT_SCREEN_WIDTH) / 2 - width / 2;
@@ -140,9 +138,9 @@ int main(int argc, char *argv[]) {
     }
 
     // Render Que
-    glutDisplayFunc(Draw);
+    glutDisplayFunc(draw);
     glutReshapeFunc(changeSize);
-    glutIdleFunc(Draw);
+    glutIdleFunc(draw);
 
     // register callbacks
     glutIgnoreKeyRepeat(1);
@@ -156,9 +154,11 @@ int main(int argc, char *argv[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
-    glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
+    glutTimerFunc(FRAMERATE_MILLIS, update, 0);
 
     glutMainLoop();
+
+    free(cwd);
 
     return EXIT_SUCCESS;
 }

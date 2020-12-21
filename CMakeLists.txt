@@ -51,7 +51,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     # Visual Studio
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
     # Enable the clang sanitizer.
-    #$<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
+    $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
 )
 
 # Link against the clang sanitizer.

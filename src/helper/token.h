@@ -12,9 +12,7 @@
  * @param separators A list of characters to search through to to separate tokens by
  * @return The number of tokens put into the tokens array, or -1 if it has exceeded MAX_NUM_TOKENS
  */
-int Tokenise(char *inputLine, char *token[], char *separators);
+int tokenise(char *inputLine, char *token[], char *separators);
 
 
-char *GetPathFromTokens(char **tokens, int numTokens, int startToken);
-
-char *GetCurrentWorkingDirectory(char *path);
+char *getPathFromTokens(char **tokens, int numTokens, int startToken);

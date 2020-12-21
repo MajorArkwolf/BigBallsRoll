@@ -4,13 +4,13 @@ target_sources(${PROJECT_NAME} PRIVATE
     main.c
 
     # helper
-    helper/token.c
+    Helper/token.c
 
     # math
 
     # objloader
-    objloader/objLoader.c
-    objloader/model.c
+    ObjLoader/objLoader.c
+    ObjLoader/model.c
 )
 
 # Include project header files.

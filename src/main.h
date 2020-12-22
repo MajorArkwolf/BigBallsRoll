@@ -1,5 +1,5 @@
 #pragma once
-#include "camera.h"
+#include "Engine/camera.h"
 
 const float FRAMERATE = 1/60.0f;                     // ~60 FPS.
 const float FRAMERATE_MILLIS = 1/60.0f * 1000;       // Millisecond version of framerate.

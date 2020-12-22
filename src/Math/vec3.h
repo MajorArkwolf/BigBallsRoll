@@ -4,3 +4,5 @@ typedef struct Vec3 {
     float Y;
     float Z;
 } Vec3;
+
+Vec3 Vec3_Construct();

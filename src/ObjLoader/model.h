@@ -1,22 +1,24 @@
 #pragma once
 #include <stdio.h>
-typedef struct Vertices {
-    float x;
-    float y;
-    float z;
+typedef struct Vertex {
+    float X;
+    float Y;
+    float Z;
 } Vertices;
 
 typedef struct Face {
-    size_t one;
-    size_t two;
-    size_t three;
+    size_t One;
+    size_t Two;
+    size_t Three;
 } Face;
 
 typedef struct Model {
-    Face *face;
-    Vertices *vertices;
-    int numOfFaces;
-    int numOfVert;
+    Face *Faces;
+    Vertices *Vertices;
+    size_t NumOfFaces;
+    size_t NumOfVert;
 } Model;
 
-void initModel(Model *model);
+void model_initModel(Model *model);
+
+void model_free(Model *model);

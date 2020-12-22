@@ -11,8 +11,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "helper/token.h"
-#include "objloader/objLoader.h"
+#include "Helper/token.h"
+#include "ObjLoader/objLoader.h"
 
 void changeSize(int w, int h) {
 
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
     char *cwd = GetCurrentWorkingDirectory(argv[0]);
 
     //This is test code and can be removed later
-    loadModel(cwd, "cat.fbx");
+    loadModel(cwd, "cat.obj");
 
     //Set the window position to the centre of the screen.
     int x_offset = glutGet(GLUT_SCREEN_WIDTH) / 2 - width / 2;

@@ -1,9 +1,8 @@
 #pragma once
 
-#include "math/vec3.h"
-#include <stdbool.h>
+#include "Math/vec3.h"
 
 typedef struct Camera {
-    struct vec3 position;
-    struct vec3 rotation;
+    Vec3 position;
+    Vec3 rotation;
 } Camera;

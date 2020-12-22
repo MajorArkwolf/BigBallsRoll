@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
+#include "Helper/stringPath.h"
 
 #define MAX_MALLOC_SIZE 10000
 #define RESOURCE_FILE_LOCATION "res/model/"
@@ -12,6 +13,14 @@
 size_t countType() {
 
     return 0;
+}
+
+bool loadOff(Model *model, FILE *fptr) {
+    return true;
+}
+
+bool loadObj(Model *model, FILE *fptr) {
+    return true;
 }
 
 Model loadModel(char *workingDir, char *fileName) {
@@ -32,6 +41,14 @@ Model loadModel(char *workingDir, char *fileName) {
     }
 
     //TODO: Begin implementing model loading here.
+    char *ext = getFileTypeFromPath(fullDir);
+    if (strcmp(ext, "off") == 0) {
+        assert(loadOff(&model, fptr));
+    } else if (strcmp(ext, "obj") == 0) {
+        assert(loadObj(&model, fptr));
+    } else {
+        assert(false);
+    }
 
     //Clean up step
     fclose(fptr);

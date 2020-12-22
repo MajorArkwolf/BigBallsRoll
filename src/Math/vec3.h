@@ -1,6 +1,6 @@
 #pragma once
-struct vec3 {
-    float x;
-    float y;
-    float z;
-};
+typedef struct Vec3 {
+    float X;
+    float Y;
+    float Z;
+} Vec3;

@@ -1,16 +1,14 @@
 #include "main.h"
 
 #ifdef __APPLE__
-#include <GLUT/freeglut.h>
+#define GL_SILENCE_DEPRECATION
+#include <GLUT/glut.h>
 #else
-
 #include <GL/freeglut.h>
-
 #endif
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include "Helper/token.h"
 #include "ObjLoader/objLoader.h"
 

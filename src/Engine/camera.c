@@ -26,7 +26,7 @@ void Camera_reset(Camera *cam) {
     cam->WorldUp = cam->Up;
     cam->Yaw = 0.0f;
     cam->Pitch = 0.0f;
-    cam->Speed = 1.0f;
+    cam->Speed = 10.0f;
     cam->Mouse_sensitivity = DEFAULT_SENSITIVITY;
     cam->MoveForward = false;
     cam->MoveBackward = false;

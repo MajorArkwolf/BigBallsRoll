@@ -20,6 +20,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 
     # Engine
     Engine/camera.c
+    Engine/stateManager.c
 )
 
 # Include project header files.

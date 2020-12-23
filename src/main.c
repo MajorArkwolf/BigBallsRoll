@@ -9,6 +9,9 @@
 
 #include "Engine/camera.h"
 #include "Math/transform.h"
+#include "Engine/stateManager.h"
+
+static StateManager sm;
 
 static int timeSinceStart;
 static Model mod;
@@ -61,13 +64,22 @@ static void Draw(void) {
     Camera_lookAt(&cam);
 
     glPushMatrix();
-    glBegin(GL_LINES);
+    if (mod.Faces[0].NumFaces == 3) {
+        glBegin(GL_TRIANGLES);
+    } else if (mod.Faces[0].NumFaces == 4) {
+        glBegin(GL_QUADS);
+    } else if (mod.Faces[0].NumFaces > 4) {
+        glBegin(GL_POLYGON);
+    } else {
+        glBegin(GL_LINES);
+    }
+
     glColor3f(1.0f, 0.0f, 0.0f);
-//    glRotatef(tran.Rotation.X, 1, 0, 0);
-//    glRotatef(tran.Rotation.Y, 0, 1, 0);
-//    glRotatef(tran.Rotation.Z, 0, 0, 1);
-//    glScalef(tran.Scale.X, tran.Scale.Y, tran.Scale.Z);
-//    glTranslatef(tran.Position.X, tran.Position.Y, tran.Position.Z);
+    glRotatef(tran.Rotation.X, 1, 0, 0);
+    glRotatef(tran.Rotation.Y, 0, 1, 0);
+    glRotatef(tran.Rotation.Z, 0, 0, 1);
+    glScalef(tran.Scale.X, tran.Scale.Y, tran.Scale.Z);
+    glTranslatef(tran.Position.X, tran.Position.Y, tran.Position.Z);
 
     for(size_t i = 0; i < mod.NumOfFaces; ++i) {
         for(size_t x = 0; x < mod.Faces[i].NumFaces; ++x) {
@@ -88,10 +100,50 @@ static void Draw(void) {
 }
 
 void processNormalKeys(unsigned char key, int xx, int yy) {
+    switch(key) {
+        case 27:
+            exit(0);
+        case 'w':
+        case 'W':
+            cam.MoveForward = true;
+            break;
+        case 's':
+        case 'S':
+            cam.MoveBackward = true;
+            break;
+        case 'a':
+        case 'A':
+            cam.MoveLeft = true;
+            break;
+        case 'd':
+        case 'D':
+            cam.MoveRight = true;
+            break;
+        default:
+            break;
+    }
+}
 
-    if (key == 27) {
-        //glutDestroyWindow(mainWindow);
-        exit(0);
+void processNormalKeysUp(unsigned char key, int xx, int yy) {
+    switch(key) {
+        case 'w':
+        case 'W':
+            cam.MoveForward = false;
+            break;
+        case 's':
+        case 'S':
+            cam.MoveBackward = false;
+            break;
+        case 'a':
+        case 'A':
+            cam.MoveLeft = false;
+            break;
+        case 'd':
+        case 'D':
+            cam.MoveRight = false;
+            break;
+        default:
+            break;
     }
 }
 
@@ -172,7 +224,7 @@ int main(int argc, char *argv[]) {
     //Get the current working directory
     char *cwd = getCurrentWorkingDirectory(argv[0]);
     //This is test code and can be removed later
-    mod = loadModel(cwd, "testcube.off");
+    mod = loadModel(cwd, "Off/bone.off");
     Model_modelToOFF(&mod);
     tran = Transformation_construct();
     tran.Scale.X = 100.f;
@@ -203,10 +255,11 @@ int main(int argc, char *argv[]) {
     // register callbacks
     glutIgnoreKeyRepeat(0);
     glutKeyboardFunc(processNormalKeys);
+    glutKeyboardUpFunc(processNormalKeysUp);
     glutSpecialFunc(pressKey);
     glutSpecialUpFunc(releaseKey);
     glutMouseFunc(mouseButton);
-    glutMotionFunc(mouseMove);
+    glutPassiveMotionFunc(mouseMove);
 
     // OpenGL init
     glEnable(GL_DEPTH_TEST);

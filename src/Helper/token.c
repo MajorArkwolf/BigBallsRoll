@@ -43,20 +43,3 @@ int ReplaceChar(char *str, char orig, char rep) {
     }
     return n;
 }
-
-char *GetCurrentWorkingDirectory(char *path) {
-    const size_t mallocSize = 1000;
-    char *newStr = malloc(mallocSize * sizeof(char));
-    if (newStr == NULL) {
-        assert(false);
-    }
-    strcpy(newStr, path);
-    ReplaceChar(newStr, '\\', '/');
-    char *lastSlash = strrchr(newStr, '/');
-    size_t indexValue = (lastSlash - newStr) / sizeof(char);
-    if (indexValue + 1 >= mallocSize) {
-        assert(false);
-    }
-    lastSlash[1] = '\0';
-    return newStr;
-}

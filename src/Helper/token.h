@@ -16,5 +16,3 @@ int Tokenise(char *inputLine, char *token[], char *separators);
 
 
 char *GetPathFromTokens(char **tokens, int numTokens, int startToken);
-
-char *GetCurrentWorkingDirectory(char *path);

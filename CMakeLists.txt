@@ -62,7 +62,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 )
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE -lm OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image ${CMAKE_DL_LIBS})
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)

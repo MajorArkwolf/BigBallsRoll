@@ -12,6 +12,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Math/vectorMath.c
     Math/vec3.c
     Math/transform.c
+    Math/extraMath.c
 
     # Objloader
     ObjLoader/objLoader.c

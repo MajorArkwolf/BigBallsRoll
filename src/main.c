@@ -1,20 +1,16 @@
 #include "main.h"
 
-#ifdef __APPLE__
-#define GL_SILENCE_DEPRECATION
-#include <GLUT/glut.h>
-#else
-#include <GL/freeglut.h>
-#endif
+#include "Engine/OpenGL.h"
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "Helper/token.h"
+#include "Helper/stringPath.h"
 #include "ObjLoader/objLoader.h"
 
 #include "Engine/camera.h"
 #include "Math/transform.h"
 
+static int timeSinceStart;
 static Model mod;
 static Transform tran;
 static Camera cam;
@@ -46,30 +42,34 @@ void changeSize(int w, int h) {
 
 static void Update(int vlaue) {
     glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
+    int oldTime = timeSinceStart;
+    timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
+    float deltaTime = (float)(timeSinceStart - oldTime) / 1000.0f;
+    printf("Old Time: %d, New Time: %d, DeltaTime: %f\n", oldTime, timeSinceStart, deltaTime);
+    Camera_update(&cam, (float)deltaTime);
     //printf("X: %f, Y: %f, Z: %f\n", cam.Position.X, cam.Position.Y, cam.Position.Z);
-    printf("Pitch: %f, Yaw: %f\n", cam.pitch, cam.yaw);
+    //printf("Pitch: %f, Yaw: %f\n", cam.Pitch, cam.Yaw);
     //printf("update\n");
 }
 
 static void Draw(void) {
+    glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glBegin(GL_TRIANGLES);
 
     glLoadIdentity();
 
-    gluLookAt(
-            cam.Position.X, cam.Position.Y, cam.Position.Z,
-            cam.Position.X + cam.Front.X, cam.Position.Y + cam.Front.Y, cam.Front.Z + cam.Front.Z,
-            cam.Up.X, cam.Up.Y, cam.Up.Z);
+    Camera_lookAt(&cam);
+
+    //
+    glBegin(GL_LINES);
 
     glPushMatrix();
     glColor3f(1.0f, 0.0f, 0.0f);
-    glTranslatef(tran.Position.X, tran.Position.Y, tran.Position.Z);
-    glScalef(tran.Scale.X, tran.Scale.Y, tran.Scale.Z);
     glRotatef(tran.Rotation.X, 1, 0, 0);
     glRotatef(tran.Rotation.Y, 0, 1, 0);
     glRotatef(tran.Rotation.Z, 0, 0, 1);
+    glScalef(tran.Scale.X, tran.Scale.Y, tran.Scale.Z);
+    glTranslatef(tran.Position.X, tran.Position.Y, tran.Position.Z);
 
     for (size_t i = 0; i < mod.NumOfFaces; ++i) {
         glVertex3f(mod.Vertices[mod.Faces[i].One].X, mod.Vertices[mod.Faces[i].One].Y, mod.Vertices[mod.Faces[i].One].Z);
@@ -77,9 +77,7 @@ static void Draw(void) {
         glVertex3f(mod.Vertices[mod.Faces[i].Three].X, mod.Vertices[mod.Faces[i].Three].Y, mod.Vertices[mod.Faces[i].Three].Z);
     }
     glPopMatrix();
-//    glVertex3f(-2, -2, -5.0);
-//    glVertex3f(2, 0.0, -5.0);
-//    glVertex3f(0.0, 2, -5.0);
+
     glEnd();
 
     glutSwapBuffers();
@@ -97,16 +95,20 @@ void pressKey(int key, int xx, int yy) {
     //TODO: This delta time is hardcoded and is wrong.
     switch (key) {
         case GLUT_KEY_UP:
-            Camera_keyboardWalk(&cam, Direction_Forward, 0.1f);
+             cam.MoveForward = true;
+            //Camera_keyboardWalk(&cam, Direction_Forward, 0.1f);
             break;
         case GLUT_KEY_DOWN:
-            Camera_keyboardWalk(&cam, Direction_Backward, 0.1f);
+            cam.MoveBackward = true;
+            //Camera_keyboardWalk(&cam, Direction_Backward, 0.1f);
             break;
         case GLUT_KEY_LEFT:
-            Camera_keyboardWalk(&cam, Direction_Left, 0.1f);
+            cam.MoveLeft = true;
+            //Camera_keyboardWalk(&cam, Direction_Left, 0.1f);
             break;
         case GLUT_KEY_RIGHT:
-            Camera_keyboardWalk(&cam, Direction_Left, 0.1f);
+            cam.MoveRight = true;
+            //Camera_keyboardWalk(&cam, Direction_Right, 0.1f);
             break;
         default:
             break;
@@ -119,14 +121,31 @@ void pressKey(int key, int xx, int yy) {
 void releaseKey(int key, int x, int y) {
 
     switch (key) {
-//        case GLUT_KEY_UP :
-//        case GLUT_KEY_DOWN : deltaMove = 0;break;
+        case GLUT_KEY_UP:
+            cam.MoveForward = false;
+            //Camera_keyboardWalk(&cam, Direction_Forward, 0.1f);
+            break;
+        case GLUT_KEY_DOWN:
+            cam.MoveBackward = false;
+            //Camera_keyboardWalk(&cam, Direction_Backward, 0.1f);
+            break;
+        case GLUT_KEY_LEFT:
+            cam.MoveLeft = false;
+            //Camera_keyboardWalk(&cam, Direction_Left, 0.1f);
+            break;
+        case GLUT_KEY_RIGHT:
+            cam.MoveRight = false;
+            //Camera_keyboardWalk(&cam, Direction_Right, 0.1f);
+            break;
+        default:
+            break;
     }
 }
 
 void mouseMove(int x, int y) {
-    //TODO: This delta time is hardcoded and is wrong.
-    Camera_mouseLook(&cam, (float)x, (float)y, 0.1f);
+    float lastX = (float)x - glutGet(GLUT_WINDOW_WIDTH) / 2;
+    float lastY = ((float)y - glutGet(GLUT_WINDOW_HEIGHT) / 2) * -1;
+    Camera_mouseLook(&cam, lastX, lastY);
 }
 
 void mouseButton(int button, int state, int x, int y) {
@@ -148,9 +167,9 @@ void mouseButton(int button, int state, int x, int y) {
 
 int main(int argc, char *argv[]) {
     //Get the current working directory
-    char *cwd = GetCurrentWorkingDirectory(argv[0]);
+    char *cwd = getCurrentWorkingDirectory(argv[0]);
     //This is test code and can be removed later
-    mod = loadModel(cwd, "bone.off");
+    mod = loadModel(cwd, "cone.off");
     tran = Transformation_construct();
     tran.Scale.X = 100.f;
     tran.Scale.Y = 100.f;
@@ -178,7 +197,7 @@ int main(int argc, char *argv[]) {
     glutIdleFunc(Draw);
 
     // register callbacks
-    glutIgnoreKeyRepeat(1);
+    glutIgnoreKeyRepeat(0);
     glutKeyboardFunc(processNormalKeys);
     glutSpecialFunc(pressKey);
     glutSpecialUpFunc(releaseKey);
@@ -188,9 +207,9 @@ int main(int argc, char *argv[]) {
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    glutWarpPointer(x_offset, y_offset);
-    glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
 
+    glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
+    timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     glutMainLoop();
 
     return EXIT_SUCCESS;

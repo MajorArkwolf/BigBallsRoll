@@ -83,6 +83,7 @@ bool loadObj(Model *model, FILE *fptr) {
 
 Model loadModel(char *workingDir, char *fileName) {
     //Get the full directory to our model.
+    bool modelLoaded = false;
     char *fullDir = malloc(MAX_MALLOC_SIZE * sizeof(char));
     strcpy(fullDir, workingDir);
     strcat(fullDir, RESOURCE_FILE_LOCATION);
@@ -96,14 +97,16 @@ Model loadModel(char *workingDir, char *fileName) {
     //Failed to open a file with the given name.
     assert(fptr != NULL);
 
-
     //TODO: Begin implementing model loading here.
     char *ext = getFileTypeFromPath(fullDir);
     if (strcmp(ext, "off") == 0) {
-        assert(loadOff(&model, fptr));
+        modelLoaded = loadOff(&model, fptr);
     } else if (strcmp(ext, "obj") == 0) {
-        assert(loadObj(&model, fptr));
-    } else {
+        modelLoaded = loadObj(&model, fptr);
+    }
+
+    if (!modelLoaded) {
+        printf("Model failed to load.");
         assert(false);
     }
 

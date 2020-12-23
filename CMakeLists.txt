@@ -26,6 +26,8 @@ endif()
 # Define the executable.
 add_executable(${PROJECT_NAME})
 
+set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
+
 # Find dependencies.
 # find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(OpenGL REQUIRED)

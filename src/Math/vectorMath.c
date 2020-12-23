@@ -21,7 +21,7 @@ Vec3 VectorMath_CrossProductVec3ByVec3(Vec3 const *firstVec3, Vec3 const *second
     Vec3 newVec;
     newVec.X = firstVec3->Y * secondVec3->Z - firstVec3->Z * secondVec3->Y;
     newVec.Y = firstVec3->Z * secondVec3->X - firstVec3->X * secondVec3->Z;
-    newVec.X = firstVec3->X * secondVec3->Y - firstVec3->Y * secondVec3->X;
+    newVec.Z = firstVec3->X * secondVec3->Y - firstVec3->Y * secondVec3->X;
     return newVec;
 }
 

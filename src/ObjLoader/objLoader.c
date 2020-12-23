@@ -22,9 +22,6 @@ bool loadOff(Model *model, FILE *fptr) {
     bool is_configured = false;
     size_t vert = 0, face = 0, cells = 0, count = 0;
     while(fgets(buff, sizeof buff, fptr) != NULL) {
-        if (feof(fptr)) {
-            break;
-        }
         // We ignore anything that is a comment or a header declaring OFF.
         if (buff[0] == '#' || (buff[0] == 'O' && buff[1] == 'F' && buff[2] == 'F')) {
             continue;
@@ -39,8 +36,8 @@ bool loadOff(Model *model, FILE *fptr) {
                 return false;
             }
             //Allocate the required memory for our model then verify it was allocated.
-            model->Vertices = calloc(vert, sizeof(Vertices));
-            model->Faces = calloc(face, sizeof(Face));
+            model->Vertices = malloc(vert * sizeof(Vertex));
+            model->Faces = malloc(face * sizeof(Face));
             if (model->Vertices == NULL || model->Faces == NULL) {
                 assert(false);
                 return false;
@@ -57,11 +54,23 @@ bool loadOff(Model *model, FILE *fptr) {
             } else if (face != 0) {
                 size_t index = model->NumOfFaces - face;
                 size_t numPerRow = 0;
-                sscanf(buff, "%zu %zu %zu %zu", &numPerRow, &model->Faces[index].One, &model->Faces[index].Two, &model->Faces[index].Three);
-                if (numPerRow != 3) {
-                    //Currently we do not support anything other then triangles as our polygons.
+                char* data = buff;
+                int offset;
+
+                sscanf(buff, "%zu%n", &numPerRow, &offset);
+                data += offset;
+                Face_initFace(&model->Faces[index]);
+                model->Faces[index].FaceIDs = calloc(numPerRow, sizeof(size_t));
+                if (model->Faces[index].FaceIDs == NULL) {
+                    printf("Failed to allocate ID's for faces");
                     assert(false);
                     return false;
+                }
+                model->Faces[index].NumFaces = numPerRow;
+
+                for (size_t i = 0; i < numPerRow; ++i) {
+                    sscanf(data, "%zu%n", &model->Faces[index].FaceIDs[i], &offset);
+                    data += offset;
                 }
                 --face;
             } else if (cells != 0) {
@@ -73,7 +82,6 @@ bool loadOff(Model *model, FILE *fptr) {
             }
         }
     }
-
     return true;
 }
 
@@ -90,7 +98,7 @@ Model loadModel(char *workingDir, char *fileName) {
     strcat(fullDir, fileName);
 
     Model model;
-    model_initModel(&model);
+    Model_initModel(&model);
 
     FILE *fptr;
     fptr = fopen(fullDir, "r");

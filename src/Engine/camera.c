@@ -28,6 +28,10 @@ void Camera_reset(Camera *cam) {
     cam->Pitch = 0.0f;
     cam->Speed = 1.0f;
     cam->Mouse_sensitivity = DEFAULT_SENSITIVITY;
+    cam->MoveForward = false;
+    cam->MoveBackward = false;
+    cam->MoveLeft = false;
+    cam->MoveRight = false;
     Camera_updateCameraVectors(cam);
 }
 

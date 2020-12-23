@@ -45,7 +45,7 @@ static void Update(int vlaue) {
     int oldTime = timeSinceStart;
     timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     float deltaTime = (float)(timeSinceStart - oldTime) / 1000.0f;
-    printf("Old Time: %d, New Time: %d, DeltaTime: %f\n", oldTime, timeSinceStart, deltaTime);
+    //printf("Old Time: %d, New Time: %d, DeltaTime: %f\n", oldTime, timeSinceStart, deltaTime);
     Camera_update(&cam, (float)deltaTime);
     //printf("X: %f, Y: %f, Z: %f\n", cam.Position.X, cam.Position.Y, cam.Position.Z);
     //printf("Pitch: %f, Yaw: %f\n", cam.Pitch, cam.Yaw);
@@ -60,25 +60,29 @@ static void Draw(void) {
 
     Camera_lookAt(&cam);
 
-    //
-    glBegin(GL_LINES);
-
     glPushMatrix();
+    glBegin(GL_LINES);
     glColor3f(1.0f, 0.0f, 0.0f);
-    glRotatef(tran.Rotation.X, 1, 0, 0);
-    glRotatef(tran.Rotation.Y, 0, 1, 0);
-    glRotatef(tran.Rotation.Z, 0, 0, 1);
-    glScalef(tran.Scale.X, tran.Scale.Y, tran.Scale.Z);
-    glTranslatef(tran.Position.X, tran.Position.Y, tran.Position.Z);
+//    glRotatef(tran.Rotation.X, 1, 0, 0);
+//    glRotatef(tran.Rotation.Y, 0, 1, 0);
+//    glRotatef(tran.Rotation.Z, 0, 0, 1);
+//    glScalef(tran.Scale.X, tran.Scale.Y, tran.Scale.Z);
+//    glTranslatef(tran.Position.X, tran.Position.Y, tran.Position.Z);
 
-    for (size_t i = 0; i < mod.NumOfFaces; ++i) {
-        glVertex3f(mod.Vertices[mod.Faces[i].One].X, mod.Vertices[mod.Faces[i].One].Y, mod.Vertices[mod.Faces[i].One].Z);
-        glVertex3f(mod.Vertices[mod.Faces[i].Two].X, mod.Vertices[mod.Faces[i].Two].Y, mod.Vertices[mod.Faces[i].Two].Z);
-        glVertex3f(mod.Vertices[mod.Faces[i].Three].X, mod.Vertices[mod.Faces[i].Three].Y, mod.Vertices[mod.Faces[i].Three].Z);
+    for(size_t i = 0; i < mod.NumOfFaces; ++i) {
+        for(size_t x = 0; x < mod.Faces[i].NumFaces; ++x) {
+            size_t index_val = mod.Faces[i].FaceIDs[x];
+            glVertex3f(mod.Vertices[index_val].X, mod.Vertices[index_val].Y, mod.Vertices[index_val].Z);
+        }
     }
-    glPopMatrix();
-
+//    for (size_t i = 0; i < mod.NumOfFaces; ++i) {
+//        for (size_t x = 0; x < mod.Faces[i].NumFaces; ++x) {
+//            size_t index = mod.Faces[i].FaceIDs[x];
+//            glVertex3f(mod.Vertices[index].X, mod.Vertices[index].Y, mod.Vertices[index].Z);
+//        }
+//    }
     glEnd();
+    glPopMatrix();
 
     glutSwapBuffers();
 }
@@ -92,7 +96,6 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 }
 
 void pressKey(int key, int xx, int yy) {
-    //TODO: This delta time is hardcoded and is wrong.
     switch (key) {
         case GLUT_KEY_UP:
              cam.MoveForward = true;
@@ -169,7 +172,8 @@ int main(int argc, char *argv[]) {
     //Get the current working directory
     char *cwd = getCurrentWorkingDirectory(argv[0]);
     //This is test code and can be removed later
-    mod = loadModel(cwd, "cone.off");
+    mod = loadModel(cwd, "testcube.off");
+    Model_modelToOFF(&mod);
     tran = Transformation_construct();
     tran.Scale.X = 100.f;
     tran.Scale.Y = 100.f;

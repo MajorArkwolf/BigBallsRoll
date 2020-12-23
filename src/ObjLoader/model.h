@@ -1,24 +1,31 @@
 #pragma once
 #include <stdio.h>
+#include <stdbool.h>
+
 typedef struct Vertex {
     float X;
     float Y;
     float Z;
-} Vertices;
+} Vertex;
 
 typedef struct Face {
-    size_t One;
-    size_t Two;
-    size_t Three;
+    size_t NumFaces;
+    size_t *FaceIDs;
 } Face;
 
 typedef struct Model {
     Face *Faces;
-    Vertices *Vertices;
+    Vertex *Vertices;
     size_t NumOfFaces;
     size_t NumOfVert;
 } Model;
 
-void model_initModel(Model *model);
+void Face_initFace(Face *face);
 
-void model_free(Model *model);
+void Face_free(Face *face);
+
+void Model_initModel(Model *model);
+
+void Model_free(Model *model);
+
+bool Model_modelToOFF(Model *model);

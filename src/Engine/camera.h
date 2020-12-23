@@ -19,16 +19,8 @@ typedef struct Camera {
     bool MoveRight;
 } Camera;
 
-typedef enum Direction {
-    Direction_Forward,
-    Direction_Backward,
-    Direction_Left,
-    Direction_Right
-} Direction;
-
 Camera Camera_construct();
 void Camera_reset(Camera *cam);
-void Camera_keyboardWalk(Camera *cam, Direction direction, float dt);
 void Camera_mouseLook(Camera *cam, float x, float y);
 void Camera_updateCameraVectors(Camera *cam);
 void Camera_lookAt(Camera *cam);

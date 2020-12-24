@@ -32,7 +32,7 @@ bool loadOff(Model *model, FILE *fptr) {
                 assert(false);
                 return false;
             }
-            if (vert < 0 || face < 0) {
+            if (vert == 0 || face == 0) {
                 return false;
             }
             //Allocate the required memory for our model then verify it was allocated.

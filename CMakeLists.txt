@@ -39,6 +39,10 @@ add_subdirectory(lib)
 # Define source files.
 add_subdirectory(src)
 
+if (MSVC)
+    string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endif()
+
 # Set compile flags.
 target_compile_options(${PROJECT_NAME} PRIVATE
     # Clang
@@ -61,8 +65,12 @@ target_link_options(${PROJECT_NAME} PRIVATE
     $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
 )
 
+if (LINUX)
+    target_link_libraries(${PROJECT_NAME} PRIVATE -lm)
+endif()
+
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE -lm OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image ${CMAKE_DL_LIBS})
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)

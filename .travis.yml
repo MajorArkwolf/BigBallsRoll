@@ -27,7 +27,7 @@ before_install:
     - ./.travis/install-cmake.sh
 script: 
     - ./.travis/build.sh
-    - cppcheck src
+    - cppcheck --enable=all --inconclusive -v src
     
 after_success:
     - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh

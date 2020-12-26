@@ -38,7 +38,7 @@ bool Model_modelToOFF(Model *model) {
     }
     fputs("OFF\n", fptr);
     //TODO: word of warning we do not have cells yet implemented.
-    fprintf(fptr, "%zu %zu 0", model->NumOfVert, model->NumOfFaces);
+    fprintf(fptr, "%zu %zu 0\n", model->NumOfVert, model->NumOfFaces);
     for (size_t i = 0; i < model->NumOfVert; ++i) {
         fprintf(fptr, "%f %f %f\n", model->Vertices[i].X, model->Vertices[i].Y, model->Vertices[i].Z);
     }

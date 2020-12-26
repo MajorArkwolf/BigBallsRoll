@@ -73,7 +73,6 @@ static void Draw(void) {
     } else {
         glBegin(GL_LINES);
     }
-
     glColor3f(1.0f, 0.0f, 0.0f);
     glRotatef(tran.Rotation.X, 1, 0, 0);
     glRotatef(tran.Rotation.Y, 0, 1, 0);
@@ -87,12 +86,7 @@ static void Draw(void) {
             glVertex3f(mod.Vertices[index_val].X, mod.Vertices[index_val].Y, mod.Vertices[index_val].Z);
         }
     }
-//    for (size_t i = 0; i < mod.NumOfFaces; ++i) {
-//        for (size_t x = 0; x < mod.Faces[i].NumFaces; ++x) {
-//            size_t index = mod.Faces[i].FaceIDs[x];
-//            glVertex3f(mod.Vertices[index].X, mod.Vertices[index].Y, mod.Vertices[index].Z);
-//        }
-//    }
+
     glEnd();
     glPopMatrix();
 
@@ -224,7 +218,7 @@ int main(int argc, char *argv[]) {
     //Get the current working directory
     char *cwd = getCurrentWorkingDirectory(argv[0]);
     //This is test code and can be removed later
-    mod = loadModel(cwd, "Off/bone.off");
+    mod = loadModel(cwd, "Obj/teapot.obj");
     Model_modelToOFF(&mod);
     tran = Transformation_construct();
     tran.Scale.X = 100.f;

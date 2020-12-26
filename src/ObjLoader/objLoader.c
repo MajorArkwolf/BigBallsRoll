@@ -17,11 +17,31 @@ size_t countType() {
     return 0;
 }
 
+bool AllocateModel(Model *model, size_t faces, size_t vertices) {
+    //TODO: Possibly at a precheck to ensure the model is null.
+
+    //Allocate the required memory for our model then verify it was allocated.
+    model->Vertices = calloc(vertices, sizeof(Vertex));
+    model->Faces = calloc(faces, sizeof(Face));
+    //Check to see if calloc worked.
+    if (model->Vertices == NULL || model->Faces == NULL) {
+        assert(false);
+        return false;
+    }
+
+    //Once we have confirmed everything worked we set the max values.
+    model->NumOfFaces = faces;
+    model->NumOfVert = vertices;
+
+    return true;
+}
+
 bool loadOff(Model *model, FILE *fptr) {
+    assert(model != NULL && fptr != NULL);
     char buff[MAX_BUFF_SIZE] = {"\0"};
     bool is_configured = false;
-    size_t vert = 0, face = 0, cells = 0, count = 0;
-    while(fgets(buff, sizeof buff, fptr) != NULL) {
+    size_t vert = 0, face = 0, cells = 0;
+    while (fgets(buff, sizeof buff, fptr) != NULL) {
         // We ignore anything that is a comment or a header declaring OFF.
         if (buff[0] == '#' || (buff[0] == 'O' && buff[1] == 'F' && buff[2] == 'F')) {
             continue;
@@ -35,26 +55,18 @@ bool loadOff(Model *model, FILE *fptr) {
             if (vert == 0 || face == 0) {
                 return false;
             }
-            //Allocate the required memory for our model then verify it was allocated.
-            model->Vertices = malloc(vert * sizeof(Vertex));
-            model->Faces = malloc(face * sizeof(Face));
-            if (model->Vertices == NULL || model->Faces == NULL) {
-                assert(false);
-                return false;
-            }
-            //Once we have confirmed everything worked we set the max values.
-            model->NumOfFaces = face;
-            model->NumOfVert = vert;
+            AllocateModel(model, face, vert);
             is_configured = true;
         } else {
             if (vert != 0) {
                 size_t index = model->NumOfVert - vert;
-                sscanf(buff, "%f %f %f", &model->Vertices[index].X, &model->Vertices[index].Y, &model->Vertices[index].Z);
+                sscanf(buff, "%f %f %f", &model->Vertices[index].X, &model->Vertices[index].Y,
+                       &model->Vertices[index].Z);
                 --vert;
             } else if (face != 0) {
                 size_t index = model->NumOfFaces - face;
                 size_t numPerRow = 0;
-                char* data = buff;
+                char *data = buff;
                 int offset;
 
                 sscanf(buff, "%zu%n", &numPerRow, &offset);
@@ -86,6 +98,72 @@ bool loadOff(Model *model, FILE *fptr) {
 }
 
 bool loadObj(Model *model, FILE *fptr) {
+    char buff[MAX_BUFF_SIZE] = {"\0"};
+    char discard[10];
+    //Verticies
+    size_t v = 0;
+    //Texture Cords
+    size_t vt = 0;
+    //Vertex Normals
+    size_t vp = 0;
+    // Faces
+    size_t f = 0;
+
+    //We need to count what is coming, so this loop is to figure out our memory allocation.
+    while (fgets(buff, sizeof buff, fptr) != NULL) {
+        if (buff[0] == '#') {
+            //Catch and remove any comments.
+            continue;
+        }
+        sscanf(buff, "%s", buff);
+        if (strcmp(buff, "v") == 0) { ++v; }
+        if (strcmp(buff, "vt") == 0) { ++vt; }
+        if (strcmp(buff, "vp") == 0) { ++vp; }
+        if (strcmp(buff, "f") == 0) { ++f; }
+    }
+    if (v == 0 || f == 0) {
+        assert(false);
+        return false;
+    }
+    bool result = AllocateModel(model, f, v);
+    if (!result) {
+        assert(false);
+        return result;
+    }
+    rewind(fptr);
+
+    while (fgets(buff, sizeof buff, fptr) != NULL) {
+        if (buff[0] == '#') {
+            //Catch and remove any comments.
+            continue;
+        }
+        sscanf(buff, "%s", discard);
+        if (strcmp(discard, "v") == 0) {
+            assert(v != 0);
+            size_t index = model->NumOfVert - v;
+            sscanf(buff, "%s %f %f %f", discard, &model->Vertices[index].X, &model->Vertices[index].Y, &model->Vertices[index].Z);
+            --v;
+        }
+        if (strcmp(discard, "vt") == 0) {
+            //TODO: Implement this.
+        }
+        if (strcmp(discard, "vp") == 0) {
+            //TODO: Implement this.
+        }
+        if (strcmp(discard, "f") == 0) {
+            assert(f != 0);
+            //Only implemented 3 for now, this may need to be updated later.
+            size_t index = model->NumOfFaces - f;
+            model->Faces[index].NumFaces = 3;
+            model->Faces[index].FaceIDs = calloc(3, sizeof(size_t));
+            sscanf(buff, "%s %zu %zu %zu", discard, &model->Faces[index].FaceIDs[0], &model->Faces[index].FaceIDs[1], &model->Faces[index].FaceIDs[2]);
+            //Obj's are indexed from 1 not 0, so we must correct the indexing.
+            --model->Faces[index].FaceIDs[0];
+            --model->Faces[index].FaceIDs[1];
+            --model->Faces[index].FaceIDs[2];
+            --f;
+        }
+    }
     return true;
 }
 

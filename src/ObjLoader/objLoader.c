@@ -115,7 +115,7 @@ bool loadObj(Model *model, FILE *fptr) {
             //Catch and remove any comments.
             continue;
         }
-        sscanf(buff, "%MAX_BUFF_SIZEs", buff);
+        sscanf(buff, "%9s", buff);
         if (strcmp(buff, "v") == 0) { ++v; }
         if (strcmp(buff, "vt") == 0) { ++vt; }
         if (strcmp(buff, "vp") == 0) { ++vp; }
@@ -137,7 +137,7 @@ bool loadObj(Model *model, FILE *fptr) {
             //Catch and remove any comments.
             continue;
         }
-        sscanf(buff, "%10s", discard);
+        sscanf(buff, "%9s", discard);
         if (strcmp(discard, "v") == 0) {
             assert(v != 0);
             size_t index = model->NumOfVert - v;
@@ -156,7 +156,7 @@ bool loadObj(Model *model, FILE *fptr) {
             size_t index = model->NumOfFaces - f;
             model->Faces[index].NumFaces = 3;
             model->Faces[index].FaceIDs = calloc(3, sizeof(size_t));
-            sscanf(buff, "%10s %zu %zu %zu", discard, &model->Faces[index].FaceIDs[0], &model->Faces[index].FaceIDs[1], &model->Faces[index].FaceIDs[2]);
+            sscanf(buff, "%9s %zu %zu %zu", discard, &model->Faces[index].FaceIDs[0], &model->Faces[index].FaceIDs[1], &model->Faces[index].FaceIDs[2]);
             //Obj's are indexed from 1 not 0, so we must correct the indexing.
             --model->Faces[index].FaceIDs[0];
             --model->Faces[index].FaceIDs[1];

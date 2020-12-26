@@ -47,9 +47,9 @@ static void Update(int vlaue) {
     glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
     int oldTime = timeSinceStart;
     timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
-    float deltaTime = (float)(timeSinceStart - oldTime) / 1000.0f;
+    float deltaTime = (float) (timeSinceStart - oldTime) / 1000.0f;
     //printf("Old Time: %d, New Time: %d, DeltaTime: %f\n", oldTime, timeSinceStart, deltaTime);
-    Camera_update(&cam, (float)deltaTime);
+    Camera_update(&cam, (float) deltaTime);
     //printf("X: %f, Y: %f, Z: %f\n", cam.Position.X, cam.Position.Y, cam.Position.Z);
     //printf("Pitch: %f, Yaw: %f\n", cam.Pitch, cam.Yaw);
     //printf("update\n");
@@ -58,10 +58,10 @@ static void Update(int vlaue) {
 static void Draw(void) {
     glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     glLoadIdentity();
 
     Camera_lookAt(&cam);
+    glColor3f(255, 255, 255);
 
     glPushMatrix();
     if (mod.Faces[0].NumFaces == 3) {
@@ -73,16 +73,23 @@ static void Draw(void) {
     } else {
         glBegin(GL_LINES);
     }
-    glColor3f(1.0f, 0.0f, 0.0f);
+
     glRotatef(tran.Rotation.X, 1, 0, 0);
     glRotatef(tran.Rotation.Y, 0, 1, 0);
     glRotatef(tran.Rotation.Z, 0, 0, 1);
     glScalef(tran.Scale.X, tran.Scale.Y, tran.Scale.Z);
     glTranslatef(tran.Position.X, tran.Position.Y, tran.Position.Z);
 
-    for(size_t i = 0; i < mod.NumOfFaces; ++i) {
-        for(size_t x = 0; x < mod.Faces[i].NumFaces; ++x) {
+    for (size_t i = 0; i < mod.NumOfFaces; ++i) {
+        for (size_t x = 0; x < mod.Faces[i].NumFaces; ++x) {
             size_t index_val = mod.Faces[i].FaceIDs[x];
+            if (mod.Vertices[index_val].HasTexture) {
+                //TODO: implement textures here
+            }
+            if (mod.Faces[i].HasColour) {
+                glColor4f(mod.Faces[i].Colour.RGBA[0], mod.Faces[i].Colour.RGBA[1],
+                          mod.Faces[i].Colour.RGBA[2], mod.Faces[i].Colour.RGBA[3]);
+            }
             glVertex3f(mod.Vertices[index_val].X, mod.Vertices[index_val].Y, mod.Vertices[index_val].Z);
         }
     }
@@ -94,7 +101,7 @@ static void Draw(void) {
 }
 
 void processNormalKeys(unsigned char key, int xx, int yy) {
-    switch(key) {
+    switch (key) {
         case 27:
             exit(0);
         case 'w':
@@ -119,7 +126,7 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 }
 
 void processNormalKeysUp(unsigned char key, int xx, int yy) {
-    switch(key) {
+    switch (key) {
         case 'w':
         case 'W':
             cam.MoveForward = false;
@@ -144,7 +151,7 @@ void processNormalKeysUp(unsigned char key, int xx, int yy) {
 void pressKey(int key, int xx, int yy) {
     switch (key) {
         case GLUT_KEY_UP:
-             cam.MoveForward = true;
+            cam.MoveForward = true;
             //Camera_keyboardWalk(&cam, Direction_Forward, 0.1f);
             break;
         case GLUT_KEY_DOWN:
@@ -192,8 +199,8 @@ void releaseKey(int key, int x, int y) {
 }
 
 void mouseMove(int x, int y) {
-    float lastX = (float)x - glutGet(GLUT_WINDOW_WIDTH) / 2;
-    float lastY = ((float)y - glutGet(GLUT_WINDOW_HEIGHT) / 2) * -1;
+    float lastX = (float) x - glutGet(GLUT_WINDOW_WIDTH) / 2;
+    float lastY = ((float) y - glutGet(GLUT_WINDOW_HEIGHT) / 2) * -1;
     Camera_mouseLook(&cam, lastX, lastY);
 }
 
@@ -218,7 +225,7 @@ int main(int argc, char *argv[]) {
     //Get the current working directory
     char *cwd = getCurrentWorkingDirectory(argv[0]);
     //This is test code and can be removed later
-    mod = loadModel(cwd, "Obj/teapot.obj");
+    mod = loadModel(cwd, "Off/colourcube.off");
     Model_modelToOFF(&mod);
     tran = Transformation_construct();
     tran.Scale.X = 100.f;

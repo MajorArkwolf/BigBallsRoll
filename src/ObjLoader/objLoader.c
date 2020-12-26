@@ -84,6 +84,16 @@ bool loadOff(Model *model, FILE *fptr) {
                     sscanf(data, "%zu%n", &model->Faces[index].FaceIDs[i], &offset);
                     data += offset;
                 }
+                //Process colour
+                Colour colour;
+                int n = sscanf(data, "%f %f %f %f", &colour.RGBA[0], &colour.RGBA[1], &colour.RGBA[2], &colour.RGBA[3]);
+                if (n >= 3) {
+                    if (n != 4) {
+                        colour.RGBA[3] = 1;
+                    }
+                    model->Faces[index].HasColour = true;
+                    model->Faces[index].Colour = colour;
+                }
                 --face;
             } else if (cells != 0) {
                 //TODO: Not yet implemented
@@ -94,6 +104,11 @@ bool loadOff(Model *model, FILE *fptr) {
             }
         }
     }
+
+    for (size_t i = 0; i < model->NumOfFaces; ++i) {
+        Colour_NormaliseColour(&model->Faces[i].Colour);
+    }
+
     return true;
 }
 

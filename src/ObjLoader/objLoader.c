@@ -115,7 +115,7 @@ bool loadObj(Model *model, FILE *fptr) {
             //Catch and remove any comments.
             continue;
         }
-        sscanf(buff, "%9s", buff);
+        sscanf(buff, "%4999s", buff);
         if (strcmp(buff, "v") == 0) { ++v; }
         if (strcmp(buff, "vt") == 0) { ++vt; }
         if (strcmp(buff, "vp") == 0) { ++vp; }

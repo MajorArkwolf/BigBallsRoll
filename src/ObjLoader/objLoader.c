@@ -141,7 +141,7 @@ bool loadObj(Model *model, FILE *fptr) {
         if (strcmp(discard, "v") == 0) {
             assert(v != 0);
             size_t index = model->NumOfVert - v;
-            sscanf(buff, "%10s %f %f %f", discard, &model->Vertices[index].X, &model->Vertices[index].Y, &model->Vertices[index].Z);
+            sscanf(buff, "%9s %f %f %f", discard, &model->Vertices[index].X, &model->Vertices[index].Y, &model->Vertices[index].Z);
             --v;
         }
         if (strcmp(discard, "vt") == 0) {

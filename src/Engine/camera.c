@@ -73,7 +73,7 @@ void Camera_mouseLook(Camera *cam, float x, float y) {
 
 void Camera_updateCameraVectors(Camera *cam) {
     assert(cam != NULL);
-    Vec3 result = Vec3_Construct();
+    Vec3 result;
     Vec3 front = Vec3_Construct();
 
     float yawInRad = ExtraMath_toRadians(cam->Yaw);

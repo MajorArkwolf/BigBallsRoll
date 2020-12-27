@@ -17,11 +17,11 @@ Camera Camera_construct() {
 
 void Camera_reset(Camera *cam) {
     assert(cam != NULL);
-    cam->Position = Vec3_Construct();
-    cam->Front = Vec3_Construct();
+    cam->Position = Vec3_construct();
+    cam->Front = Vec3_construct();
     cam->Front.Z = -1.0f;
-    cam->Right = Vec3_Construct();
-    cam->Up = Vec3_Construct();
+    cam->Right = Vec3_construct();
+    cam->Up = Vec3_construct();
     cam->Up.Y = 1.0f;
     cam->WorldUp = cam->Up;
     cam->Yaw = 0.0f;
@@ -74,7 +74,7 @@ void Camera_mouseLook(Camera *cam, float x, float y) {
 void Camera_updateCameraVectors(Camera *cam) {
     assert(cam != NULL);
     Vec3 result;
-    Vec3 front = Vec3_Construct();
+    Vec3 front = Vec3_construct();
 
     float yawInRad = ExtraMath_toRadians(cam->Yaw);
     float pitchInRad = ExtraMath_toRadians(cam->Pitch);

@@ -21,12 +21,13 @@ char *getCurrentWorkingDirectory(char *path) {
 }
 
 char *getFileTypeFromPath(char *path) {
-    char *ext = malloc(4 * sizeof(char));
+    const int LEN = 4;
+    char *ext = calloc(LEN, sizeof(char)); // file extension can be at most 4 characters
     if (ext == NULL) {
         printf("malloc failed while getting file type path.");
         assert(false);
     }
     size_t indexOf = getLastOccurrenceInString('.', path, strlen(path));
-    strncpy(ext, path + indexOf + 1, strlen(path));
+    strncpy(ext, path + indexOf + 1, LEN-1); // preserve null terminator
     return ext;
 }

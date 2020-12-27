@@ -43,7 +43,9 @@ bool loadOff(Model *model, FILE *fptr) {
     size_t vert = 0, face = 0, cells = 0;
 
     //OFF only supports a single mesh per OFF file so we hard code it here.
-    model->Mesh = calloc(1, sizeof (Mesh));
+    //malloc(1*sizeof(Mesh));
+    //int a = 5;
+    model->Mesh = malloc(1*sizeof(Mesh));
     if (model->Mesh == NULL) {
         printf("Calloc failed when making Mesh in loadOff");
         assert(false);
@@ -202,7 +204,7 @@ Model ObjLoader_loadModel(char *workingDir, char *fileName) {
 
     Model model;
     Model_initModel(&model);
-    model.Name = malloc(strlen(fileName) * sizeof(char));
+    model.Name = malloc(strlen(fileName) * sizeof(char) + 1);
     assert(strcpy(model.Name, fileName) != NULL);
     FILE *fptr;
     fptr = fopen(fullDir, "r");

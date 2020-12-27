@@ -22,11 +22,16 @@ typedef struct Face {
     Colour Colour;
 } Face;
 
-typedef struct Model {
+typedef struct Mesh {
     Face *Faces;
     Vertex *Vertices;
     size_t NumOfFaces;
     size_t NumOfVert;
+} Mesh;
+
+typedef struct Model {
+    size_t NumOfMesh;
+    Mesh *Mesh;
 } Model;
 
 void Vertex_init(Vertex *vertex);
@@ -38,6 +43,10 @@ void Face_free(Face *face);
 void Model_initModel(Model *model);
 
 void Model_free(Model *model);
+
+void Mesh_initMesh(Mesh *mesh);
+
+void Mesh_free(Mesh *mesh);
 
 bool Model_modelToOFF(Model *model);
 

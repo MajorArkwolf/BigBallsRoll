@@ -64,15 +64,6 @@ static void Draw(void) {
     glColor3f(255, 255, 255);
 
     glPushMatrix();
-    if (mod.Faces[0].NumFaces == 3) {
-        glBegin(GL_TRIANGLES);
-    } else if (mod.Faces[0].NumFaces == 4) {
-        glBegin(GL_QUADS);
-    } else if (mod.Faces[0].NumFaces > 4) {
-        glBegin(GL_POLYGON);
-    } else {
-        glBegin(GL_LINES);
-    }
 
     glRotatef(tran.Rotation.X, 1, 0, 0);
     glRotatef(tran.Rotation.Y, 0, 1, 0);
@@ -80,21 +71,33 @@ static void Draw(void) {
     glScalef(tran.Scale.X, tran.Scale.Y, tran.Scale.Z);
     glTranslatef(tran.Position.X, tran.Position.Y, tran.Position.Z);
 
-    for (size_t i = 0; i < mod.NumOfFaces; ++i) {
-        for (size_t x = 0; x < mod.Faces[i].NumFaces; ++x) {
-            size_t index_val = mod.Faces[i].FaceIDs[x];
-            if (mod.Vertices[index_val].HasTexture) {
-                //TODO: implement textures here
-            }
-            if (mod.Faces[i].HasColour) {
-                glColor4f(mod.Faces[i].Colour.RGBA[0], mod.Faces[i].Colour.RGBA[1],
-                          mod.Faces[i].Colour.RGBA[2], mod.Faces[i].Colour.RGBA[3]);
-            }
-            glVertex3f(mod.Vertices[index_val].X, mod.Vertices[index_val].Y, mod.Vertices[index_val].Z);
+    for (size_t index = 0; index < mod.NumOfMesh; ++index) {
+        if (mod.Mesh[index].Faces[0].NumFaces == 3) {
+            glBegin(GL_TRIANGLES);
+        } else if (mod.Mesh[index].Faces[0].NumFaces == 4) {
+            glBegin(GL_QUADS);
+        } else if (mod.Mesh[index].Faces[0].NumFaces > 4) {
+            glBegin(GL_POLYGON);
+        } else {
+            glBegin(GL_LINES);
         }
-    }
 
-    glEnd();
+        for (size_t i = 0; i < mod.Mesh[index].NumOfFaces; ++i) {
+            for (size_t x = 0; x < mod.Mesh[index].Faces[i].NumFaces; ++x) {
+                size_t index_val = mod.Mesh[index].Faces[i].FaceIDs[x];
+                if (mod.Mesh[index].Vertices[index_val].HasTexture) {
+                    //TODO: implement textures here
+                }
+                if (mod.Mesh[index].Faces[i].HasColour) {
+                    glColor4f(mod.Mesh[index].Faces[i].Colour.RGBA[0], mod.Mesh[index].Faces[i].Colour.RGBA[1],
+                              mod.Mesh[index].Faces[i].Colour.RGBA[2], mod.Mesh[index].Faces[i].Colour.RGBA[3]);
+                }
+                glVertex3f(mod.Mesh[index].Vertices[index_val].X, mod.Mesh[index].Vertices[index_val].Y, mod.Mesh[index].Vertices[index_val].Z);
+            }
+        }
+
+        glEnd();
+    }
     glPopMatrix();
 
     glutSwapBuffers();
@@ -228,9 +231,9 @@ int main(int argc, char *argv[]) {
     mod = loadModel(cwd, "Off/colourcube.off");
     Model_modelToOFF(&mod);
     tran = Transformation_construct();
-    tran.Scale.X = 100.f;
-    tran.Scale.Y = 100.f;
-    tran.Scale.Z = 100.f;
+    tran.Scale.X = 1.f;
+    tran.Scale.Y = 1.f;
+    tran.Scale.Z = 1.f;
     cam = Camera_construct();
 
 

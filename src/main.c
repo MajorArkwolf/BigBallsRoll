@@ -10,11 +10,12 @@
 #include "Engine/camera.h"
 #include "Math/transform.h"
 #include "Engine/stateManager.h"
+#include "Engine/gameObject.h"
 
 static StateManager sm;
 
 static int timeSinceStart;
-static Model mod;
+static GameObject go;
 static Transform tran;
 static Camera cam;
 
@@ -70,34 +71,7 @@ static void Draw(void) {
     glRotatef(tran.Rotation.Z, 0, 0, 1);
     glScalef(tran.Scale.X, tran.Scale.Y, tran.Scale.Z);
     glTranslatef(tran.Position.X, tran.Position.Y, tran.Position.Z);
-
-    for (size_t index = 0; index < mod.NumOfMesh; ++index) {
-        if (mod.Mesh[index].Faces[0].NumFaces == 3) {
-            glBegin(GL_TRIANGLES);
-        } else if (mod.Mesh[index].Faces[0].NumFaces == 4) {
-            glBegin(GL_QUADS);
-        } else if (mod.Mesh[index].Faces[0].NumFaces > 4) {
-            glBegin(GL_POLYGON);
-        } else {
-            glBegin(GL_LINES);
-        }
-
-        for (size_t i = 0; i < mod.Mesh[index].NumOfFaces; ++i) {
-            for (size_t x = 0; x < mod.Mesh[index].Faces[i].NumFaces; ++x) {
-                size_t index_val = mod.Mesh[index].Faces[i].FaceIDs[x];
-                if (mod.Mesh[index].Vertices[index_val].HasTexture) {
-                    //TODO: implement textures here
-                }
-                if (mod.Mesh[index].Faces[i].HasColour) {
-                    glColor4f(mod.Mesh[index].Faces[i].Colour.RGBA[0], mod.Mesh[index].Faces[i].Colour.RGBA[1],
-                              mod.Mesh[index].Faces[i].Colour.RGBA[2], mod.Mesh[index].Faces[i].Colour.RGBA[3]);
-                }
-                glVertex3f(mod.Mesh[index].Vertices[index_val].X, mod.Mesh[index].Vertices[index_val].Y, mod.Mesh[index].Vertices[index_val].Z);
-            }
-        }
-
-        glEnd();
-    }
+    Model_draw(ModelManager_getModel(&modelManager, go.ModelID));
     glPopMatrix();
 
     glutSwapBuffers();
@@ -227,9 +201,14 @@ void mouseButton(int button, int state, int x, int y) {
 int main(int argc, char *argv[]) {
     //Get the current working directory
     char *cwd = getCurrentWorkingDirectory(argv[0]);
+
+    ModelManager_init(&modelManager);
+    ModelManager_loadModels(&modelManager, cwd);
+
     //This is test code and can be removed later
-    mod = loadModel(cwd, "Off/colourcube.off");
-    Model_modelToOFF(&mod);
+    //mod = loadModel(cwd, "Off/colourcube.off");
+    go.ModelID = ModelManager_findModel(&modelManager, "Off/colourcube.off");
+
     tran = Transformation_construct();
     tran.Scale.X = 1.f;
     tran.Scale.Y = 1.f;
@@ -273,5 +252,6 @@ int main(int argc, char *argv[]) {
     timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     glutMainLoop();
 
+    ModelManager_free(&modelManager);
     return EXIT_SUCCESS;
 }

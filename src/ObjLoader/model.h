@@ -16,10 +16,10 @@ typedef struct Vertex {
 } Vertex;
 
 typedef struct Face {
+    Colour Colour;
     size_t NumFaces;
     size_t *FaceIDs;
     bool HasColour;
-    Colour Colour;
 } Face;
 
 typedef struct Mesh {
@@ -30,8 +30,9 @@ typedef struct Mesh {
 } Mesh;
 
 typedef struct Model {
-    size_t NumOfMesh;
     Mesh *Mesh;
+    size_t NumOfMesh;
+    char *Name;
 } Model;
 
 void Vertex_init(Vertex *vertex);
@@ -42,13 +43,15 @@ void Face_free(Face *face);
 
 void Model_initModel(Model *model);
 
+void Model_draw(Model *model);
+
 void Model_free(Model *model);
 
 void Mesh_initMesh(Mesh *mesh);
 
-void Mesh_free(Mesh *mesh);
-
 bool Model_modelToOFF(Model *model);
+
+void Mesh_free(Mesh *mesh);
 
 Colour Colour_addColourToColour(Colour *firstColour, Colour *secondColour);
 

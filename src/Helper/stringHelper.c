@@ -19,3 +19,10 @@ int replaceChar(char *str, char orig, char rep) {
     }
     return n;
 }
+
+void removeNewLine(char *str) {
+    char *pos;
+    if ((pos = strchr(str, '\n')) != NULL) {
+        *pos = '\0';
+    }
+}

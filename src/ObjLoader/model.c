@@ -2,12 +2,43 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>
+#include "Engine/OpenGL.h"
 
 void Mesh_initMesh(Mesh *mesh) {
     mesh->NumOfFaces = 0;
     mesh->NumOfVert = 0;
     mesh->Vertices = NULL;
     mesh->Faces = NULL;
+}
+
+void Model_draw(Model *model) {
+    for (size_t index = 0; index < model->NumOfMesh; ++index) {
+        if (model->Mesh[index].Faces[0].NumFaces == 3) {
+            glBegin(GL_TRIANGLES);
+        } else if (model->Mesh[index].Faces[0].NumFaces == 4) {
+            glBegin(GL_QUADS);
+        } else if (model->Mesh[index].Faces[0].NumFaces > 4) {
+            glBegin(GL_POLYGON);
+        } else {
+            glBegin(GL_LINES);
+        }
+
+        for (size_t i = 0; i < model->Mesh[index].NumOfFaces; ++i) {
+            for (size_t x = 0; x < model->Mesh[index].Faces[i].NumFaces; ++x) {
+                size_t index_val = model->Mesh[index].Faces[i].FaceIDs[x];
+                if (model->Mesh[index].Vertices[index_val].HasTexture) {
+                    //TODO: implement textures here
+                }
+                if (model->Mesh[index].Faces[i].HasColour) {
+                    glColor4f(model->Mesh[index].Faces[i].Colour.RGBA[0], model->Mesh[index].Faces[i].Colour.RGBA[1],
+                              model->Mesh[index].Faces[i].Colour.RGBA[2], model->Mesh[index].Faces[i].Colour.RGBA[3]);
+                }
+                glVertex3f(model->Mesh[index].Vertices[index_val].X, model->Mesh[index].Vertices[index_val].Y, model->Mesh[index].Vertices[index_val].Z);
+            }
+        }
+
+        glEnd();
+    }
 }
 
 void Mesh_free(Mesh *mesh) {
@@ -21,6 +52,7 @@ void Mesh_free(Mesh *mesh) {
 }
 
 void Model_initModel(Model *model) {
+    model->Name = NULL;
     model->NumOfMesh = 0;
     model->Mesh = NULL;
 }
@@ -31,6 +63,7 @@ void Model_free(Model *model) {
     }
     free(model->Mesh);
     model->NumOfMesh = 0;
+    free(model->Name);
 }
 
 void Face_initFace(Face *face) {

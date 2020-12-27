@@ -21,6 +21,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     # Engine
     Engine/camera.c
     Engine/stateManager.c
+    Engine/gameObject.c
+    Engine/modelManager.c
 )
 
 # Include project header files.

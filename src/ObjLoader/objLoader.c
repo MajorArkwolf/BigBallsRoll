@@ -192,7 +192,7 @@ bool loadObj(Model *model, FILE *fptr) {
     return true;
 }
 
-Model loadModel(char *workingDir, char *fileName) {
+Model ObjLoader_loadModel(char *workingDir, char *fileName) {
     //Get the full directory to our model.
     bool modelLoaded = false;
     char *fullDir = malloc(MAX_MALLOC_SIZE * sizeof(char));

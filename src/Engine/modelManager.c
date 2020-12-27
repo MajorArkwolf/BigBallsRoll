@@ -30,7 +30,7 @@ void ModelManager_loadModels(ModelManager *modelManger, char *cwd) {
     char buff[MAX_BUFF_SIZE];
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);
-        modelManger->Models[modelManger->NumOfModels] = loadModel(cwd, buff);
+        modelManger->Models[modelManger->NumOfModels] = ObjLoader_loadModel(cwd, buff);
         ++modelManger->NumOfModels;
     }
     free(fulldir);

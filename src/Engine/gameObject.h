@@ -1,4 +1,5 @@
 #pragma once
+#include <stdlib.h>
 #include "Math/transform.h"
 
 typedef struct GameObject {

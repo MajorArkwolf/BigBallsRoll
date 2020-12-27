@@ -57,6 +57,7 @@ static void Update(int vlaue) {
     timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     float deltaTime = (float) (timeSinceStart - oldTime) / 1000.0f;
     //printf("Old Time: %d, New Time: %d, DeltaTime: %f\n", oldTime, timeSinceStart, deltaTime);
+    StateManager_update(&sM, deltaTime);
     Camera_update(cam, (float) deltaTime);
     //printf("X: %f, Y: %f, Z: %f\n", cam.Position.X, cam.Position.Y, cam.Position.Z);
     //printf("Pitch: %f, Yaw: %f\n", cam.Pitch, cam.Yaw);

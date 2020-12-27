@@ -5,6 +5,9 @@ cmake_minimum_required(VERSION 3.15)
 set(PROJECT_NAME 289)
 project(${PROJECT_NAME} LANGUAGES C)
 
+# Treat warnings as errors.
+option(WarningsAsErrors "WarningsAsErrors" OFF)
+
 # If enabled, the post build symlink will copy instead.
 option(CopyResources "CopyResources" OFF)
 
@@ -41,6 +44,14 @@ add_subdirectory(src)
 
 if (MSVC)
     string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endif()
+
+# Treat warnings as errors if enabled.
+if (WarningsAsErrors)
+    target_compile_options(${PROJECT_NAME} PRIVATE
+            $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Werror>
+            $<$<CXX_COMPILER_ID:MSVC>:/WX>
+            )
 endif()
 
 # Set compile flags.

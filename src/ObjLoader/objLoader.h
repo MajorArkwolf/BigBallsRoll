@@ -4,4 +4,4 @@
 #include "model.h"
 
 
-Model loadModel(char *workingDir, char *fileName);
+Model ObjLoader_loadModel(char *workingDir, char *fileName);

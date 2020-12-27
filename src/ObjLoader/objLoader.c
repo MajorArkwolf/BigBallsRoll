@@ -43,8 +43,6 @@ bool loadOff(Model *model, FILE *fptr) {
     size_t vert = 0, face = 0, cells = 0;
 
     //OFF only supports a single mesh per OFF file so we hard code it here.
-    //malloc(1*sizeof(Mesh));
-    //int a = 5;
     model->Mesh = malloc(1*sizeof(Mesh));
     if (model->Mesh == NULL) {
         printf("Calloc failed when making Mesh in loadOff");

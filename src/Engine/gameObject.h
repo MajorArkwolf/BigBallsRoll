@@ -10,3 +10,5 @@ typedef struct GameObject {
 void GameObject_init(GameObject *gameObject);
 
 void GameObject_free(GameObject *gameObject);
+
+void GameObject_draw(GameObject *gameObject);

@@ -10,7 +10,7 @@ int StateManager_scale(StateManager *stateManager) {
 
 int StateManager_init(StateManager *stateManager) {
     stateManager->capacity = 3;
-    stateManager->stack = malloc(stateManager->capacity * sizeof(State *));
+    stateManager->stack = calloc(stateManager->capacity, sizeof(State *));
     stateManager->top = -1;
     return 0;
 }
@@ -27,9 +27,9 @@ int StateManager_push(StateManager *stateManager, State *state) {
     if (stateManager->top + 1 == stateManager->capacity) {
         StateManager_scale(stateManager);
     }
-    stateManager->top++;
+    ++stateManager->top;
     stateManager->stack[stateManager->top] = state;
-    if (state->init != NULL) state->init();
+    if (state->init != NULL) { state->init(); }
     return stateManager->top;
 }
 
@@ -60,4 +60,13 @@ int StateManager_draw(StateManager *stateManager, float deltaTime) {
         return state->draw(deltaTime);
     }
     return 1;
+}
+
+void State_init(State *state) {
+    state->NumOfGameObjects = 0;
+    state->draw = NULL;
+    state->update = NULL;
+    state->destroy = NULL;
+    state->init = NULL;
+    state->camera = Camera_construct();
 }

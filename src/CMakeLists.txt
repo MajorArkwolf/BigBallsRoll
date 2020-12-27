@@ -23,6 +23,9 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/stateManager.c
     Engine/gameObject.c
     Engine/modelManager.c
+
+    #Scenes
+    Scene/MainMenu/mainMenu.c
 )
 
 # Include project header files.

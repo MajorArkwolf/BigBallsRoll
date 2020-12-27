@@ -5,4 +5,8 @@ typedef struct Vec3 {
     float Z;
 } Vec3;
 
+/**
+ * Construct a zero'ed out vector
+ * @return the result
+ */
 Vec3 Vec3_Construct();

@@ -40,20 +40,20 @@ void Camera_update(Camera *cam, float dt) {
     Vec3 newVec;
     const float velocity = cam->Speed * dt * 1.0f;
     if (cam->MoveForward) {
-        newVec = VectorMath_MultiplyVecByScalar(&cam->Front, velocity);
-        cam->Position = VectorMath_AddVec3ByVec3(&cam->Position, &newVec);
+        newVec = VectorMath_multiplyVecByScalar(&cam->Front, velocity);
+        cam->Position = VectorMath_addVec3ByVec3(&cam->Position, &newVec);
     }
     if (cam->MoveBackward) {
-        newVec = VectorMath_MultiplyVecByScalar(&cam->Front, velocity * -1);
-        cam->Position = VectorMath_AddVec3ByVec3(&cam->Position, &newVec);
+        newVec = VectorMath_multiplyVecByScalar(&cam->Front, velocity * -1);
+        cam->Position = VectorMath_addVec3ByVec3(&cam->Position, &newVec);
     }
     if (cam->MoveRight) {
-        newVec = VectorMath_MultiplyVecByScalar(&cam->Right, velocity);
-        cam->Position = VectorMath_AddVec3ByVec3(&cam->Position, &newVec);
+        newVec = VectorMath_multiplyVecByScalar(&cam->Right, velocity);
+        cam->Position = VectorMath_addVec3ByVec3(&cam->Position, &newVec);
     }
     if (cam->MoveLeft) {
-        newVec = VectorMath_MultiplyVecByScalar(&cam->Right, velocity * -1);
-        cam->Position = VectorMath_AddVec3ByVec3(&cam->Position, &newVec);
+        newVec = VectorMath_multiplyVecByScalar(&cam->Right, velocity * -1);
+        cam->Position = VectorMath_addVec3ByVec3(&cam->Position, &newVec);
     }
 }
 
@@ -82,11 +82,11 @@ void Camera_updateCameraVectors(Camera *cam) {
     front.X = cosf(yawInRad) * cosf(pitchInRad);
     front.Y = sinf(pitchInRad);
     front.Z = sinf(yawInRad) * cosf(pitchInRad);
-    cam->Front = VectorMath_NormaliseVec3(&front);
-    result = VectorMath_CrossProductVec3ByVec3(&cam->Front, &cam->WorldUp);
-    cam->Right = VectorMath_NormaliseVec3(&result);
-    result = VectorMath_CrossProductVec3ByVec3(&cam->Right, &cam->Front);
-    cam->Up = VectorMath_NormaliseVec3(&result);
+    cam->Front = VectorMath_normaliseVec3(&front);
+    result = VectorMath_crossProductVec3ByVec3(&cam->Front, &cam->WorldUp);
+    cam->Right = VectorMath_normaliseVec3(&result);
+    result = VectorMath_crossProductVec3ByVec3(&cam->Right, &cam->Front);
+    cam->Up = VectorMath_normaliseVec3(&result);
 }
 
 void Camera_lookAt(Camera *cam) {

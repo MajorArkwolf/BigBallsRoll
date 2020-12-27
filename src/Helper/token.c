@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 
-int Tokenise(char *inputLine, char *token[], char *separators) {
+int tokenise(char *inputLine, char **token, char *separators) {
     char *readToken = strtok(inputLine, separators);
     int count = 0;
 
@@ -21,7 +21,7 @@ int Tokenise(char *inputLine, char *token[], char *separators) {
     return count;
 }
 
-char *GetPathFromTokens(char **tokens, int numTokens, int startToken) {
+char *getPathFromTokens(char **tokens, int numTokens, int startToken) {
     char *output = (char *) calloc(FILENAME_MAX, sizeof(char));
     if (numTokens > startToken) {
         for (int i = startToken; i < numTokens; ++i) {

@@ -7,15 +7,15 @@
 #include "stringHelper.h"
 
 char *getCurrentWorkingDirectory(char *path) {
-    const size_t mallocSize = 1000;
-    char *newStr = malloc(mallocSize * sizeof(char));
+    size_t mallocSize = strlen(path) * sizeof(char) + 1;
+    char *newStr = malloc(mallocSize);
     if (newStr == NULL) {
         printf("malloc failed while getting current working directory.");
         assert(false);
     }
     strcpy(newStr, path);
     replaceChar(newStr, '\\', '/');
-    size_t indexOf = getLastOccurrenceInString('/', newStr, mallocSize);
+    size_t indexOf = getLastOccurrenceInString('/', newStr);
     newStr[indexOf + 1] = '\0';
     return newStr;
 }
@@ -27,7 +27,7 @@ char *getFileTypeFromPath(char *path) {
         printf("malloc failed while getting file type path.");
         assert(false);
     }
-    size_t indexOf = getLastOccurrenceInString('.', path, strlen(path));
+    size_t indexOf = getLastOccurrenceInString('.', path);
     strncpy(ext, path + indexOf + 1, LEN-1); // preserve null terminator
     return ext;
 }

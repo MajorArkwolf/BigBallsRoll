@@ -81,7 +81,7 @@ bool loadOff(Model *model, FILE *fptr) {
 
                 sscanf(buff, "%zu%n", &numPerRow, &offset);
                 data += offset;
-                Face_initFace(&model->Mesh[0].Faces[index]);
+                Face_init(&model->Mesh[0].Faces[index]);
                 model->Mesh[0].Faces[index].FaceIDs = calloc(numPerRow, sizeof(size_t));
                 if (model->Mesh[0].Faces[index].FaceIDs == NULL) {
                     printf("Failed to allocate ID's for faces");
@@ -201,7 +201,7 @@ Model ObjLoader_loadModel(char *workingDir, char *fileName) {
     strcat(fullDir, fileName);
 
     Model model;
-    Model_initModel(&model);
+    Model_init(&model);
     model.Name = malloc(strlen(fileName) * sizeof(char) + 1);
     assert(strcpy(model.Name, fileName) != NULL);
     FILE *fptr;

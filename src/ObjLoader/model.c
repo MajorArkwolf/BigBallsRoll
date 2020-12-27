@@ -4,7 +4,7 @@
 #include <math.h>
 #include "Engine/OpenGL.h"
 
-void Mesh_initMesh(Mesh *mesh) {
+void Mesh_init(Mesh *mesh) {
     mesh->NumOfFaces = 0;
     mesh->NumOfVert = 0;
     mesh->Vertices = NULL;
@@ -50,7 +50,7 @@ void Mesh_free(Mesh *mesh) {
     mesh->NumOfVert = 0;
 }
 
-void Model_initModel(Model *model) {
+void Model_init(Model *model) {
     model->Name = NULL;
     model->NumOfMesh = 0;
     model->Mesh = NULL;
@@ -65,7 +65,7 @@ void Model_free(Model *model) {
     free(model->Name);
 }
 
-void Face_initFace(Face *face) {
+void Face_init(Face *face) {
     face->FaceIDs = NULL;
     face->NumFaces = 0;
     face->HasColour = false;
@@ -74,34 +74,6 @@ void Face_initFace(Face *face) {
 void Face_free(Face *face) {
     free(face->FaceIDs);
     face->NumFaces = 0;
-}
-
-bool Model_modelToOFF(Model *model) {
-    //TODO: Disabled for the time being due to new implementation of Model/Mesh system.
-//    FILE *fptr = fopen("./export.off", "w+");
-//    if (fptr == NULL) {
-//        printf("Failed to create export.off");
-//        assert(false);
-//        return false;
-//    }
-//    fputs("OFF\n", fptr);
-//    //TODO: word of warning we do not have cells yet implemented.
-//    fprintf(fptr, "%zu %zu 0\n", model->NumOfVert, model->NumOfFaces);
-//    for (size_t i = 0; i < model->NumOfVert; ++i) {
-//        fprintf(fptr, "%f %f %f\n", model->Vertices[i].X, model->Vertices[i].Y, model->Vertices[i].Z);
-//    }
-//    for (size_t i = 0; i < model->NumOfFaces; ++i) {
-//        fprintf(fptr, "%zu ", model->Faces[i].NumFaces);
-//        for(size_t x = 0; x < model->Faces[i].NumFaces; ++x) {
-//            fprintf(fptr, "%zu ", model->Faces[i].FaceIDs[x]);
-//        }
-//        if (model->Faces[i].HasColour) {
-//            fprintf(fptr, "%f %f %f", model->Faces[i].Colour.RGBA[0], model->Faces[i].Colour.RGBA[1], model->Faces[i].Colour.RGBA[2]);
-//        }
-//        fprintf(fptr, "\n");
-//    }
-//    fclose(fptr);
-    return true;
 }
 
 void Vertex_init(Vertex *vertex) {

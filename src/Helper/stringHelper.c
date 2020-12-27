@@ -1,10 +1,10 @@
 #include "stringHelper.h"
 #include <string.h>
 
-size_t getLastOccurrenceInString(char findThis, char* stringToCheck, size_t maxStringSize) {
+size_t getLastOccurrenceInString(char findThis, char* stringToCheck) {
     char *lastSlash = strrchr(stringToCheck, findThis);
     size_t indexValue = (lastSlash - stringToCheck) / sizeof(char);
-    if (indexValue + 1 >= maxStringSize) {
+    if (indexValue + 1 >= strlen(stringToCheck)) {
         return 0;
     }
     return indexValue;

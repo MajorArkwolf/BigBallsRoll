@@ -15,8 +15,8 @@
 
 #include "Scene/MainMenu/mainMenu.h"
 
-const float FRAMERATE = 1/60.0f;                     // ~60 FPS.
-const float FRAMERATE_MILLIS = 1/60.0f * 1000;       // Millisecond version of framerate.
+const float FRAMERATE = 1 / 60.0f;                     // ~60 FPS.
+const float FRAMERATE_MILLIS = 1 / 60.0f * 1000;       // Millisecond version of framerate.
 const float PHYSICS_MILLIS = 200;
 int width = 1920;
 int height = 1080;
@@ -25,6 +25,11 @@ int timeSinceStart;
 ModelManager modelManager;
 StateManager sM;
 
+/**
+ * Callback function for glut when window size changes.
+ * @param w the new width
+ * @param h the new height
+ */
 void changeSize(int w, int h) {
 
     // Prevent a divide by zero, when window is too short
@@ -50,25 +55,26 @@ void changeSize(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
 }
 
+/**
+ * Callback function for glut update.
+ * @param vlaue
+ */
 static void Update(int vlaue) {
     Camera *cam = &StateManager_top(&sM)->camera;
+    // Timer to start update function again based on frame rate.
     glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
     int oldTime = timeSinceStart;
     timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     float deltaTime = (float) (timeSinceStart - oldTime) / 1000.0f;
-    //printf("Old Time: %d, New Time: %d, DeltaTime: %f\n", oldTime, timeSinceStart, deltaTime);
     StateManager_update(&sM, deltaTime);
+    //TODO: Camera should be moved into the state update.
     Camera_update(cam, (float) deltaTime);
-    //printf("X: %f, Y: %f, Z: %f\n", cam.Position.X, cam.Position.Y, cam.Position.Z);
-    //printf("Pitch: %f, Yaw: %f\n", cam.Pitch, cam.Yaw);
-    //printf("update\n");
 }
 
+/**
+ * Callback function for Draw
+ */
 static void Draw(void) {
-    int oldTime = timeSinceStart;
-    timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
-    float deltaTime = (float) (timeSinceStart - oldTime) / 1000.0f;
-
     Camera *cam = &StateManager_top(&sM)->camera;
     glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -77,11 +83,17 @@ static void Draw(void) {
     Camera_lookAt(cam);
     glColor3f(255, 255, 255);
 
-    StateManager_draw(&sM, deltaTime);
+    StateManager_draw(&sM, 0.0f);
 
     glutSwapBuffers();
 }
 
+/**
+ * Process key press for normal keys, callback function for glut
+ * @param key character of the key that was pressed.
+ * @param xx Unknown
+ * @param yy Unknown
+ */
 void processNormalKeys(unsigned char key, int xx, int yy) {
     Camera *cam = &StateManager_top(&sM)->camera;
     switch (key) {
@@ -108,6 +120,12 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
     }
 }
 
+/**
+ * Process key release for normal keys, callback function for glut
+ * @param key character of the key that was pressed.
+ * @param xx Unknown
+ * @param yy Unknown
+ */
 void processNormalKeysUp(unsigned char key, int xx, int yy) {
     Camera *cam = &StateManager_top(&sM)->camera;
     switch (key) {
@@ -132,6 +150,12 @@ void processNormalKeysUp(unsigned char key, int xx, int yy) {
     }
 }
 
+/**
+ * Process key press for special keys, callback function for glut
+ * @param key int representation of the key that was pressed.
+ * @param xx Unknown
+ * @param yy Unknown
+ */
 void pressKey(int key, int xx, int yy) {
     Camera *cam = &StateManager_top(&sM)->camera;
     switch (key) {
@@ -159,6 +183,12 @@ void pressKey(int key, int xx, int yy) {
 
 }
 
+/**
+ * Process key release for special keys, callback function for glut
+ * @param key int representation of the key that was pressed.
+ * @param xx Unknown
+ * @param yy Unknown
+ */
 void releaseKey(int key, int x, int y) {
     Camera *cam = &StateManager_top(&sM)->camera;
     switch (key) {
@@ -183,6 +213,11 @@ void releaseKey(int key, int x, int y) {
     }
 }
 
+/**
+ * Callback function for the mouse movement.
+ * @param x Coordinates local to the window on the x axis
+ * @param y Coordinates local to the window on the y axis
+ */
 void mouseMove(int x, int y) {
     Camera *cam = &StateManager_top(&sM)->camera;
     float lastX = (float) x - glutGet(GLUT_WINDOW_WIDTH) / 2;
@@ -190,6 +225,13 @@ void mouseMove(int x, int y) {
     Camera_mouseLook(cam, lastX, lastY);
 }
 
+/**
+ * Callback function for when a mouse button is pressed
+ * @param button int representation of the button
+ * @param state Unknown
+ * @param x Unknown
+ * @param y Unknown
+ */
 void mouseButton(int button, int state, int x, int y) {
 
     // only start motion if the left button is pressed
@@ -228,7 +270,8 @@ int main(int argc, char *argv[]) {
 
     glutInitWindowPosition(x_offset, y_offset);
     glutInitWindowSize(width, height);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE |
+                        GLUT_RGBA);
     glutCreateWindow("Plachinko");
     if (!glutExtensionSupported("GL_EXT_abgr")) {
         printf("Couldn't find abgr extension.\n");

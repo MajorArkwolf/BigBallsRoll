@@ -16,6 +16,11 @@ void MainMenu_init(State *state) {
 
     //Test Model Load
     GameObject_init(&state->gameObjects[0]);
+    GameObject_init(&state->gameObjects[1]);
+    state->gameObjects[0].Transform.Position.X += 15.f;
+    state->gameObjects[0].Transform.Position.Z += 5.f;
     state->gameObjects[0].ModelID = ModelManager_findModel(&modelManager, "Off/colourcube.off");
-    state->NumOfGameObjects = 1;
+    state->gameObjects[1].ModelID = ModelManager_findModel(&modelManager, "Off/colourcube.off");
+    state->gameObjects[1].Transform.Position.X += 15.f;
+    state->NumOfGameObjects = 2;
 }

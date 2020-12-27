@@ -36,7 +36,6 @@ void Model_draw(Model *model) {
                 glVertex3f(model->Mesh[index].Vertices[index_val].X, model->Mesh[index].Vertices[index_val].Y, model->Mesh[index].Vertices[index_val].Z);
             }
         }
-
         glEnd();
     }
 }

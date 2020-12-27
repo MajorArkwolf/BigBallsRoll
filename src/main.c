@@ -77,9 +77,7 @@ static void Draw(void) {
     Camera_lookAt(cam);
     glColor3f(255, 255, 255);
 
-    glPushMatrix();
     StateManager_draw(&sM, deltaTime);
-    glPopMatrix();
 
     glutSwapBuffers();
 }

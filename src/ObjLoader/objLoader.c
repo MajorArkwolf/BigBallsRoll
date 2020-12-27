@@ -9,7 +9,7 @@
 
 #define MAX_MALLOC_SIZE 10000
 #define MAX_BUFF_SIZE 5000
-#define RESOURCE_FILE_LOCATION "res/model/"
+#define RESOURCE_FILE_LOCATION "res/Model/"
 #define _CRT_SECURE_NO_WARNINGS
 
 size_t countType() {

@@ -1,2 +1,3 @@
+redundantAssignment
 unusedFunction
 unusedVariable

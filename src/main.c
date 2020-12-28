@@ -184,8 +184,8 @@ void pressKey(int key, int xx, int yy) {
 /**
  * Process key release for special keys, callback function for glut
  * @param key int representation of the key that was pressed.
- * @param xx Unknown
- * @param yy Unknown
+ * @param x Unknown
+ * @param y Unknown
  */
 void releaseKey(int key, int x, int y) {
     Camera *cam = &StateManager_top(&sM)->camera;

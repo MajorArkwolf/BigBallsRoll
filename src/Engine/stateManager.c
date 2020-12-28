@@ -1,16 +1,25 @@
 #include "stateManager.h"
 #include <stdlib.h>
 #include <stdbool.h>
+#include <assert.h>
 
 int StateManager_scale(StateManager *stateManager) {
     stateManager->capacity *= 2;
     stateManager->stack = realloc(stateManager->stack, stateManager->capacity * sizeof(State *));
+    if (stateManager->stack == NULL) {
+        assert(false);
+        return 1;
+    }
     return stateManager->capacity;
 }
 
 int StateManager_init(StateManager *stateManager) {
     stateManager->capacity = 3;
     stateManager->stack = calloc(stateManager->capacity, sizeof(State *));
+    if (stateManager->stack == NULL) {
+        assert(false);
+        return 1;
+    }
     stateManager->top = -1;
     return 0;
 }

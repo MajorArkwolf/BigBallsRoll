@@ -18,7 +18,7 @@ size_t countType() {
 }
 
 bool AllocateMesh(Mesh *mesh, size_t faces, size_t vertices) {
-    //TODO: Possibly at a precheck to ensure the mesh is null.
+    assert(mesh != NULL);
 
     //Allocate the required memory for our model then verify it was allocated.
     mesh->Vertices = calloc(vertices, sizeof(Vertex));
@@ -208,8 +208,7 @@ Model ObjLoader_loadModel(char *workingDir, char *fileName) {
     fptr = fopen(fullDir, "r");
     //Failed to open a file with the given name.
     assert(fptr != NULL);
-
-    //TODO: Begin implementing model loading here.
+    // Send of to the appropriate loader
     char *ext = getFileTypeFromPath(fullDir);
     if (strcmp(ext, "off") == 0) {
         modelLoaded = loadOff(&model, fptr);

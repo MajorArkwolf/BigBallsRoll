@@ -11,6 +11,7 @@ option(WarningsAsErrors "WarningsAsErrors" OFF)
 # If enabled, the post build symlink will copy instead.
 option(CopyResources "CopyResources" OFF)
 
+option(GenerateDoxygen "GenerateDoxygen" OFF)
 
 # Disable in-source builds.
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
@@ -36,7 +37,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 
-# Build 3rd Party Liberaries
+# Build 3rd Party Libraries
 add_subdirectory(lib)
 
 # Define source files.
@@ -83,17 +84,19 @@ endif()
 # Include and link against dependencies.
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image ${CMAKE_DL_LIBS})
 
-find_package(Doxygen)
-if (DOXYGEN_FOUND)
-    set(DOXYGEN_IN ${CMAKE_SOURCE_DIR}/.doxyconf)
+if (GenerateDoxygen)
+    find_package(Doxygen)
+    if (DOXYGEN_FOUND)
+        set(DOXYGEN_IN ${CMAKE_SOURCE_DIR}/.doxyconf)
 
-    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-    add_custom_target(doc ALL
-            COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_IN}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-            COMMENT "Generating API documentation with Doxygen"
-            VERBATIM)
-endif (DOXYGEN_FOUND)
+        configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+        add_custom_target(doc ALL
+                COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_IN}
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                COMMENT "Generating API documentation with Doxygen"
+                VERBATIM)
+    endif (DOXYGEN_FOUND)
+endif (GenerateDoxygen)
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)

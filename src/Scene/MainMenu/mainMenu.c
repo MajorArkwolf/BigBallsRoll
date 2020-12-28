@@ -9,9 +9,14 @@ int draw(float deltaTime) {
     return 0;
 }
 
+int update(float deltaTime) {
+    Camera_update(&StateManager_top(&sM)->camera, (float) deltaTime);
+    return 0;
+}
+
 void MainMenu_init(State *state) {
     state->camera = Camera_construct();
-    state->update = NULL;
+    state->update = update;
     state->draw = draw;
 
     //Test Model Load

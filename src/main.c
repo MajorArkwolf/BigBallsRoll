@@ -67,8 +67,6 @@ static void Update(int vlaue) {
     timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     float deltaTime = (float) (timeSinceStart - oldTime) / 1000.0f;
     StateManager_update(&sM, deltaTime);
-    //TODO: Camera should be moved into the state update.
-    Camera_update(cam, (float) deltaTime);
 }
 
 /**

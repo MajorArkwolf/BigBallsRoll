@@ -203,7 +203,7 @@ Model ObjLoader_loadModel(char *workingDir, char *fileName) {
     Model model;
     Model_init(&model);
     model.Name = malloc(strlen(fileName) * sizeof(char) + 1);
-    assert(strcpy(model.Name, fileName) != NULL);
+    strcpy(model.Name, fileName);
     FILE *fptr;
     fptr = fopen(fullDir, "r");
     //Failed to open a file with the given name.

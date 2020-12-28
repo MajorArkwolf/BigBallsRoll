@@ -22,7 +22,7 @@ typedef struct Camera {
 
 /**
  * Constructs a Camera object initialised to zero
- * @return
+ * @return a camera object allocated and initialised
  */
 Camera Camera_construct();
 

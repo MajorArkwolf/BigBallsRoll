@@ -33,13 +33,3 @@ char *getPathFromTokens(char **tokens, int numTokens, int startToken) {
     }
     return output;
 }
-
-int ReplaceChar(char *str, char orig, char rep) {
-    char *ix = str;
-    int n = 0;
-    while ((ix = strchr(ix, orig)) != NULL) {
-        *ix++ = rep;
-        n++;
-    }
-    return n;
-}

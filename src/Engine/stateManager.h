@@ -1,0 +1,87 @@
+#pragma once
+
+#include "Engine/camera.h"
+#include "Engine/gameObject.h"
+
+#define MAX_GAME_OBJECTS 10000
+
+/// Simple typedefs to distinguish between a function pointer and a function pointer that takes a float as a parameter
+typedef int (*fnPtr)();
+
+typedef int (*fnPtrFl)(float);
+
+/// State Structure
+typedef struct {
+    GameObject gameObjects[MAX_GAME_OBJECTS];
+    Camera camera;
+    size_t NumOfGameObjects;
+    fnPtr init;
+    fnPtrFl update;
+    fnPtrFl draw;
+    fnPtr destroy;
+} State;
+
+/// A Stack implementation that holds a stack of states
+typedef struct {
+    State **stack;
+    int capacity;
+    int top;
+} StateManager;
+
+/**
+ * Initialises the Stack manager, must be freed before calling on an existing State Manager
+ * @param stateManager State Manager to initialise.
+ * @return 0 on success or 1 on failure
+ */
+int StateManager_init(StateManager *stateManager);
+
+/**
+ * Frees the entire stack.
+ * @param stateManager State Manager to free
+ * @return 0 on success and 1 on failure
+ */
+int StateManager_free(StateManager *stateManager);
+
+/**
+ * Push a new state onto the stack
+ * @param stateManager State Manager to push onto
+ * @param state State to be added, the lifetime of the state must exceed that of the State Manager for memory safety.
+ * @return 0 on success and 1 on failure
+ */
+int StateManager_push(StateManager *stateManager, State *state);
+
+/**
+ * Pop the top state off the stack
+ * @param stateManager
+ * @return
+ */
+int StateManager_pop(StateManager *stateManager);
+
+/**
+ * Get the top element on the stack
+ * @param stateManager The state manager we want to point too
+ * @return the current top state on the stack
+ */
+State *StateManager_top(StateManager *stateManager);
+
+/**
+ * Calls the function pointer for update on the top of the stack
+ * @param stateManager state manager to check the stack of
+ * @param deltaTime delta time since last update, important to have
+ * @return 0 on success and 1 on failure
+ */
+int StateManager_update(StateManager *stateManager, float deltaTime);
+
+/**
+ * Calls the function pointer for draw on the top of the stack
+ * @param stateManager state manager to check the stack of
+ * @param deltaTime delta time since last update, not important in a draw call
+ * @return 0 on success and 1 on failure
+ */
+int StateManager_draw(StateManager *stateManager, float deltaTime);
+
+/**
+ * Initialises a base state for use
+ * @param state State to initialise, must be allocated prior to being passed in
+ */
+void State_init(State *state);

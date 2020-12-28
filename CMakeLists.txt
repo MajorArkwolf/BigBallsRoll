@@ -5,9 +5,13 @@ cmake_minimum_required(VERSION 3.15)
 set(PROJECT_NAME 289)
 project(${PROJECT_NAME} LANGUAGES C)
 
+# Treat warnings as errors.
+option(WarningsAsErrors "WarningsAsErrors" OFF)
+
 # If enabled, the post build symlink will copy instead.
 option(CopyResources "CopyResources" OFF)
 
+option(GenerateDoxygen "GenerateDoxygen" OFF)
 
 # Disable in-source builds.
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
@@ -26,16 +30,30 @@ endif()
 # Define the executable.
 add_executable(${PROJECT_NAME})
 
+set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
+
 # Find dependencies.
 # find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 
-# Build 3rd Party Liberaries
+# Build 3rd Party Libraries
 add_subdirectory(lib)
 
 # Define source files.
 add_subdirectory(src)
+
+if (MSVC)
+    string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+endif()
+
+# Treat warnings as errors if enabled.
+if (WarningsAsErrors)
+    target_compile_options(${PROJECT_NAME} PRIVATE
+            $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Werror>
+            $<$<CXX_COMPILER_ID:MSVC>:/WX>
+            )
+endif()
 
 # Set compile flags.
 target_compile_options(${PROJECT_NAME} PRIVATE
@@ -51,7 +69,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE
     # Visual Studio
     $<$<CXX_COMPILER_ID:MSVC>:/W4>
     # Enable the clang sanitizer.
-    #$<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
+    $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
 )
 
 # Link against the clang sanitizer.
@@ -59,8 +77,26 @@ target_link_options(${PROJECT_NAME} PRIVATE
     $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
 )
 
+if (LINUX)
+    target_link_libraries(${PROJECT_NAME} PRIVATE -lm)
+endif()
+
 # Include and link against dependencies.
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image ${CMAKE_DL_LIBS})
+
+if (GenerateDoxygen)
+    find_package(Doxygen)
+    if (DOXYGEN_FOUND)
+        set(DOXYGEN_IN ${CMAKE_SOURCE_DIR}/.doxyconf)
+
+        configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+        add_custom_target(doc ALL
+                COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_IN}
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                COMMENT "Generating API documentation with Doxygen"
+                VERBATIM)
+    endif (DOXYGEN_FOUND)
+endif (GenerateDoxygen)
 
 # Symlink or copy the resources to the binary location.
 if (NOT DisablePostBuild)

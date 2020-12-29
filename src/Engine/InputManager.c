@@ -1,5 +1,6 @@
 #include "InputManager.h"
 #include <Engine/OpenGL.h>
+#include <ctype.h>
 
 InputType InputType_convertSpecialKey(int glutKey) {
     switch(glutKey) {

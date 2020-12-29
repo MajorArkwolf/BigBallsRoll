@@ -151,7 +151,7 @@ void mouseMove(int x, int y) {
  * @param y Unknown
  */
 void mouseButton(int button, int state, int x, int y) {
-    InputType inputType = InputType_convertMouseButton(button);
+    //InputType inputType = InputType_convertMouseButton(button);
     // Check state to determine if down or up then send down the stack.
     //StateManager_keyUp(&engine.sM, inputType);
     //StateManager_keyDown(&engine.sM, inputType);

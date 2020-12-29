@@ -19,10 +19,12 @@ target_sources(${PROJECT_NAME} PRIVATE
     ObjLoader/model.c
 
     # Engine
+    Engine/engine.c
     Engine/camera.c
     Engine/stateManager.c
     Engine/gameObject.c
     Engine/modelManager.c
+    Engine/InputManager.c
 
     #Scenes
     Scene/MainMenu/mainMenu.c

@@ -15,6 +15,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Math/extraMath.c
 
     # Objloader
+    ObjLoader/modelLoading.c
     ObjLoader/objLoader.c
     ObjLoader/model.c
 

@@ -157,6 +157,7 @@ void mouseButton(int button, int state, int x, int y) {
     //StateManager_keyDown(&engine.sM, inputType);
 }
 
+
 int Engine_run(int argc, char *argv[]) {
     engine.width = 1920;
     engine.height = 1080;

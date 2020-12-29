@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/modelManager.h"
 #include "Engine/stateManager.h"
+#include <stdbool.h>
 
 typedef struct Engine {
     int timeSinceStart;
@@ -9,6 +10,7 @@ typedef struct Engine {
     int width;
     int height;
     float fov;
+    bool lockCamera;
 } Engine;
 
 extern Engine engine;

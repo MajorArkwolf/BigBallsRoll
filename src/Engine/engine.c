@@ -62,7 +62,10 @@ void Update(int vlaue) {
  */
 void Draw(void) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
-    glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
+    // Move cursor back to middle if camera lock is on
+    if (engine.lockCamera) {
+        glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
@@ -121,6 +124,10 @@ void pressKey(int key, int xx, int yy) {
  */
 void releaseKey(int key, int x, int y) {
     InputType inputType = InputType_convertSpecialKey(key);
+    if (inputType == KEY_F1) {
+        //Toggle the lock Camera.
+        engine.lockCamera = !engine.lockCamera;
+    }
     StateManager_keyUp(&engine.sM, inputType);
 }
 
@@ -154,6 +161,7 @@ int Engine_run(int argc, char *argv[]) {
     engine.width = 1920;
     engine.height = 1080;
     engine.fov = 60.0f;
+    engine.lockCamera = false;
 
     //Get the current working directory
     char *cwd = getCurrentWorkingDirectory(argv[0]);

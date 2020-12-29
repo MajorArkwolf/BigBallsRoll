@@ -1,4 +1,3 @@
 Off/bone.off
 Off/colourcube.off
 Off/boxtorus.off
-Obj/Goblin/goblin_warrior_spear.obj

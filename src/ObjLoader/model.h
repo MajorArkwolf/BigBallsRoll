@@ -29,7 +29,6 @@ typedef struct Point {
 typedef struct Face {
     Colour Colour;
     size_t NumFaces;
-    size_t *FaceIDs;
     Point *Point;
     bool HasColour;
 } Face;
@@ -116,3 +115,5 @@ Colour Colour_addColourToColour(Colour *firstColour, Colour *secondColour);
 void Colour_NormaliseColour(Colour *colour);
 
 void Point_init(Point *point);
+
+void Face_free(Face * face);

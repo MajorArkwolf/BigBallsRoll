@@ -31,12 +31,12 @@ bool ModelLoader_allocateMesh(Mesh *mesh, size_t faces, size_t vertices, size_t 
     mesh->NumOfTextureCords = textureCords;
     mesh->NumOfNormals = normals;
     if (textureCords > 0) {
-        mesh->TextureCords = calloc(textureCords, sizeof(TextureCord));
+        mesh->TextureCords = malloc(textureCords * sizeof(TextureCord));
     } else {
         mesh->TextureCords = NULL;
     }
     if (normals > 0) {
-        mesh->Normals = calloc(normals, sizeof(Vertex));
+        mesh->Normals = malloc(normals * sizeof(Vertex));
     } else {
         mesh->Normals = NULL;
     }
@@ -154,7 +154,7 @@ Model ModelLoader_loadModel(char *workingDir, char *fileName) {
     } else if (strcmp(ext, "obj") == 0) {
         modelLoaded = ObjLoader_loadObj(&model, fptr);
     }
-
+    free(ext);
     if (!modelLoaded) {
         printf("Model failed to load.");
         assert(false);

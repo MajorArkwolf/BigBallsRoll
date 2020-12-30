@@ -106,7 +106,7 @@ void MainMenu_init(State *state) {
 //    state->NumOfGameObjects = 3;
     GameObject_init(&state->gameObjects[0]);
     GameObject_init(&state->gameObjects[1]);
-    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/tav7.obj");
+    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/Goblin/goblin_warrior_spear.obj");
     state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
     state->gameObjects[1].Transform.Position.Z += 15.f;
     state->NumOfGameObjects = 2;

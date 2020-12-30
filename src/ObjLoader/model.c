@@ -50,6 +50,8 @@ void Mesh_free(Mesh *mesh) {
     }
     free(mesh->Faces);
     free(mesh->Vertices);
+    free(mesh->Normals);
+    free(mesh->TextureCords);
     mesh->NumOfFaces = 0;
     mesh->NumOfVert = 0;
 }
@@ -70,14 +72,13 @@ void Model_free(Model *model) {
 }
 
 void Face_init(Face *face) {
-    face->FaceIDs = NULL;
     face->Point = NULL;
     face->NumFaces = 0;
     face->HasColour = false;
 }
 
 void Face_free(Face *face) {
-    free(face->FaceIDs);
+    free(face->Point);
     face->NumFaces = 0;
 }
 

@@ -79,7 +79,7 @@ void ObjLoader_addPointData(Point *point, char* string, size_t slashCount) {
 bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr) {
     rewind(fptr);
     char buff[MAX_BUFF_SIZE] = {"\0"};
-    char discard[10];
+    char discard[10] = {'\0'};
     size_t index = 0;
     //Verticies
     size_t v = 0;
@@ -186,7 +186,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr) {
                 }
             }
             mesh->Faces[index].NumFaces = numOfFaces;
-            mesh->Faces[index].Point = calloc(numOfFaces, sizeof(Point));
+            mesh->Faces[index].Point = malloc(numOfFaces  * sizeof(Point));
             for (size_t i = 0; i < numOfFaces; ++i) {
                 mesh->Faces[index].Point[i] = point[i];
             }

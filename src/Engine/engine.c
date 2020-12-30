@@ -23,8 +23,9 @@ void changeSize(int w, int h) {
 
     // Prevent a divide by zero, when window is too short
     // (you cant make a window of zero width).
-    if (h == 0)
+    if (h == 0) {
         h = 1;
+    }
 
     float ratio = (float) w / (float) h;
 
@@ -84,7 +85,7 @@ void Draw(void) {
  * @param yy Unknown
  */
 void processNormalKeys(unsigned char key, int xx, int yy) {
-    InputType inputType = InputType_convertRegularKey((char)key);
+    InputType inputType = InputType_convertRegularKey((char) key);
     StateManager_keyDown(&engine.sM, inputType);
 }
 
@@ -95,7 +96,7 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
  * @param yy Unknown
  */
 void processNormalKeysUp(unsigned char key, int xx, int yy) {
-    InputType inputType = InputType_convertRegularKey((char)key);
+    InputType inputType = InputType_convertRegularKey((char) key);
     if (inputType == KEY_ESC) {
         Engine_stop();
         exit(EXIT_SUCCESS);

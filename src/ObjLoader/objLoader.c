@@ -49,8 +49,12 @@ bool ObjLoader_getMeshLocations(FILE *fptr, fpos_t **location, size_t *amountFou
     return true;
 }
 
+bool ObjLoader_loadMTL() {
+    printf("Hello :D");
+    return true;
+}
 
-bool ObjLoader_loadObj(Model *model, FILE *fptr) {
+bool ObjLoader_loadObj(Model *model, FILE *fptr, char *cwd) {
     model->Mesh = malloc(1*sizeof(Mesh));
     if (model->Mesh == NULL) {
         printf("malloc failed when making Mesh in loadOff");
@@ -58,14 +62,11 @@ bool ObjLoader_loadObj(Model *model, FILE *fptr) {
         return false;
     }
     model->NumOfMesh = 1;
-    ObjLoader_loadMesh(&model->Mesh[0], fptr);
+    ObjLoader_loadMesh(&model->Mesh[0], fptr, cwd);
     return true;
 }
 
 void ObjLoader_addPointData(Point *point, char* value, size_t slashCount) {
-    if (atoi(value) < 0) {
-        printf("hello");
-    }
     if (slashCount == 0) {
         //this is a vertex id
         point->VertexID = atoi(value);
@@ -81,7 +82,7 @@ void ObjLoader_addPointData(Point *point, char* value, size_t slashCount) {
     }
 }
 
-bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr) {
+bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
     rewind(fptr);
     char buff[MAX_BUFF_SIZE] = {"\0"};
     char discard[10] = {'\0'};
@@ -106,6 +107,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr) {
         if (strcmp(buff, "vt") == 0) { ++vt; }
         if (strcmp(buff, "vn") == 0) { ++vn; }
         if (strcmp(buff, "f") == 0) { ++f; }
+        if (strcmp(buff, "mtllib") == 0) { ObjLoader_loadMTL(mesh); }
     }
     if (v == 0 || f == 0) {
         assert(false);

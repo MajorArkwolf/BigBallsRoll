@@ -106,7 +106,17 @@ void MainMenu_init(State *state) {
     //Test Texture Load
     TextureManager_init(&engine.tM);
     TextureManager_preLoadTextures(&engine.tM, "/home/chase/ICT289/");
-    printf("%s",engine.tM.Textures[0].textureName);
-    printf("\n%s", engine.tM.Textures[0].textureData);
+    printf("Texture name: %s",engine.tM.Textures[0].textureName);
+    printf("\nTexture data: %s", engine.tM.Textures[0].textureData);
+    TextureManager_LoadTexture(&engine.tM, "/home/chase/ICT289/", "pog.jpg");
+    TextureManager_LoadTexture(&engine.tM, "/home/chase/ICT289/", "pog.jpg");
+    TextureManager_LoadTexture(&engine.tM, "/home/chase/ICT289/", "pog.jpg");
+    printf("\nTexture name: %s",engine.tM.Textures[1].textureName);
+    printf("\nTexture data: %s", engine.tM.Textures[1].textureData);
+    printf("\nTexture name: %s",engine.tM.Textures[0].textureName);
+    printf("\nTexture data: %s", engine.tM.Textures[0].textureData);
+    printf("\n%zu", TextureManager_findTexture(&engine.tM, "pog.jpg"));
+
+    TextureManager_getTexture(&engine.tM, 1);
     TextureManager_free(&engine.tM);
 }

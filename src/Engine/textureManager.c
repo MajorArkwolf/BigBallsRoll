@@ -24,7 +24,7 @@ void TextureManager_free(TextureManager *textureManager) {
 }
 
 //preload textures
-void TextureManager_loadTextures(TextureManager *textureManager, char *cwd) {
+void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     assert(textureManager != NULL);
     //no idea what these do yet
     int width = 0;
@@ -36,18 +36,22 @@ void TextureManager_loadTextures(TextureManager *textureManager, char *cwd) {
 
     strcpy(fulldir, cwd);
     strcpy(imgdir, cwd);
+    strcpy(imgdir, "res/Texture");
     //No clue about the directory yet
     strcat(fulldir, "res/Loader/textureloading.txt");
     FILE *fptr = fopen(fulldir, "r");
     char buff[MAX_BUFF_SIZE];
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);
-        //add null check later
         textureManager->Textures[textureManager->NumOfTextures].textureName = buff;
         strcpy(imgdir, cwd);
-        strcat(imgdir, "res/Texture/PNG/smileyFace.png");
-        textureManager->Textures[textureManager->NumOfTextures].textureData = stbi_load(fulldir, &width, &height, &channels, 0);
-        ++textureManager->NumOfTextures;
+        strcat(imgdir, "res/Texture/");
+        strcat(imgdir, buff);
+        textureManager->Textures[textureManager->NumOfTextures].textureData = stbi_load(imgdir, &width, &height, &channels, 0);
+
+        if (textureManager->Textures[textureManager->NumOfTextures].textureData != NULL) {
+            ++textureManager->NumOfTextures;
+        }
     }
     free(fulldir);
 }

@@ -21,7 +21,7 @@ void TextureManager_init(TextureManager *textureManager);
 
 void TextureManager_free(TextureManager *textureManager);
 
-void TextureManager_loadTextures(TextureManager *textureManager, char *cwd);
+void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd);
 
 size_t TextureManager_findTexture(TextureManager *textureManager, char *textureName);
 

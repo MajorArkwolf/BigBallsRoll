@@ -105,6 +105,8 @@ void MainMenu_init(State *state) {
 
     //Test Texture Load
     TextureManager_init(&engine.tM);
-    TextureManager_loadTextures(&engine.tM, "/home/chase/ICT289/");
+    TextureManager_preLoadTextures(&engine.tM, "/home/chase/ICT289/");
     printf("%s",engine.tM.Textures[0].textureName);
+    printf("\n%s", engine.tM.Textures[0].textureData);
+    TextureManager_free(&engine.tM);
 }

@@ -13,15 +13,15 @@ int draw(float deltaTime) {
 int update(float deltaTime) {
     Camera_update(&StateManager_top(&engine.sM)->camera, (float) deltaTime);
     GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
-    for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
-        float rotationSpeed = 10.0f;
-        if (i % 2 == 0) {
-            rotationSpeed *= -1.0f;
-        }
-        gameObjects[i].Transform.Rotation.X += rotationSpeed * deltaTime;
-        gameObjects[i].Transform.Rotation.Y += rotationSpeed * deltaTime;
-        gameObjects[i].Transform.Rotation.Z += rotationSpeed * deltaTime;
-    }
+//    for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
+//        float rotationSpeed = 10.0f;
+//        if (i % 2 == 0) {
+//            rotationSpeed *= -1.0f;
+//        }
+//        gameObjects[i].Transform.Rotation.X += rotationSpeed * deltaTime;
+//        gameObjects[i].Transform.Rotation.Y += rotationSpeed * deltaTime;
+//        gameObjects[i].Transform.Rotation.Z += rotationSpeed * deltaTime;
+//    }
     return 0;
 }
 
@@ -93,13 +93,21 @@ void MainMenu_init(State *state) {
     state->mouseMovement = mouseMovement;
 
     //Test Model Load
+//    GameObject_init(&state->gameObjects[0]);
+//    GameObject_init(&state->gameObjects[1]);
+//    GameObject_init(&state->gameObjects[2]);
+//    state->gameObjects[0].Transform.Position.X += 15.f;
+//    state->gameObjects[0].Transform.Position.Z += 5.f;
+//    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
+//    state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
+//    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/Goblin/goblin_warrior_spear.obj");
+//    state->gameObjects[1].Transform.Position.X += 15.f;
+//    state->gameObjects[1].Transform.Position.Z -= 5.f;
+//    state->NumOfGameObjects = 3;
     GameObject_init(&state->gameObjects[0]);
     GameObject_init(&state->gameObjects[1]);
-    state->gameObjects[0].Transform.Position.X += 15.f;
-    state->gameObjects[0].Transform.Position.Z += 5.f;
-    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
+    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/tav7.obj");
     state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
-    state->gameObjects[1].Transform.Position.X += 15.f;
-    state->gameObjects[1].Transform.Position.Z -= 5.f;
+    state->gameObjects[1].Transform.Position.Z += 15.f;
     state->NumOfGameObjects = 2;
 }

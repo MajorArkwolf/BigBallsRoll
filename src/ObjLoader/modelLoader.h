@@ -16,7 +16,7 @@ Model ModelLoader_loadModel(char *workingDir, char *fileName);
  * @param vertices the amount of vertices to allocate
  * @return true if passed or false if failed
  */
-bool ModelLoader_allocateMesh(Mesh *mesh, size_t faces, size_t vertices);
+bool ModelLoader_allocateMesh(Mesh *mesh, size_t faces, size_t vertices, size_t textureCords, size_t normals);
 
 /**
  * Load OFF file format

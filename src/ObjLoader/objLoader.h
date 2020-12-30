@@ -11,4 +11,4 @@
  */
 bool ObjLoader_loadObj(Model *model, FILE *fptr);
 
-bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, fpos_t startLocation);
+bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr);

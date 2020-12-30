@@ -8,20 +8,29 @@ typedef struct Colour {
     float RGBA[4];
 } Colour;
 
+typedef struct TextureCord {
+    float T[2];
+} TextureCord;
+
 /// Vertex data
 typedef struct Vertex {
     float X;
     float Y;
     float Z;
-    bool HasTexture;
-    Vec3 Normals;
 } Vertex;
+
+typedef struct Point {
+    int VertexID;
+    int TextureID;
+    int NormalID;
+} Point;
 
 /// Face Data
 typedef struct Face {
     Colour Colour;
     size_t NumFaces;
     size_t *FaceIDs;
+    Point *Point;
     bool HasColour;
 } Face;
 
@@ -29,8 +38,12 @@ typedef struct Face {
 typedef struct Mesh {
     Face *Faces;
     Vertex *Vertices;
+    Vertex *Normals;
+    TextureCord *TextureCords;
     size_t NumOfFaces;
     size_t NumOfVert;
+    size_t NumOfNormals;
+    size_t NumOfTextureCords;
 } Mesh;
 
 /// Model Data
@@ -101,3 +114,5 @@ Colour Colour_addColourToColour(Colour *firstColour, Colour *secondColour);
  * @param colour this variable will be altered.
  */
 void Colour_NormaliseColour(Colour *colour);
+
+void Point_init(Point *point);

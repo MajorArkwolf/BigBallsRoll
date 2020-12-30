@@ -8,6 +8,7 @@
 typedef struct ModelManager{
     Model Models[MAX_MODELS];
     size_t NumOfModels;
+    char *cwd;
 } ModelManager;
 
 /**

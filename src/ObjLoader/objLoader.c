@@ -62,17 +62,22 @@ bool ObjLoader_loadObj(Model *model, FILE *fptr) {
     return true;
 }
 
-void ObjLoader_addPointData(Point *point, char* string, size_t slashCount) {
+void ObjLoader_addPointData(Point *point, char* value, size_t slashCount) {
+    if (atoi(value) < 0) {
+        printf("hello");
+    }
     if (slashCount == 0) {
         //this is a vertex id
-        point->VertexID = atoi(string);
+        point->VertexID = atoi(value);
         --point->VertexID;
     } else if (slashCount == 1) {
         //this is a texture cord
-        point->TextureID = atoi(string);
+        point->TextureID = atoi(value);
+        --point->TextureID;
     } else if (slashCount == 2) {
         // this is a normal
-        point->NormalID = atoi(string);
+        point->NormalID = atoi(value);
+        --point->NormalID;
     }
 }
 

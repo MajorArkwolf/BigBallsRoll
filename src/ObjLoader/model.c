@@ -13,22 +13,10 @@ void Mesh_init(Mesh *mesh) {
 
 void Model_draw(Model *model) {
     for (size_t index = 0; index < model->NumOfMesh; ++index) {
-        if (model->Mesh[index].Faces[0].NumFaces == 3) {
-            glBegin(GL_TRIANGLES);
-        } else if (model->Mesh[index].Faces[0].NumFaces == 4) {
-            glBegin(GL_QUADS);
-        } else if (model->Mesh[index].Faces[0].NumFaces > 4) {
-            glBegin(GL_POLYGON);
-        } else {
-            glBegin(GL_LINES);
-        }
-
         for (size_t i = 0; i < model->Mesh[index].NumOfFaces; ++i) {
+            glBegin(GL_POLYGON);
             for (size_t x = 0; x < model->Mesh[index].Faces[i].NumFaces; ++x) {
                 int index_val = model->Mesh[index].Faces[i].Point[x].VertexID;
-                if (index_val < 0) {
-                    continue;
-                }
 //                if (model->Mesh[index].Vertices[index_val].HasTexture) {
 //                    //TODO: implement textures here
 //                }
@@ -38,9 +26,10 @@ void Model_draw(Model *model) {
                 }
                 glVertex3f(model->Mesh[index].Vertices[index_val].X, model->Mesh[index].Vertices[index_val].Y,
                            model->Mesh[index].Vertices[index_val].Z);
+
             }
+            glEnd();
         }
-        glEnd();
     }
 }
 

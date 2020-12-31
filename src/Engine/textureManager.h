@@ -8,8 +8,8 @@
 
 /// Texture Structure
 typedef struct Texture {
-    unsigned char *textureData;
-    char *textureName;
+    unsigned char *TextureData;
+    char *TextureName;
 } Texture;
 
 /// Texture Manager Structure
@@ -22,7 +22,7 @@ typedef struct TextureManager {
  * Frees the textureData and sets textureName to NULL
  * @param texture Texture struct to store Name and Data
  */
-void Texture_Free(Texture *texture);
+void Texture_free(Texture *texture);
 
 /**
  * Initialises texture manager, must be allocated prior to being used
@@ -49,7 +49,7 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd);
  * @param cwd The current working directory, must contain res floder to work
  * @param textureName The name of the texture to be loaded from res/Texture
  */
-void TextureManager_LoadTexture(TextureManager *textureManager, char *cwd, char *textureName);
+void TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char *textureName);
 
 /**
  * Finds a texture based on a name and returns its ID (index) in the texture managers textures array

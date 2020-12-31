@@ -1,3 +1,4 @@
+//Must be defined before stb_image.h is included
 #define STB_IMAGE_IMPLEMENTATION
 #include "textureManager.h"
 
@@ -18,8 +19,8 @@ void TextureManager_init(TextureManager *textureManager) {
 //Not sure if this even works?
 void Texture_Free(Texture *texture) {
     assert(texture != NULL);
-    free(texture->textureData);
-    texture->textureName = NULL;
+    free(texture->TextureData);
+    texture->TextureName = NULL;
 }
 
 void TextureManager_free(TextureManager *textureManager) {
@@ -48,9 +49,9 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     char buff[MAX_BUFF_SIZE];
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);
-        if (TextureManager_isLoaded(textureManager, buff) == false) {
-            textureManager->Textures[textureManager->NumOfTextures].textureName = calloc(sizeof(char), 50);
-            strcpy(textureManager->Textures[textureManager->NumOfTextures].textureName, buff);
+        if (!TextureManager_isLoaded(textureManager, buff)) {
+            textureManager->Textures[textureManager->NumOfTextures].TextureName = calloc(sizeof(char), 50);
+            strcpy(textureManager->Textures[textureManager->NumOfTextures].TextureName, buff);
             strcpy(imgdir, cwd);
             strcat(imgdir, RESOURCE_FILE_LOCATION);
 
@@ -62,10 +63,9 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
             }
             strcat(imgdir, buff);
 
-            textureManager->Textures[textureManager->NumOfTextures].textureData = stbi_load(imgdir, &width, &height,
-                                                                                            &channels, 0);
+            textureManager->Textures[textureManager->NumOfTextures].TextureData = stbi_load(imgdir, &width, &height, &channels, 0);
 
-            if (textureManager->Textures[textureManager->NumOfTextures].textureData != NULL) {
+            if (textureManager->Textures[textureManager->NumOfTextures].TextureData != NULL) {
                 ++textureManager->NumOfTextures;
             }
         }
@@ -75,10 +75,10 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     fclose(fptr);
 }
 
-void TextureManager_LoadTexture(TextureManager *textureManager, char *cwd, char *textureName) {
+void TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char *textureName) {
     assert(textureManager != NULL);
 
-    if (TextureManager_isLoaded(textureManager, textureName) == false) {
+    if (!TextureManager_isLoaded(textureManager, textureName)) {
         int width = 0;
         int height = 0;
         int channels = 0;
@@ -97,13 +97,12 @@ void TextureManager_LoadTexture(TextureManager *textureManager, char *cwd, char 
             strcat(imgdir, "JPG/");
         }
         strcat(imgdir, textureName);
-        textureManager->Textures[textureManager->NumOfTextures].textureName = textureName;
-        textureManager->Textures[textureManager->NumOfTextures].textureData = stbi_load(imgdir, &width, &height, &channels, 0);
+        textureManager->Textures[textureManager->NumOfTextures].TextureName = textureName;
+        textureManager->Textures[textureManager->NumOfTextures].TextureData = stbi_load(imgdir, &width, &height, &channels, 0);
 
-        if (textureManager->Textures[textureManager->NumOfTextures].textureData != NULL) {
+        if (textureManager->Textures[textureManager->NumOfTextures].TextureData != NULL) {
             ++textureManager->NumOfTextures;
         }
-
         free(imgdir);
     }
 }
@@ -111,7 +110,7 @@ void TextureManager_LoadTexture(TextureManager *textureManager, char *cwd, char 
 size_t TextureManager_findTexture(TextureManager *textureManager, char *textureName) {
     assert(textureManager != NULL);
     for (size_t i = 0; i < textureManager->NumOfTextures; ++i) {
-        if(strcmp(textureName, textureManager->Textures[i].textureName) == 0) {
+        if(strcmp(textureName, textureManager->Textures[i].TextureName) == 0) {
             return i;
         }
     }
@@ -130,7 +129,7 @@ Texture* TextureManager_getTexture(TextureManager *textureManager, size_t index)
 bool TextureManager_isLoaded(TextureManager *textureManager, char*textureName) {
     assert(textureManager != NULL);
     for (size_t i = 0; i < textureManager->NumOfTextures; ++i) {
-        if(strcmp(textureManager->Textures[i].textureName, textureName) == 0) {
+        if(strcmp(textureManager->Textures[i].TextureName, textureName) == 0) {
             return true;
         }
     }

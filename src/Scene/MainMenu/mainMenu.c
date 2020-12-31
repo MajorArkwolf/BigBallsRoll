@@ -104,19 +104,19 @@ void MainMenu_init(State *state) {
     state->NumOfGameObjects = 2;
 
     //Test Texture Load
-    TextureManager_init(&engine.tM);
-    TextureManager_preLoadTextures(&engine.tM, "/home/chase/ICT289/");
-    printf("Texture name: %s",engine.tM.Textures[0].textureName);
-    printf("\nTexture data: %s", engine.tM.Textures[0].textureData);
-    TextureManager_LoadTexture(&engine.tM, "/home/chase/ICT289/", "pog.jpg");
-    TextureManager_LoadTexture(&engine.tM, "/home/chase/ICT289/", "pog.jpg");
-    TextureManager_LoadTexture(&engine.tM, "/home/chase/ICT289/", "pog.jpg");
-    printf("\nTexture name: %s",engine.tM.Textures[1].textureName);
-    printf("\nTexture data: %s", engine.tM.Textures[1].textureData);
-    printf("\nTexture name: %s",engine.tM.Textures[0].textureName);
-    printf("\nTexture data: %s", engine.tM.Textures[0].textureData);
-    printf("\n%zu", TextureManager_findTexture(&engine.tM, "pog.jpg"));
+    TextureManager_init(&engine.textureManager);
+    TextureManager_preLoadTextures(&engine.textureManager, "/home/chase/ICT289/");
+    printf("Texture name: %s",engine.textureManager.Textures[0].TextureName);
+    printf("\nTexture data: %s", engine.textureManager.Textures[0].TextureData);
+    TextureManager_loadTexture(&engine.textureManager, "/home/chase/ICT289/", "pog.jpg");
+    TextureManager_loadTexture(&engine.textureManager, "/home/chase/ICT289/", "pog.jpg");
+    TextureManager_loadTexture(&engine.textureManager, "/home/chase/ICT289/", "pog.jpg");
+    printf("\nTexture name: %s",engine.textureManager.Textures[1].TextureName);
+    printf("\nTexture data: %s", engine.textureManager.Textures[1].TextureData);
+    printf("\nTexture name: %s",engine.textureManager.Textures[0].TextureName);
+    printf("\nTexture data: %s", engine.textureManager.Textures[0].TextureData);
+    printf("\n%zu", TextureManager_findTexture(&engine.textureManager, "pog.jpg"));
 
-    TextureManager_getTexture(&engine.tM, 1);
-    TextureManager_free(&engine.tM);
+    TextureManager_getTexture(&engine.textureManager, 1);
+    TextureManager_free(&engine.textureManager);
 }

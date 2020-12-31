@@ -8,7 +8,7 @@ typedef struct Engine {
     int timeSinceStart;
     ModelManager modelManager;
     StateManager sM;
-    TextureManager tM;
+    TextureManager textureManager;
     int width;
     int height;
     float fov;

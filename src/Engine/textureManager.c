@@ -27,6 +27,8 @@ void TextureManager_bindTextureOpenGL(Texture *texture) {
 void TextureManager_init(TextureManager *textureManager) {
     assert(textureManager != NULL);
     textureManager->NumOfTextures = 0;
+    textureManager->renderSetup = false;
+    stbi_set_flip_vertically_on_load(true);
 }
 
 void Texture_init(Texture *texture) {
@@ -85,7 +87,9 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
             if (textureManager->Textures[textureManager->NumOfTextures].TextureData == NULL) {
                 Texture_free(&textureManager->Textures[textureManager->NumOfTextures]);
             } else {
+                if (textureManager->renderSetup) {
                 TextureManager_bindTextureOpenGL(&textureManager->Textures[textureManager->NumOfTextures]);
+                }
                 ++textureManager->NumOfTextures;
             }
         }
@@ -119,7 +123,9 @@ bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char 
             Texture_free(&textureManager->Textures[NumOfTex]);
             return false;
         }
-        TextureManager_bindTextureOpenGL(&textureManager->Textures[textureManager->NumOfTextures]);
+        if (textureManager->renderSetup) {
+            TextureManager_bindTextureOpenGL(&textureManager->Textures[textureManager->NumOfTextures]);
+        }
         ++textureManager->NumOfTextures;
         free(imgdir);
     }
@@ -165,4 +171,10 @@ bool TextureManager_isLoaded(TextureManager *textureManager, char*textureName) {
         }
     }
     return false;
+}
+
+void TextureManager_bindTexturesToRenderer(TextureManager *textureManager) {
+    for (size_t i = 0; i < textureManager->NumOfTextures; ++i) {
+        TextureManager_bindTextureOpenGL(&textureManager->Textures[i]);
+    }
 }

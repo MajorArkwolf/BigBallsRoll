@@ -215,6 +215,9 @@ int Engine_run(int argc, char *argv[]) {
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
 
+    engine.textureManager.renderSetup = true;
+    TextureManager_bindTexturesToRenderer(&engine.textureManager);
+
     glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
     engine.timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     glutMainLoop();

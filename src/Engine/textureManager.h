@@ -14,12 +14,14 @@ typedef struct Texture {
     int Height;
     int Channels;
     unsigned int GLTextureID;
+
 } Texture;
 
 /// Texture Manager Structure
 typedef struct TextureManager {
     Texture Textures[MAX_TEXTURES];
     size_t NumOfTextures;
+    bool renderSetup;
 } TextureManager;
 
 /**
@@ -94,3 +96,5 @@ size_t TextureManager_findTextureID(TextureManager *textureManager, char *textur
  * @return true if found, false otherwise
  */
 bool TextureManager_isLoaded(TextureManager *textureManager, char*textureName);
+
+void TextureManager_bindTexturesToRenderer(TextureManager *textureManager);

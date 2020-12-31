@@ -47,7 +47,7 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);
         if (!TextureManager_isLoaded(textureManager, buff)) {
-            textureManager->Textures[textureManager->NumOfTextures].TextureName = calloc(sizeof(char), 50);
+            textureManager->Textures[textureManager->NumOfTextures].TextureName = calloc(sizeof(char), sizeof(buff) + 30);
             strcpy(textureManager->Textures[textureManager->NumOfTextures].TextureName, buff);
             strcpy(imgdir, cwd);
             strcat(imgdir, RESOURCE_FILE_LOCATION);

@@ -48,6 +48,7 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     assert(textureManager != NULL);
 
     int numOfTex = 0;
+    const int DesiredChannels = 0;
     char *fulldir = calloc(sizeof(char), (strlen(cwd) + 100));
     char *imgdir = calloc(sizeof(char), (strlen(cwd) + 100));
 
@@ -69,11 +70,10 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
             textureManager->Textures[numOfTex].TextureData =
                     stbi_load(imgdir, &textureManager->Textures[numOfTex].Width,
                               &textureManager->Textures[numOfTex].Height,
-                              &textureManager->Textures[numOfTex].Channels, 0);
+                              &textureManager->Textures[numOfTex].Channels, DesiredChannels);
 
             if (textureManager->Textures[numOfTex].TextureData == NULL) {
                 Texture_free(&textureManager->Textures[numOfTex]);
-
             } else {
                 ++textureManager->NumOfTextures;
             }
@@ -83,15 +83,14 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     free(imgdir);
     fclose(fptr);
 }
-//find more elegant way to deal with freeing
-//find out what texture file formats we need, jpg and png are just being used for testing atm
-//maybe reconsider if else for filetypes
+
 bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char *textureName) {
     assert(textureManager != NULL);
 
     if (!TextureManager_isLoaded(textureManager, textureName)) {
 
         const int NumOfTex = textureManager->NumOfTextures;
+        const int DesiredChannels = 0;
         char *imgdir = calloc(sizeof(char), (strlen(cwd) + 100));
         strcpy(imgdir, cwd);
         strcat(imgdir, RESOURCE_FILE_LOCATION);
@@ -102,7 +101,7 @@ bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char 
         textureManager->Textures[NumOfTex].TextureData =
                 stbi_load(imgdir, &textureManager->Textures[NumOfTex].Width,
                           &textureManager->Textures[NumOfTex].Height,
-                          &textureManager->Textures[NumOfTex].Channels, 0);
+                          &textureManager->Textures[NumOfTex].Channels, DesiredChannels);
 
         if (textureManager->Textures[NumOfTex].TextureData == NULL) {
             free(imgdir);

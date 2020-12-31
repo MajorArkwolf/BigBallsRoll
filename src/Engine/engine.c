@@ -220,4 +220,5 @@ int Engine_run(int argc, char *argv[]) {
 void Engine_stop() {
     ModelManager_free(&engine.modelManager);
     StateManager_free(&engine.sM);
+    free(&engine.cwd);
 }

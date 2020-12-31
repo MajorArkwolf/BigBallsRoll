@@ -9,6 +9,7 @@ typedef struct Engine {
     ModelManager modelManager;
     StateManager sM;
     TextureManager textureManager;
+    char *cwd;
     int width;
     int height;
     float fov;

@@ -166,10 +166,10 @@ int Engine_run(int argc, char *argv[]) {
     engine.lockCamera = false;
 
     //Get the current working directory
-    char *cwd = getCurrentWorkingDirectory(argv[0]);
+    engine.cwd = getCurrentWorkingDirectory(argv[0]);
 
     ModelManager_init(&engine.modelManager);
-    ModelManager_loadModels(&engine.modelManager, cwd);
+    ModelManager_loadModels(&engine.modelManager, engine.cwd);
 
     StateManager_init(&engine.sM);
     State state;

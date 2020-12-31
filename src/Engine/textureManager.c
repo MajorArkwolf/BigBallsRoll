@@ -9,6 +9,7 @@
 
 #define MAX_BUFF_SIZE 100
 #define RESOURCE_FILE_LOCATION "res/Texture/"
+#define RESOURCE_LOADER_FILE_LOCATION "res/Loader/textureloading.txt"
 #define DEFAULT_TEXTURE 0
 
 void TextureManager_init(TextureManager *textureManager) {
@@ -16,10 +17,20 @@ void TextureManager_init(TextureManager *textureManager) {
     textureManager->NumOfTextures = 0;
 }
 
+void Texture_init(Texture *texture) {
+    assert(texture != NULL);
+    texture->TextureName = calloc(sizeof(char), 50);
+    texture->TextureData = NULL;
+    texture->Channels = 0;
+    texture->Width = 0;
+    texture->Height = 0;
+}
+
 //texture->TextureName not freed or set to NULL, else valgrind complains (not sure if its correct)
 void Texture_free(Texture *texture) {
     assert(texture != NULL);
     STBI_FREE(texture->TextureData);
+    free(texture->TextureName);
 }
 
 void TextureManager_free(TextureManager *textureManager) {
@@ -35,45 +46,35 @@ void TextureManager_free(TextureManager *textureManager) {
 //maybe reconsider if else for filetypes
 void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     assert(textureManager != NULL);
-    //no idea what to do with these yet
-    int width, height, channels;
 
+    int numOfTex = 0;
     char *fulldir = calloc(sizeof(char), (strlen(cwd) + 100));
     char *imgdir = calloc(sizeof(char), (strlen(cwd) + 100));
 
     strcpy(fulldir, cwd);
-    //No clue about the directory yet
-    strcat(fulldir, "res/Loader/textureloading.txt");
+    strcat(fulldir, RESOURCE_LOADER_FILE_LOCATION);
     FILE *fptr = fopen(fulldir, "r");
     char buff[MAX_BUFF_SIZE];
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);
         if (!TextureManager_isLoaded(textureManager, buff)) {
-            textureManager->Textures[textureManager->NumOfTextures].TextureName = calloc(sizeof(char), sizeof(buff) + 30);
-            strcpy(textureManager->Textures[textureManager->NumOfTextures].TextureName, buff);
+
+            numOfTex = textureManager->NumOfTextures;
+            Texture_init(&textureManager->Textures[numOfTex]);
+            strcpy(textureManager->Textures[numOfTex].TextureName, buff);
             strcpy(imgdir, cwd);
             strcat(imgdir, RESOURCE_FILE_LOCATION);
 
-            char *fileType = getFileType(buff);
-            if (strcmp(fileType, "png") == 0) {
-                strcat(imgdir, "PNG/");
-            } else if (strcmp(fileType, "jpg") == 0) {
-                strcat(imgdir, "JPG/");
-            } else if (strcmp(fileType, "bmp") == 0) {
-                strcat(imgdir, "BMP/");
-            } else {
-                printf("\nTexture format not supported: %s", fileType);
-                //bad practice using continue here?
-                continue;
-            }
             strcat(imgdir, buff);
 
-            textureManager->Textures[textureManager->NumOfTextures].TextureData = stbi_load(imgdir, &width, &height, &channels, 0);
+            textureManager->Textures[numOfTex].TextureData =
+                    stbi_load(imgdir, &textureManager->Textures[numOfTex].Width,
+                              &textureManager->Textures[numOfTex].Height,
+                              &textureManager->Textures[numOfTex].Channels, 0);
 
-            if (textureManager->Textures[textureManager->NumOfTextures].TextureData != NULL) {
+            if (textureManager->Textures[numOfTex].TextureData != NULL) {
                 ++textureManager->NumOfTextures;
             }
-            free(fileType);
         }
     }
     free(fulldir);
@@ -87,38 +88,26 @@ bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char 
     assert(textureManager != NULL);
 
     if (!TextureManager_isLoaded(textureManager, textureName)) {
-        int width, height, channels;
 
+        const int NumOfTex = textureManager->NumOfTextures;
         char *imgdir = calloc(sizeof(char), (strlen(cwd) + 100));
         strcpy(imgdir, cwd);
         strcat(imgdir, RESOURCE_FILE_LOCATION);
 
-        char *fileType = getFileType(textureName);
-
-        if (strcmp(fileType, "png") == 0) {
-            strcat(imgdir, "PNG/");
-        } else if (strcmp(fileType, "jpg") == 0) {
-            strcat(imgdir, "JPG/");
-        } else if (strcmp(fileType, "bmp") == 0) {
-            strcat(imgdir, "BMP/");
-        } else {
-            printf("\nTexture format not supported: %s", fileType);
-            free(imgdir);
-            free(fileType);
-            return false;
-        }
         strcat(imgdir, textureName);
-        textureManager->Textures[textureManager->NumOfTextures].TextureName = textureName;
-        textureManager->Textures[textureManager->NumOfTextures].TextureData = stbi_load(imgdir, &width, &height, &channels, 0);
+        Texture_init(&textureManager->Textures[NumOfTex]);
+        textureManager->Textures[NumOfTex].TextureName = textureName;
+        textureManager->Textures[NumOfTex].TextureData =
+                stbi_load(imgdir, &textureManager->Textures[NumOfTex].Width,
+                          &textureManager->Textures[NumOfTex].Height,
+                          &textureManager->Textures[NumOfTex].Channels, 0);
 
-        if (textureManager->Textures[textureManager->NumOfTextures].TextureData == NULL) {
+        if (textureManager->Textures[NumOfTex].TextureData == NULL) {
             free(imgdir);
-            free(fileType);
             return false;
         }
         ++textureManager->NumOfTextures;
         free(imgdir);
-        free(fileType);
     }
     return true;
 }
@@ -139,7 +128,6 @@ Texture* TextureManager_getTexture(TextureManager *textureManager, char *cwd, ch
 Texture* TextureManager_getTextureUsingID(TextureManager *textureManager, size_t index) {
     assert(textureManager != NULL);
     if (index >= textureManager->NumOfTextures) {
-        printf("Index greater than number of models, return 0 index");
         return &textureManager->Textures[DEFAULT_TEXTURE];
     }
     return &textureManager->Textures[index];
@@ -163,13 +151,4 @@ bool TextureManager_isLoaded(TextureManager *textureManager, char*textureName) {
         }
     }
     return false;
-}
-//not sure on the assert or if it should be handled differently
-char* getFileType(char *textureName) {
-    assert(textureName != NULL && strlen(textureName) > 3);
-    char *fileType = calloc(sizeof(char), 4);
-    fileType[2] = textureName[strlen(textureName)-1];
-    fileType[1] = textureName[strlen(textureName)-2];
-    fileType[0] = textureName[strlen(textureName)-3];
-    return fileType;
 }

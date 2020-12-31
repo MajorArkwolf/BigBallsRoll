@@ -10,6 +10,9 @@
 typedef struct Texture {
     unsigned char *TextureData;
     char *TextureName;
+    int Width;
+    int Height;
+    int Channels;
 } Texture;
 
 /// Texture Manager Structure
@@ -25,8 +28,14 @@ typedef struct TextureManager {
 void Texture_free(Texture *texture);
 
 /**
+ * Initialises texture, must be allocated prior to being used
+ * @param texture The texture to be initialised
+ */
+void Texture_init(Texture *texture);
+
+/**
  * Initialises texture manager, must be allocated prior to being used
- * @param textureManager object to initialise
+ * @param textureManager object to initialised
  */
 void TextureManager_init(TextureManager *textureManager);
 
@@ -84,11 +93,3 @@ size_t TextureManager_findTextureID(TextureManager *textureManager, char *textur
  * @return true if found, false otherwise
  */
 bool TextureManager_isLoaded(TextureManager *textureManager, char*textureName);
-
-//place somewhere else?
-/**
- * Gets a file type from the name of a texture (i.e. jpg, png)
- * @param textureName The name of the texture to process
- * @return the file type extension
- */
-char* getFileType(char *textureName);

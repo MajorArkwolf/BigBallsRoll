@@ -21,16 +21,18 @@ void Texture_init(Texture *texture) {
     assert(texture != NULL);
     texture->TextureName = calloc(sizeof(char), 50);
     texture->TextureData = NULL;
-    texture->Channels = 0;
     texture->Width = 0;
     texture->Height = 0;
+    texture->Channels = 0;
 }
 
-//texture->TextureName not freed or set to NULL, else valgrind complains (not sure if its correct)
 void Texture_free(Texture *texture) {
     assert(texture != NULL);
     STBI_FREE(texture->TextureData);
     free(texture->TextureName);
+    texture->Width = 0;
+    texture->Height = 0;
+    texture ->Channels = 0;
 }
 
 void TextureManager_free(TextureManager *textureManager) {
@@ -41,9 +43,7 @@ void TextureManager_free(TextureManager *textureManager) {
     textureManager->NumOfTextures = 0;
 }
 
-//preload textures
-//find out what texture file formats we need, jpg and png are just being used for testing atm
-//maybe reconsider if else for filetypes
+//Pre-load textures
 void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     assert(textureManager != NULL);
 
@@ -64,7 +64,6 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
             strcpy(textureManager->Textures[numOfTex].TextureName, buff);
             strcpy(imgdir, cwd);
             strcat(imgdir, RESOURCE_FILE_LOCATION);
-
             strcat(imgdir, buff);
 
             textureManager->Textures[numOfTex].TextureData =
@@ -72,7 +71,10 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
                               &textureManager->Textures[numOfTex].Height,
                               &textureManager->Textures[numOfTex].Channels, 0);
 
-            if (textureManager->Textures[numOfTex].TextureData != NULL) {
+            if (textureManager->Textures[numOfTex].TextureData == NULL) {
+                Texture_free(&textureManager->Textures[numOfTex]);
+
+            } else {
                 ++textureManager->NumOfTextures;
             }
         }
@@ -96,7 +98,7 @@ bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char 
 
         strcat(imgdir, textureName);
         Texture_init(&textureManager->Textures[NumOfTex]);
-        textureManager->Textures[NumOfTex].TextureName = textureName;
+        strcpy(textureManager->Textures[NumOfTex].TextureName, textureName);
         textureManager->Textures[NumOfTex].TextureData =
                 stbi_load(imgdir, &textureManager->Textures[NumOfTex].Width,
                           &textureManager->Textures[NumOfTex].Height,
@@ -104,6 +106,7 @@ bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char 
 
         if (textureManager->Textures[NumOfTex].TextureData == NULL) {
             free(imgdir);
+            Texture_free(&textureManager->Textures[NumOfTex]);
             return false;
         }
         ++textureManager->NumOfTextures;

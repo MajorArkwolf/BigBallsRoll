@@ -111,8 +111,8 @@ void MainMenu_init(State *state) {
     printf("\nTexture data: %s", engine.textureManager.Textures[0].TextureData);
     //Test getTexture with invalid extension (.jpa)
     TextureManager_getTexture(&engine.textureManager, engine.cwd, "pog.jpa");
-    printf("\nTexture name: %s",engine.textureManager.Textures[1].TextureName);
-    printf("\nTexture data: %s", engine.textureManager.Textures[1].TextureData);
+    //printf("\nTexture name: %s",engine.textureManager.Textures[1].TextureName);
+    //printf("\nTexture data: %s", engine.textureManager.Textures[1].TextureData);
     //Test getTexture
     TextureManager_getTexture(&engine.textureManager, engine.cwd, "pog.jpg");
     printf("\nTexture name: %s",engine.textureManager.Textures[1].TextureName);

@@ -168,8 +168,11 @@ int Engine_run(int argc, char *argv[]) {
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
 
+    TextureManager_init(&engine.textureManager);
+    TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+
 
     StateManager_init(&engine.sM);
     State state;
@@ -210,6 +213,7 @@ int Engine_run(int argc, char *argv[]) {
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_TEXTURE_2D);
 
     glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
     engine.timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
@@ -220,5 +224,5 @@ int Engine_run(int argc, char *argv[]) {
 void Engine_stop() {
     ModelManager_free(&engine.modelManager);
     StateManager_free(&engine.sM);
-    free(&engine.cwd);
+    free(engine.cwd);
 }

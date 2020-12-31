@@ -1,7 +1,7 @@
 //Must be defined in .c file before stb_image.h is included (dont redefine in any other .c file)
 #define STB_IMAGE_IMPLEMENTATION
 #include "textureManager.h"
-
+#include "Engine/OpenGL.h"
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -12,6 +12,18 @@
 #define RESOURCE_LOADER_FILE_LOCATION "res/Loader/textureloading.txt"
 #define DEFAULT_TEXTURE 0
 
+void TextureManager_bindTextureOpenGL(Texture *texture) {
+    glGenTextures(1, &texture->GLTextureID);
+    glBindTexture(GL_TEXTURE_2D, texture->GLTextureID);
+    unsigned colouChannel = GL_RGB;
+    if (texture->Channels == 4) {
+        colouChannel = GL_RGBA;
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0, texture->Channels, texture->Width, texture->Height, 0, colouChannel, GL_UNSIGNED_BYTE, texture->TextureData);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // Linear Filtering
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // Linear Filtering
+}
+
 void TextureManager_init(TextureManager *textureManager) {
     assert(textureManager != NULL);
     textureManager->NumOfTextures = 0;
@@ -19,11 +31,12 @@ void TextureManager_init(TextureManager *textureManager) {
 
 void Texture_init(Texture *texture) {
     assert(texture != NULL);
-    texture->TextureName = calloc(sizeof(char), 50);
+    //texture->TextureName = {"\0"};
     texture->TextureData = NULL;
     texture->Width = 0;
     texture->Height = 0;
     texture->Channels = 0;
+    texture->GLTextureID = 0;
 }
 
 void Texture_free(Texture *texture) {
@@ -47,7 +60,6 @@ void TextureManager_free(TextureManager *textureManager) {
 void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     assert(textureManager != NULL);
 
-    int numOfTex = 0;
     const int DesiredChannels = 0;
     char *fulldir = calloc(sizeof(char), (strlen(cwd) + 100));
     char *imgdir = calloc(sizeof(char), (strlen(cwd) + 100));
@@ -59,22 +71,21 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);
         if (!TextureManager_isLoaded(textureManager, buff)) {
-
-            numOfTex = textureManager->NumOfTextures;
-            Texture_init(&textureManager->Textures[numOfTex]);
-            strcpy(textureManager->Textures[numOfTex].TextureName, buff);
+            Texture_init(&textureManager->Textures[textureManager->NumOfTextures]);
+            strcpy(textureManager->Textures[textureManager->NumOfTextures].TextureName, buff);
             strcpy(imgdir, cwd);
             strcat(imgdir, RESOURCE_FILE_LOCATION);
             strcat(imgdir, buff);
 
-            textureManager->Textures[numOfTex].TextureData =
-                    stbi_load(imgdir, &textureManager->Textures[numOfTex].Width,
-                              &textureManager->Textures[numOfTex].Height,
-                              &textureManager->Textures[numOfTex].Channels, DesiredChannels);
+            textureManager->Textures[textureManager->NumOfTextures].TextureData =
+                    stbi_load(imgdir, &textureManager->Textures[textureManager->NumOfTextures].Width,
+                              &textureManager->Textures[textureManager->NumOfTextures].Height,
+                              &textureManager->Textures[textureManager->NumOfTextures].Channels, DesiredChannels);
 
-            if (textureManager->Textures[numOfTex].TextureData == NULL) {
-                Texture_free(&textureManager->Textures[numOfTex]);
+            if (textureManager->Textures[textureManager->NumOfTextures].TextureData == NULL) {
+                Texture_free(&textureManager->Textures[textureManager->NumOfTextures]);
             } else {
+                TextureManager_bindTextureOpenGL(&textureManager->Textures[textureManager->NumOfTextures]);
                 ++textureManager->NumOfTextures;
             }
         }
@@ -108,6 +119,7 @@ bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char 
             Texture_free(&textureManager->Textures[NumOfTex]);
             return false;
         }
+        TextureManager_bindTextureOpenGL(&textureManager->Textures[textureManager->NumOfTextures]);
         ++textureManager->NumOfTextures;
         free(imgdir);
     }
@@ -122,7 +134,7 @@ Texture* TextureManager_getTexture(TextureManager *textureManager, char *cwd, ch
         }
     }
     if (TextureManager_loadTexture(textureManager, cwd, textureName)) {
-        return &textureManager->Textures[textureManager->NumOfTextures];
+        return &textureManager->Textures[textureManager->NumOfTextures - 1];
     }
     return &textureManager->Textures[DEFAULT_TEXTURE];
 }

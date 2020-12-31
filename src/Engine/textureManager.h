@@ -9,10 +9,11 @@
 /// Texture Structure
 typedef struct Texture {
     unsigned char *TextureData;
-    char *TextureName;
+    char TextureName[50];
     int Width;
     int Height;
     int Channels;
+    unsigned int GLTextureID;
 } Texture;
 
 /// Texture Manager Structure

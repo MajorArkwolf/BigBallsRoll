@@ -47,7 +47,8 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
         sscanf(buff, "%9s", discard);
         if (strcmp(discard, "newmtl") == 0) {
             char smallBuff[1000];
-            Material_init(&mesh->Materials[++index]);
+            ++index;
+            Material_init(&mesh->Materials[index]);
             sscanf(buff, "%9s %4999s", discard, smallBuff);
             mesh->Materials[index].MaterialName = malloc(1000 * sizeof(char));
             strcpy(mesh->Materials[index].MaterialName, smallBuff);
@@ -59,24 +60,24 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
             return false;
         }
         if (strcmp(discard, "Kd") == 0) {
-            sscanf(buff, "%s %f %f %f", discard, &mesh->Materials[numOfMaterials].Diffuse[0], &mesh->Materials[numOfMaterials].Diffuse[1], &mesh->Materials[numOfMaterials].Diffuse[2]);
+            sscanf(buff, "%s %f %f %f", discard, &mesh->Materials[index].Diffuse[0], &mesh->Materials[index].Diffuse[1], &mesh->Materials[index].Diffuse[2]);
             continue;
         }
         if (strcmp(discard, "Ka") == 0) {
-            sscanf(buff, "%s %f %f %f", discard, &mesh->Materials[numOfMaterials].Ambient[0], &mesh->Materials[numOfMaterials].Ambient[1], &mesh->Materials[numOfMaterials].Ambient[2]);
+            sscanf(buff, "%s %f %f %f", discard, &mesh->Materials[index].Ambient[0], &mesh->Materials[index].Ambient[1], &mesh->Materials[index].Ambient[2]);
             continue;
         }
         if (strcmp(discard, "Tf") == 0) {
             //TODO: Not implemented yet.
         }
         if (strcmp(discard, "Ni") == 0) {
-            sscanf(buff, "%s %f", discard, &mesh->Materials[numOfMaterials].OpticalWeight);
+            sscanf(buff, "%s %f", discard, &mesh->Materials[index].OpticalWeight);
             continue;
         }
         if (strcmp(discard, "map_Kd") == 0) {
             char textureFile[MAX_BUFF_SIZE] = {'\0'};
             sscanf(buff, "%s %s", discard, textureFile);
-            mesh->Materials[numOfMaterials].DiffuseTexture = TextureManager_getTexture(&engine.textureManager, engine.cwd, textureFile);
+            mesh->Materials[index].DiffuseTexture = TextureManager_getTexture(&engine.textureManager, engine.cwd, textureFile);
         }
     }
 
@@ -92,6 +93,7 @@ bool ObjLoader_loadObj(Model *model, FILE *fptr, char *cwd) {
         return false;
     }
     model->NumOfMesh = 1;
+    Mesh_init(&model->Mesh[0]);
     ObjLoader_loadMesh(&model->Mesh[0], fptr, cwd);
     return true;
 }
@@ -150,6 +152,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
             sscanf(buff, "%s %s", discard, mtlFile);
             strcat(cwd, mtlFile);
             ObjLoader_loadMTL(mesh, cwd);
+            assert(mesh->NumOfMaterials != 0);
         }
     }
     if (v == 0 || f == 0) {
@@ -204,6 +207,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
             continue;
         }
         if (strcmp(discard, "f") == 0) {
+            if (f <= fCount) { continue; }
             index = fCount;
             Face_init(&mesh->Faces[index]);
             Point point[10];

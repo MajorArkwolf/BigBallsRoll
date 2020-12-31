@@ -12,24 +12,34 @@ void Mesh_init(Mesh *mesh) {
     mesh->NumOfVert = 0;
     mesh->Vertices = NULL;
     mesh->Faces = NULL;
+    mesh->Materials = NULL;
 }
 
 void Model_draw(Model *model) {
+    glBindTexture(GL_TEXTURE_2D, model->Mesh[0].Materials[1].DiffuseTexture->GLTextureID);
     for (size_t index = 0; index < model->NumOfMesh; ++index) {
         for (size_t i = 0; i < model->Mesh[index].NumOfFaces; ++i) {
             glBegin(GL_POLYGON);
+            int matIndex = model->Mesh[index].Faces[i].MaterialIndex;
+            if (matIndex >= 0) {
+                //TODO: this is broken and hardcoded, this is for testing purposes only.
+
+            }
+
             for (size_t x = 0; x < model->Mesh[index].Faces[i].NumFaces; ++x) {
+                int textureIndex = model->Mesh[index].Faces[i].Point[x].TextureID;
+                if (model->Mesh->NumOfTextureCords > textureIndex) {
+                    float t1 = model->Mesh[index].TextureCords[textureIndex].T[0];
+                    float t2 = model->Mesh[index].TextureCords[textureIndex].T[1];
+                    glTexCoord2f(t1, t2);
+                }
                 int index_val = model->Mesh[index].Faces[i].Point[x].VertexID;
-//                if (model->Mesh[index].Vertices[index_val].HasTexture) {
-//                    //TODO: implement textures here
-//                }
                 if (model->Mesh[index].Faces[i].HasColour) {
                     glColor4f(model->Mesh[index].Faces[i].Colour.RGBA[0], model->Mesh[index].Faces[i].Colour.RGBA[1],
                               model->Mesh[index].Faces[i].Colour.RGBA[2], model->Mesh[index].Faces[i].Colour.RGBA[3]);
                 }
                 glVertex3f(model->Mesh[index].Vertices[index_val].X, model->Mesh[index].Vertices[index_val].Y,
                            model->Mesh[index].Vertices[index_val].Z);
-
             }
             glEnd();
         }
@@ -66,6 +76,7 @@ void Model_free(Model *model) {
 void Face_init(Face *face) {
     face->Point = NULL;
     face->NumFaces = 0;
+    face->MaterialIndex = -1;
     face->HasColour = false;
 }
 
@@ -90,8 +101,7 @@ Colour Colour_addColourToColour(Colour *firstColour, Colour *secondColour) {
 }
 
 void Colour_NormaliseColour(Colour *colour) {
-    float mag = sqrtf((colour->RGBA[0] * colour->RGBA[0]) + (colour->RGBA[1] * colour->RGBA[1]) +
-                      (colour->RGBA[2] * colour->RGBA[2]));
+    float mag = sqrtf((colour->RGBA[0] * colour->RGBA[0]) + (colour->RGBA[1] * colour->RGBA[1]) + (colour->RGBA[2] * colour->RGBA[2]));
     colour->RGBA[0] = colour->RGBA[0] / mag;
     colour->RGBA[1] = colour->RGBA[1] / mag;
     colour->RGBA[2] = colour->RGBA[2] / mag;
@@ -104,13 +114,13 @@ void Point_init(Point *point) {
 }
 
 void Material_init(Material *material) {
-    for (size_t i = 0; i < sizeof (material->Ambient); ++i) {
+    for (size_t i = 0; i < 3; ++i) {
         material->Ambient[i] = 1.0f;
     }
-    for (size_t i = 0; i < sizeof (material->Diffuse); ++i) {
+    for (size_t i = 0; i < 3; ++i) {
         material->Diffuse[i] = 1.0f;
     }
-    for (size_t i = 0; i < sizeof (material->Specular); ++i) {
+    for (size_t i = 0; i < 3; ++i) {
         material->Specular[i] = 1.0f;
     }
     material->OpticalWeight = 1.0f;
@@ -118,10 +128,10 @@ void Material_init(Material *material) {
     material->MaterialName = NULL;
 }
 
-int Mesh_findMaterial(Mesh *mesh, char* materialName) {
+int Mesh_findMaterial(Mesh *mesh, char *materialName) {
     for (size_t i = 0; i < mesh->NumOfMaterials; ++i) {
         if (strcmp(materialName, mesh->Materials[i].MaterialName) == 0) {
-            return (int)i;
+            return (int) i;
         }
     }
     return -1;

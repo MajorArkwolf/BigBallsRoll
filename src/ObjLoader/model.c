@@ -99,3 +99,18 @@ void Point_init(Point *point) {
     point->TextureID = -1;
     point->NormalID = -1;
 }
+
+void Material_init(Material *material) {
+    for (size_t i = 0; i < sizeof (material->Ambient); ++i) {
+        material->Ambient[i] = 1.0f;
+    }
+    for (size_t i = 0; i < sizeof (material->Diffuse); ++i) {
+        material->Diffuse[i] = 1.0f;
+    }
+    for (size_t i = 0; i < sizeof (material->Specular); ++i) {
+        material->Specular[i] = 1.0f;
+    }
+    material->OpticalWeight = 1.0f;
+    material->DiffuseTexture = NULL;
+    material->MaterialName = NULL;
+}

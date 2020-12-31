@@ -1,30 +1,91 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
 #include "objLoader.h"
+
+#include <assert.h>
 #include <stdarg.h>
+#include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <assert.h>
+#include "Engine/engine.h"
 #include "ObjLoader/modelLoader.h"
 
 #define MAX_BUFF_SIZE 5000
 
-
 bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
+    //Attempt to open the MTL file.
     FILE *fptr = fopen(dir, "r");
     if (fptr == NULL) {
         printf("Failed to open MTL: %s\n", dir);
         assert(false);
         return false;
     }
+    //Next we check how many materials we have.
+    char buff[MAX_BUFF_SIZE];
+    char discard[10] = {'\0'};
+    size_t numOfMaterials = 0;
+    while (fgets(buff, sizeof buff, fptr) != NULL) {
+        sscanf(buff, "%9s", discard);
+        if (strcmp(discard, "newmtl") == 0) {
+            ++numOfMaterials;
+        }
+    }
+
+    //Allocate Materials to be used in the project.
+    mesh->Materials = malloc(numOfMaterials * sizeof(Material));
+    if (mesh->Materials == NULL) {
+        printf("Failed to allocate Mesh for %s.\n", dir);
+        assert(false);
+        return false;
+    }
+    mesh->NumOfMaterials = numOfMaterials;
+    //We reset this back to zero to be used for indexing later.
+    int index = -1;
+    rewind(fptr);
+    while (fgets(buff, sizeof buff, fptr) != NULL) {
+        sscanf(buff, "%9s", discard);
+        if (strcmp(discard, "newmtl") == 0) {
+            char smallBuff[1000];
+            Material_init(&mesh->Materials[++index]);
+            sscanf(buff, "%9s %4999s", discard, smallBuff);
+            mesh->Materials[index].MaterialName = malloc(1000 * sizeof(char));
+            strcpy(mesh->Materials[index].MaterialName, smallBuff);
+            continue;
+        }
+        if (index == -1) {
+            printf("Failed to find first material, aborting");
+            assert(false);
+            return false;
+        }
+        if (strcmp(discard, "Kd") == 0) {
+            sscanf(buff, "%s %f %f %f", discard, &mesh->Materials[numOfMaterials].Diffuse[0], &mesh->Materials[numOfMaterials].Diffuse[1], &mesh->Materials[numOfMaterials].Diffuse[2]);
+            continue;
+        }
+        if (strcmp(discard, "Ka") == 0) {
+            sscanf(buff, "%s %f %f %f", discard, &mesh->Materials[numOfMaterials].Ambient[0], &mesh->Materials[numOfMaterials].Ambient[1], &mesh->Materials[numOfMaterials].Ambient[2]);
+            continue;
+        }
+        if (strcmp(discard, "Tf") == 0) {
+            //TODO: Not implemented yet.
+        }
+        if (strcmp(discard, "Ni") == 0) {
+            sscanf(buff, "%s %f", discard, &mesh->Materials[numOfMaterials].OpticalWeight);
+            continue;
+        }
+        if (strcmp(discard, "map_Kd") == 0) {
+            char textureFile[MAX_BUFF_SIZE] = {'\0'};
+            sscanf(buff, "%s %s", discard, textureFile);
+            mesh->Materials[numOfMaterials].DiffuseTexture = TextureManager_getTexture(&engine.textureManager, engine.cwd, textureFile);
+        }
+    }
+
     fclose(fptr);
     return true;
 }
 
 bool ObjLoader_loadObj(Model *model, FILE *fptr, char *cwd) {
-    model->Mesh = malloc(1*sizeof(Mesh));
+    model->Mesh = malloc(1 * sizeof(Mesh));
     if (model->Mesh == NULL) {
         printf("malloc failed when making Mesh in loadOff");
         assert(false);
@@ -35,7 +96,7 @@ bool ObjLoader_loadObj(Model *model, FILE *fptr, char *cwd) {
     return true;
 }
 
-void ObjLoader_addPointData(Point *point, char* value, size_t slashCount) {
+void ObjLoader_addPointData(Point *point, char *value, size_t slashCount) {
     if (slashCount == 0) {
         //this is a vertex id
         point->VertexID = atoi(value);
@@ -72,10 +133,18 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
             continue;
         }
         sscanf(buff, "%9s", discard);
-        if (strcmp(discard, "v") == 0) { ++v; }
-        if (strcmp(discard, "vt") == 0) { ++vt; }
-        if (strcmp(discard, "vn") == 0) { ++vn; }
-        if (strcmp(discard, "f") == 0) { ++f; }
+        if (strcmp(discard, "v") == 0) {
+            ++v;
+        }
+        if (strcmp(discard, "vt") == 0) {
+            ++vt;
+        }
+        if (strcmp(discard, "vn") == 0) {
+            ++vn;
+        }
+        if (strcmp(discard, "f") == 0) {
+            ++f;
+        }
         if (strcmp(discard, "mtllib") == 0) {
             char mtlFile[1000];
             sscanf(buff, "%s %s", discard, mtlFile);
@@ -167,7 +236,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
                 }
             }
             mesh->Faces[index].NumFaces = numOfFaces;
-            mesh->Faces[index].Point = malloc(numOfFaces  * sizeof(Point));
+            mesh->Faces[index].Point = malloc(numOfFaces * sizeof(Point));
             for (size_t i = 0; i < numOfFaces; ++i) {
                 mesh->Faces[index].Point[i] = point[i];
             }

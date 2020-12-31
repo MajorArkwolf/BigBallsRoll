@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <Math/vec3.h>
+#include "Engine/textureManager.h"
 
 /// Colour represented in RGBA format and in that order.
 typedef struct Colour {
@@ -33,16 +34,33 @@ typedef struct Face {
     bool HasColour;
 } Face;
 
+typedef struct Material {
+    //Ka
+    float Ambient[3];
+    //Kd
+    float Diffuse[3];
+    //Ks
+    float Specular[3];
+    //Ni (weight for spec)
+    float OpticalWeight;
+    // kd texture
+    Texture *DiffuseTexture;
+    //Material Name
+    char *MaterialName;
+} Material;
+
 /// Mesh Data
 typedef struct Mesh {
     Face *Faces;
     Vertex *Vertices;
     Vertex *Normals;
     TextureCord *TextureCords;
+    Material *Materials;
     size_t NumOfFaces;
     size_t NumOfVert;
     size_t NumOfNormals;
     size_t NumOfTextureCords;
+    size_t NumOfMaterials;
 } Mesh;
 
 /// Model Data
@@ -116,4 +134,4 @@ void Colour_NormaliseColour(Colour *colour);
 
 void Point_init(Point *point);
 
-void Face_free(Face * face);
+void Material_init(Material *material);

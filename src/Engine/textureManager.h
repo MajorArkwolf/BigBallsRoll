@@ -26,7 +26,7 @@ void Texture_free(Texture *texture);
 
 /**
  * Initialises texture manager, must be allocated prior to being used
- * @param textureManager object to intialise
+ * @param textureManager object to initialise
  */
 void TextureManager_init(TextureManager *textureManager);
 
@@ -46,7 +46,7 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd);
 /**
  * Textures to be loaded as needed, once loaded they will be stored in memory until freed
  * @param textureManager Texture manager to load textures into
- * @param cwd The current working directory, must contain res floder to work
+ * @param cwd The current working directory, must contain res folder to work
  * @param textureName The name of the texture to be loaded from res/Texture
  */
 bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char *textureName);

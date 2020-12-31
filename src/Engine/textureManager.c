@@ -16,10 +16,10 @@ void TextureManager_init(TextureManager *textureManager) {
     textureManager->NumOfTextures = 0;
 }
 
+//texture->TextureName not freed or set to NULL, else valgrind complains (not sure if its correct)
 void Texture_free(Texture *texture) {
     assert(texture != NULL);
-    texture->TextureData = NULL;
-    texture->TextureName = NULL;
+    STBI_FREE(texture->TextureData);
 }
 
 void TextureManager_free(TextureManager *textureManager) {
@@ -36,8 +36,8 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     //no idea what to do with these yet
     int width, height, channels;
 
-    char *fulldir = malloc(sizeof(char) * (strlen(cwd) + 30));
-    char *imgdir = malloc(sizeof(char) * (strlen(cwd) + 30));
+    char *fulldir = calloc(sizeof(char), (strlen(cwd) + 100));
+    char *imgdir = calloc(sizeof(char), (strlen(cwd) + 100));
 
     strcpy(fulldir, cwd);
     //No clue about the directory yet
@@ -71,6 +71,7 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
             if (textureManager->Textures[textureManager->NumOfTextures].TextureData != NULL) {
                 ++textureManager->NumOfTextures;
             }
+            free(fileType);
         }
     }
     free(fulldir);
@@ -85,7 +86,7 @@ bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char 
     if (!TextureManager_isLoaded(textureManager, textureName)) {
         int width, height, channels;
 
-        char *imgdir = malloc(sizeof(char) * (strlen(cwd) + 30));
+        char *imgdir = calloc(sizeof(char), (strlen(cwd) + 100));
         strcpy(imgdir, cwd);
         strcat(imgdir, RESOURCE_FILE_LOCATION);
 
@@ -163,7 +164,7 @@ bool TextureManager_isLoaded(TextureManager *textureManager, char*textureName) {
 //not sure on the assert or if it should be handled differently
 char* getFileType(char *textureName) {
     assert(textureName != NULL && strlen(textureName) > 3);
-    char *fileType = calloc(sizeof(char), 3);
+    char *fileType = calloc(sizeof(char), 4);
     fileType[2] = textureName[strlen(textureName)-1];
     fileType[1] = textureName[strlen(textureName)-2];
     fileType[0] = textureName[strlen(textureName)-3];

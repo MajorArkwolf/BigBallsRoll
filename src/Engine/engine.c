@@ -138,7 +138,6 @@ void releaseKey(int key, int x, int y) {
  * @param y Coordinates local to the window on the y axis
  */
 void mouseMove(int x, int y) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
     float lastX = (float) x - glutGet(GLUT_WINDOW_WIDTH) / 2;
     float lastY = ((float) y - glutGet(GLUT_WINDOW_HEIGHT) / 2) * -1;
     StateManager_mouseMove(&engine.sM, lastX, lastY);

@@ -37,6 +37,7 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
     if (mesh->Materials == NULL) {
         printf("Failed to allocate Mesh for %s.\n", dir);
         assert(false);
+        fclose(fptr);
         return false;
     }
     mesh->NumOfMaterials = numOfMaterials;
@@ -49,7 +50,7 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
             char smallBuff[1000];
             ++index;
             Material_init(&mesh->Materials[index]);
-            sscanf(buff, "%9s %4999s", discard, smallBuff);
+            sscanf(buff, "%9s %999s", discard, smallBuff);
             mesh->Materials[index].MaterialName = malloc(1000 * sizeof(char));
             strcpy(mesh->Materials[index].MaterialName, smallBuff);
             continue;
@@ -60,23 +61,23 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
             return false;
         }
         if (strcmp(discard, "Kd") == 0) {
-            sscanf(buff, "%s %f %f %f", discard, &mesh->Materials[index].Diffuse[0], &mesh->Materials[index].Diffuse[1], &mesh->Materials[index].Diffuse[2]);
+            sscanf(buff, "%9s %f %f %f", discard, &mesh->Materials[index].Diffuse[0], &mesh->Materials[index].Diffuse[1], &mesh->Materials[index].Diffuse[2]);
             continue;
         }
         if (strcmp(discard, "Ka") == 0) {
-            sscanf(buff, "%s %f %f %f", discard, &mesh->Materials[index].Ambient[0], &mesh->Materials[index].Ambient[1], &mesh->Materials[index].Ambient[2]);
+            sscanf(buff, "%9s %f %f %f", discard, &mesh->Materials[index].Ambient[0], &mesh->Materials[index].Ambient[1], &mesh->Materials[index].Ambient[2]);
             continue;
         }
         if (strcmp(discard, "Tf") == 0) {
             //TODO: Not implemented yet.
         }
         if (strcmp(discard, "Ni") == 0) {
-            sscanf(buff, "%s %f", discard, &mesh->Materials[index].OpticalWeight);
+            sscanf(buff, "%9s %f", discard, &mesh->Materials[index].OpticalWeight);
             continue;
         }
         if (strcmp(discard, "map_Kd") == 0) {
             char textureFile[MAX_BUFF_SIZE] = {'\0'};
-            sscanf(buff, "%s %s", discard, textureFile);
+            sscanf(buff, "%9s %4999s", discard, textureFile);
             mesh->Materials[index].DiffuseTexture = TextureManager_getTexture(&engine.textureManager, engine.cwd, textureFile);
         }
     }

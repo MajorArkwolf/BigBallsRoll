@@ -152,7 +152,9 @@ Model ModelLoader_loadModel(char *workingDir, char *fileName) {
     if (strcmp(ext, "off") == 0) {
         modelLoaded = ModelLoader_loadOff(&model, fptr);
     } else if (strcmp(ext, "obj") == 0) {
-        modelLoaded = ObjLoader_loadObj(&model, fptr, fullDir);
+        char *objPath = getCurrentWorkingDirectory(fullDir);
+        modelLoaded = ObjLoader_loadObj(&model, fptr, objPath);
+        free(objPath);
     }
     free(ext);
     if (!modelLoaded) {

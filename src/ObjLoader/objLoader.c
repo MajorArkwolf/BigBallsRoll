@@ -11,46 +11,15 @@
 
 #define MAX_BUFF_SIZE 5000
 
-bool ObjLoader_getMeshLocations(FILE *fptr, fpos_t **location, size_t *amountFound) {
-//    assert(*location == NULL && amountFound != NULL);
-//    char buff[MAX_BUFF_SIZE];
-//    while (fgets(buff, sizeof(buff), fptr) != NULL) {
-//        if (buff[0] == 'g') {
-//            ++*amountFound;
-//        }
-//    }
-//    rewind(fptr);
-//    //If no g tag is found then its safe to assume its a single mesh model.
-//    if (*amountFound == 0) {
-//        *amountFound = 1ul;
-//    }
-//    *location = malloc(*amountFound * sizeof (fpos_t));
-//    if (*location == NULL) {
-//        printf("calloc failed in ObjLoader_getMeshLocations");
-//        assert(false);
-//        return false;
-//    }
-//    if (*amountFound == 1) {
-//        *location[0] = ftell(fptr);
-//        return true;
-//    }
-//
-//    size_t index = 0;
-//    while (1) {
-//        fpos_t temp = ftell(fptr);
-//        if (fgets(buff, sizeof(buff), fptr) == NULL) {
-//            break;
-//        }
-//        if (buff[0] == 'g') {
-//            location[0][index] = temp;
-//            ++index;
-//        }
-//    }
-    return true;
-}
 
-bool ObjLoader_loadMTL() {
-    printf("Hello :D");
+bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
+    FILE *fptr = fopen(dir, "r");
+    if (fptr == NULL) {
+        printf("Failed to open MTL: %s\n", dir);
+        assert(false);
+        return false;
+    }
+    fclose(fptr);
     return true;
 }
 
@@ -102,12 +71,17 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
             //Catch and remove any comments.
             continue;
         }
-        sscanf(buff, "%4999s", buff);
-        if (strcmp(buff, "v") == 0) { ++v; }
-        if (strcmp(buff, "vt") == 0) { ++vt; }
-        if (strcmp(buff, "vn") == 0) { ++vn; }
-        if (strcmp(buff, "f") == 0) { ++f; }
-        if (strcmp(buff, "mtllib") == 0) { ObjLoader_loadMTL(mesh); }
+        sscanf(buff, "%9s", discard);
+        if (strcmp(discard, "v") == 0) { ++v; }
+        if (strcmp(discard, "vt") == 0) { ++vt; }
+        if (strcmp(discard, "vn") == 0) { ++vn; }
+        if (strcmp(discard, "f") == 0) { ++f; }
+        if (strcmp(discard, "mtllib") == 0) {
+            char mtlFile[1000];
+            sscanf(buff, "%s %s", discard, mtlFile);
+            strcat(cwd, mtlFile);
+            ObjLoader_loadMTL(mesh, cwd);
+        }
     }
     if (v == 0 || f == 0) {
         assert(false);

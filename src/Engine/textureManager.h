@@ -45,6 +45,7 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd);
 
 /**
  * Textures to be loaded as needed, once loaded they will be stored in memory until freed
+ * Should only be used to load textures, doesnt return texture object
  * @param textureManager Texture manager to load textures into
  * @param cwd The current working directory, must contain res folder to work
  * @param textureName The name of the texture to be loaded from res/Texture

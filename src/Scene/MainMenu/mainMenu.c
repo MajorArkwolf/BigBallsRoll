@@ -104,20 +104,32 @@ void MainMenu_init(State *state) {
     state->NumOfGameObjects = 2;
 
     //Test Texture Load
+    //temp cwd until an easier way to get from Engine_Run or wherever
     char *tempCWD = "/home/chase/ICT289/";
 
     TextureManager_init(&engine.textureManager);
+    //Test preload
     TextureManager_preLoadTextures(&engine.textureManager, tempCWD);
     printf("\nTexture name: %s",engine.textureManager.Textures[0].TextureName);
     printf("\nTexture data: %s", engine.textureManager.Textures[0].TextureData);
+    //Test getTexture with invalid extension (.jpa)
     TextureManager_getTexture(&engine.textureManager, tempCWD, "pog.jpa");
     printf("\nTexture name: %s",engine.textureManager.Textures[1].TextureName);
     printf("\nTexture data: %s", engine.textureManager.Textures[1].TextureData);
+    //Test getTexture
     TextureManager_getTexture(&engine.textureManager, tempCWD, "pog.jpg");
     printf("\nTexture name: %s",engine.textureManager.Textures[1].TextureName);
     printf("\nTexture data: %s", engine.textureManager.Textures[1].TextureData);
-    printf("\nTexture Index: %zu", TextureManager_findTextureID(&engine.textureManager, "pog.jpg"));
+    //Test getTexture with texture that is already loaded (if loaded it would go to Textures[2]
+    TextureManager_getTexture(&engine.textureManager, tempCWD, "pog.jpg");
+    printf("\nTexture name (already loaded): %s",engine.textureManager.Textures[2].TextureName);
+    printf("\nTexture data (already loaded: %s", engine.textureManager.Textures[2].TextureData);
+    //Test findTextureID
+    printf("\nTexture Index (pog): %zu", TextureManager_findTextureID(&engine.textureManager, "pog.jpg"));
+    printf("\nTexture Index (smileyFace): %zu", TextureManager_findTextureID(&engine.textureManager, "smileyFace.png"));
+    //Test getTextureUsingID
     printf("\nTexture data (id): %s", TextureManager_getTextureUsingID(&engine.textureManager, 1));
+    //Test free (done using valgrind)
     TextureManager_free(&engine.textureManager);
 
 }

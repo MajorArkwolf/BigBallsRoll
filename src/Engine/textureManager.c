@@ -31,6 +31,8 @@ void TextureManager_free(TextureManager *textureManager) {
 }
 
 //preload textures
+//find out what texture file formats we need, jpg and png are just being used for testing atm
+//maybe reconsider if else for filetypes
 void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     assert(textureManager != NULL);
     //no idea what to do with these yet
@@ -80,6 +82,7 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
 }
 //find more elegant way to deal with freeing
 //find out what texture file formats we need, jpg and png are just being used for testing atm
+//maybe reconsider if else for filetypes
 bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char *textureName) {
     assert(textureManager != NULL);
 

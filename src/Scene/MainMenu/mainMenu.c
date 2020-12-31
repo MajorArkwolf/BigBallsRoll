@@ -104,19 +104,20 @@ void MainMenu_init(State *state) {
     state->NumOfGameObjects = 2;
 
     //Test Texture Load
+    char *tempCWD = "/home/chase/ICT289/";
+
     TextureManager_init(&engine.textureManager);
-    TextureManager_preLoadTextures(&engine.textureManager, "/home/chase/ICT289/");
-    printf("Texture name: %s",engine.textureManager.Textures[0].TextureName);
-    printf("\nTexture data: %s", engine.textureManager.Textures[0].TextureData);
-    TextureManager_loadTexture(&engine.textureManager, "/home/chase/ICT289/", "pog.jpg");
-    TextureManager_loadTexture(&engine.textureManager, "/home/chase/ICT289/", "pog.jpg");
-    TextureManager_loadTexture(&engine.textureManager, "/home/chase/ICT289/", "pog.jpg");
-    printf("\nTexture name: %s",engine.textureManager.Textures[1].TextureName);
-    printf("\nTexture data: %s", engine.textureManager.Textures[1].TextureData);
+    TextureManager_preLoadTextures(&engine.textureManager, tempCWD);
     printf("\nTexture name: %s",engine.textureManager.Textures[0].TextureName);
     printf("\nTexture data: %s", engine.textureManager.Textures[0].TextureData);
-    printf("\n%zu", TextureManager_findTexture(&engine.textureManager, "pog.jpg"));
-
-    TextureManager_getTexture(&engine.textureManager, 1);
+    TextureManager_getTexture(&engine.textureManager, tempCWD, "pog.jpa");
+    printf("\nTexture name: %s",engine.textureManager.Textures[1].TextureName);
+    printf("\nTexture data: %s", engine.textureManager.Textures[1].TextureData);
+    TextureManager_getTexture(&engine.textureManager, tempCWD, "pog.jpg");
+    printf("\nTexture name: %s",engine.textureManager.Textures[1].TextureName);
+    printf("\nTexture data: %s", engine.textureManager.Textures[1].TextureData);
+    printf("\nTexture Index: %zu", TextureManager_findTextureID(&engine.textureManager, "pog.jpg"));
+    printf("\nTexture data (id): %s", TextureManager_getTextureUsingID(&engine.textureManager, 1));
     TextureManager_free(&engine.textureManager);
+
 }

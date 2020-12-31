@@ -49,7 +49,7 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd);
  * @param cwd The current working directory, must contain res floder to work
  * @param textureName The name of the texture to be loaded from res/Texture
  */
-void TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char *textureName);
+bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char *textureName);
 
 /**
  * Finds a texture based on a name and returns its ID (index) in the texture managers textures array
@@ -58,16 +58,23 @@ void TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char 
  * @param textureName The name of the texture to search for
  * @return the index of the texture in the array, if not there 0 (default texture) is returned
  */
-size_t TextureManager_findTexture(TextureManager *textureManager, char *textureName);
+Texture* TextureManager_getTexture(TextureManager *textureManager, char *cwd, char *textureName);
 
 /**
- * Gets a texture using an ID (index) and if found returns the texture data
- * If texture cannot be found it returns the data stored at index 0 (default texture)
+ * Gets a texture object if it is found in the texture manager
  * @param textureManager The texture manager to search
- * @param Index The index of the texture being searched for
- * @return The index of the found texture, if not found; data stored at index 0 (default texture)
+ * @param index The index of the texture
+ * @return The texture object if found, else DEFAULT_TEXTURE (0)
  */
-Texture* TextureManager_getTexture(TextureManager *textureManager, size_t index);
+Texture* TextureManager_getTextureUsingID(TextureManager *textureManager, size_t index);
+
+/**
+ * Finds a textures ID (index) in the textureManager using the texture name
+ * @param textureManager The texture manager to search
+ * @param textureName The name of the texture to search for
+ * @return The ID (index) of the texture or DEFAULT_TEXTURE (0) if not found
+ */
+size_t TextureManager_findTextureID(TextureManager *textureManager, char *textureName);
 
 /**
  * Checks if a texture is loaded in the texture manager using the textures name

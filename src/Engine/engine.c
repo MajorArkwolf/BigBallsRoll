@@ -23,8 +23,9 @@ void changeSize(int w, int h) {
 
     // Prevent a divide by zero, when window is too short
     // (you cant make a window of zero width).
-    if (h == 0)
+    if (h == 0) {
         h = 1;
+    }
 
     float ratio = (float) w / (float) h;
 
@@ -84,7 +85,7 @@ void Draw(void) {
  * @param yy Unknown
  */
 void processNormalKeys(unsigned char key, int xx, int yy) {
-    InputType inputType = InputType_convertRegularKey((char)key);
+    InputType inputType = InputType_convertRegularKey((char) key);
     StateManager_keyDown(&engine.sM, inputType);
 }
 
@@ -95,7 +96,7 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
  * @param yy Unknown
  */
 void processNormalKeysUp(unsigned char key, int xx, int yy) {
-    InputType inputType = InputType_convertRegularKey((char)key);
+    InputType inputType = InputType_convertRegularKey((char) key);
     if (inputType == KEY_ESC) {
         Engine_stop();
         exit(EXIT_SUCCESS);
@@ -165,10 +166,10 @@ int Engine_run(int argc, char *argv[]) {
     engine.lockCamera = false;
 
     //Get the current working directory
-    char *cwd = getCurrentWorkingDirectory(argv[0]);
+    engine.cwd = getCurrentWorkingDirectory(argv[0]);
 
     ModelManager_init(&engine.modelManager);
-    ModelManager_loadModels(&engine.modelManager, cwd);
+    ModelManager_loadModels(&engine.modelManager, engine.cwd);
 
     StateManager_init(&engine.sM);
     State state;
@@ -219,4 +220,5 @@ int Engine_run(int argc, char *argv[]) {
 void Engine_stop() {
     ModelManager_free(&engine.modelManager);
     StateManager_free(&engine.sM);
+    free(&engine.cwd);
 }

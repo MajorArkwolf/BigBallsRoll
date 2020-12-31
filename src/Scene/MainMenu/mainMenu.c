@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <Engine/engine.h>
 #include "Engine/InputManager.h"
-
+#include "Helper/stringPath.h"
 int draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
@@ -110,4 +110,5 @@ void MainMenu_init(State *state) {
     state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/teapot.obj");
     state->gameObjects[1].Transform.Position.Z += 15.f;
     state->NumOfGameObjects = 2;
+
 }

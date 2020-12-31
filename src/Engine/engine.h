@@ -1,12 +1,15 @@
 #pragma once
 #include "Engine/modelManager.h"
 #include "Engine/stateManager.h"
+#include "Engine/textureManager.h"
 #include <stdbool.h>
 
 typedef struct Engine {
     int timeSinceStart;
     ModelManager modelManager;
     StateManager sM;
+    TextureManager textureManager;
+    char *cwd;
     int width;
     int height;
     float fov;

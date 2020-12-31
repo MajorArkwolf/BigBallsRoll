@@ -26,6 +26,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/gameObject.c
     Engine/modelManager.c
     Engine/InputManager.c
+    Engine/textureManager.c
 
     #Scenes
     Scene/MainMenu/mainMenu.c

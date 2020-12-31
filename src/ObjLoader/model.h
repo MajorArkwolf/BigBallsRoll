@@ -31,6 +31,7 @@ typedef struct Face {
     Colour Colour;
     size_t NumFaces;
     Point *Point;
+    int MaterialIndex;
     bool HasColour;
 } Face;
 
@@ -132,6 +133,22 @@ Colour Colour_addColourToColour(Colour *firstColour, Colour *secondColour);
  */
 void Colour_NormaliseColour(Colour *colour);
 
+/**
+ * Initialises point data
+ * @param point the point data to be initialised
+ */
 void Point_init(Point *point);
 
+/**
+ * Initialises a material data
+ * @param material the material data to tbe initialised
+ */
 void Material_init(Material *material);
+
+/**
+ * Find a material with in a mesh
+ * @param mesh the mesh to search
+ * @param materialName the material name to look for
+ * @return -1 on failure or 0+ on valid index
+ */
+int Mesh_findMaterial(Mesh *mesh, char* materialName);

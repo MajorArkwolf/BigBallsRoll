@@ -171,13 +171,18 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
     size_t vnCount = 0;
     // Faces
     size_t fCount = 0;
-
+    //The current bound mtl
+    int activeMTL = -1;
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         if (buff[0] == '#') {
             //Catch and remove any comments.
             continue;
         }
         sscanf(buff, "%9s", discard);
+        if (strcmp(discard, "usemtl") == 0) {
+            sscanf(buff, "%9s %s", discard, buff);
+            activeMTL = Mesh_findMaterial(mesh, buff);
+        }
         if (strcmp(discard, "v") == 0) {
             index = vCount;
             sscanf(buff, "%9s %f %f %f", discard, &mesh->Vertices[index].X, &mesh->Vertices[index].Y,
@@ -237,6 +242,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
             }
             mesh->Faces[index].NumFaces = numOfFaces;
             mesh->Faces[index].Point = malloc(numOfFaces * sizeof(Point));
+            mesh->Faces[index].MaterialIndex = activeMTL;
             for (size_t i = 0; i < numOfFaces; ++i) {
                 mesh->Faces[index].Point[i] = point[i];
             }

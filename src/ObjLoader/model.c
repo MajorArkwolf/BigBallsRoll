@@ -1,7 +1,10 @@
 #include "model.h"
-#include <stdlib.h>
+
 #include <assert.h>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "Engine/OpenGL.h"
 
 void Mesh_init(Mesh *mesh) {
@@ -113,4 +116,13 @@ void Material_init(Material *material) {
     material->OpticalWeight = 1.0f;
     material->DiffuseTexture = NULL;
     material->MaterialName = NULL;
+}
+
+int Mesh_findMaterial(Mesh *mesh, char* materialName) {
+    for (size_t i = 0; i < mesh->NumOfMaterials; ++i) {
+        if (strcmp(materialName, mesh->Materials[i].MaterialName) == 0) {
+            return (int)i;
+        }
+    }
+    return -1;
 }

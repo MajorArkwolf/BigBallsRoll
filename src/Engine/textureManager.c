@@ -23,7 +23,7 @@ void TextureManager_bindTextureOpenGL(Texture *texture) {
         colourChannel = GL_RGBA;
     }
     //Load the texture into VRAM
-    glTexImage2D(GL_TEXTURE_2D, 0, texture->Channels, texture->Width, texture->Height, 0, colouChannel, GL_UNSIGNED_BYTE, texture->TextureData);
+    glTexImage2D(GL_TEXTURE_2D, 0, texture->Channels, texture->Width, texture->Height, 0, colourChannel, GL_UNSIGNED_BYTE, texture->TextureData);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 }

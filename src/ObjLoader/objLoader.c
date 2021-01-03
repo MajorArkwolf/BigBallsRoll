@@ -36,8 +36,8 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
     mesh->Materials = malloc(numOfMaterials * sizeof(Material));
     if (mesh->Materials == NULL) {
         printf("Failed to allocate Mesh for %s.\n", dir);
-        assert(false);
         fclose(fptr);
+        assert(false);
         return false;
     }
     mesh->NumOfMaterials = numOfMaterials;
@@ -57,6 +57,7 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
         }
         if (index == -1) {
             printf("Failed to find first material, aborting");
+            fclose(fptr);
             assert(false);
             return false;
         }
@@ -150,7 +151,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
         }
         if (strcmp(discard, "mtllib") == 0) {
             char mtlFile[1000];
-            sscanf(buff, "%s %s", discard, mtlFile);
+            sscanf(buff, "%9s %999s", discard, mtlFile);
             strcat(cwd, mtlFile);
             ObjLoader_loadMTL(mesh, cwd);
             assert(mesh->NumOfMaterials != 0);
@@ -184,7 +185,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
         }
         sscanf(buff, "%9s", discard);
         if (strcmp(discard, "usemtl") == 0) {
-            sscanf(buff, "%9s %s", discard, buff);
+            sscanf(buff, "%9s %4999s", discard, buff);
             activeMTL = Mesh_findMaterial(mesh, buff);
         }
         if (strcmp(discard, "v") == 0) {

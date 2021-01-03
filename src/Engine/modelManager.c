@@ -39,6 +39,7 @@ void ModelManager_loadModels(ModelManager *modelManger, char *cwd) {
         ++modelManger->NumOfModels;
     }
     modelManger->cwd = cwd;
+    fclose(fptr);
     free(fulldir);
 }
 

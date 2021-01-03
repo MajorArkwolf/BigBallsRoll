@@ -225,6 +225,7 @@ int Engine_run(int argc, char *argv[]) {
 
 void Engine_stop() {
     ModelManager_free(&engine.modelManager);
+    TextureManager_free(&engine.textureManager);
     StateManager_free(&engine.sM);
     free(engine.cwd);
 }

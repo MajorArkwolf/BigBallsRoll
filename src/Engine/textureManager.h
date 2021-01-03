@@ -97,4 +97,8 @@ size_t TextureManager_findTextureID(TextureManager *textureManager, char *textur
  */
 bool TextureManager_isLoaded(TextureManager *textureManager, char*textureName);
 
+/**
+ * Binds the textures into GPU (vram) memory for use by the renderer
+ * @param textureManager The texture manager to pull textures from
+ */
 void TextureManager_bindTexturesToRenderer(TextureManager *textureManager);

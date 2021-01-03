@@ -13,15 +13,19 @@
 #define DEFAULT_TEXTURE 0
 
 void TextureManager_bindTextureOpenGL(Texture *texture) {
+    //Generate an ID in opengl for our texture
     glGenTextures(1, &texture->GLTextureID);
+    //Bind the texture to opengl
     glBindTexture(GL_TEXTURE_2D, texture->GLTextureID);
+    //Assign it a value based on channels
     unsigned colouChannel = GL_RGB;
     if (texture->Channels == 4) {
         colouChannel = GL_RGBA;
     }
+    //Load the texture into VRAM
     glTexImage2D(GL_TEXTURE_2D, 0, texture->Channels, texture->Width, texture->Height, 0, colouChannel, GL_UNSIGNED_BYTE, texture->TextureData);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // Linear Filtering
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // Linear Filtering
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 }
 
 void TextureManager_init(TextureManager *textureManager) {
@@ -44,7 +48,6 @@ void Texture_init(Texture *texture) {
 void Texture_free(Texture *texture) {
     assert(texture != NULL);
     STBI_FREE(texture->TextureData);
-    free(texture->TextureName);
     texture->Width = 0;
     texture->Height = 0;
     texture ->Channels = 0;

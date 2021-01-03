@@ -58,6 +58,7 @@ bool ModelLoader_loadOff(Model *model, FILE *fptr) {
         return false;
     }
     model->NumOfMesh = 1;
+    Mesh_init(&model->Mesh[0]);
 
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         // We ignore anything that is a comment or a header declaring OFF.

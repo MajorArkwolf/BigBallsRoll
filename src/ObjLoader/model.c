@@ -10,22 +10,31 @@
 void Mesh_init(Mesh *mesh) {
     mesh->NumOfFaces = 0;
     mesh->NumOfVert = 0;
+    mesh->NumOfMaterials = 0;
+    mesh->NumOfTextureCords = 0;
+    mesh->NumOfNormals = 0;
     mesh->Vertices = NULL;
     mesh->Faces = NULL;
     mesh->Materials = NULL;
+    mesh->TextureCords = NULL;
+    mesh->Normals = NULL;
 }
 
 void Model_draw(Model *model) {
-    glBindTexture(GL_TEXTURE_2D, model->Mesh[0].Materials[1].DiffuseTexture->GLTextureID);
+    int lastTexture = GL_NONE;
+    glColor3f(1, 1, 1);
     for (size_t index = 0; index < model->NumOfMesh; ++index) {
         for (size_t i = 0; i < model->Mesh[index].NumOfFaces; ++i) {
-            glBegin(GL_POLYGON);
+
             int matIndex = model->Mesh[index].Faces[i].MaterialIndex;
-            if (matIndex >= 0) {
-                //TODO: this is broken and hardcoded, this is for testing purposes only.
-
+            if (matIndex >= 0 && model->Mesh[index].Materials != NULL && model->Mesh[index].Materials[matIndex].DiffuseTexture != NULL) {
+                if (lastTexture != model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID) {
+                    lastTexture = (int)model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID;
+                    //TODO: this is broken and hardcoded, this is for testing purposes only.
+                }
             }
-
+            glBindTexture(GL_TEXTURE_2D, lastTexture);
+            glBegin(GL_POLYGON);
             for (size_t x = 0; x < model->Mesh[index].Faces[i].NumFaces; ++x) {
                 int textureIndex = model->Mesh[index].Faces[i].Point[x].TextureID;
                 if (model->Mesh->NumOfTextureCords > textureIndex) {
@@ -54,8 +63,11 @@ void Mesh_free(Mesh *mesh) {
     free(mesh->Vertices);
     free(mesh->Normals);
     free(mesh->TextureCords);
+    free(mesh->Materials);
     mesh->NumOfFaces = 0;
     mesh->NumOfVert = 0;
+    mesh->NumOfMaterials = 0;
+    mesh->NumOfTextureCords = 0;
 }
 
 void Model_init(Model *model) {

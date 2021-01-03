@@ -18,9 +18,9 @@ void TextureManager_bindTextureOpenGL(Texture *texture) {
     //Bind the texture to opengl
     glBindTexture(GL_TEXTURE_2D, texture->GLTextureID);
     //Assign it a value based on channels
-    unsigned colouChannel = GL_RGB;
+    unsigned colourChannel = GL_RGB;
     if (texture->Channels == 4) {
-        colouChannel = GL_RGBA;
+        colourChannel = GL_RGBA;
     }
     //Load the texture into VRAM
     glTexImage2D(GL_TEXTURE_2D, 0, texture->Channels, texture->Width, texture->Height, 0, colouChannel, GL_UNSIGNED_BYTE, texture->TextureData);

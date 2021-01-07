@@ -37,7 +37,6 @@ void TextureManager_init(TextureManager *textureManager) {
 
 void Texture_init(Texture *texture) {
     assert(texture != NULL);
-    //texture->TextureName = {"\0"};
     texture->TextureData = NULL;
     texture->Width = 0;
     texture->Height = 0;

@@ -27,9 +27,10 @@ void Model_draw(Model *model) {
         for (size_t i = 0; i < model->Mesh[index].NumOfFaces; ++i) {
 
             int matIndex = model->Mesh[index].Faces[i].MaterialIndex;
-            if (matIndex >= 0 && model->Mesh[index].Materials != NULL && model->Mesh[index].Materials[matIndex].DiffuseTexture != NULL) {
+            if (matIndex >= 0 && model->Mesh[index].Materials != NULL &&
+                model->Mesh[index].Materials[matIndex].DiffuseTexture != NULL) {
                 if (lastTexture != model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID) {
-                    lastTexture = (int)model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID;
+                    lastTexture = (int) model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID;
                     //TODO: this is broken and hardcoded, this is for testing purposes only.
                 }
             }
@@ -44,10 +45,13 @@ void Model_draw(Model *model) {
                 }
                 int index_val = model->Mesh[index].Faces[i].Point[x].VertexID;
                 if (model->Mesh[index].Faces[i].HasColour) {
-                    glColor4f(model->Mesh[index].Faces[i].Colour.RGBA[0], model->Mesh[index].Faces[i].Colour.RGBA[1],
-                              model->Mesh[index].Faces[i].Colour.RGBA[2], model->Mesh[index].Faces[i].Colour.RGBA[3]);
+                    glColor4f(model->Mesh[index].Faces[i].Colour.RGBA[0],
+                              model->Mesh[index].Faces[i].Colour.RGBA[1],
+                              model->Mesh[index].Faces[i].Colour.RGBA[2],
+                              model->Mesh[index].Faces[i].Colour.RGBA[3]);
                 }
-                glVertex3f(model->Mesh[index].Vertices[index_val].X, model->Mesh[index].Vertices[index_val].Y,
+                glVertex3f(model->Mesh[index].Vertices[index_val].X,
+                           model->Mesh[index].Vertices[index_val].Y,
                            model->Mesh[index].Vertices[index_val].Z);
             }
             glEnd();
@@ -113,7 +117,8 @@ Colour Colour_addColourToColour(Colour *firstColour, Colour *secondColour) {
 }
 
 void Colour_NormaliseColour(Colour *colour) {
-    float mag = sqrtf((colour->RGBA[0] * colour->RGBA[0]) + (colour->RGBA[1] * colour->RGBA[1]) + (colour->RGBA[2] * colour->RGBA[2]));
+    float mag = sqrtf((colour->RGBA[0] * colour->RGBA[0]) + (colour->RGBA[1] * colour->RGBA[1]) +
+                      (colour->RGBA[2] * colour->RGBA[2]));
     colour->RGBA[0] = colour->RGBA[0] / mag;
     colour->RGBA[1] = colour->RGBA[1] / mag;
     colour->RGBA[2] = colour->RGBA[2] / mag;

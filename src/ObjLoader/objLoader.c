@@ -90,7 +90,7 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
 bool ObjLoader_loadObj(Model *model, FILE *fptr, char *cwd) {
     model->Mesh = malloc(1 * sizeof(Mesh));
     if (model->Mesh == NULL) {
-        printf("malloc failed when making Mesh in loadOff");
+        printf("malloc failed when making Mesh in loadObj");
         assert(false);
         return false;
     }

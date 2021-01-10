@@ -9,16 +9,19 @@
 /// Texture Structure
 typedef struct Texture {
     unsigned char *TextureData;
-    char *TextureName;
+    char TextureName[50];
     int Width;
     int Height;
     int Channels;
+    unsigned int GLTextureID;
+
 } Texture;
 
 /// Texture Manager Structure
 typedef struct TextureManager {
     Texture Textures[MAX_TEXTURES];
     size_t NumOfTextures;
+    bool renderSetup;
 } TextureManager;
 
 /**
@@ -95,3 +98,9 @@ size_t TextureManager_findTextureID(TextureManager *textureManager, char *textur
  * @return true if found, false otherwise
  */
 bool TextureManager_isLoaded(TextureManager *textureManager, char*textureName);
+
+/**
+ * Binds the textures into GPU (vram) memory for use by the renderer
+ * @param textureManager The texture manager to pull textures from
+ */
+void TextureManager_bindTexturesToRenderer(TextureManager *textureManager);

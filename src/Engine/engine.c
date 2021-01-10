@@ -138,7 +138,6 @@ void releaseKey(int key, int x, int y) {
  * @param y Coordinates local to the window on the y axis
  */
 void mouseMove(int x, int y) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
     float lastX = (float) x - glutGet(GLUT_WINDOW_WIDTH) / 2;
     float lastY = ((float) y - glutGet(GLUT_WINDOW_HEIGHT) / 2) * -1;
     StateManager_mouseMove(&engine.sM, lastX, lastY);
@@ -168,8 +167,11 @@ int Engine_run(int argc, char *argv[]) {
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
 
+    TextureManager_init(&engine.textureManager);
+    TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+
 
     StateManager_init(&engine.sM);
     State state;
@@ -210,6 +212,10 @@ int Engine_run(int argc, char *argv[]) {
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glEnable(GL_TEXTURE_2D);
+
+    engine.textureManager.renderSetup = true;
+    TextureManager_bindTexturesToRenderer(&engine.textureManager);
 
     glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
     engine.timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
@@ -219,6 +225,7 @@ int Engine_run(int argc, char *argv[]) {
 
 void Engine_stop() {
     ModelManager_free(&engine.modelManager);
+    TextureManager_free(&engine.textureManager);
     StateManager_free(&engine.sM);
-    free(&engine.cwd);
+    free(engine.cwd);
 }

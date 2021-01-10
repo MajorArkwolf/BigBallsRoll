@@ -13,7 +13,7 @@
 #define MAX_BUFF_SIZE 5000
 #define RESOURCE_FILE_LOCATION "res/Model/"
 
-bool ModelLoader_allocateMesh(Mesh *mesh, size_t faces, size_t vertices) {
+bool ModelLoader_allocateMesh(Mesh *mesh, size_t faces, size_t vertices, size_t textureCords, size_t normals) {
     assert(mesh != NULL);
 
     //Allocate the required memory for our model then verify it was allocated.
@@ -28,6 +28,18 @@ bool ModelLoader_allocateMesh(Mesh *mesh, size_t faces, size_t vertices) {
     //Once we have confirmed everything worked we set the max values.
     mesh->NumOfFaces = faces;
     mesh->NumOfVert = vertices;
+    mesh->NumOfTextureCords = textureCords;
+    mesh->NumOfNormals = normals;
+    if (textureCords > 0) {
+        mesh->TextureCords = malloc(textureCords * sizeof(TextureCord));
+    } else {
+        mesh->TextureCords = NULL;
+    }
+    if (normals > 0) {
+        mesh->Normals = malloc(normals * sizeof(Vertex));
+    } else {
+        mesh->Normals = NULL;
+    }
 
     return true;
 }
@@ -46,6 +58,7 @@ bool ModelLoader_loadOff(Model *model, FILE *fptr) {
         return false;
     }
     model->NumOfMesh = 1;
+    Mesh_init(&model->Mesh[0]);
 
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         // We ignore anything that is a comment or a header declaring OFF.
@@ -61,7 +74,7 @@ bool ModelLoader_loadOff(Model *model, FILE *fptr) {
             if (vert == 0 || face == 0) {
                 return false;
             }
-            ModelLoader_allocateMesh(&model->Mesh[0], face, vert);
+            ModelLoader_allocateMesh(&model->Mesh[0], face, vert, 0, 0);
             is_configured = true;
         } else {
             if (vert != 0) {
@@ -78,8 +91,8 @@ bool ModelLoader_loadOff(Model *model, FILE *fptr) {
                 sscanf(buff, "%zu%n", &numPerRow, &offset);
                 data += offset;
                 Face_init(&model->Mesh[0].Faces[index]);
-                model->Mesh[0].Faces[index].FaceIDs = calloc(numPerRow, sizeof(size_t));
-                if (model->Mesh[0].Faces[index].FaceIDs == NULL) {
+                model->Mesh[0].Faces[index].Point = calloc(numPerRow, sizeof(Point));
+                if (model->Mesh[0].Faces[index].Point == NULL) {
                     printf("Failed to allocate ID's for faces");
                     assert(false);
                     return false;
@@ -87,7 +100,8 @@ bool ModelLoader_loadOff(Model *model, FILE *fptr) {
                 model->Mesh[0].Faces[index].NumFaces = numPerRow;
 
                 for (size_t i = 0; i < numPerRow; ++i) {
-                    sscanf(data, "%zu%n", &model->Mesh[0].Faces[index].FaceIDs[i], &offset);
+                    Point_init(&model->Mesh[0].Faces[index].Point[i]);
+                    sscanf(data, "%d%n", &model->Mesh[0].Faces[index].Point[i].VertexID, &offset);
                     data += offset;
                 }
                 //Process colour
@@ -139,9 +153,11 @@ Model ModelLoader_loadModel(char *workingDir, char *fileName) {
     if (strcmp(ext, "off") == 0) {
         modelLoaded = ModelLoader_loadOff(&model, fptr);
     } else if (strcmp(ext, "obj") == 0) {
-        modelLoaded = ObjLoader_loadObj(&model, fptr);
+        char *objPath = getCurrentWorkingDirectory(fullDir);
+        modelLoaded = ObjLoader_loadObj(&model, fptr, objPath);
+        free(objPath);
     }
-
+    free(ext);
     if (!modelLoaded) {
         printf("Model failed to load.");
         assert(false);

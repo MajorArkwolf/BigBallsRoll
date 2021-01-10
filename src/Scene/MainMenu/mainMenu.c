@@ -3,6 +3,7 @@
 #include <Engine/engine.h>
 #include "Engine/InputManager.h"
 #include "Helper/stringPath.h"
+
 int draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
@@ -13,7 +14,7 @@ int draw(float deltaTime) {
 int update(float deltaTime) {
     Camera_update(&StateManager_top(&engine.sM)->camera, (float) deltaTime);
     GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
-    for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
+    for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects - 1; ++i) {
         float rotationSpeed = 10.0f;
         if (i % 2 == 0) {
             rotationSpeed *= -1.0f;
@@ -92,15 +93,18 @@ void MainMenu_init(State *state) {
     state->keyUp = keyUp;
     state->mouseMovement = mouseMovement;
 
-    //Test Model Load
     GameObject_init(&state->gameObjects[0]);
     GameObject_init(&state->gameObjects[1]);
+    GameObject_init(&state->gameObjects[2]);
     state->gameObjects[0].Transform.Position.X += 15.f;
     state->gameObjects[0].Transform.Position.Z += 5.f;
     state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
     state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
+    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/Goblin/goblin_warrior_spear.obj");
     state->gameObjects[1].Transform.Position.X += 15.f;
     state->gameObjects[1].Transform.Position.Z -= 5.f;
-    state->NumOfGameObjects = 2;
-
+    state->gameObjects[2].Transform.Position.X += 15.f;
+    state->gameObjects[2].Transform.Position.Y -= 1.f;
+    state->gameObjects[2].Transform.Rotation.Y -= 90.f;
+    state->NumOfGameObjects = 3;
 }

@@ -1,4 +1,11 @@
-# ICT289 - (Insert Group Name)
+<h1 align="center">
+   ICT289 - Team Big Balls
+   <br>
+   <br>
+   <img src="https://i.imgur.com/xumKzG5.png" alt="plum" width="200"></a>
+</h1>
+
+
 
 [![Build Status](https://www.travis-ci.com/MajorArkwolf/ICT289.svg?token=cpQtXoFFuizqCsLDGgMe&branch=main)](https://www.travis-ci.com/MajorArkwolf/ICT289)
 

@@ -2,6 +2,7 @@
 
 #include "Engine/camera.h"
 #include "Engine/gameObject.h"
+#include "Engine/InputManager.h"
 
 #define MAX_GAME_OBJECTS 10000
 
@@ -9,6 +10,10 @@
 typedef int (*fnPtr)();
 
 typedef int (*fnPtrFl)(float);
+
+typedef int (*fnPtrInput)(InputType);
+
+typedef int (*fnPtrFlFl)(float, float);
 
 /// State Structure
 typedef struct {
@@ -19,6 +24,9 @@ typedef struct {
     fnPtrFl update;
     fnPtrFl draw;
     fnPtr destroy;
+    fnPtrInput keyDown;
+    fnPtrInput keyUp;
+    fnPtrFlFl mouseMovement;
 } State;
 
 /// A Stack implementation that holds a stack of states
@@ -79,6 +87,31 @@ int StateManager_update(StateManager *stateManager, float deltaTime);
  * @return 0 on success and 1 on failure
  */
 int StateManager_draw(StateManager *stateManager, float deltaTime);
+
+/**
+ * Key down function to pass key presses into our game state
+ * @param stateManager state manager to check the stack of
+ * @param inputType the input pressed by the user
+ * @return 0 on success and 1 on failure
+ */
+int StateManager_keyDown(StateManager *stateManager, InputType inputType);
+
+/**
+ * Key Up function to pass key presses into our game state
+ * @param stateManager state manager to check the stack of
+ * @param inputType the input pressed by the user
+ * @return 0 on success and 1 on failure
+ */
+int StateManager_keyUp(StateManager *stateManager, InputType inputType);
+
+/**
+ * Passes the difference in mouse movement into our scene.
+ * @param stateManager state manager to check the stack of
+ * @param x the difference in x pos
+ * @param y the difference in y pos
+ * @return 0 on success and 1 on failure
+ */
+int StateManager_mouseMove(StateManager *stateManager, float x, float y);
 
 /**
  * Initialises a base state for use

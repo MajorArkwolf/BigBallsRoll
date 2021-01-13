@@ -71,11 +71,38 @@ int StateManager_draw(StateManager *stateManager, float deltaTime) {
     return 1;
 }
 
+int StateManager_keyDown(StateManager *stateManager, InputType inputType) {
+    State *state = StateManager_top(stateManager);
+    if (state->keyDown != NULL) {
+        return state->keyDown(inputType);
+    }
+    return 1;
+}
+
+int StateManager_keyUp(StateManager *stateManager, InputType inputType) {
+    State *state = StateManager_top(stateManager);
+    if (state->keyUp != NULL) {
+        return state->keyUp(inputType);
+    }
+    return 1;
+}
+
+int StateManager_mouseMove(StateManager *stateManager, float x, float y) {
+    State *state = StateManager_top(stateManager);
+    if (state->mouseMovement != NULL) {
+        return state->mouseMovement(x, y);
+    }
+    return 1;
+}
+
 void State_init(State *state) {
     state->NumOfGameObjects = 0;
     state->draw = NULL;
     state->update = NULL;
     state->destroy = NULL;
     state->init = NULL;
+    state->keyDown = NULL;
+    state->keyUp = NULL;
+    state->mouseMovement = NULL;
     state->camera = Camera_construct();
 }

@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "ObjLoader/objLoader.h"
-#include "ObjLoader/model.h"
+#include "ObjLoader/modelLoader.h"
 #include "Helper/stringHelper.h"
 
 #define MAX_BUFF_SIZE 100
@@ -33,9 +32,14 @@ void ModelManager_loadModels(ModelManager *modelManger, char *cwd) {
     char buff[MAX_BUFF_SIZE];
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);
-        modelManger->Models[modelManger->NumOfModels] = ObjLoader_loadModel(cwd, buff);
+        if (buff[0] == '#') {
+            continue;
+        }
+        modelManger->Models[modelManger->NumOfModels] = ModelLoader_loadModel(cwd, buff);
         ++modelManger->NumOfModels;
     }
+    modelManger->cwd = cwd;
+    fclose(fptr);
     free(fulldir);
 }
 
@@ -46,7 +50,8 @@ size_t ModelManager_findModel(ModelManager *modelManger, char *modelName) {
             return i;
         }
     }
-    return 0;
+    modelManger->Models[modelManger->NumOfModels] = ModelLoader_loadModel(modelManger->cwd, modelName);
+    return modelManger->NumOfModels++;
 }
 
 Model* ModelManager_getModel(ModelManager *modelManger, size_t index) {

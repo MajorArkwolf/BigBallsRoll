@@ -15,14 +15,18 @@ target_sources(${PROJECT_NAME} PRIVATE
     Math/extraMath.c
 
     # Objloader
+    ObjLoader/modelLoader.c
     ObjLoader/objLoader.c
     ObjLoader/model.c
 
     # Engine
+    Engine/engine.c
     Engine/camera.c
     Engine/stateManager.c
     Engine/gameObject.c
     Engine/modelManager.c
+    Engine/InputManager.c
+    Engine/textureManager.c
 
     #Scenes
     Scene/MainMenu/mainMenu.c

@@ -53,7 +53,7 @@ if (WarningsAsErrors)
             $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Werror>
             $<$<CXX_COMPILER_ID:MSVC>:/WX>
             )
-endif()
+endif(WarningsAsErrors)
 
 # Set compile flags.
 target_compile_options(${PROJECT_NAME} PRIVATE

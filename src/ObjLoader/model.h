@@ -2,35 +2,66 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <Math/vec3.h>
+#include "Engine/textureManager.h"
 
 /// Colour represented in RGBA format and in that order.
 typedef struct Colour {
     float RGBA[4];
 } Colour;
 
+typedef struct TextureCord {
+    float T[2];
+} TextureCord;
+
 /// Vertex data
 typedef struct Vertex {
     float X;
     float Y;
     float Z;
-    bool HasTexture;
-    Vec3 Normals;
 } Vertex;
+
+typedef struct Point {
+    int VertexID;
+    int TextureID;
+    int NormalID;
+} Point;
 
 /// Face Data
 typedef struct Face {
     Colour Colour;
     size_t NumFaces;
-    size_t *FaceIDs;
+    Point *Point;
+    int MaterialIndex;
     bool HasColour;
 } Face;
+
+typedef struct Material {
+    //Ka
+    float Ambient[3];
+    //Kd
+    float Diffuse[3];
+    //Ks
+    float Specular[3];
+    //Ni (weight for spec)
+    float OpticalWeight;
+    // kd texture
+    Texture *DiffuseTexture;
+    //Material Name
+    char *MaterialName;
+} Material;
 
 /// Mesh Data
 typedef struct Mesh {
     Face *Faces;
     Vertex *Vertices;
+    Vertex *Normals;
+    TextureCord *TextureCords;
+    Material *Materials;
     size_t NumOfFaces;
     size_t NumOfVert;
+    size_t NumOfNormals;
+    size_t NumOfTextureCords;
+    size_t NumOfMaterials;
 } Mesh;
 
 /// Model Data
@@ -101,3 +132,23 @@ Colour Colour_addColourToColour(Colour *firstColour, Colour *secondColour);
  * @param colour this variable will be altered.
  */
 void Colour_NormaliseColour(Colour *colour);
+
+/**
+ * Initialises point data
+ * @param point the point data to be initialised
+ */
+void Point_init(Point *point);
+
+/**
+ * Initialises a material data
+ * @param material the material data to tbe initialised
+ */
+void Material_init(Material *material);
+
+/**
+ * Find a material with in a mesh
+ * @param mesh the mesh to search
+ * @param materialName the material name to look for
+ * @return -1 on failure or 0+ on valid index
+ */
+int Mesh_findMaterial(Mesh *mesh, char* materialName);

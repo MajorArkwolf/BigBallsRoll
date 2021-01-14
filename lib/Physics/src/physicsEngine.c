@@ -11,36 +11,36 @@ void physicsWorldInit(){
     // init collision body manager
 }
 
-size_t createCollisionBody(){
+int createCollisionBody(){
     // Allocate memory for collisionbody
     // Add memory to collision body manager and get ID from manager
     return 0; // stub
 }
 
-bool destroyCollisionBody(size_t ID){
+bool destroyCollisionBody(int ID){
     return true; // stub
 }
 
-void createBoxCollider(size_t ID,
-                       size_t xOffset,
-                       size_t yOffset,
-                       size_t zOffset,
-                       size_t xLen,
-                       size_t yLen,
-                       size_t zLen){
-
+void createBoxCollider(int ID,
+                       float xOffset,
+                       float yOffset,
+                       float zOffset,
+                       float xLen,
+                       float yLen,
+                       float zLen){
+    // check lengths aren't negative
 }
 
 void destroyBoxCollider(){
 
 }
 
-void createSphereCollider(size_t ID,
-                          size_t xOffset,
-                          size_t yOffset,
-                          size_t zOffset,
-                          size_t radius){
-
+void createSphereCollider(int ID,
+                          float xOffset,
+                          float yOffset,
+                          float zOffset,
+                          float radius){
+    // check radius isn't negative
 }
 
 void destroySphereCollider(){

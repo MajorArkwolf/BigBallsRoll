@@ -5,11 +5,17 @@ project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES C)
 
 set(PHYSICS_HEADERS
     "src/include/BigBalls/physicsEngine.h"
-)
+    "src/include/BigBalls/collisionBodyManager.h"
+    "src/include/BigBalls/colliderManager.h"
+    "src/include/BigBalls/collider.h"
+    "src/include/BigBalls/collisionBody.h")
 
 set(PHYSICS_SOURCES
     "src/physicsEngine.c"
-)
+    "src/collisionBodyManager.c"
+    "src/colliderManager.c"
+    "src/collider.c"
+    "src/collisionBody.c")
 
 add_library(${PROJECT_NAME} ${PHYSICS_HEADERS} ${PHYSICS_SOURCES})
 add_library(BigBalls::Physics ALIAS ${PROJECT_NAME})

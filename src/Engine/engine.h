@@ -1,4 +1,6 @@
 #pragma once
+#include "Engine/Audio/audioEngine.h"
+#include "Engine/Audio/audioManager.h"
 #include "Engine/modelManager.h"
 #include "Engine/stateManager.h"
 #include "Engine/textureManager.h"
@@ -9,6 +11,8 @@ typedef struct Engine {
     ModelManager modelManager;
     StateManager sM;
     TextureManager textureManager;
+    AudioEngine audioEngine;
+    AudioManager audioManager;
     char *cwd;
     int width;
     int height;

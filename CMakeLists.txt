@@ -36,6 +36,8 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
 # find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(OpenAL CONFIG REQUIRED)
+find_package(SndFile CONFIG REQUIRED)
 
 # Build 3rd Party Libraries
 add_subdirectory(lib)
@@ -82,7 +84,7 @@ if (LINUX)
 endif()
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU GLUT::GLUT OpenAL::OpenAL SndFile::sndfile stb ${CMAKE_DL_LIBS})
 
 if (GenerateDoxygen)
     find_package(Doxygen)

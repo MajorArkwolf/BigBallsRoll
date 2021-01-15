@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "Helper/stringPath.h"
+#include "Engine/Audio/audioEngine.h"
 
 #include "Scene/MainMenu/mainMenu.h"
 
@@ -171,6 +172,10 @@ int Engine_run(int argc, char *argv[]) {
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+    AudioEngine_init(&engine.audioEngine);
+    AudioManager_init(&engine.audioManager);
+    AudioManager_loadSounds(&engine.audioManager, engine.cwd);
+    //AudioEngine_play(&engine.audioEngine, &engine.audioManager.Sounds[1]);
 
 
     StateManager_init(&engine.sM);
@@ -224,6 +229,9 @@ int Engine_run(int argc, char *argv[]) {
 }
 
 void Engine_stop() {
+    AudioEngine_stop_all(&engine.audioEngine);
+    AudioManager_free(&engine.audioManager);
+    AudioEngine_free(&engine.audioEngine);
     ModelManager_free(&engine.modelManager);
     TextureManager_free(&engine.textureManager);
     StateManager_free(&engine.sM);

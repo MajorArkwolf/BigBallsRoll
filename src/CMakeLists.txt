@@ -27,6 +27,10 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/modelManager.c
     Engine/InputManager.c
     Engine/textureManager.c
+    ## Audio
+    Engine/Audio/sound.c
+    Engine/Audio/audioEngine.c
+    Engine/Audio/audioManager.c
 
     #Scenes
     Scene/MainMenu/mainMenu.c

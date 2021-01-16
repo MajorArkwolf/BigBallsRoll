@@ -55,6 +55,7 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
             strcpy(mesh->Materials[index].MaterialName, smallBuff);
             continue;
         }
+        if (discard[0] == '#' || discard[0] == '\n') {continue;}
         if (index == -1) {
             printf("Failed to find first material, aborting");
             fclose(fptr);

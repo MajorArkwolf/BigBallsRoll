@@ -131,5 +131,5 @@ void MainMenu_init(State *state) {
     Camera_updateCameraVectors(&state->camera);
 
     GameObject_registerSoundSource(&state->gameObjects[2]);
-    AudioEngine_play(&engine.audioEngine, state->gameObjects[2].SoundID, &engine.audioManager.Sounds[0]);
+    AudioEngine_play(state->gameObjects[2].SoundID, &engine.audioManager.Sounds[0]);
 }

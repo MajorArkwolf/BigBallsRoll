@@ -27,7 +27,7 @@ void AudioEngine_init(AudioEngine *audioEngine) {
     audioEngine->MaxNumSources = 0;
 }
 
-void AudioEngine_play(AudioEngine *audioEngine, ALuint source, Sound *sound) {
+void AudioEngine_play(ALuint source, Sound *sound) {
     alSourcei(source, AL_BUFFER, sound->Buffer);
     alSourcePlay(source);
 }
@@ -39,7 +39,7 @@ void AudioEngine_stop_all(AudioEngine *audioEngine) {
     }
 }
 
-void AudioEngine_listenerLocation(AudioEngine *audioEngine, Vec3 *position, Vec3 *velocity) {
+void AudioEngine_listenerLocation(Vec3 *position, Vec3 *velocity) {
     if (position != NULL) {
         alListener3f(AL_POSITION, position->X, position->Y, position->Z);
     }
@@ -48,7 +48,7 @@ void AudioEngine_listenerLocation(AudioEngine *audioEngine, Vec3 *position, Vec3
     }
 }
 
-void AudioEngine_listenerOrientation(AudioEngine *audioEngine, Vec3 *front, Vec3 *up) {
+void AudioEngine_listenerOrientation(Vec3 *front, Vec3 *up) {
     ALfloat listenerOri[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
     listenerOri[0] = front->X;
     listenerOri[1] = front->Y;
@@ -91,7 +91,7 @@ ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *vel
     return audioEngine->Sources[audioEngine->MaxNumSources - 1];
 }
 
-void AudioEngine_updateSource(AudioEngine *audioEngine, ALuint id ,Vec3 *position, Vec3 *velocity) {
+void AudioEngine_updateSource(ALuint id, Vec3 *position, Vec3 *velocity) {
     if (position != NULL) {
         alSource3f(id, AL_POSITION, position->X, position->Y, position->Z);
     }

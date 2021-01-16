@@ -31,7 +31,7 @@ void GameObject_draw(GameObject *gameObject) {
 
 void GameObject_update(GameObject *gameObject) {
     if (!gameObject->StaticObject && gameObject->SoundID > 0) {
-        AudioEngine_updateSource(&engine.audioEngine, gameObject->SoundID, &gameObject->Transform.Position, NULL);
+        AudioEngine_updateSource(gameObject->SoundID, &gameObject->Transform.Position, NULL);
     }
 }
 

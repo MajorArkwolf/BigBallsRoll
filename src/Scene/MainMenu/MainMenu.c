@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <Engine/engine.h>
 #include "Scene/LevelOne/LevelOne.h"
+#include "Engine/stateManager.h"
 
 int MainMenu_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
@@ -53,6 +54,7 @@ int MainMenu_keyDown(InputType inputType) {
 
 int MainMenu_keyUp(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
+    State *state;
     switch (inputType) {
         case KEY_UP_ARROW:
         case KEY_W:
@@ -71,7 +73,7 @@ int MainMenu_keyUp(InputType inputType) {
             cam->MoveRight = false;
             break;
         case KEY_SPACEBAR:
-            State *state = malloc(sizeof (State));
+            state = malloc(sizeof (State));
             State_init(state);
             LevelOne_init(state);
             AudioEngine_stop_all(&engine.audioEngine);

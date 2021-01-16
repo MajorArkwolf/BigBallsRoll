@@ -1,5 +1,6 @@
 #pragma once
 #include "sound.h"
+#include <stdlib.h>
 
 #define MAX_SOUNDS 1000
 

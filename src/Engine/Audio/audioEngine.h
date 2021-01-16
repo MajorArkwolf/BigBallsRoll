@@ -1,6 +1,7 @@
 #pragma once
 #include <AL/al.h>
 #include <AL/alc.h>
+#include <stdlib.h>
 #include "sound.h"
 #include "Math/vec3.h"
 

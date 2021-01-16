@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "sound.h"
 #include "Math/vec3.h"
+#include <stdbool.h>
 
 #define MAX_SOURCES 10000
 
@@ -26,6 +27,25 @@ void AudioEngine_init(AudioEngine *audioEngine);
  * @param sound Sound object in relationship to an object.
  */
 void AudioEngine_play(ALuint source, Sound *sound);
+
+/**
+ * Checks if the current source is playing.
+ * @param source the source to check.
+ * @return true if playing
+ */
+bool AudioEngine_isPlaying(ALuint source);
+
+/**
+ * Stop the current source if playing.
+ * @param source the source to stop.
+ */
+void AudioEngine_stop(ALuint source);
+
+/**
+ * Pause the current source if playing.
+ * @param source the source to pause.
+ */
+void AudioEngine_pause(ALuint source);
 
 /**
  * This method is mainly for ensuring that all buffers are stopped so freeing

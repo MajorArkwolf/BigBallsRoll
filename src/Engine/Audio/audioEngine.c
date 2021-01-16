@@ -32,6 +32,20 @@ void AudioEngine_play(ALuint source, Sound *sound) {
     alSourcePlay(source);
 }
 
+bool AudioEngine_isPlaying(ALuint source) {
+    ALenum state;
+    alGetSourcei(source, AL_SOURCE_STATE, &state);
+    return (state == AL_PLAYING);
+}
+
+void AudioEngine_stop(ALuint source) {
+    alSourceStop(source);
+}
+
+void AudioEngine_pause(ALuint source) {
+    alSourcePause(source);
+}
+
 void AudioEngine_stop_all(AudioEngine *audioEngine) {
     for (size_t i = 0; i < audioEngine->MaxNumSources; ++i) {
         alSourceStop(audioEngine->Sources[i]);

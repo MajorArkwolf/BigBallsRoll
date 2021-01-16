@@ -100,11 +100,12 @@ void MainMenu_init(State *state) {
     state->gameObjects[0].Transform.Position.Z += 5.f;
     state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
     state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
-    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/Goblin/goblin_warrior_spear.obj");
+    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/Title.obj");
     state->gameObjects[1].Transform.Position.X += 15.f;
     state->gameObjects[1].Transform.Position.Z -= 5.f;
     state->gameObjects[2].Transform.Position.X += 15.f;
-    state->gameObjects[2].Transform.Position.Y -= 1.f;
+    state->gameObjects[2].Transform.Position.Z += 0.5f;
+    state->gameObjects[2].Transform.Rotation.X = 90.f;
     state->gameObjects[2].Transform.Rotation.Y -= 90.f;
     state->NumOfGameObjects = 3;
 }

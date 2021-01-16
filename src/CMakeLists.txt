@@ -33,7 +33,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/Audio/audioManager.c
 
     #Scenes
-    Scene/MainMenu/mainMenu.c
+    Scene/MainMenu/MainMenu.c
+    Scene/LevelOne/LevelOne.c
 )
 
 # Include project header files.

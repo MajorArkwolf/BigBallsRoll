@@ -5,6 +5,7 @@
 #include "Engine/OpenGL.h"
 #include "Math/vectorMath.h"
 #include "Math/extraMath.h"
+#include "Engine/engine.h"
 
 #define DEFAULT_SENSITIVITY 0.01f
 
@@ -54,6 +55,8 @@ void Camera_update(Camera *cam, float dt) {
         newVec = VectorMath_multiplyVecByScalar(&cam->Right, velocity * -1);
         cam->Position = VectorMath_addVec3ByVec3(&cam->Position, &newVec);
     }
+    AudioEngine_listenerLocation(&engine.audioEngine, &cam->Position, NULL);
+    AudioEngine_listenerOrientation(&engine.audioEngine, &cam->Front, &cam->Up);
 }
 
 void Camera_mouseLook(Camera *cam, float x, float y) {

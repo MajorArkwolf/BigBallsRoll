@@ -151,10 +151,12 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
             ++f;
         }
         if (strcmp(discard, "mtllib") == 0) {
+            char dir[10000];
+            strcpy(dir, cwd);
             char mtlFile[1000];
             sscanf(buff, "%9s %999s", discard, mtlFile);
-            strcat(cwd, mtlFile);
-            ObjLoader_loadMTL(mesh, cwd);
+            strcat(dir, mtlFile);
+            ObjLoader_loadMTL(mesh, dir);
             assert(mesh->NumOfMaterials != 0);
         }
     }

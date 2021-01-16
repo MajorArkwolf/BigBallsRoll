@@ -1,32 +1,31 @@
-#include "mainMenu.h"
+#include "LevelOne.h"
 #include <stdlib.h>
 #include <Engine/engine.h>
-#include "Engine/InputManager.h"
-#include "Helper/stringPath.h"
 
-int draw(float deltaTime) {
+int LevelOne_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
     }
     return 0;
 }
 
-int update(float deltaTime) {
+int LevelOne_update(float deltaTime) {
     Camera_update(&StateManager_top(&engine.sM)->camera, (float) deltaTime);
     GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
-    for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects - 1; ++i) {
-        float rotationSpeed = 10.0f;
-        if (i % 2 == 0) {
-            rotationSpeed *= -1.0f;
-        }
-        gameObjects[i].Transform.Rotation.X += rotationSpeed * deltaTime;
-        gameObjects[i].Transform.Rotation.Y += rotationSpeed * deltaTime;
-        gameObjects[i].Transform.Rotation.Z += rotationSpeed * deltaTime;
+    for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
+        GameObject_update(&gameObjects[i]);
+//        float rotationSpeed = 10.0f;
+//        if (i % 2 == 0) {
+//            rotationSpeed *= -1.0f;
+//        }
+//        gameObjects[i].Transform.Rotation.X += rotationSpeed * deltaTime;
+//        gameObjects[i].Transform.Rotation.Y += rotationSpeed * deltaTime;
+//        gameObjects[i].Transform.Rotation.Z += rotationSpeed * deltaTime;
     }
     return 0;
 }
 
-int keyDown(InputType inputType) {
+int LevelOne_keyDown(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     switch (inputType) {
         case KEY_UP_ARROW:
@@ -51,7 +50,7 @@ int keyDown(InputType inputType) {
     return 0;
 }
 
-int keyUp(InputType inputType) {
+int LevelOne_keyUp(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     switch (inputType) {
         case KEY_UP_ARROW:
@@ -70,13 +69,15 @@ int keyUp(InputType inputType) {
         case KEY_D:
             cam->MoveRight = false;
             break;
+        case KEY_SPACEBAR:
+            break;
         default:
             break;
     }
     return 0;
 }
 
-int mouseMovement(float x, float y) {
+int LevelOne_mouseMovement(float x, float y) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {
@@ -85,27 +86,22 @@ int mouseMovement(float x, float y) {
     return 0;
 }
 
-void MainMenu_init(State *state) {
+void LevelOne_init(State *state) {
     state->camera = Camera_construct();
-    state->update = update;
-    state->draw = draw;
-    state->keyDown = keyDown;
-    state->keyUp = keyUp;
-    state->mouseMovement = mouseMovement;
+    state->update = LevelOne_update;
+    state->draw = LevelOne_draw;
+    state->keyDown = LevelOne_keyDown;
+    state->keyUp = LevelOne_keyUp;
+    state->mouseMovement = LevelOne_mouseMovement;
 
     GameObject_init(&state->gameObjects[0]);
-    GameObject_init(&state->gameObjects[1]);
-    GameObject_init(&state->gameObjects[2]);
-    state->gameObjects[0].Transform.Position.X += 15.f;
+    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Terrain/Wall.obj");
+    state->gameObjects[0].Transform.Position.X += 20.f;
     state->gameObjects[0].Transform.Position.Z += 5.f;
-    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
-    state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
-    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/Title.obj");
-    state->gameObjects[1].Transform.Position.X += 15.f;
-    state->gameObjects[1].Transform.Position.Z -= 5.f;
-    state->gameObjects[2].Transform.Position.X += 15.f;
-    state->gameObjects[2].Transform.Position.Z += 0.5f;
-    state->gameObjects[2].Transform.Rotation.X = 90.f;
-    state->gameObjects[2].Transform.Rotation.Y -= 90.f;
-    state->NumOfGameObjects = 3;
+    state->gameObjects[0].Transform.Position.Y -= 3.f;
+    state->gameObjects[0].Transform.Rotation.Y += 90.f;
+    state->NumOfGameObjects = 1;
+    state->camera.Position.Y += 2.0f;
+    state->camera.Pitch -= 15.0f;
+    Camera_updateCameraVectors(&state->camera);
 }

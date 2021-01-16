@@ -19,7 +19,7 @@ Windows: ``` vcpkg install freeglut openal-soft libsndfile```
 
 Note: VCPKG is windows package manager, you can download it [here](https://github.com/microsoft/vcpkg). Please ensure you read how to use it. Also be aware, by default it will install x86 binaries over x64. You can change the default by adding it to a system enviroment variable like so ``VCPKG_DEFAULT_TRIPLET=x64-windows``
 
-macOS: ``` brew install freeglut cmake ninja llvm --with-toolchain```
+macOS: ``` brew install freeglut vorbis-tools opus-tools cmake ninja llvm --with-toolchain```
 ___
 ## Cloning
 ### GIT LFS

@@ -1,7 +1,7 @@
 #include "include/BigBalls/boxCollider.h"
 
 void BoxCollider_init(BoxCollider *boxCollider){
-    boxCollider->ID = -1;
+    boxCollider->id = -1;
     boxCollider->xOffset = 0;
     boxCollider->yOffset = 0;
     boxCollider->zOffset = 0;

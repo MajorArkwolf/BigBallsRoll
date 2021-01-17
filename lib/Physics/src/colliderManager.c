@@ -45,19 +45,19 @@ void ColliderManager_addBoxCollider(ColliderManager *colliderManager,
     // Copy BoxCollider object into array
     colliderManager->BoxColliders[colliderManager->numOfBoxColliders] = boxCollider;
     // Assign ID to BoxCollider
-    colliderManager->BoxColliders[colliderManager->numOfBoxColliders]->ID = getID(colliderManager);
+    colliderManager->BoxColliders[colliderManager->numOfBoxColliders]->id = getID(colliderManager);
     colliderManager->numOfBoxColliders++;
     colliderManager->numOfColliders++;
 }
 
 void ColliderManager_rmBoxCollider(ColliderManager *colliderManager,
-                                     int ID){
+                                     int id){
     if(colliderManager->numOfBoxColliders - 1 != 0){
         // Allocate memory for smaller array
         BoxCollider **newBoxColliders = calloc(colliderManager->numOfBoxColliders - 1, sizeof(BoxCollider));
         // Only copy elements that are not to be removed
         for(size_t i = 0; i < colliderManager->numOfBoxColliders - 1; ++i){
-            if(colliderManager->BoxColliders[i]->ID != ID){
+            if(colliderManager->BoxColliders[i]->id != id){
                 newBoxColliders[i] = colliderManager->BoxColliders[i];
             }
         }
@@ -85,19 +85,19 @@ void ColliderManager_addSphereCollider(ColliderManager *colliderManager,
     // Copy SphereCollider object into array
     colliderManager->SphereColliders[colliderManager->numOfSphereColliders] = sphereCollider;
     // Assign ID to BoxCollider
-    colliderManager->SphereColliders[colliderManager->numOfSphereColliders]->ID = getID(colliderManager);
+    colliderManager->SphereColliders[colliderManager->numOfSphereColliders]->id = getID(colliderManager);
     colliderManager->numOfSphereColliders++;
     colliderManager->numOfColliders++;
 }
 
 void ColliderManager_rmSphereCollider(ColliderManager *colliderManager,
-                                        int ID){
+                                        int id){
     if(colliderManager->numOfSphereColliders - 1 != 0){
         // Allocate memory for smaller array
         SphereCollider **newSphereColliders = calloc(colliderManager->numOfSphereColliders - 1, sizeof(SphereCollider));
         // Only copy elements that are not to be removed
         for(size_t i = 0; i < colliderManager->numOfSphereColliders - 1; ++i){
-            if(colliderManager->SphereColliders[i]->ID != ID){
+            if(colliderManager->SphereColliders[i]->id != id){
                 newSphereColliders[i] = colliderManager->SphereColliders[i];
             }
         }

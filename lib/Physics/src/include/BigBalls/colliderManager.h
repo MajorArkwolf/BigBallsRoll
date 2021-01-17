@@ -26,10 +26,10 @@ void ColliderManager_addBoxCollider(ColliderManager *colliderManager,
                                      BoxCollider *boxCollider);
 
 void ColliderManager_rmBoxCollider(ColliderManager *colliderManager,
-                                    int ID);
+                                    int id);
 
 void ColliderManager_addSphereCollider(ColliderManager *colliderManager,
                                         SphereCollider *sphereCollider);
 
 void ColliderManager_rmSphereCollider(ColliderManager *colliderManager,
-                                       int ID);
+                                       int id);

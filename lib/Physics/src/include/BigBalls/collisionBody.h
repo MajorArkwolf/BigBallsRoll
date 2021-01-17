@@ -4,6 +4,7 @@
 
 typedef struct CollisionBody{
     ColliderManager* colliderManager;
+    int id;
 } CollisionBody;
 
 /**

@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # Set the project details.
-set(PROJECT_NAME 289)
+set(PROJECT_NAME BigBalls)
 project(${PROJECT_NAME} LANGUAGES C)
 
 # Treat warnings as errors.
@@ -82,7 +82,7 @@ if (LINUX)
 endif()
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image BigBalls::Physics ${CMAKE_DL_LIBS})
 
 if (GenerateDoxygen)
     find_package(Doxygen)

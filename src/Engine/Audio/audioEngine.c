@@ -3,6 +3,32 @@
 #include <stdbool.h>
 #include <assert.h>
 
+/**
+ * 1) Identify the error code.
+ * 2) Return the error as a string.
+ */
+static void getErrorString(int err) {
+    if (err > 0) {
+        switch (err) {
+            case ALC_NO_ERROR:
+                printf("AL_NO_ERROR");
+            case ALC_INVALID_DEVICE:
+                printf("ALC_INVALID_DEVICE");
+            case ALC_INVALID_CONTEXT:
+                printf("ALC_INVALID_CONTEXT");
+            case ALC_INVALID_ENUM:
+                printf("ALC_INVALID_ENUM");
+            case ALC_INVALID_VALUE:
+                printf("ALC_INVALID_VALUE");
+            case ALC_OUT_OF_MEMORY:
+                printf("ALC_OUT_OF_MEMORY");
+            default:
+                printf("no such error code");
+        }
+        assert(false);
+    }
+}
+
 void AudioEngine_init(AudioEngine *audioEngine) {
     audioEngine->Device = alcOpenDevice(NULL);
     if (audioEngine->Device == NULL) {
@@ -56,9 +82,11 @@ void AudioEngine_stop_all(AudioEngine *audioEngine) {
 void AudioEngine_listenerLocation(Vec3 *position, Vec3 *velocity) {
     if (position != NULL) {
         alListener3f(AL_POSITION, position->X, position->Y, position->Z);
+        getErrorString(alGetError());
     }
     if (velocity != NULL) {
         alListener3f(AL_VELOCITY, velocity->X, velocity->Y, velocity->Z);
+        getErrorString(alGetError());
     }
 }
 
@@ -78,11 +106,11 @@ ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *vel
         return 0;
     }
     alGenSources((ALuint)1, &audioEngine->Sources[audioEngine->MaxNumSources]);// check for errors
-
+    getErrorString(alGetError());
     alSourcef(audioEngine->Sources[audioEngine->MaxNumSources], AL_PITCH, 1);
-// check for errors
+    getErrorString(alGetError());
     alSourcef(audioEngine->Sources[audioEngine->MaxNumSources], AL_GAIN, 1);
-// check for errors
+    getErrorString(alGetError());
     if (position != NULL) {
         alSource3f(audioEngine->Sources[audioEngine->MaxNumSources],
                    AL_POSITION,
@@ -90,7 +118,7 @@ ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *vel
                    position->Y,
                    position->Z);
     }
-// check for errors
+    getErrorString(alGetError());
     if (velocity != NULL) {
         alSource3f(audioEngine->Sources[audioEngine->MaxNumSources],
                    AL_VELOCITY,
@@ -98,9 +126,6 @@ ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *vel
                    velocity->Y,
                    velocity->Z);
     }
-// check for errors
-    //alSourcei(audioEngine->Sources[audioEngine->MaxNumSources], AL_LOOPING, AL_FALSE);
-
     ++audioEngine->MaxNumSources;
     return audioEngine->Sources[audioEngine->MaxNumSources - 1];
 }
@@ -109,11 +134,12 @@ void AudioEngine_updateSource(ALuint id, Vec3 *position, Vec3 *velocity) {
     if (position != NULL) {
         alSource3f(id, AL_POSITION, position->X, position->Y, position->Z);
     }
-// check for errors
+    getErrorString(alGetError());
     if (velocity != NULL) {
         alSource3f(id, AL_VELOCITY, velocity->X, velocity->Y,
                    velocity->Z);
     }
+    getErrorString(alGetError());
 }
 
 void AudioEngine_free(AudioEngine *audioEngine) {

@@ -33,7 +33,7 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
     }
 
     //Allocate Materials to be used in the project.
-    mesh->Materials = malloc(numOfMaterials * sizeof(Material));
+    mesh->Materials = malloc((numOfMaterials + 1) * sizeof(Material));
     if (mesh->Materials == NULL) {
         printf("Failed to allocate Mesh for %s.\n", dir);
         fclose(fptr);
@@ -51,7 +51,7 @@ bool ObjLoader_loadMTL(Mesh *mesh, char *dir) {
             ++index;
             Material_init(&mesh->Materials[index]);
             sscanf(buff, "%9s %999s", discard, smallBuff);
-            mesh->Materials[index].MaterialName = malloc(1000 * sizeof(char));
+            mesh->Materials[index].MaterialName = malloc((strlen(smallBuff) + 1) * sizeof(char));
             strcpy(mesh->Materials[index].MaterialName, smallBuff);
             continue;
         }

@@ -1,4 +1,3 @@
-
 # Set compile flags.
 target_compile_options(${PROJECT_NAME} PRIVATE
         # Clang
@@ -8,8 +7,6 @@ target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CXX_COMPILER_ID:GNU>:-w>
         # Visual Studio
         $<$<CXX_COMPILER_ID:MSVC>:/W0>
-        # Enable the clang sanitizer.
-        $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>,$<PLATFORM_ID:${SANITIZER_OS}>>:${SANITIZER_FLAGS}>
 )
 
 add_subdirectory(stb)
@@ -27,3 +24,4 @@ OPTION(ALSOFT_INSTALL OFF)
 OPTION(ALSOFT_INSTALL_CONFIG OFF)
 OPTION(ALSOFT_INSTALL_UTILS OFF)
 add_subdirectory(openal)
+add_subdirectory(Physics)

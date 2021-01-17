@@ -1,12 +1,19 @@
 #pragma once
 
-typedef struct CollisionBody{
-    *addBoxCollider();
+#include "include/BigBalls/collisionBody.h"
 
-} CollisionBody;
+typedef struct CollisionBodyManager{
+    CollisionBody **collisionBodies;
+    size_t numCollisionBodies;
+    int idCount;
+} CollisionBodyManager;
 
-collisionBodyManager_init();
+void CollisionBodyManager_init(CollisionBodyManager *collisionBodyManager);
 
-collisionBodyManager_addBoxCollider();
+void CollisionBodyManager_free(CollisionBodyManager *collisionBodyManager);
 
-collision
+void CollisionBodyManager_add(CollisionBodyManager *collisionBodyManager,
+                              CollisionBody *collisionBody);
+
+void CollisionBodyManager_rm(CollisionBodyManager *collisionBodyManager,
+                             int id);

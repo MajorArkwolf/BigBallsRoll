@@ -1,48 +1,28 @@
 #include "include/BigBalls/physicsEngine.h"
-#include "include/BigBalls/collisionBodyManager.h"
-#include <stdbool.h>
+
 #include <stdlib.h>
+#include <assert.h>
+#include "include/BigBalls/collisionBodyManager.h"
 
-void collisionBodyManager(){
-    // init collider manager
-}
-
-void physicsWorldInit(){
+void physicsWorldInit(PhysicsEngine *physicsEngine){
+    assert(physicsEngine != NULL);
     // init collision body manager
+    physicsEngine->collisionBodyManager = NULL;
 }
 
-int createCollisionBody(){
+int createCollisionBody(PhysicsEngine *physicsEngine){
+    assert(physicsEngine != NULL);
     // Allocate memory for collisionbody
     // Add memory to collision body manager and get ID from manager
     return 0; // stub
 }
 
-bool destroyCollisionBody(int ID){
+bool destroyCollisionBody(PhysicsEngine *physicsEngine,
+                          int id){
+    assert(physicsEngine != NULL);
     return true; // stub
 }
 
-void createBoxCollider(int ID,
-                       float xOffset,
-                       float yOffset,
-                       float zOffset,
-                       float xLen,
-                       float yLen,
-                       float zLen){
-    // check lengths aren't negative
-}
+void addBroadPhase(){}
 
-void destroyBoxCollider(){
-
-}
-
-void createSphereCollider(int ID,
-                          float xOffset,
-                          float yOffset,
-                          float zOffset,
-                          float radius){
-    // check radius isn't negative
-}
-
-void destroySphereCollider(){
-
-}
+void addNarrowPhase(){}

@@ -9,7 +9,7 @@ set(PHYSICS_HEADERS
     "src/include/BigBalls/collisionBodyManager.h"
     "src/include/BigBalls/boxCollider.h"
     "src/include/BigBalls/sphereCollider.h"
-    "src/include/BigBalls/colliderManager.h")
+        )
 
 set(PHYSICS_SOURCES
     "src/physicsEngine.c"
@@ -17,7 +17,7 @@ set(PHYSICS_SOURCES
     "src/collisionBodyManager.c"
     "src/boxCollider.c"
     "src/sphereCollider.c"
-    "src/colliderManager.c")
+        )
 
 add_library(${PROJECT_NAME} ${PHYSICS_HEADERS} ${PHYSICS_SOURCES})
 add_library(BigBalls::Physics ALIAS ${PROJECT_NAME})

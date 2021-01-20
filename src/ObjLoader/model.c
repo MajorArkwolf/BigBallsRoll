@@ -60,8 +60,12 @@ void Model_draw(Model *model) {
 }
 
 void Mesh_free(Mesh *mesh) {
-    for (size_t i = 0; i < mesh->NumOfFaces; ++i) {
+    size_t i;
+    for (i = 0; i < mesh->NumOfFaces; ++i) {
         Face_free(&mesh->Faces[i]);
+    }
+    for (i = 0; i < mesh->NumOfMaterials; ++i) {
+        free(mesh->Materials[i].MaterialName);
     }
     free(mesh->Faces);
     free(mesh->Vertices);

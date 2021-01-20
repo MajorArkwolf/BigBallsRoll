@@ -1,12 +1,15 @@
 #pragma once
 #include <stdlib.h>
+#include <stdbool.h>
 #include "Math/transform.h"
 
 /// GameObject Structure
 typedef struct GameObject {
     Transform Transform;
     size_t ModelID;
+    unsigned int SoundID;
     char *Name;
+    bool StaticObject;
 } GameObject;
 
 /**
@@ -26,3 +29,7 @@ void GameObject_free(GameObject *gameObject);
  * @param gameObject game object to be drawn.
  */
 void GameObject_draw(GameObject *gameObject);
+
+void GameObject_update(GameObject *gameObject);
+
+void GameObject_registerSoundSource(GameObject *gameObject);

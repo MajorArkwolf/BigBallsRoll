@@ -3,6 +3,7 @@
 #include "Engine/stateManager.h"
 #include "Engine/textureManager.h"
 #include <stdbool.h>
+#include <lua.h>
 
 typedef struct Engine {
     int timeSinceStart;
@@ -14,6 +15,7 @@ typedef struct Engine {
     int height;
     float fov;
     bool lockCamera;
+    lua_State *lua;
 } Engine;
 
 extern Engine engine;

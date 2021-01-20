@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/camera.h"
-#include "Engine/gameObject.h"
+#include "Engine/GameObjects/gameObject.h"
 #include "Engine/InputManager.h"
 
 #define MAX_GAME_OBJECTS 10000

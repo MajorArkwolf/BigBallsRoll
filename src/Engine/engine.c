@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <lauxlib.h>
+#include <lualib.h>
+#include <lua.h>
 #include "Helper/stringPath.h"
 
 #include "Scene/MainMenu/mainMenu.h"
@@ -171,7 +174,12 @@ int Engine_run(int argc, char *argv[]) {
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+    engine.lua = luaL_newstate();
 
+    //Initialise LUA state
+    luaL_openlibs(engine.lua);
+    luaopen_math(engine.lua);
+    luaopen_string(engine.lua);
 
     StateManager_init(&engine.sM);
     State state;
@@ -227,5 +235,6 @@ void Engine_stop() {
     ModelManager_free(&engine.modelManager);
     TextureManager_free(&engine.textureManager);
     StateManager_free(&engine.sM);
+    lua_close(engine.lua);
     free(engine.cwd);
 }

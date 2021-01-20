@@ -20,11 +20,11 @@ void CollisionBody_init(CollisionBody *collisionBody){
 
 void CollisionBody_free(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
-    // Free stack-allocated box colliders
+    // Free box colliders
     for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
         free(collisionBody->BoxColliders[i]);
     }
-    // Free stack-allocated sphere colliders
+    // Free sphere colliders
     for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
         free(collisionBody->SphereColliders[i]);
     }

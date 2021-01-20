@@ -33,7 +33,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/Audio/audioManager.c
 
     #Scenes
-    Scene/MainMenu/MainMenu.c
+    Scene/MainMenu/mainMenu.c
     Scene/LevelOne/LevelOne.c
 )
 

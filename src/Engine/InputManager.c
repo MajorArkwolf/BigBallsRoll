@@ -4,14 +4,14 @@
 
 InputType InputType_convertSpecialKey(int glutKey) {
     switch(glutKey) {
-        case(GLUT_KEY_ALT_L):
-            return KEY_LALT;
-        case(GLUT_KEY_ALT_R):
-            return KEY_RALT;
-        case(GLUT_KEY_CTRL_L):
-            return KEY_LCNTRL;
-        case(GLUT_KEY_CTRL_R):
-            return KEY_RCNTRL;
+//        case(GLUT_KEY_ALT_L):
+//            return KEY_LALT;
+//        case(GLUT_KEY_ALT_R):
+//            return KEY_RALT;
+//        case(GLUT_KEY_CTRL_L):
+//            return KEY_LCNTRL;
+//        case(GLUT_KEY_CTRL_R):
+//            return KEY_RCNTRL;
         case(GLUT_KEY_F1):
             return KEY_F1;
         case(GLUT_KEY_F2):

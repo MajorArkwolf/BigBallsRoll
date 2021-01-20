@@ -22,7 +22,3 @@ bool destroyCollisionBody(PhysicsEngine *physicsEngine,
     assert(physicsEngine != NULL);
     return true; // stub
 }
-
-void addBroadPhase(){}
-
-void addNarrowPhase(){}

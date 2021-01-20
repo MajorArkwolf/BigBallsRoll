@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "Helper/stringPath.h"
+#include "Engine/Audio/audioEngine.h"
 
 #include "Scene/MainMenu/mainMenu.h"
 
@@ -167,19 +168,28 @@ int Engine_run(int argc, char *argv[]) {
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
 
+    //Initialise our Services
     TextureManager_init(&engine.textureManager);
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+    AudioEngine_init(&engine.audioEngine);
+    AudioManager_init(&engine.audioManager);
+    AudioManager_loadSounds(&engine.audioManager, engine.cwd);
 
-
+    //Initialise our Game State.
     StateManager_init(&engine.sM);
-    State state;
-    State_init(&state);
-    MainMenu_init(&state);
-    StateManager_push(&engine.sM, &state);
-    assert(engine.sM.stack[engine.sM.top] != NULL);
+    State *state = malloc(sizeof(State));
+    State_init(state);
+    MainMenu_init(state);
+    StateManager_push(&engine.sM, state);
+    if (engine.sM.stack[engine.sM.top] == NULL) {
+        printf("Game stack failed to start.");
+        return EXIT_FAILURE;
+    }
 
+
+    //Initialise our Window and OpenGL context.
     glutInit(&argc, argv);
     //Set the window position to the centre of the screen.
     int x_offset = glutGet(GLUT_SCREEN_WIDTH) / 2 - engine.width / 2;
@@ -224,6 +234,9 @@ int Engine_run(int argc, char *argv[]) {
 }
 
 void Engine_stop() {
+    AudioEngine_stop_all(&engine.audioEngine);
+    AudioManager_free(&engine.audioManager);
+    AudioEngine_free(&engine.audioEngine);
     ModelManager_free(&engine.modelManager);
     TextureManager_free(&engine.textureManager);
     StateManager_free(&engine.sM);

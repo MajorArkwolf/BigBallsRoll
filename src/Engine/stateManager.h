@@ -16,7 +16,7 @@ typedef int (*fnPtrInput)(InputType);
 typedef int (*fnPtrFlFl)(float, float);
 
 /// State Structure
-typedef struct {
+typedef struct State {
     GameObject gameObjects[MAX_GAME_OBJECTS];
     Camera camera;
     size_t NumOfGameObjects;

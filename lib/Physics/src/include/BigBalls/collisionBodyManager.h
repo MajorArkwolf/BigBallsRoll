@@ -1,6 +1,6 @@
 #pragma once
 
-#include "include/BigBalls/collisionBody.h"
+#include "collisionBody.h"
 
 typedef struct CollisionBodyManager{
     CollisionBody **collisionBodies;

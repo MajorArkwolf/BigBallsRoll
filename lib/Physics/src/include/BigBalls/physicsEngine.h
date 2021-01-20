@@ -6,19 +6,6 @@ typedef struct PhysicsEngine{
     CollisionBodyManager *collisionBodyManager;
 } PhysicsEngine;
 
-typedef struct Mesh{
-    Face *Faces;
-    Vertex *Vertices;
-    Vertex *Normals;
-    TextureCord *TextureCords;
-    Material *Materials;
-    size_t NumOfFaces;
-    size_t NumOfVert;
-    size_t NumOfNormals;
-    size_t NumOfTextureCords;
-    size_t NumOfMaterials;
-} Mesh;
-
 /**
  * Initialises the physics world
  */
@@ -104,9 +91,9 @@ bool willCollide(PhysicsEngine *physicsEngine,
   * @param physicsEngine
   * @param coords
   */
- void getBroadPhaseMesh(PhysicsEngine *physicsEngine,
-                    int id,
-                    Mesh *mesh){}
+ //void getBroadPhaseMesh(PhysicsEngine *physicsEngine,
+ //                   int id,
+ //                   Mesh *mesh){}
 
  /**
   * Get mesh of narrowphase physics representation of object
@@ -115,6 +102,6 @@ bool willCollide(PhysicsEngine *physicsEngine,
   * @param id
   * @param mesh
   */
- void getNarrowPhaseMesh(PhysicsEngine *physicsEngine,
-                     int id,
-                     Mesh *mesh){}
+ //void getNarrowPhaseMesh(PhysicsEngine *physicsEngine,
+ //                    int id,
+ //                    Mesh *mesh){}

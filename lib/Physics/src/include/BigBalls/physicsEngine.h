@@ -59,49 +59,33 @@ bool willCollide(PhysicsEngine *physicsEngine,
 /**
  * TODO: idk if this is in the scope of physics engine, but I imagine the engine must be updated with new data when an object intends to move
  */
- bool moveObj(PhysicsEngine *physicsEngine,
-                int id,
-                float newXOffset,
-                float newYOffset,
-                float newZOffset);
+bool moveObj(PhysicsEngine *physicsEngine,
+             int id,
+             float newXOffset,
+             float newYOffset,
+             float newZOffset);
 
- //TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
- bool applyForceToObj(PhysicsEngine *physicsEngine,
-                      float force,
-                      float xDir,
-                      float yDir,
-                      float zDir,
-                      int objID);
+//TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
+bool applyForce(PhysicsEngine *physicsEngine,
+                  float force,
+                  float xDir,
+                  float yDir,
+                  float zDir,
+                  int objID);
 
- /**
-  * Add a game object to the physics engine
-  * @return
-  */
- bool addObj(PhysicsEngine *physicsEngine);
+/**
+* Add a game object to the physics engine
+* @return
+*/
+int addObj(PhysicsEngine *physicsEngine);
 
- /**
-  * Remove a game object from the physics engine
-  * @return
-  */
- bool removeObj(PhysicsEngine *physicsEngine);
+/**
+* Remove a game object from the physics engine
+* @return
+*/
+bool removeObj(PhysicsEngine *physicsEngine);
 
- /**
-  * Get mesh of broadphase physics representation of object
-  * Useful for debugging
-  * @param physicsEngine
-  * @param coords
-  */
- //void getBroadPhaseMesh(PhysicsEngine *physicsEngine,
- //                   int id,
- //                   Mesh *mesh){}
+bool updateObj(PhysicsEngine *physicsEngine,
+               int objId);
 
- /**
-  * Get mesh of narrowphase physics representation of object
-  * Useful for debugging
-  * @param physicsEngine
-  * @param id
-  * @param mesh
-  */
- //void getNarrowPhaseMesh(PhysicsEngine *physicsEngine,
- //                    int id,
- //                    Mesh *mesh){}
+void draw(PhysicsEngine *physicsEngine);

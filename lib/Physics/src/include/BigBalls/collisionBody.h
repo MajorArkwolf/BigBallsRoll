@@ -28,7 +28,9 @@ void CollisionBody_init(CollisionBody *collisionBody);
 void CollisionBody_free(CollisionBody *collisionBody);
 
 /**
- * A stack array was chosen for its ability to be resized, at the cost of performance when being resized (when colliders are added or destroyed). As object creation/destruction are not speed-critical operations in our project this tradeoff seems acceptable (the alternative being two static arrays per collisonBody (for each type) which seemed a bit excessive)
+ * A heap array was chosen for its ability to be resized, at the cost of performance when being resized (when colliders are added or destroyed).
+ * As object creation/destruction are not speed-critical operations in our project this tradeoff seems acceptable
+ * (the alternative being two static arrays per collisonBody (for each type) which seemed a bit excessive)
  * @param colliderManager
  * @param boxCollider
  */

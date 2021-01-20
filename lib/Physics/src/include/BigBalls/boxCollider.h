@@ -14,6 +14,5 @@ typedef struct BoxCollider{
 /**
  * Initialises a BoxCollider
  * @param boxCollider an instantiated BoxCollider
- * @return
  */
 void BoxCollider_init(BoxCollider *boxCollider);

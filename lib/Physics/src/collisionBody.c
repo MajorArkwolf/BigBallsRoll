@@ -20,14 +20,8 @@ void CollisionBody_init(CollisionBody *collisionBody){
 
 void CollisionBody_free(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
-    // Free stack-allocated box colliders
-    for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
-        free(collisionBody->BoxColliders[i]);
-    }
-    // Free stack-allocated sphere colliders
-    for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
-        free(collisionBody->SphereColliders[i]);
-    }
+    free(collisionBody->BoxColliders);
+    free(collisionBody->SphereColliders);
     // Reset colliderManager values
     collisionBody->numOfBoxColliders = 0;
     collisionBody->numOfSphereColliders = 0;
@@ -54,21 +48,17 @@ void CollisionBody_addBoxCollider(CollisionBody *collisionBody,
 void CollisionBody_rmBoxCollider(CollisionBody *collisionBody,
                                    int id){
     if(collisionBody->numOfBoxColliders - 1 != 0){
-        // Allocate memory for smaller array
-        BoxCollider **newBoxColliders = calloc(collisionBody->numOfBoxColliders - 1, sizeof(BoxCollider));
-        // Only copy elements that are not to be removed
         for(size_t i = 0; i < collisionBody->numOfBoxColliders - 1; ++i){
             if(collisionBody->BoxColliders[i]->id != id){
-                newBoxColliders[i] = collisionBody->BoxColliders[i];
+                // doesn't actually remove the data from memory for performance reasons
+                // O(n-1) vs O(n-x) time to copy all data but desired ID to new array
+                // Only a small struct of primitives so memory efficiency is less pertinent of an issue
+                collisionBody->BoxColliders[i] = NULL;
             }
         }
-        // free old array
-        free(collisionBody->BoxColliders);
-        // assign new array to colliderManager
-        collisionBody->BoxColliders = newBoxColliders;
     }
     else{
-        // if size = 0, store null pointer
+        // if size = 0, free whole array and store null pointer
         free(collisionBody->BoxColliders);
         collisionBody->BoxColliders = NULL;
     }
@@ -94,18 +84,14 @@ void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
 void CollisionBody_rmSphereCollider(CollisionBody *collisionBody,
                                       int id){
     if(collisionBody->numOfSphereColliders - 1 != 0){
-        // Allocate memory for smaller array
-        SphereCollider **newSphereColliders = calloc(collisionBody->numOfSphereColliders - 1, sizeof(SphereCollider));
-        // Only copy elements that are not to be removed
         for(size_t i = 0; i < collisionBody->numOfSphereColliders - 1; ++i){
             if(collisionBody->SphereColliders[i]->id != id){
-                newSphereColliders[i] = collisionBody->SphereColliders[i];
+                // doesn't actually remove the data from memory for performance reasons
+                // O(n-1) vs O(n-x) time to copy all data but desired ID to new array
+                // Only a small struct of primitives so memory efficiency is less pertinent of an issue
+                collisionBody->SphereColliders[i] = NULL;
             }
         }
-        // free old array
-        free(collisionBody->SphereColliders);
-        // assign new array to colliderManager
-        collisionBody->SphereColliders = newSphereColliders;
     }
     else{
         // if size = 0, store null pointer

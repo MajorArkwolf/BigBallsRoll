@@ -9,6 +9,9 @@ typedef struct BoxCollider{
     float xLen;
     float yLen;
     float zLen;
+    float xRot;
+    float yRot;
+    float zRot;
 } BoxCollider;
 
 /**

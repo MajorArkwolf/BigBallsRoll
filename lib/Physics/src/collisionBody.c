@@ -16,6 +16,12 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->SphereColliders = NULL;
     collisionBody->idCount = 0;
     collisionBody->id = -1; //TODO: request id here or not?
+    collisionBody->xPos = 0;
+    collisionBody->yPos = 0;
+    collisionBody->zPos = 0;
+    collisionBody->xRot = 0;
+    collisionBody->yRot = 0;
+    collisionBody->zRot = 0;
 }
 
 void CollisionBody_free(CollisionBody *collisionBody){

@@ -69,24 +69,31 @@ void CollisionBody_rmSphereCollider(CollisionBody *collisionBody,
 
 /**
  * Translate a collisonbody (and therefore all of its member colliders)
+ * @param collisionBody
  * @param xDist
  * @param yDist
  * @param zDist
  */
-void CollisionBody_translate(float xDist, float yDist, float zDist);
+void CollisionBody_translate(CollisionBody *collisionBody,
+                             float xDist,
+                             float yDist,
+                             float zDist);
 
 /**
  * Rotate a collisionbody (and therefore all of its member colliders)
+ * @param collisionBody
  * @param xRot
  * @param yRot
  * @param zRot
  */
-void CollisionBody_rotate(float xRot, float yRot, float zRot);
+void CollisionBody_rotate(CollisionBody *collisionBody,
+                          float xRot,
+                          float yRot,
+                          float zRot);
 
 /**
- * Scale a collisionbody (and therefore all of its member colliders)
- * @param xFactor
- * @param yFactor
- * @param zFactor
+ * Scale a collisionbody uniformly (and therefore all of its member colliders)
+ * @param collisionBody
+ * @param scaleFactor
  */
-void CollisionBody_scale(float xFactor, float yFactor, float zFactor);
+void CollisionBody_scale(CollisionBody *collisionBody, float scaleFactor);

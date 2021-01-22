@@ -7,6 +7,9 @@ typedef struct SphereCollider{
     float yOffset;
     float zOffset;
     float radius;
+    float xRot;
+    float yRot;
+    float zRot;
 } SphereCollider;
 
 /**

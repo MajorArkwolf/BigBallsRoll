@@ -38,4 +38,7 @@ int Engine_run(int argc, char *argv[]);
  */
 void Engine_stop();
 
+/**
+ * Load the config lua to set the default values.
+ */
 void Engine_loadConfig();

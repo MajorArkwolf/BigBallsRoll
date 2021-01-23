@@ -3,7 +3,7 @@
 #include <Engine/engine.h>
 #include "Engine/InputManager.h"
 #include "Helper/stringPath.h"
-#include <lua.h>
+
 #include <lualib.h>
 #include <lauxlib.h>
 #include <string.h>
@@ -109,10 +109,70 @@ void Game_init(State *state) {
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
-    lua_getglobal(engine.lua, "my_function");
+
+    //Register functions for lua.
+    lua_pushcfunction(engine.lua, Game_addGameObject);
+    lua_setglobal(engine.lua, "GameObjectRegister");
+    lua_pushcfunction(engine.lua, Game_setPosition);
+    lua_setglobal(engine.lua, "GameObjectSetPosition");
+    lua_pushcfunction(engine.lua, Game_setRotation);
+    lua_setglobal(engine.lua, "GameObjectSetRotation");
+    lua_pushcfunction(engine.lua, Game_setModel);
+    lua_setglobal(engine.lua, "GameObjectSetModel");
+
+    lua_getglobal(engine.lua, "Init");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
-    lua_pop(engine.lua, lua_gettop(engine.lua));
+    //lua_pop(engine.lua, lua_gettop(engine.lua));
     free(lua_location);
+}
+
+int Game_addGameObject(lua_State *L) {
+    //Get the ID ready for lua to manipulate a game object.
+    State *state = StateManager_top(&engine.sM);
+    size_t id = state->NumOfGameObjects;
+    GameObject_init(&state->gameObjects[id]);
+    ++state->NumOfGameObjects;
+    lua_pushnumber(L, id);
+    return 1;
+}
+
+int Game_setPosition(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    gameObject->Transform.Position.X = lua_tonumber(L, 2);
+    gameObject->Transform.Position.Y = lua_tonumber(L, 3);
+    gameObject->Transform.Position.Z = lua_tonumber(L, 4);
+
+    return 0;
+}
+
+int Game_setRotation(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    gameObject->Transform.Rotation.X = lua_tonumber(L, 2);
+    gameObject->Transform.Rotation.Y = lua_tonumber(L, 3);
+    gameObject->Transform.Rotation.Z = lua_tonumber(L, 4);
+
+    return 0;
+}
+
+int Game_setModel(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    size_t length = 0;
+    const char* model = luaL_checklstring(L, 2,  &length);
+    gameObject->ModelID = ModelManager_findModel(&engine.modelManager, model);
+
+    return 0;
 }

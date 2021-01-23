@@ -1,3 +1,13 @@
-function my_function()
-    print("Hello, World from File")
+function Init()
+    object = GameObjectRegister()
+    GameObjectSetPosition(object, 0, 0, 0)
+    GameObjectSetModel(object, "Ball.obj")
+end
+
+function Update()
+
+end
+
+function Draw()
+
 end

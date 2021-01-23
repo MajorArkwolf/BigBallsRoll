@@ -68,8 +68,8 @@ int MainMenu_keyUp(InputType inputType) {
         case KEY_SPACEBAR:
             state = malloc(sizeof (State));
             State_init(state);
-            Game_init(state);
             StateManager_push(&engine.sM, state);
+            Game_init(state);
             return 0;
         default:
             break;

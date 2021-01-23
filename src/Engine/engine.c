@@ -9,7 +9,7 @@
 #include <lua.h>
 #include "Helper/stringPath.h"
 #include "Engine/Audio/audioEngine.h"
-
+#include "Engine/luaHelper.h"
 #include "Scene/MainMenu/mainMenu.h"
 
 const float FRAMERATE = 1 / 60.0f;                     // ~60 FPS.
@@ -163,10 +163,12 @@ void mouseButton(int button, int state, int x, int y) {
 
 
 int Engine_run(int argc, char *argv[]) {
-    engine.width = 1920;
-    engine.height = 1080;
+    //Engine Defaults
+    engine.width = 1600;
+    engine.height = 1200;
     engine.fov = 60.0f;
     engine.lockCamera = false;
+    engine.fullScreen = false;
 
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
@@ -182,6 +184,7 @@ int Engine_run(int argc, char *argv[]) {
     luaL_openlibs(engine.lua);
     luaopen_math(engine.lua);
     luaopen_string(engine.lua);
+    Engine_loadConfig();
 
     AudioEngine_init(&engine.audioEngine);
     AudioManager_init(&engine.audioManager);
@@ -214,6 +217,8 @@ int Engine_run(int argc, char *argv[]) {
         printf("Couldn't find abgr extension.\n");
         exit(EXIT_FAILURE);
     }
+
+    if (engine.fullScreen) {glutFullScreen();}
 
     // Render Que
     glutDisplayFunc(Draw);
@@ -252,4 +257,30 @@ void Engine_stop() {
     StateManager_free(&engine.sM);
     lua_close(engine.lua);
     free(engine.cwd);
+}
+
+void Engine_loadConfig() {
+    char configFile[] = {"config.lua"};
+    LuaHelper_loadScript(configFile);
+    //Get width
+    lua_getglobal(engine.lua, "width");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.width = lua_tonumber(engine.lua, -1);
+    }
+    //Get Height
+    lua_getglobal(engine.lua, "height");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.height = lua_tonumber(engine.lua, -1);
+    }
+    //Get Fov
+    lua_getglobal(engine.lua, "fov");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.fov = lua_tonumber(engine.lua, -1);
+    }
+
+    //Get Fullscreen
+    lua_getglobal(engine.lua, "fullscreen");
+    if (lua_isboolean(engine.lua, 0) == 0) {
+        engine.fullScreen = lua_toboolean(engine.lua, -1);
+    }
 }

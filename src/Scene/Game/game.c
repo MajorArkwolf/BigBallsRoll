@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <Engine/engine.h>
 #include "Engine/InputManager.h"
+#include "Engine/luaHelper.h"
 #include "Helper/stringPath.h"
 
 #include <lualib.h>
@@ -98,17 +99,8 @@ void Game_init(State *state) {
     state->keyDown = Game_keyDown;
     state->keyUp = Game_keyUp;
     state->mouseMovement = Game_mouseMovement;
-    char file[] = "Script/game.lua";
-    char* lua_location = malloc(sizeof (char) * (strlen(engine.cwd) + strlen(file) + 6));
-    strcpy(lua_location, engine.cwd);
-    strcat(lua_location, "res/");
-    strcat(lua_location, file);
-    if(luaL_loadfile(engine.lua, lua_location) != LUA_OK) {
-        assert(false);
-    }
-    if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
-        lua_pop(engine.lua, lua_gettop(engine.lua));
-    }
+    char file[] = "game.lua";
+    LuaHelper_loadScript(file);
 
     //Register functions for lua.
     lua_pushcfunction(engine.lua, Game_addGameObject);
@@ -124,8 +116,6 @@ void Game_init(State *state) {
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
-    //lua_pop(engine.lua, lua_gettop(engine.lua));
-    free(lua_location);
 }
 
 int Game_addGameObject(lua_State *L) {

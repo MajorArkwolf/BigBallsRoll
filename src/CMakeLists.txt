@@ -27,6 +27,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/modelManager.c
     Engine/InputManager.c
     Engine/textureManager.c
+    Engine/luaHelper.c
     ## Audio
     Engine/Audio/sound.c
     Engine/Audio/audioEngine.c

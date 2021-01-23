@@ -8,11 +8,30 @@
  */
 void Game_init(State *state);
 
-
+/**
+ * Add a game object from LUA
+ * @param L lua's state to get the information from LUA
+ * @return how many parameters are returned
+ */
 int Game_addGameObject(lua_State *L);
 
+/**
+ * Set position of a game object from LUA
+ * @param L lua's state to get the information from LUA
+ * @return how many parameters are returned
+ */
 int Game_setPosition(lua_State *L);
 
+/**
+ * Set rotation of a game object from LUA
+ * @param L lua's state to get the information from LUA
+ * @return how many parameters are returned
+ */
 int Game_setRotation(lua_State *L);
 
+/**
+ * Set a rotation game object from LUA
+ * @param L lua's state to get the information from LUA
+ * @return how many parameters are returned
+ */
 int Game_setModel(lua_State *L);

@@ -19,6 +19,7 @@ typedef struct Engine {
     int height;
     float fov;
     bool lockCamera;
+    bool fullScreen;
     lua_State *lua;
 } Engine;
 
@@ -36,3 +37,5 @@ int Engine_run(int argc, char *argv[]);
  * Frees any memory the engine is using on the heap
  */
 void Engine_stop();
+
+void Engine_loadConfig();

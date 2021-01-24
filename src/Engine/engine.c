@@ -218,7 +218,9 @@ int Engine_run(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    if (engine.fullScreen) {glutFullScreen();}
+    if (engine.fullScreen) {
+        glutFullScreen();
+    }
 
     // Render Que
     glutDisplayFunc(Draw);

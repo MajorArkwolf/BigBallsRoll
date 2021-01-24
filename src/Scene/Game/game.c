@@ -18,7 +18,7 @@ int Game_draw(float deltaTime) {
 }
 
 int Game_update(float deltaTime) {
-    Camera_update(&StateManager_top(&engine.sM)->camera, (float) deltaTime);
+    Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
     GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
     if(StateManager_top(&engine.sM)->NumOfGameObjects != 0) {
         for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects - 1; ++i) {

@@ -30,7 +30,7 @@ int Game_setPosition(lua_State *L);
 int Game_setRotation(lua_State *L);
 
 /**
- * Set a rotation game object from LUA
+ * Set the model from lua based of the string of the models file location.
  * @param L lua's state to get the information from LUA
  * @return how many parameters are returned
  */

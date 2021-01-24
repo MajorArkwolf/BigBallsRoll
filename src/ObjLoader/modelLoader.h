@@ -7,7 +7,7 @@
  * @param fileName file name you wish to load relative to the resource directory.
  * @return the loaded model if successful.
  */
-Model ModelLoader_loadModel(char *workingDir, char *fileName);
+Model ModelLoader_loadModel(char *workingDir, const char *fileName);
 
 /**
  * Allocate the required quantities for the Mesh

@@ -8,7 +8,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE
         # Visual Studio
         $<$<CXX_COMPILER_ID:MSVC>:/W0>
 )
-
+add_subdirectory(lua)
+add_subdirectory(Physics)
 add_subdirectory(stb)
 cmake_policy(PUSH)
 OPTION(BUILD_PROGRAMS OFF)
@@ -24,4 +25,3 @@ OPTION(ALSOFT_INSTALL OFF)
 OPTION(ALSOFT_INSTALL_CONFIG OFF)
 OPTION(ALSOFT_INSTALL_UTILS OFF)
 add_subdirectory(openal)
-add_subdirectory(Physics)

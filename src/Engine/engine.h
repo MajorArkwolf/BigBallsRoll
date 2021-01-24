@@ -5,6 +5,7 @@
 #include "Engine/stateManager.h"
 #include "Engine/textureManager.h"
 #include <stdbool.h>
+#include <lua.h>
 
 typedef struct Engine {
     int timeSinceStart;
@@ -18,6 +19,8 @@ typedef struct Engine {
     int height;
     float fov;
     bool lockCamera;
+    bool fullScreen;
+    lua_State *lua;
 } Engine;
 
 extern Engine engine;
@@ -34,3 +37,8 @@ int Engine_run(int argc, char *argv[]);
  * Frees any memory the engine is using on the heap
  */
 void Engine_stop();
+
+/**
+ * Load the config lua to set the default values.
+ */
+void Engine_loadConfig();

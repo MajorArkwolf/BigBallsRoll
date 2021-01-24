@@ -1,32 +1,26 @@
 #include "mainMenu.h"
 #include <stdlib.h>
 #include <Engine/engine.h>
-#include "Engine/InputManager.h"
-#include "Helper/stringPath.h"
+#include "Scene/Game/game.h"
+#include "Engine/stateManager.h"
 
-int draw(float deltaTime) {
+int MainMenu_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
     }
     return 0;
 }
 
-int update(float deltaTime) {
+int MainMenu_update(float deltaTime) {
     Camera_update(&StateManager_top(&engine.sM)->camera, (float) deltaTime);
     GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
-    for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects - 1; ++i) {
-        float rotationSpeed = 10.0f;
-        if (i % 2 == 0) {
-            rotationSpeed *= -1.0f;
-        }
-        gameObjects[i].Transform.Rotation.X += rotationSpeed * deltaTime;
-        gameObjects[i].Transform.Rotation.Y += rotationSpeed * deltaTime;
-        gameObjects[i].Transform.Rotation.Z += rotationSpeed * deltaTime;
+    for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
+        GameObject_update(&gameObjects[i]);
     }
     return 0;
 }
 
-int keyDown(InputType inputType) {
+int MainMenu_keyDown(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     switch (inputType) {
         case KEY_UP_ARROW:
@@ -51,8 +45,9 @@ int keyDown(InputType inputType) {
     return 0;
 }
 
-int keyUp(InputType inputType) {
+int MainMenu_keyUp(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
+    State *state;
     switch (inputType) {
         case KEY_UP_ARROW:
         case KEY_W:
@@ -70,13 +65,19 @@ int keyUp(InputType inputType) {
         case KEY_D:
             cam->MoveRight = false;
             break;
+        case KEY_SPACEBAR:
+            state = malloc(sizeof (State));
+            State_init(state);
+            StateManager_push(&engine.sM, state);
+            Game_init(state);
+            return 0;
         default:
             break;
     }
     return 0;
 }
 
-int mouseMovement(float x, float y) {
+int MainMenu_mouseMovement(float x, float y) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {
@@ -87,24 +88,40 @@ int mouseMovement(float x, float y) {
 
 void MainMenu_init(State *state) {
     state->camera = Camera_construct();
-    state->update = update;
-    state->draw = draw;
-    state->keyDown = keyDown;
-    state->keyUp = keyUp;
-    state->mouseMovement = mouseMovement;
+    state->update = MainMenu_update;
+    state->draw = MainMenu_draw;
+    state->keyDown = MainMenu_keyDown;
+    state->keyUp = MainMenu_keyUp;
+    state->mouseMovement = MainMenu_mouseMovement;
 
     GameObject_init(&state->gameObjects[0]);
     GameObject_init(&state->gameObjects[1]);
     GameObject_init(&state->gameObjects[2]);
-    state->gameObjects[0].Transform.Position.X += 15.f;
+    GameObject_init(&state->gameObjects[3]);
+    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Terrain/Wall.obj");
+    state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Terrain/Floor.obj");
+    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/Title.obj");
+    state->gameObjects[3].ModelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
+    state->gameObjects[0].Transform.Position.X += 20.f;
     state->gameObjects[0].Transform.Position.Z += 5.f;
-    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
-    state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Off/colourcube.off");
-    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/Goblin/goblin_warrior_spear.obj");
-    state->gameObjects[1].Transform.Position.X += 15.f;
+    state->gameObjects[0].Transform.Position.Y -= 3.f;
+    state->gameObjects[0].Transform.Rotation.Y += 90.f;
+    state->gameObjects[1].Transform.Position.X += 20.f;
+    state->gameObjects[1].Transform.Position.Y -= 4.f;
     state->gameObjects[1].Transform.Position.Z -= 5.f;
+    state->gameObjects[1].Transform.Rotation.Y += 180.f;
     state->gameObjects[2].Transform.Position.X += 15.f;
-    state->gameObjects[2].Transform.Position.Y -= 1.f;
+    state->gameObjects[2].Transform.Position.Z += 0.25f;
+    state->gameObjects[2].Transform.Rotation.X = 90.f;
     state->gameObjects[2].Transform.Rotation.Y -= 90.f;
-    state->NumOfGameObjects = 3;
+    state->gameObjects[3].Transform.Position.X += 15.0f;
+    state->gameObjects[3].Transform.Position.Y -= 2.5f;
+    state->NumOfGameObjects = 4;
+
+    state->camera.Position.Y += 2.0f;
+    state->camera.Pitch -= 15.0f;
+    Camera_updateCameraVectors(&state->camera);
+
+    GameObject_registerSoundSource(&state->gameObjects[2]);
+    AudioEngine_play(state->gameObjects[2].SoundID, &engine.audioManager.Sounds[0]);
 }

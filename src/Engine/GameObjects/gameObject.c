@@ -1,6 +1,6 @@
 #include "gameObject.h"
 #include <stdlib.h>
-#include "OpenGL.h"
+#include "Engine/OpenGL.h"
 #include "Engine/modelManager.h"
 #include "Engine/engine.h"
 

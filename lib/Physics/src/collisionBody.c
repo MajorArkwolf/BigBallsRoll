@@ -16,6 +16,12 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->SphereColliders = NULL;
     collisionBody->idCount = 0;
     collisionBody->id = -1; //TODO: request id here or not?
+    collisionBody->xPos = 0;
+    collisionBody->yPos = 0;
+    collisionBody->zPos = 0;
+    collisionBody->xRot = 0;
+    collisionBody->yRot = 0;
+    collisionBody->zRot = 0;
 }
 
 void CollisionBody_free(CollisionBody *collisionBody){
@@ -97,5 +103,59 @@ void CollisionBody_rmSphereCollider(CollisionBody *collisionBody,
         // if size = 0, store null pointer
         free(collisionBody->SphereColliders);
         collisionBody->SphereColliders = NULL;
+    }
+}
+
+void CollisionBody_translate(CollisionBody *collisionBody,
+                             float xDist,
+                             float yDist,
+                             float zDist){
+    collisionBody->xPos += xDist; // update collisionbody position
+    collisionBody->yPos += yDist;
+    collisionBody->zPos += zDist;
+    // update relative positions of boxcolliders
+    for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
+        collisionBody->BoxColliders[i]->xOffset += xDist;
+        collisionBody->BoxColliders[i]->yOffset += yDist;
+        collisionBody->BoxColliders[i]->zOffset += zDist;
+    }
+    // update relative positions of spherecolliders
+    for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
+        collisionBody->SphereColliders[i]->xOffset += xDist;
+        collisionBody->SphereColliders[i]->yOffset += yDist;
+        collisionBody->SphereColliders[i]->zOffset += zDist;
+    }
+}
+
+void CollisionBody_rotate(CollisionBody *collisionBody,
+                          float xRot,
+                          float yRot,
+                          float zRot){
+    collisionBody->xRot += xRot; // update collisionbody rotation
+    collisionBody->yRot += yRot;
+    collisionBody->zRot += zRot;
+    // update relative rotation of boxcolliders
+    for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
+        collisionBody->BoxColliders[i]->xRot += xRot;
+        collisionBody->BoxColliders[i]->yRot += yRot;
+        collisionBody->BoxColliders[i]->zRot += zRot;
+    }
+    // update relative rotation of spherecolliders
+    for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
+        collisionBody->SphereColliders[i]->xRot += xRot;
+        collisionBody->SphereColliders[i]->yRot += yRot;
+        collisionBody->SphereColliders[i]->zRot += zRot;
+    }
+}
+
+void CollisionBody_scale(CollisionBody *collisionBody,
+                         float scaleFactor){
+    for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
+        collisionBody->BoxColliders[i]->xLen *= scaleFactor;
+        collisionBody->BoxColliders[i]->yLen *= scaleFactor;
+        collisionBody->BoxColliders[i]->zLen *= scaleFactor;
+    }
+    for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
+        collisionBody->SphereColliders[i]->radius *= scaleFactor;// scale by the average of the three dimensions
     }
 }

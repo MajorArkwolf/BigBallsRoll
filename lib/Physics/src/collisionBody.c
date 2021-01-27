@@ -4,7 +4,7 @@
 int getID(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
     // increment and return new id
-    return collisionBody->idCount++;
+    return ++collisionBody->idCount;
 }
 
 void CollisionBody_init(CollisionBody *collisionBody){
@@ -47,8 +47,8 @@ void CollisionBody_addBoxCollider(CollisionBody *collisionBody,
     collisionBody->BoxColliders[collisionBody->numOfBoxColliders] = boxCollider;
     // Assign ID to BoxCollider
     collisionBody->BoxColliders[collisionBody->numOfBoxColliders]->id = getID(collisionBody);
-    collisionBody->numOfBoxColliders++;
-    collisionBody->numOfColliders++;
+    ++collisionBody->numOfBoxColliders;
+    ++collisionBody->numOfColliders;
 }
 
 void CollisionBody_rmBoxCollider(CollisionBody *collisionBody,
@@ -83,8 +83,8 @@ void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
     collisionBody->SphereColliders[collisionBody->numOfSphereColliders] = sphereCollider;
     // Assign ID to BoxCollider
     collisionBody->SphereColliders[collisionBody->numOfSphereColliders]->id = getID(collisionBody);
-    collisionBody->numOfSphereColliders++;
-    collisionBody->numOfColliders++;
+    ++collisionBody->numOfSphereColliders;
+    ++collisionBody->numOfColliders;
 }
 
 void CollisionBody_rmSphereCollider(CollisionBody *collisionBody,

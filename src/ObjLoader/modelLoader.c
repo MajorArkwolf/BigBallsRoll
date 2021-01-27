@@ -132,7 +132,7 @@ bool ModelLoader_loadOff(Model *model, FILE *fptr) {
     return true;
 }
 
-Model ModelLoader_loadModel(char *workingDir, char *fileName) {
+Model ModelLoader_loadModel(char *workingDir, const char *fileName) {
     //Get the full directory to our model.
     bool modelLoaded = false;
     char *fullDir = malloc(MAX_MALLOC_SIZE * sizeof(char));

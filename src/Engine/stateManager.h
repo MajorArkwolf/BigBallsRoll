@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/camera.h"
-#include "Engine/gameObject.h"
+#include "Engine/GameObjects/gameObject.h"
 #include "Engine/InputManager.h"
 
 #define MAX_GAME_OBJECTS 10000
@@ -16,7 +16,7 @@ typedef int (*fnPtrInput)(InputType);
 typedef int (*fnPtrFlFl)(float, float);
 
 /// State Structure
-typedef struct {
+typedef struct State {
     GameObject gameObjects[MAX_GAME_OBJECTS];
     Camera camera;
     size_t NumOfGameObjects;

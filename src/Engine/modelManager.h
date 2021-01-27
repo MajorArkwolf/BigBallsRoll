@@ -36,7 +36,7 @@ void ModelManager_loadModels(ModelManager *modelManger, char* cwd);
  * @param modelName string name to look up
  * @return the id of where it exists in the array, or a new initialised index if not found.
  */
-size_t ModelManager_findModel(ModelManager *modelManger, char *modelName);
+size_t ModelManager_findModel(ModelManager *modelManger, const char *modelName);
 
 /**
  * Return a model based of the index value.

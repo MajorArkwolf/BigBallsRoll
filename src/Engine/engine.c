@@ -4,8 +4,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <lauxlib.h>
+#include <lualib.h>
+#include <lua.h>
 #include "Helper/stringPath.h"
-
+#include "Engine/Audio/audioEngine.h"
+#include "Engine/luaHelper.h"
 #include "Scene/MainMenu/mainMenu.h"
 
 const float FRAMERATE = 1 / 60.0f;                     // ~60 FPS.
@@ -159,27 +163,46 @@ void mouseButton(int button, int state, int x, int y) {
 
 
 int Engine_run(int argc, char *argv[]) {
-    engine.width = 1920;
-    engine.height = 1080;
+    //Engine Defaults
+    engine.width = 1600;
+    engine.height = 1200;
     engine.fov = 60.0f;
     engine.lockCamera = false;
+    engine.fullScreen = false;
 
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
 
+    //Initialise our Services
     TextureManager_init(&engine.textureManager);
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+	
+	//Initialise LUA state
+    engine.lua = luaL_newstate();
+    luaL_openlibs(engine.lua);
+    luaopen_math(engine.lua);
+    luaopen_string(engine.lua);
+    Engine_loadConfig();
 
+    AudioEngine_init(&engine.audioEngine);
+    AudioManager_init(&engine.audioManager);
+    AudioManager_loadSounds(&engine.audioManager, engine.cwd);
 
+    //Initialise our Game State.
     StateManager_init(&engine.sM);
-    State state;
-    State_init(&state);
-    MainMenu_init(&state);
-    StateManager_push(&engine.sM, &state);
-    assert(engine.sM.stack[engine.sM.top] != NULL);
+    State *state = malloc(sizeof(State));
+    State_init(state);
+    MainMenu_init(state);
+    StateManager_push(&engine.sM, state);
+    if (engine.sM.stack[engine.sM.top] == NULL) {
+        printf("Game stack failed to start.");
+        return EXIT_FAILURE;
+    }
 
+
+    //Initialise our Window and OpenGL context.
     glutInit(&argc, argv);
     //Set the window position to the centre of the screen.
     int x_offset = glutGet(GLUT_SCREEN_WIDTH) / 2 - engine.width / 2;
@@ -193,6 +216,10 @@ int Engine_run(int argc, char *argv[]) {
     if (!glutExtensionSupported("GL_EXT_abgr")) {
         printf("Couldn't find abgr extension.\n");
         exit(EXIT_FAILURE);
+    }
+
+    if (engine.fullScreen) {
+        glutFullScreen();
     }
 
     // Render Que
@@ -224,8 +251,38 @@ int Engine_run(int argc, char *argv[]) {
 }
 
 void Engine_stop() {
+    AudioEngine_stop_all(&engine.audioEngine);
+    AudioManager_free(&engine.audioManager);
+    AudioEngine_free(&engine.audioEngine);
     ModelManager_free(&engine.modelManager);
     TextureManager_free(&engine.textureManager);
     StateManager_free(&engine.sM);
+    lua_close(engine.lua);
     free(engine.cwd);
+}
+
+void Engine_loadConfig() {
+    char configFile[] = {"config.lua"};
+    LuaHelper_loadScript(configFile);
+    //Get width
+    lua_getglobal(engine.lua, "width");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.width = lua_tonumber(engine.lua, -1);
+    }
+    //Get Height
+    lua_getglobal(engine.lua, "height");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.height = lua_tonumber(engine.lua, -1);
+    }
+    //Get Fov
+    lua_getglobal(engine.lua, "fov");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.fov = lua_tonumber(engine.lua, -1);
+    }
+
+    //Get Fullscreen
+    lua_getglobal(engine.lua, "fullscreen");
+    if (lua_isboolean(engine.lua, 0) == 0) {
+        engine.fullScreen = lua_toboolean(engine.lua, -1);
+    }
 }

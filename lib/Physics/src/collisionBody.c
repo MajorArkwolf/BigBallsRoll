@@ -53,7 +53,7 @@ void CollisionBody_addBoxCollider(CollisionBody *collisionBody,
 
 void CollisionBody_rmBoxCollider(CollisionBody *collisionBody,
                                    int id){
-    if(collisionBody->numOfBoxColliders - 1 != 0){
+    if(collisionBody->numOfBoxColliders - 1 > 0){
         for(size_t i = 0; i < collisionBody->numOfBoxColliders - 1; ++i){
             if(collisionBody->BoxColliders[i]->id != id){
                 // doesn't actually remove the data from memory for performance reasons
@@ -89,7 +89,7 @@ void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
 
 void CollisionBody_rmSphereCollider(CollisionBody *collisionBody,
                                       int id){
-    if(collisionBody->numOfSphereColliders - 1 != 0){
+    if(collisionBody->numOfSphereColliders - 1 > 0){
         for(size_t i = 0; i < collisionBody->numOfSphereColliders - 1; ++i){
             if(collisionBody->SphereColliders[i]->id != id){
                 // doesn't actually remove the data from memory for performance reasons

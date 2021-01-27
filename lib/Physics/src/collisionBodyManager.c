@@ -1,10 +1,18 @@
 #include "include/BigBalls/collisionBodyManager.h"
 #include <assert.h>
 
-int getID(CollisionBodyManager *collisionBodyManager){
+int newCollisionBodyID(CollisionBodyManager *collisionBodyManager){
     assert(collisionBodyManager != NULL);
-    // increment and return new id
-    return collisionBodyManager->idCount++;
+    // increment internal ID count and return new ID
+    return ++collisionBodyManager->idCount;
+}
+
+CollisionBody* findCollisionBodyByID(CollisionBodyManager *collisionBodyManager, const int ID){
+    for(size_t i = 0; i < collisionBodyManager->numCollisionBodies; ++i){
+        if(collisionBodyManager->collisionBodies[i]->id == ID){
+            return collisionBodyManager->collisionBodies[i];
+        }
+    }
 }
 
 void CollisionBodyManager_init(CollisionBodyManager *collisionBodyManager){
@@ -36,11 +44,22 @@ void CollisionBodyManager_add(CollisionBodyManager *collisionBodyManager,
     // Copy BoxCollider object into array
     collisionBodyManager->collisionBodies[collisionBodyManager->numCollisionBodies] = collisionBody;
     // Assign ID to BoxCollider
-    collisionBodyManager->collisionBodies[collisionBodyManager->numCollisionBodies]->id = getID(collisionBodyManager);
+    collisionBodyManager->collisionBodies[collisionBodyManager->numCollisionBodies]->id = newCollisionBodyID(collisionBodyManager);
     collisionBodyManager->numCollisionBodies++;
 }
 
-void CollisionBodyManager_rm(CollisionBodyManager *collisionBodyManager,
-                             int id){
+void CollisionBodyManager_rm(CollisionBodyManager *collisionBodyManager, const int ID){
     assert(collisionBodyManager != NULL);
+    for(size_t i = 0; i < collisionBodyManager->numCollisionBodies; ++i){
+        if(collisionBodyManager->collisionBodies[i]->id == ID){
+            CollisionBody_free(collisionBodyManager->collisionBodies[i]);
+            for(size_t j = i + 1; j < collisionBodyManager->numCollisionBodies; ++j){ // for each collisionbody after match index
+                collisionBodyManager->collisionBodies[j - 1] = collisionBodyManager->collisionBodies[j];
+            }
+            collisionBodyManager->collisionBodies[collisionBodyManager->numCollisionBodies - 1] = NULL;
+            --collisionBodyManager->numCollisionBodies;
+            // reduce size of memory allocation (shouldn't be costly if realloc() realises whats going on)
+            realloc(collisionBodyManager->collisionBodies, sizeof(CollisionBody) * collisionBodyManager->numCollisionBodies);
+        }
+    }
 }

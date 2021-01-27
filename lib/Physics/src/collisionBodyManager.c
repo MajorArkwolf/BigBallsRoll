@@ -7,6 +7,42 @@ int newCollisionBodyID(CollisionBodyManager *collisionBodyManager){
     return ++collisionBodyManager->idCount;
 }
 
+bool testAABBCollision(const float X1POS,
+                       const float Y1POS,
+                       const float Z1POS,
+                       const float X1LEN,
+                       const float Y1LEN,
+                       const float Z1LEN,
+                       const float X2POS,
+                       const float Y2POS,
+                       const float Z2POS,
+                       const float X2LEN,
+                       const float Y2LEN,
+                       const float Z2LEN){
+    const float D1X = X1POS - (X2POS + X2LEN);
+    const float D1Y = Y1POS - (Y2POS + Y2LEN);
+    const float D1Z = Z1POS - (Z2POS + Z2LEN);
+    const float D2X = X2POS - (X1POS + X1LEN);
+    const float D2Y = Y2POS - (Y1POS + Y1LEN);
+    const float D2Z = Z2POS - (Z1POS + Z1LEN);
+
+    // if smallest coord of a box is greater than largest x coord of other box, the boxes cannot be colliding
+    return D1X > 0.0f || D1Y > 0.0f || D1Z > 0.0f || D2X > 0.0f || D2Y > 0.0f || D2Z > 0.0f ? false : true;
+}
+
+void detectCollisions(CollisionBodyManager * collisionBodyManager){
+    // TODO: ideally shouldn't check every body against each other - spacial partitioning method ideal
+    // broad phase
+    for(size_t i = 0; collisionBodyManager->numCollisionBodies; ++i){
+        for(size_t j = 0; collisionBodyManager->numCollisionBodies; j++){
+            if(i != j){ // dont check for collision of the same object
+                // TODO: stub
+            }
+        }
+    }
+    // narrow phase
+}
+
 CollisionBody* findCollisionBody(CollisionBodyManager *collisionBodyManager, const int ID){
     for(size_t i = 0; i < collisionBodyManager->numCollisionBodies; ++i){
         if(collisionBodyManager->collisionBodies[i]->id == ID){

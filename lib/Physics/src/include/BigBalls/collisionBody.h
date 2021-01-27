@@ -23,6 +23,12 @@ typedef struct CollisionBody{
     float yVel;
     float zVel;
     float mass; // physical mass of CollisionBody
+    float AABBx1; // two coordinates required for AABB
+    float AABBy1;
+    float AABBz1;
+    float AABBx2;
+    float AABBy2;
+    float AABBz2;
 } CollisionBody;
 
 /**

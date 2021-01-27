@@ -2,7 +2,6 @@
 #include <stdbool.h>
 
 typedef struct BoxCollider{
-    int id;
     float xOffset;
     float yOffset;
     float zOffset;

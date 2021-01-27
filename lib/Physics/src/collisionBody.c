@@ -1,12 +1,6 @@
 #include "include/BigBalls/collisionBody.h"
 #include <assert.h>
 
-int getID(CollisionBody *collisionBody){
-    assert(collisionBody != NULL);
-    // increment and return new id
-    return collisionBody->idCount++;
-}
-
 void CollisionBody_init(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
     collisionBody->numOfColliders = 0;
@@ -15,13 +9,17 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->BoxColliders = NULL;
     collisionBody->SphereColliders = NULL;
     collisionBody->idCount = 0;
-    collisionBody->id = -1; //TODO: request id here or not?
+    collisionBody->id = -1;
     collisionBody->xPos = 0;
     collisionBody->yPos = 0;
     collisionBody->zPos = 0;
     collisionBody->xRot = 0;
     collisionBody->yRot = 0;
     collisionBody->zRot = 0;
+    collisionBody->xVel = 0;
+    collisionBody->yVel = 0;
+    collisionBody->zVel = 0;
+    collisionBody->mass = 0;
 }
 
 void CollisionBody_free(CollisionBody *collisionBody){
@@ -45,29 +43,8 @@ void CollisionBody_addBoxCollider(CollisionBody *collisionBody,
     }
     // Copy BoxCollider object into array
     collisionBody->BoxColliders[collisionBody->numOfBoxColliders] = boxCollider;
-    // Assign ID to BoxCollider
-    collisionBody->BoxColliders[collisionBody->numOfBoxColliders]->id = getID(collisionBody);
-    collisionBody->numOfBoxColliders++;
-    collisionBody->numOfColliders++;
-}
-
-void CollisionBody_rmBoxCollider(CollisionBody *collisionBody,
-                                   int id){
-    if(collisionBody->numOfBoxColliders - 1 != 0){
-        for(size_t i = 0; i < collisionBody->numOfBoxColliders - 1; ++i){
-            if(collisionBody->BoxColliders[i]->id != id){
-                // doesn't actually remove the data from memory for performance reasons
-                // O(n-1) vs O(n-x) time to copy all data but desired ID to new array
-                // Only a small struct of primitives so memory efficiency is less pertinent of an issue
-                collisionBody->BoxColliders[i] = NULL;
-            }
-        }
-    }
-    else{
-        // if size = 0, free whole array and store null pointer
-        free(collisionBody->BoxColliders);
-        collisionBody->BoxColliders = NULL;
-    }
+    ++collisionBody->numOfBoxColliders;
+    ++collisionBody->numOfColliders;
 }
 
 void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
@@ -81,45 +58,24 @@ void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
     }
     // Copy SphereCollider object into array
     collisionBody->SphereColliders[collisionBody->numOfSphereColliders] = sphereCollider;
-    // Assign ID to BoxCollider
-    collisionBody->SphereColliders[collisionBody->numOfSphereColliders]->id = getID(collisionBody);
-    collisionBody->numOfSphereColliders++;
-    collisionBody->numOfColliders++;
-}
-
-void CollisionBody_rmSphereCollider(CollisionBody *collisionBody,
-                                      int id){
-    if(collisionBody->numOfSphereColliders - 1 != 0){
-        for(size_t i = 0; i < collisionBody->numOfSphereColliders - 1; ++i){
-            if(collisionBody->SphereColliders[i]->id != id){
-                // doesn't actually remove the data from memory for performance reasons
-                // O(n-1) vs O(n-x) time to copy all data but desired ID to new array
-                // Only a small struct of primitives so memory efficiency is less pertinent of an issue
-                collisionBody->SphereColliders[i] = NULL;
-            }
-        }
-    }
-    else{
-        // if size = 0, store null pointer
-        free(collisionBody->SphereColliders);
-        collisionBody->SphereColliders = NULL;
-    }
+    ++collisionBody->numOfSphereColliders;
+    ++collisionBody->numOfColliders;
 }
 
 void CollisionBody_translate(CollisionBody *collisionBody,
                              float xDist,
                              float yDist,
                              float zDist){
-    collisionBody->xPos += xDist; // update collisionbody position
+    collisionBody->xPos += xDist; // update CollisionBody position
     collisionBody->yPos += yDist;
     collisionBody->zPos += zDist;
-    // update relative positions of boxcolliders
+    // update relative positions of BoxColliders
     for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
         collisionBody->BoxColliders[i]->xOffset += xDist;
         collisionBody->BoxColliders[i]->yOffset += yDist;
         collisionBody->BoxColliders[i]->zOffset += zDist;
     }
-    // update relative positions of spherecolliders
+    // update relative positions of SphereColliders
     for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
         collisionBody->SphereColliders[i]->xOffset += xDist;
         collisionBody->SphereColliders[i]->yOffset += yDist;
@@ -131,16 +87,16 @@ void CollisionBody_rotate(CollisionBody *collisionBody,
                           float xRot,
                           float yRot,
                           float zRot){
-    collisionBody->xRot += xRot; // update collisionbody rotation
+    collisionBody->xRot += xRot; // update CollisionBody rotation
     collisionBody->yRot += yRot;
     collisionBody->zRot += zRot;
-    // update relative rotation of boxcolliders
+    // update relative rotation of BoxColliders
     for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
         collisionBody->BoxColliders[i]->xRot += xRot;
         collisionBody->BoxColliders[i]->yRot += yRot;
         collisionBody->BoxColliders[i]->zRot += zRot;
     }
-    // update relative rotation of spherecolliders
+    // update relative rotation of SphereColliders
     for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
         collisionBody->SphereColliders[i]->xRot += xRot;
         collisionBody->SphereColliders[i]->yRot += yRot;

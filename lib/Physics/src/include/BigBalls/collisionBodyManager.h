@@ -9,6 +9,15 @@ typedef struct CollisionBodyManager{
 } CollisionBodyManager;
 
 /**
+ * Searches for a CollisionBody by ID in a CollisionBodyManager
+ * Returns NULL if match is not found
+ * @param collisionBodyManager The CollisionBodyManager to search for the CollisionBody in
+ * @param ID The ID of the CollisionBody to find
+ * @return CollisionBody* CollisionBody pointer of found CollisionBody, or NULL if not found
+ */
+CollisionBody* findCollisionBody(CollisionBodyManager *collisionBodyManager, int ID);
+
+/**
  * Initialises a CollisionBodyManager object
  * @param collisionBodyManager The CollisionBodyManager to be initialised
  */

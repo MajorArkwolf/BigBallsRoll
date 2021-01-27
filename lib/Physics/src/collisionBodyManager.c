@@ -7,12 +7,13 @@ int newCollisionBodyID(CollisionBodyManager *collisionBodyManager){
     return ++collisionBodyManager->idCount;
 }
 
-CollisionBody* findCollisionBodyByID(CollisionBodyManager *collisionBodyManager, const int ID){
+CollisionBody* findCollisionBody(CollisionBodyManager *collisionBodyManager, const int ID){
     for(size_t i = 0; i < collisionBodyManager->numCollisionBodies; ++i){
         if(collisionBodyManager->collisionBodies[i]->id == ID){
             return collisionBodyManager->collisionBodies[i];
         }
     }
+    return NULL;
 }
 
 void CollisionBodyManager_init(CollisionBodyManager *collisionBodyManager){

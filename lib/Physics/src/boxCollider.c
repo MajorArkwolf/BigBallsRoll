@@ -1,7 +1,9 @@
 #include "include/BigBalls/boxCollider.h"
+#include <stdlib.h>
+#include <assert.h>
 
 void BoxCollider_init(BoxCollider *boxCollider){
-    boxCollider->id = -1;
+    assert(boxCollider != NULL);
     boxCollider->xOffset = 0;
     boxCollider->yOffset = 0;
     boxCollider->zOffset = 0;

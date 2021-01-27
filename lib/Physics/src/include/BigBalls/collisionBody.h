@@ -13,10 +13,10 @@ typedef struct CollisionBody{
     size_t numOfColliders; // TODO: may be redundant
     int idCount;
     int id;
-    float xPos; // give position so collider positions are relative to collisionBody position
+    float xPos; // give position so collider positions are relative to CollisionBody position
     float yPos;
     float zPos;
-    float xRot; // give rotation so collider rotations are relative to collisionbody rotation
+    float xRot; // give rotation so collider rotations are relative to CollisionBody rotation
     float yRot;
     float zRot;
 } CollisionBody;
@@ -36,7 +36,7 @@ void CollisionBody_free(CollisionBody *collisionBody);
 /**
  * A heap array was chosen for its ability to be resized, at the cost of performance when being resized (when colliders are added or destroyed).
  * As object creation/destruction are not speed-critical operations in our project this tradeoff seems acceptable
- * (the alternative being two static arrays per collisonBody (for each type) which seemed a bit excessive)
+ * (the alternative being two static arrays per CollisionBody (for each type) which seemed a bit excessive)
  * @param collisionBody The CollisionBody object to add a BoxCollider object to
  * @param boxCollider The BoxCollider object to be added to the CollisionBody
  */
@@ -44,15 +44,7 @@ void CollisionBody_addBoxCollider(CollisionBody *collisionBody,
                                     BoxCollider *boxCollider);
 
 /**
- * Remove a boxcollider from a collisionbody
- * @param collisionBody The CollisionBody to remove a BoxCollider from
- * @param id The ID of a BoxCollider to be removed from the CollisionBody
- */
-void CollisionBody_rmBoxCollider(CollisionBody *collisionBody,
-                                   int id);
-
-/**
- * Add a spherecollider to a collisionbody
+ * Add a SphereCollider to a CollisionBody
  * @param collisionBody The CollisionBody object to add a SphereCollider object to
  * @param sphereCollider The SphereCollider object to be added to the CollisionBody
  */
@@ -60,15 +52,7 @@ void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
                                        SphereCollider *sphereCollider);
 
 /**
- * Remove a spherecollider from a collisionbody (by ID)
- * @param collisionBody The CollisionBody to remove a SphereCollider from
- * @param id The ID of a SphereCollider to be removed from the CollisionBody
- */
-void CollisionBody_rmSphereCollider(CollisionBody *collisionBody,
-                                      int id);
-
-/**
- * Translate a collisonbody (and therefore all of its member colliders)
+ * Translate a CollisionBody (and therefore all of its member colliders)
  * @param collisionBody The CollisionBody to be translated
  * @param xDist The x-delta the CollisionBody should be moved by
  * @param yDist The y-delta the CollisionBody should be moved by
@@ -80,7 +64,7 @@ void CollisionBody_translate(CollisionBody *collisionBody,
                              float zDist);
 
 /**
- * Rotate a collisionbody (and therefore all of its member colliders)
+ * Rotate a CollisionBody (and therefore all of its member colliders)
  * @param collisionBody The CollisionBody to be rotated
  * @param xRot The x-delta the CollisionBody should be rotated by
  * @param yRot The y-delta the CollisionBody should be rotated by
@@ -92,7 +76,7 @@ void CollisionBody_rotate(CollisionBody *collisionBody,
                           float zRot);
 
 /**
- * Scale a collisionbody uniformly (and therefore all of its member colliders)
+ * Scale a CollisionBody uniformly (and therefore all of its member colliders)
  * @param collisionBody The CollisionBody to be uniformly scaled
  * @param scaleFactor The scale factor the CollisionBody should be scaled by
  * (scale factor of 1 would have no change, 0.5 would be half size, 2 would be double size)

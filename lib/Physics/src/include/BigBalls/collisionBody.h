@@ -19,6 +19,10 @@ typedef struct CollisionBody{
     float xRot; // give rotation so collider rotations are relative to CollisionBody rotation
     float yRot;
     float zRot;
+    float xVel; // current velocity of CollisionBody (as a vector)
+    float yVel;
+    float zVel;
+    float mass; // physical mass of CollisionBody
 } CollisionBody;
 
 /**

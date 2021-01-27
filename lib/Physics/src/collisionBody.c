@@ -16,6 +16,10 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->xRot = 0;
     collisionBody->yRot = 0;
     collisionBody->zRot = 0;
+    collisionBody->xVel = 0;
+    collisionBody->yVel = 0;
+    collisionBody->zVel = 0;
+    collisionBody->mass = 0;
 }
 
 void CollisionBody_free(CollisionBody *collisionBody){

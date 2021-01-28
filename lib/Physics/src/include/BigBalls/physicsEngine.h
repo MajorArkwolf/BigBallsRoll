@@ -1,9 +1,9 @@
 #pragma once
 #include <stdbool.h>
-#include "collisionBodyManager.h"
+#include "physicsWorld.h"
 
 typedef struct PhysicsEngine{
-    CollisionBodyManager *collisionBodyManager;
+    PhysicsWorld *physicsWorld;
 } PhysicsEngine;
 
 /**

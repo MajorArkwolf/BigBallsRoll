@@ -2,12 +2,12 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include "include/BigBalls/collisionBodyManager.h"
+#include "include/BigBalls/physicsWorld.h"
 
 void physicsWorldInit(PhysicsEngine *physicsEngine){
     assert(physicsEngine != NULL);
     // init collision body manager
-    physicsEngine->collisionBodyManager = NULL;
+    physicsEngine->physicsWorld = NULL;
 }
 
 int createCollisionBody(PhysicsEngine *physicsEngine){

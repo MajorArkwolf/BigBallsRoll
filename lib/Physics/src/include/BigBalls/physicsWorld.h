@@ -34,7 +34,7 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld);
  * @param physicsWorld The target PhysicsWorld
  * @param collisionBody The CollisionBOdy to be added
  */
-void PhysicsWorld_add(PhysicsWorld *physicsWorld,
+void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld,
                               CollisionBody *collisionBody);
 
 /**
@@ -42,5 +42,5 @@ void PhysicsWorld_add(PhysicsWorld *physicsWorld,
  * @param physicsWorld The target PhysicsWorld
  * @param id The ID of the CollisionBody to be removed
  */
-void PhysicsWorld_rm(PhysicsWorld *physicsWorld,
+void PhysicsWorld_removeCollisonBody(PhysicsWorld *physicsWorld,
                              int id);

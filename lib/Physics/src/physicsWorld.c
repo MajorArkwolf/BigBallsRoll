@@ -32,7 +32,7 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld){
     physicsWorld = NULL;
 }
 
-void PhysicsWorld_add(PhysicsWorld *physicsWorld,
+void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld,
                               CollisionBody *collisionBody){
     assert(physicsWorld != NULL);
     // Allocate new, larger array
@@ -49,7 +49,7 @@ void PhysicsWorld_add(PhysicsWorld *physicsWorld,
     physicsWorld->numCollisionBodies++;
 }
 
-void PhysicsWorld_rm(PhysicsWorld *physicsWorld, const int ID){
+void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID){
     assert(physicsWorld != NULL);
     for(size_t i = 0; i < physicsWorld->numCollisionBodies; ++i){
         if(physicsWorld->collisionBodies[i]->id == ID){

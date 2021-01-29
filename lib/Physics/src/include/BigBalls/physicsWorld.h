@@ -6,6 +6,7 @@ typedef struct PhysicsWorld{
     CollisionBody **collisionBodies;
     size_t numCollisionBodies;
     int idCount;
+    float gravity;
 } PhysicsWorld;
 
 /**

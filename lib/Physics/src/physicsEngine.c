@@ -6,8 +6,9 @@
 
 void physicsWorldInit(PhysicsEngine *physicsEngine){
     assert(physicsEngine != NULL);
-    // init collision body manager
-    physicsEngine->physicsWorld = NULL;
+    // init Physics World
+    PhysicsWorld_init(physicsEngine->physicsWorld);
+    assert(physicsEngine->physicsWorld != NULL);
 }
 
 int createCollisionBody(PhysicsEngine *physicsEngine){

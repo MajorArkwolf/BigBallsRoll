@@ -9,7 +9,7 @@ typedef struct PhysicsEngine{
 /**
  * Initialises the physics world
  */
-void physicsWorldInit(PhysicsEngine *physicsEngine);
+void PE_newPhysicsWorld(PhysicsEngine *physicsEngine);
 
 /**
  * Creates a collision body (a collection of colliders dedicated to detecting collisions of an object)

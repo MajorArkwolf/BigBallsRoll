@@ -21,6 +21,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld){
     physicsWorld->collisionBodies = NULL;
     physicsWorld->numCollisionBodies = 0;
     physicsWorld->idCount = 0;
+    physicsWorld->gravity = 1; //TODO: find default
 }
 
 void PhysicsWorld_free(PhysicsWorld *physicsWorld){

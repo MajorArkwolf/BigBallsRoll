@@ -15,14 +15,14 @@ void PE_newPhysicsWorld(PhysicsEngine *physicsEngine);
  * Creates a collision body (a collection of colliders dedicated to detecting collisions of an object)
  * @return int ID of the collision body created
  */
-int createCollisionBody(PhysicsEngine *physicsEngine);
+int PE_createCollisionBody(PhysicsEngine *physicsEngine);
 
 /**
  * Destroys a collision body
  * @param ID the ID of the collision body to be destroyed
  * @return bool Success of operation
  */
-bool destroyCollisionBody(PhysicsEngine *physicsEngine,
+bool PE_destroyCollisionBody(PhysicsEngine *physicsEngine,
                           int id);
 
 /**
@@ -32,7 +32,7 @@ bool destroyCollisionBody(PhysicsEngine *physicsEngine,
  * @param ID2
  * @return
  */
-bool checkCollision(PhysicsEngine *physicsEngine,
+bool PE_checkCollision(PhysicsEngine *physicsEngine,
                     int id1,
                     int id2);
 
@@ -46,7 +46,7 @@ bool checkCollision(PhysicsEngine *physicsEngine,
  * @param ID2
  * @return
  */
-bool willCollide(PhysicsEngine *physicsEngine,
+bool PE_willCollide(PhysicsEngine *physicsEngine,
                  int bodyId1,
                  float newXOffset1,
                  float newYOffset1,
@@ -59,14 +59,14 @@ bool willCollide(PhysicsEngine *physicsEngine,
 /**
  * TODO: idk if this is in the scope of physics engine, but I imagine the engine must be updated with new data when an object intends to move
  */
-bool moveObj(PhysicsEngine *physicsEngine,
+bool PE_moveObj(PhysicsEngine *physicsEngine,
              int id,
              float newXOffset,
              float newYOffset,
              float newZOffset);
 
 //TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
-bool applyForce(PhysicsEngine *physicsEngine,
+bool PE_applyForce(PhysicsEngine *physicsEngine,
                   float force,
                   float xDir,
                   float yDir,
@@ -77,15 +77,15 @@ bool applyForce(PhysicsEngine *physicsEngine,
 * Add a game object to the physics engine
 * @return
 */
-int addObj(PhysicsEngine *physicsEngine);
+int PE_addObj(PhysicsEngine *physicsEngine);
 
 /**
 * Remove a game object from the physics engine
 * @return
 */
-bool removeObj(PhysicsEngine *physicsEngine);
+bool PE_removeObj(PhysicsEngine *physicsEngine);
 
-bool updateObj(PhysicsEngine *physicsEngine,
+bool PE_updateObj(PhysicsEngine *physicsEngine,
                int objId);
 
-void draw(PhysicsEngine *physicsEngine);
+void PE_draw(PhysicsEngine *physicsEngine);

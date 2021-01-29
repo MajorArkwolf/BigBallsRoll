@@ -22,13 +22,19 @@ void PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine){
 
 int PhysicsEngine_createCollisionBody(PhysicsEngine *physicsEngine){
     assert(physicsEngine != NULL);
+    assert(physicsEngine->physicsWorld != NULL);
     // Allocate memory for collisionbody
     // Add memory to collision body manager and get ID from manager
-    return 0; // stub
+    CollisionBody *newCB = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(newCB);
+    PhysicsWorld_addCollisionBody(physicsEngine->physicsWorld, newCB);
+
+    return newCB->id;
 }
 
 bool PhysicsEngine_destroyCollisionBody(PhysicsEngine *physicsEngine,
                           int id){
     assert(physicsEngine != NULL);
+    PhysicsWorld_removeCollisonBody(physicsEngine->physicsWorld, id);
     return true; // stub
 }

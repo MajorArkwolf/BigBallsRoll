@@ -22,6 +22,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld){
     physicsWorld->numCollisionBodies = 0;
     physicsWorld->idCount = 0;
     physicsWorld->gravity = 1; //TODO: find default
+    physicsWorld->gravityNormal = GravityNormal_init();
 }
 
 void PhysicsWorld_free(PhysicsWorld *physicsWorld){
@@ -64,4 +65,17 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID){
             realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * physicsWorld->numCollisionBodies);
         }
     }
+}
+
+void PhysicsWorld_updateGravityNormal(float x, float y, float z) {
+    //Stub
+}
+
+//Temporary
+GravityNormal GravityNormal_init() {
+    GravityNormal gN;
+    gN.X = 0.0f;
+    gN.Y = 0.0f;
+    gN.Z = 0.0f;
+    return gN;
 }

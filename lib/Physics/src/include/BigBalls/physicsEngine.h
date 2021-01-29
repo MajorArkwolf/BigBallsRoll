@@ -7,7 +7,15 @@ typedef struct PhysicsEngine{
 } PhysicsEngine;
 
 /**
- * Initialises the physics world
+ * Initialize Physics Engine
+ * @param physicsEngine the object to be initialized
+ */
+void PhysicsEngine_init(PhysicsEngine *physicsEngine);
+
+/**
+ * Calls PhysicsWorld_init and creates a new PhysicsWorld
+ * Can be used to replace existing physicsWorld with a new one
+ * @param physicsEngine The object containing the physicsWorld object
  */
 void PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine);
 

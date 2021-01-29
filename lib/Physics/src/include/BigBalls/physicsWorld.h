@@ -57,5 +57,5 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld,
  * @param physicsWorld The target PhysicsWorld
  * @param id The ID of the CollisionBody to be removed
  */
-void PhysicsWorld_removeCollisonBody(PhysicsWorld *physicsWorld,
+void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld,
                              int id);

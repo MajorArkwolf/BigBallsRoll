@@ -75,7 +75,7 @@ void PhysicsWorld_updateGravityNormal(float x, float y, float z) {
 GravityNormal GravityNormal_init() {
     GravityNormal gN;
     gN.X = 0.0f;
-    gN.Y = 0.0f;
+    gN.Y = 1.0f;
     gN.Z = 0.0f;
     return gN;
 }

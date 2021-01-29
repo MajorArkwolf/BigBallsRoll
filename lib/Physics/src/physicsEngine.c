@@ -35,6 +35,6 @@ int PhysicsEngine_createCollisionBody(PhysicsEngine *physicsEngine){
 bool PhysicsEngine_destroyCollisionBody(PhysicsEngine *physicsEngine,
                           int id){
     assert(physicsEngine != NULL);
-    PhysicsWorld_removeCollisonBody(physicsEngine->physicsWorld, id);
+    PhysicsWorld_removeCollisionBody(physicsEngine->physicsWorld, id);
     return true; // stub
 }

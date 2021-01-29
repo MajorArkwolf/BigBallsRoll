@@ -4,9 +4,13 @@
 #include <assert.h>
 #include "include/BigBalls/physicsWorld.h"
 
-void PE_newPhysicsWorld(PhysicsEngine *physicsEngine){
+void PhysicsEngine_init(PhysicsEngine *physicsEngine) {
+    physicsEngine->physicsWorld = NULL;
+}
+
+void PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine){
     assert(physicsEngine != NULL);
-    // init Physics World
+    // Create new Physics World
     if (physicsEngine->physicsWorld == NULL) {
         PhysicsWorld_init(physicsEngine->physicsWorld);
     } else {
@@ -16,14 +20,14 @@ void PE_newPhysicsWorld(PhysicsEngine *physicsEngine){
     assert(physicsEngine->physicsWorld != NULL);
 }
 
-int PE_createCollisionBody(PhysicsEngine *physicsEngine){
+int PhysicsEngine_createCollisionBody(PhysicsEngine *physicsEngine){
     assert(physicsEngine != NULL);
     // Allocate memory for collisionbody
     // Add memory to collision body manager and get ID from manager
     return 0; // stub
 }
 
-bool PE_destroyCollisionBody(PhysicsEngine *physicsEngine,
+bool PhysicsEngine_destroyCollisionBody(PhysicsEngine *physicsEngine,
                           int id){
     assert(physicsEngine != NULL);
     return true; // stub

@@ -30,7 +30,7 @@ void PhysicsWorld_updateGravityNormal(float x, float y, float z);
  * @param ID The ID of the CollisionBody to find
  * @return CollisionBody* CollisionBody pointer of found CollisionBody, or NULL if not found
  */
-CollisionBody* findCollisionBody(PhysicsWorld *physicsWorld, int ID);
+CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
 /**
  * Initialises a PhysicsWorld object

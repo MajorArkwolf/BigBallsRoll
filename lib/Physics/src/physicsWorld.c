@@ -7,7 +7,7 @@ int newCollisionBodyID(PhysicsWorld *physicsWorld){
     return ++physicsWorld->idCount;
 }
 
-CollisionBody* findCollisionBody(PhysicsWorld *physicsWorld, const int ID){
+CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, const int ID){
     for(size_t i = 0; i < physicsWorld->numCollisionBodies; ++i){
         if(physicsWorld->collisionBodies[i]->id == ID){
             return physicsWorld->collisionBodies[i];

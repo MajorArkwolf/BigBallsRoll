@@ -2,7 +2,7 @@
 
 #include "collisionBody.h"
 
-//Temp until vec3 is apart of external library
+//TODO: Temp until vec3 is apart of external library
 typedef struct GravityNormal {
     float X;
     float Y;
@@ -17,7 +17,7 @@ typedef struct PhysicsWorld{
     GravityNormal gravityNormal;
 } PhysicsWorld;
 
-//Temp until vec3 is apart of external library
+//TODO: Temp until vec3 is apart of external library
 GravityNormal GravityNormal_init();
 
 //TODO: stub, not sure how this will work atm.

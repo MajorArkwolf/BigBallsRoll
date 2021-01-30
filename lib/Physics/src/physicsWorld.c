@@ -67,11 +67,12 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID){
     }
 }
 
+//TODO: Implement
 void PhysicsWorld_updateGravityNormal(float x, float y, float z) {
     //Stub
 }
 
-//Temporary
+//TODO: Temporary
 GravityNormal GravityNormal_init() {
     GravityNormal gN;
     gN.X = 0.0f;

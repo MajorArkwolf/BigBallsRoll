@@ -20,17 +20,6 @@ int Game_draw(float deltaTime) {
 int Game_update(float deltaTime) {
     Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
     GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
-    if(StateManager_top(&engine.sM)->NumOfGameObjects != 0) {
-        for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects - 1; ++i) {
-            float rotationSpeed = 10.0f;
-            if (i % 2 == 0) {
-                rotationSpeed *= -1.0f;
-            }
-            gameObjects[i].Transform.Rotation.X += rotationSpeed * deltaTime;
-            gameObjects[i].Transform.Rotation.Y += rotationSpeed * deltaTime;
-            gameObjects[i].Transform.Rotation.Z += rotationSpeed * deltaTime;
-        }
-    }
     return 0;
 }
 

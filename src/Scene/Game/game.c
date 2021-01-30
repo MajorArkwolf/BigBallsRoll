@@ -11,6 +11,10 @@
 #include <assert.h>
 
 int Game_draw(float deltaTime) {
+    lua_getglobal(engine.lua, "Draw");
+    if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
     }
@@ -18,8 +22,13 @@ int Game_draw(float deltaTime) {
 }
 
 int Game_update(float deltaTime) {
+    lua_pushnumber(engine.lua, deltaTime);
+    lua_setglobal(engine.lua, "deltaTime");
+    lua_getglobal(engine.lua, "Update");
+    if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
     Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
-    GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
     return 0;
 }
 
@@ -67,6 +76,8 @@ int Game_keyUp(InputType inputType) {
         case KEY_D:
             cam->MoveRight = false;
             break;
+        case KEY_F2:
+            StateManager_pop(&engine.sM);
         default:
             break;
     }

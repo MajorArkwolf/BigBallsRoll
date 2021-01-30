@@ -43,24 +43,28 @@ end
 function GetRandomDirection()
     local direction = {}
     direction.x = {}
+    direction.y = {}
     direction.z = {}
-    local dir = math.random(1, 4)
+    direction.x = 0
+    direction.y = 0
+    direction.z = 0
+    local dir = math.random(1, 6)
     if (dir == 1) then
         --north
         direction.x = 1
-        direction.z = 0
     elseif (dir == 2) then
         --east
-        direction.x = 0
         direction.z = 1
     elseif (dir == 3) then
         --south
         direction.x = -1
-        direction.z = 0
-    else
+    elseif (dir == 4) then
         --west
-        direction.x = 0
         direction.z = -1
+    elseif (dir == 5) then
+        direction.y = 1
+    else
+        direction.y = -1
     end
     return direction
 end
@@ -78,6 +82,14 @@ function RotateDirection(direction)
     return direction
 end
 
+function AlterHeight(direction)
+    direction.y = direction.y + 1
+    if (direction.y > 1) then
+        direction.y = -1
+    end
+    return direction
+end
+
 function HasBeenVisited(currentNode)
     for x = 1, visitedLength, 1 do
         if (currentNode[1] == visited[x][1] and currentNode[2] == visited[x][2] and currentNode[3] == visited[x][3]) then
@@ -85,6 +97,16 @@ function HasBeenVisited(currentNode)
         end
     end
     return false
+end
+
+function ClearBlocks(currentNode, field, gridMaxY)
+    for x = currentNode[2] + 1, gridMaxY, 1 do
+        field[currentNode[1]][x][currentNode[3]] = false
+    end
+    for x = currentNode[2] - 1, 1, -1 do
+        field[currentNode[1]][x][currentNode[3]] = false
+    end
+    return field
 end
 
 function NextNode(currentNode, endNode, gridMaxX, gridMaxY, gridMaxZ)
@@ -99,11 +121,11 @@ function NextNode(currentNode, endNode, gridMaxX, gridMaxY, gridMaxZ)
     visited[visitedLength] = currentNode
 
     while(true) do
-        count = 0
-        dir = GetRandomDirection()
-        while (count <= 4) do
+        local count = 0
+        local dir = GetRandomDirection()
+        while (count <= 6) do
             x = dir.x + currentNode[1]
-            y = currentNode[2]
+            y = dir.y + currentNode[2]
             z = dir.z + currentNode[3]
             if (x > 0 and y > 0 and  z > 0 and x <= gridMaxX and y <= gridMaxY and z <= gridMaxZ) then
                 local nextNode = {x, y, z}
@@ -114,6 +136,9 @@ function NextNode(currentNode, endNode, gridMaxX, gridMaxY, gridMaxZ)
                 end
             end
             dir = RotateDirection(dir)
+            if (y < 1 or y > gridMaxY) then
+                dir = AlterHeight(dir)
+            end
             count = count + 1
         end
         count = 0
@@ -134,6 +159,8 @@ function RandomPath(startPoint, endPoint, gridMaxX, gridMaxY, gridMaxZ, field)
     for key, value in ipairs(path) do
         field[value[1]][value[2]][value[3]] = true
     end
+    field = ClearBlocks(startPoint, field, gridMaxY)
+    field = ClearBlocks(endPoint, field, gridMaxY)
     return field
 end
 

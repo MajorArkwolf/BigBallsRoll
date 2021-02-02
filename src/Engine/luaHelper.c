@@ -1,14 +1,13 @@
 #include "luaHelper.h"
 #include <lualib.h>
 #include <lauxlib.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include "Engine/engine.h"
 
 void LuaHelper_loadScript(const char* scriptName) {
     char scriptDir[] = {"res/Script/"};
-    //char *lua_location = malloc(sizeof(char) * (strlen(engine.cwd) + strlen(scriptDir) + strlen(scriptName) + 1));
     char *lua_location = calloc((strlen(engine.cwd) + strlen(scriptDir) + strlen(scriptName) + 1), sizeof(char));
     strcpy(lua_location, engine.cwd);
     strcat(lua_location, scriptDir);

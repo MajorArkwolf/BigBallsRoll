@@ -3,7 +3,8 @@
 #include "physicsWorld.h"
 
 typedef struct PhysicsEngine{
-    PhysicsWorld *physicsWorld;
+    PhysicsWorld **physicsWorld;
+    size_t numOfPhysicsWorlds;
 } PhysicsEngine;
 
 /**
@@ -13,25 +14,40 @@ typedef struct PhysicsEngine{
 void PhysicsEngine_init(PhysicsEngine *physicsEngine);
 
 /**
+ * Frees the physicsWorlds associated with this physicsEngine
+ * @param physicsEngine the object to free
+ */
+void PhysicsEngine_free(PhysicsEngine *physicsEngine);
+
+/**
  * Calls PhysicsWorld_init and creates a new PhysicsWorld
  * Can be used to replace existing physicsWorld with a new one
  * @param physicsEngine The object containing the physicsWorld object
+ * @return a pointer to the new physicsWorld object
  */
-void PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine);
+PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine);
+
+/**
+ * Frees an existing physicsWorld from the physicsEngine
+ * @param physicsEngine contains the physicsWorld to free
+ * @param physicsWorld the physicsWorld to free
+ */
+void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *physicsWorld);
 
 /**
  * Creates a collision body (a collection of colliders dedicated to detecting collisions of an object)
+ * @param the physics world to add the collision body to
  * @return int ID of the collision body created
  */
-int PhysicsEngine_createCollisionBody(PhysicsEngine *physicsEngine);
+int PhysicsEngine_createCollisionBody(PhysicsWorld *physicsWorld);
 
 /**
  * Destroys a collision body
- * @param ID the ID of the collision body to be destroyed
- * @return bool Success of operation
+ * @param physicsWorld the physics world the collision body belongs to
+ * @param ID the ID of the collision body
+ * @return success of operation
  */
-bool PhysicsEngine_destroyCollisionBody(PhysicsEngine *physicsEngine,
-                          int id);
+bool PhysicsEngine_destroyCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
 /**
  * Checks if two objects are currently colliding with each other

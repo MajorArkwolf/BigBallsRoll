@@ -12,7 +12,7 @@ typedef struct GravityNormal {
 typedef struct PhysicsWorld{
     CollisionBody **collisionBodies;
     size_t numCollisionBodies;
-    int idCount;
+    int collisionBodyIdCount;
     float gravity;
     GravityNormal gravityNormal;
 } PhysicsWorld;
@@ -49,13 +49,18 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld);
  * @param physicsWorld The target PhysicsWorld
  * @param collisionBody The CollisionBOdy to be added
  */
-void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld,
-                              CollisionBody *collisionBody);
+void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody);
 
 /**
  * Removes a CollisionBody from a PhysicsWorld via its ID
  * @param physicsWorld The target PhysicsWorld
  * @param id The ID of the CollisionBody to be removed
  */
-void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld,
-                             int id);
+void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int id);
+
+/**
+ * Returns a collision body ID and increments collisionBodyIdCount by one
+ * @param physicsWorld the physics world containing the new collision body
+ * @return the ID
+ */
+int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld);

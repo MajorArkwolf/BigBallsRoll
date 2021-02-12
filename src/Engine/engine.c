@@ -53,13 +53,17 @@ void changeSize(int w, int h) {
  * Callback function for glut update.
  * @param vlaue
  */
-void Update(int vlaue) {
+void Update(int value) {
     // Timer to start update function again based on frame rate.
     glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
     int oldTime = engine.timeSinceStart;
     engine.timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     float deltaTime = (float) (engine.timeSinceStart - oldTime) / 1000.0f;
     StateManager_update(&engine.sM, deltaTime);
+    // Via the physics engine updates the positions, rotations and velocities of objects in a physics world
+    // based on the last known state and the pending forces being applied to these objects
+    // (forces to be applied since last frame)
+    CollisionBodyManager_Update(&engine.sM.stack[engine.sM.top]->collisionBodyManager, deltaTime);
 }
 
 /**

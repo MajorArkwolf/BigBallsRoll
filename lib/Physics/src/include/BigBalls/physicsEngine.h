@@ -1,29 +1,56 @@
 #pragma once
 #include <stdbool.h>
-#include "collisionBodyManager.h"
+#include "physicsWorld.h"
 
 typedef struct PhysicsEngine{
-    CollisionBodyManager *collisionBodyManager;
+    PhysicsWorld **physicsWorld;
+    size_t numOfPhysicsWorlds;
 } PhysicsEngine;
 
 /**
- * Initialises the physics world
+<<<<<<< Updated upstream
+ * Initialize Physics Engine
+ * @param physicsEngine the object to be initialized
  */
-void physicsWorldInit(PhysicsEngine *physicsEngine);
+void PhysicsEngine_init(PhysicsEngine *physicsEngine);
 
 /**
+ * Frees the physicsWorlds associated with this physicsEngine
+ * @param physicsEngine the object to free
+ */
+void PhysicsEngine_free(PhysicsEngine *physicsEngine);
+
+/**
+ * Calls PhysicsWorld_init and creates a new PhysicsWorld
+ * Can be used to replace existing physicsWorld with a new one
+ * @param physicsEngine The object containing the physicsWorld object
+ * @return a pointer to the new physicsWorld object
+ */
+PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine);
+
+/**
+ * Frees an existing physicsWorld from the physicsEngine
+ * @param physicsEngine contains the physicsWorld to free
+ * @param physicsWorld the physicsWorld to free
+ */
+void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *physicsWorld);
+
+/**
+=======
+>>>>>>> Stashed changes
  * Creates a collision body (a collection of colliders dedicated to detecting collisions of an object)
+ * @param the physics world to add the collision body to
  * @return int ID of the collision body created
  */
-int createCollisionBody(PhysicsEngine *physicsEngine);
+int PhysicsEngine_createCollisionBody(PhysicsWorld *physicsWorld);
 
 /**
  * Destroys a collision body
- * @param ID the ID of the collision body to be destroyed
- * @return bool Success of operation
+ * @param physicsWorld the physics world the collision body belongs to
+ * @param ID the ID of the collision body
+ * @return success of operation
  */
-bool destroyCollisionBody(PhysicsEngine *physicsEngine,
-                          int id);
+bool PhysicsEngine_destroyCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
 /**
  * Checks if two objects are currently colliding with each other
@@ -32,7 +59,7 @@ bool destroyCollisionBody(PhysicsEngine *physicsEngine,
  * @param ID2
  * @return
  */
-bool checkCollision(PhysicsEngine *physicsEngine,
+bool PhysicsEngine_checkCollision(PhysicsEngine *physicsEngine,
                     int id1,
                     int id2);
 
@@ -46,7 +73,7 @@ bool checkCollision(PhysicsEngine *physicsEngine,
  * @param ID2
  * @return
  */
-bool willCollide(PhysicsEngine *physicsEngine,
+bool PhysicsEngine_willCollide(PhysicsEngine *physicsEngine,
                  int bodyId1,
                  float newXOffset1,
                  float newYOffset1,
@@ -59,14 +86,14 @@ bool willCollide(PhysicsEngine *physicsEngine,
 /**
  * TODO: idk if this is in the scope of physics engine, but I imagine the engine must be updated with new data when an object intends to move
  */
-bool moveObj(PhysicsEngine *physicsEngine,
+bool PhysicsEngine_moveObj(PhysicsEngine *physicsEngine,
              int id,
              float newXOffset,
              float newYOffset,
              float newZOffset);
 
 //TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
-bool applyForce(PhysicsEngine *physicsEngine,
+bool PhysicsEngine_applyForce(PhysicsEngine *physicsEngine,
                   float force,
                   float xDir,
                   float yDir,
@@ -77,15 +104,21 @@ bool applyForce(PhysicsEngine *physicsEngine,
 * Add a game object to the physics engine
 * @return
 */
-int addObj(PhysicsEngine *physicsEngine);
+int PhysicsEngine_addObj(PhysicsEngine *physicsEngine);
 
 /**
 * Remove a game object from the physics engine
 * @return
 */
-bool removeObj(PhysicsEngine *physicsEngine);
+bool PhysicsEngine_removeObj(PhysicsEngine *physicsEngine);
 
-bool updateObj(PhysicsEngine *physicsEngine,
+bool PhysicsEngine_updateObj(PhysicsEngine *physicsEngine,
                int objId);
 
-void draw(PhysicsEngine *physicsEngine);
+void PhysicsEngine_draw(PhysicsEngine *physicsEngine);
+
+void PhysicsEngine_stop(PhysicsEngine *physicsEngine){
+
+}
+
+void PhysicsEngine_update(PhysicsEngine *physicsEngine){}

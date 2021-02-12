@@ -3,6 +3,7 @@
 #include "Engine/camera.h"
 #include "Engine/GameObjects/gameObject.h"
 #include "Engine/InputManager.h"
+#include "../../lib/Physics/src/include/BigBalls/physicsEngine.h"
 
 #define MAX_GAME_OBJECTS 10000
 
@@ -20,6 +21,7 @@ typedef struct State {
     GameObject gameObjects[MAX_GAME_OBJECTS];
     Camera camera;
     size_t NumOfGameObjects;
+    CollisionBodyManager collisionBodyManager; // TODO: pull in physicsworld implementation
     fnPtr init;
     fnPtrFl update;
     fnPtrFl draw;

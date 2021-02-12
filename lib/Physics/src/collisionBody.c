@@ -129,10 +129,8 @@ void CollisionBody_stop(CollisionBody *collisionBody){
     collisionBody->xVel = 0;
     collisionBody->yVel = 0;
     collisionBody->zVel = 0;
-    CollisionBody_sleep(collisionBody); // put the collisionbody to sleep so that it isnt considered by collision detection or moved by gravity
+    collisionBody->force = 0;
+    collisionBody->forceDirX = 0;
+    collisionBody->forceDirY = 0;
+    collisionBody->forceDirZ = 0;
 }
-
-void CollisionBody_start(CollisionBody *collisionBody){
-    CollisionBody_awake(collisionBody);
-}
-

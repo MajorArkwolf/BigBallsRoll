@@ -22,6 +22,10 @@ typedef struct CollisionBody{
     float xVel; // current velocity of CollisionBody (as a vector)
     float yVel;
     float zVel;
+    float force; // force in Netwons currently applied to CollisionBody
+    float forceDirX; // force direction vector
+    float forceDirY;
+    float forceDirZ;
     float mass; // physical mass of CollisionBody
     float AABBx1; // two coordinates required for AABB
     float AABBy1;
@@ -107,13 +111,7 @@ void CollisionBody_sleep(CollisionBody *collisionBody);
 void CollisionBody_awake(CollisionBody *collisionBody);
 
 /**
- * Stops all processing and removes all data from the CollisionBody
+ * Stops movement and removes forces from CollisionBody
  * @param physicsEngine
  */
 void CollisionBody_stop(CollisionBody *collisionBody);
-
-/**
- * Resumes the motion of a CollisionBody (not maintaining its previous velocity) after being in a stopped state previously
- * @param collisionBody
- */
-void CollisionBody_start(struct CollisionBody *collisionBody);

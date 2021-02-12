@@ -83,42 +83,4 @@ bool PhysicsEngine_willCollide(PhysicsEngine *physicsEngine,
                  float newYOffset2,
                  float newZOffset2);
 
-/**
- * TODO: idk if this is in the scope of physics engine, but I imagine the engine must be updated with new data when an object intends to move
- */
-bool PhysicsEngine_moveObj(PhysicsEngine *physicsEngine,
-             int id,
-             float newXOffset,
-             float newYOffset,
-             float newZOffset);
-
-//TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
-bool PhysicsEngine_applyForce(PhysicsEngine *physicsEngine,
-                  float force,
-                  float xDir,
-                  float yDir,
-                  float zDir,
-                  int objID);
-
-/**
-* Add a game object to the physics engine
-* @return
-*/
-int PhysicsEngine_addObj(PhysicsEngine *physicsEngine);
-
-/**
-* Remove a game object from the physics engine
-* @return
-*/
-bool PhysicsEngine_removeObj(PhysicsEngine *physicsEngine);
-
-bool PhysicsEngine_updateObj(PhysicsEngine *physicsEngine,
-               int objId);
-
-void PhysicsEngine_draw(PhysicsEngine *physicsEngine);
-
-void PhysicsEngine_stop(PhysicsEngine *physicsEngine){
-
-}
-
 void PhysicsEngine_update(PhysicsEngine *physicsEngine){}

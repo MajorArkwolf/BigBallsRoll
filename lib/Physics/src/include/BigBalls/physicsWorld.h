@@ -66,6 +66,74 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int id);
 int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld);
 
 /**
- * TODO: do nothing
+ * Updates the position and rotation data of objects in the PhysicsWorld based on time passed since last update,
+ * current forces on objects and current velocities, detecting and resolving collisions where appropriate
+ * @param physicsWorld
+ * @param deltaTime
  */
-void PhysicsWorld_sleep(){}
+void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime);
+
+bool PhysicsWorld_moveObj(PhysicsWorld *physicsWorld,
+                           int id,
+                           float newXOffset,
+                           float newYOffset,
+                           float newZOffset);
+
+/**
+ * Get current object positional data from PhysicsEngine
+ * TODO: change type to Vec3 once it is moved to an external library
+ * @param physicsWorld the PhysicsWorld the object belongs to
+ * @param id the id of the relevant object
+ * @return GravityNormal the position vector of the object, returns NULL if object isn't found
+ */
+GravityNormal* PhysicsWorld_getObjPos(PhysicsWorld *physicsWorld, int id);
+
+/**
+ * Get current object rotational data from PhysicsEngine
+ * TODO: change type to Vec3 once it is moved to an external library
+ * @param physicsWorld the PhysicsWorld the object belongs to
+ * @param id the id of the relevant object
+ * @return GravityNormal the rotation vector of the object, returns NULL if object isn't found
+ */
+GravityNormal* PhysicsWorld_getObjRot(PhysicsWorld *physicsWorld, int id);
+
+void PhysicsWorld_setObjPos(PhysicsWorld *physicsWorld,
+                            int id,
+                            float x,
+                            float y,
+                            float z);
+
+void PhysicsWorld_setObjRot(PhysicsWorld *physicsWorld,
+                            int id,
+                            float x,
+                            float y,
+                            float z);
+
+void PhysicsWorld_createObjAABB(PhysicsWorld *physicsWorld,
+                                const int ID,
+                                const float* vertsX,
+                                const float* vertsY,
+                                const float* vertsZ,
+                                const int numVerts);
+
+void PhysicsWorld_createObjOOBB(PhysicsWorld *physicsWorld, int id, GravityNormal** verts, edges?);
+
+//TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
+bool PhysicsEngine_applyForce(PhysicsWorld *physicsWorld,
+                              float force,
+                              float xDir,
+                              float yDir,
+                              float zDir,
+                              int objID);
+
+/**
+* Add a game object to the physics engine
+* @return int The id of the object
+*/
+int PhysicsEngine_addObj(PhysicsWorld *physicsWorld);
+
+/**
+* Remove a game object from the physics engine
+* @return
+*/
+bool PhysicsEngine_removeObj(PhysicsWorld *physicsWorld);

@@ -63,7 +63,7 @@ void Update(int value) {
     // Via the physics engine updates the positions, rotations and velocities of objects in a physics world
     // based on the last known state and the pending forces being applied to these objects
     // (forces to be applied since last frame)
-    CollisionBodyManager_Update(&engine.sM.stack[engine.sM.top]->collisionBodyManager, deltaTime);
+    PhysicsWorld_update(&engine.sM.stack[engine.sM.top]->physicsWorld, deltaTime);
 }
 
 /**

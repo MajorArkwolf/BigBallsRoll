@@ -115,3 +115,24 @@ void CollisionBody_scale(CollisionBody *collisionBody,
         collisionBody->SphereColliders[i]->radius *= scaleFactor;// scale by the average of the three dimensions
     }
 }
+
+void CollisionBody_sleep(CollisionBody *collisonBody){
+    //TODO: implement
+}
+
+void CollisionBody_awake(CollisionBody *collisionBody){
+    // TODO: implement
+}
+
+void CollisionBody_stop(CollisionBody *collisionBody){
+    // TODO: check if stop should do more
+    collisionBody->xVel = 0;
+    collisionBody->yVel = 0;
+    collisionBody->zVel = 0;
+    CollisionBody_sleep(collisionBody); // put the collisionbody to sleep so that it isnt considered by collision detection or moved by gravity
+}
+
+void CollisionBody_start(CollisionBody *collisionBody){
+    CollisionBody_awake(collisionBody);
+}
+

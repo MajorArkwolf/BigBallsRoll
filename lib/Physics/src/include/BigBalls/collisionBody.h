@@ -92,3 +92,28 @@ void CollisionBody_rotate(CollisionBody *collisionBody,
  * (scale factor of 1 would have no change, 0.5 would be half size, 2 would be double size)
  */
 void CollisionBody_scale(CollisionBody *collisionBody, float scaleFactor);
+
+/**
+ * Stops a CollisionBody from being considered by collision detection, and stops all forces from moving it (including gravity)
+ * Maintains the current velocity of the object
+ * TODO: do nothing
+ */
+void CollisionBody_sleep(CollisionBody *collisionBody);
+
+/**
+ * Allows forces to act on a CollisionBody and for the body to be involved in collisions after being in a sleep state
+ * @param collisionBody
+ */
+void CollisionBody_awake(CollisionBody *collisionBody);
+
+/**
+ * Stops all processing and removes all data from the CollisionBody
+ * @param physicsEngine
+ */
+void CollisionBody_stop(CollisionBody *collisionBody);
+
+/**
+ * Resumes the motion of a CollisionBody (not maintaining its previous velocity) after being in a stopped state previously
+ * @param collisionBody
+ */
+void CollisionBody_start(struct CollisionBody *collisionBody);

@@ -104,4 +104,10 @@ void LevelOne_init(State *state) {
     state->camera.Position.Y += 2.0f;
     state->camera.Pitch -= 15.0f;
     Camera_updateCameraVectors(&state->camera);
+
+    // TODO: should all this be an init function in the PhysicsEngine?
+    int wallphys = PhysicsEngine_addObj(&state->physicsWorld);
+    PhysicsWorld_setObjPos(&state->physicsWorld,wallphys, 20.f, 5.f, 3.f);
+    PhysicsWorld_setObjRot(&state->physicsWorld, wallphys, 0.f, 90.f, 0.f);
+    PhysicsWorld_createObjAABB(&state->physicsWorld, wallphys);
 }

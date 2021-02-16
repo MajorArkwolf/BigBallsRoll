@@ -86,6 +86,8 @@ void CollisionBody_rotate(CollisionBody *collisionBody,
                           float xRot,
                           float yRot,
                           float zRot){
+    collisionBody->BoxColliders;
+    collisionBody->SphereColliders;
     collisionBody->xRot += xRot; // update CollisionBody rotation
     collisionBody->yRot += yRot;
     collisionBody->zRot += zRot;
@@ -127,9 +129,19 @@ void CollisionBody_stop(CollisionBody *collisionBody){
 void CollisionBody_updateAABB(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
     assert(collisionBody != NULL && (collisionBody->numOfBoxColliders != 0 || collisionBody->numOfSphereColliders != 0)); // ensure that one collider exists before processing
+
+    /*for(boxCollider in BoxColliders){
+        // apply global rotation
+        // apply local rotation
+    }
+
+    // apply global rotation
+    for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
+        collisionBody->SphereColliders[i]->xAbs =
+    }*/
+
     // declare local vars
     float greatestX, lowestX, greatestY, lowestY, greatestZ, lowestZ;
-    // TODO: account for rotation (both CollisionBody and collider)
     // init min/max vertices
     if(collisionBody->numOfBoxColliders != 0){
         greatestX = collisionBody->BoxColliders[0]->xOffset + collisionBody->BoxColliders[0]->xLen;

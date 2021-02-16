@@ -1,5 +1,4 @@
 #pragma once
-
 #include "collisionBody.h"
 
 //TODO: Temp until vec3 is apart of external library
@@ -60,7 +59,7 @@ int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld);
 void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime);
 
 //TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
-bool PhysicsEngine_applyForce(PhysicsWorld *physicsWorld,
+bool PhysicsWorld_applyForce(PhysicsWorld *physicsWorld,
                               const float force,
                               const float xDir,
                               const float yDir,
@@ -69,12 +68,14 @@ bool PhysicsEngine_applyForce(PhysicsWorld *physicsWorld,
 
 /**
 * Add a game object to the physics engine
-* @return int The id of the added object
+ * @param physicsWorld the PhysicsWorld to add a CollisionBody to
+ * @param collisionBody the CollisionBody to add to the PhysicsWorld
 */
-int PhysicsEngine_addCollisionBody(PhysicsWorld *physicsWorld);
+void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody);
 
 /**
 * Remove a game object from the physics engine
-* @return
+* @param physicsWorld The PhysicsWorld to remove a CollisionBody from
+* @param ID The ID of the CollisionBody to be removed
 */
-bool PhysicsEngine_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID);
+void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID);

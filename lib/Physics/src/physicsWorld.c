@@ -17,28 +17,6 @@ CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, const 
     return NULL;
 }
 
-void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
-    assert(physicsWorld != NULL);
-    physicsWorld->collisionBodies = NULL;
-    physicsWorld->numCollisionBodies = 0;
-    physicsWorld->collisionBodyIdCount = 0;
-    physicsWorld->gravity = 1; //TODO: find default
-    physicsWorld->gravityNormal = GravityNormal_init();
-}
-
-void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
-    assert(physicsWorld != NULL);
-    for (size_t i = 1; i < physicsWorld->numCollisionBodies; ++i) {
-        CollisionBody_free(physicsWorld->collisionBodies[i]);
-    }
-    free(physicsWorld);
-    physicsWorld = NULL;
-}
-
-void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
-    //TODO: implement
-}
-
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
     // determine which coordinate is larger than the other
     float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
@@ -93,8 +71,8 @@ bool testAABBCollision(CollisionBody *a, CollisionBody *b){
     }
 
     return (x1min <= x2max && x1max >= x2min) &&
-            (y1min <= y2max && y1max >= y2min) &&
-            (z1min <= z2max && z1max >= z2min);
+           (y1min <= y2max && y1max >= y2min) &&
+           (z1min <= z2max && z1max >= z2min);
 }
 
 void detectCollisions(PhysicsWorld* physicsWorld){
@@ -112,6 +90,29 @@ void detectCollisions(PhysicsWorld* physicsWorld){
             }
         }
     }
+}
+
+void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
+    assert(physicsWorld != NULL);
+    physicsWorld->collisionBodies = NULL;
+    physicsWorld->numCollisionBodies = 0;
+    physicsWorld->collisionBodyIdCount = 0;
+    physicsWorld->gravity = 1; //TODO: find default
+    physicsWorld->gravityNormal = GravityNormal_init();
+}
+
+void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
+    assert(physicsWorld != NULL);
+    for (size_t i = 1; i < physicsWorld->numCollisionBodies; ++i) {
+        CollisionBody_free(physicsWorld->collisionBodies[i]);
+    }
+    free(physicsWorld);
+    physicsWorld = NULL;
+}
+
+void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
+    //TODO: implement
+    detectCollisions(physicsWorld);
 }
 
 void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody) {

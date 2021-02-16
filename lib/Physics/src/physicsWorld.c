@@ -18,6 +18,8 @@ CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, const 
 }
 
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
+    assert(a != NULL);
+    assert(b != NULL);
     // determine which coordinate is larger than the other
     float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
     if(a->AABBx1 <= a->AABBx2){ // a
@@ -76,10 +78,11 @@ bool testAABBCollision(CollisionBody *a, CollisionBody *b){
 }
 
 void detectCollisions(PhysicsWorld* physicsWorld){
+    assert(physicsWorld != NULL);
     // TODO: ideally shouldn't check every body against each other - spacial partitioning method ideal
     // broad phase
     for(size_t i = 0; physicsWorld->numCollisionBodies; ++i){
-        for(size_t j = 0; physicsWorld->numCollisionBodies; j++){
+        for(size_t j = 0; physicsWorld->numCollisionBodies; ++j){
             if(i != j){ // dont check for collision of the same object
                 if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
                     // broad phase collision detected
@@ -111,23 +114,23 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
 }
 
 void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
+    assert(physicsWorld != NULL);
     //TODO: implement
     detectCollisions(physicsWorld);
 }
 
 void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody) {
-    assert(physicsWorld != NULL);
+    assert(physicsWorld != NULL && collisionBody != NULL);
     // Allocate new, larger array
     if (physicsWorld->collisionBodies == NULL) {
         physicsWorld->collisionBodies = calloc(1, sizeof(CollisionBody));
     } else {
-        physicsWorld->collisionBodies = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * physicsWorld->numCollisionBodies + 1);
+        physicsWorld->collisionBodies = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * (physicsWorld->numCollisionBodies + 1));
     }
     // Copy BoxCollider object into array
     physicsWorld->collisionBodies[physicsWorld->numCollisionBodies] = collisionBody;
     // Assign ID to BoxCollider
     physicsWorld->collisionBodies[physicsWorld->numCollisionBodies]->id = PhysicsWorld_newCollisionBodyID(physicsWorld);
-    physicsWorld->numCollisionBodies++;
 }
 
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) {
@@ -141,7 +144,7 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) 
             physicsWorld->collisionBodies[physicsWorld->numCollisionBodies - 1] = NULL;
             --physicsWorld->numCollisionBodies;
             // reduce size of memory allocation (shouldn't be costly if realloc() realises whats going on)
-            realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * physicsWorld->numCollisionBodies);
+            physicsWorld->collisionBodies = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * physicsWorld->numCollisionBodies);
         }
     }
 }

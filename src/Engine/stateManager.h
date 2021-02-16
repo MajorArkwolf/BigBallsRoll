@@ -21,7 +21,7 @@ typedef struct State {
     GameObject gameObjects[MAX_GAME_OBJECTS];
     Camera camera;
     size_t NumOfGameObjects;
-    PhysicsWorld physicsWorld;
+    PhysicsEngine physicsEngine;
     fnPtr init;
     fnPtrFl update;
     fnPtrFl draw;

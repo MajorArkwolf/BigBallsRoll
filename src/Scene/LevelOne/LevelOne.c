@@ -10,7 +10,7 @@ int LevelOne_draw(float deltaTime) {
 }
 
 int LevelOne_update(float deltaTime) {
-    detectCollisions(&StateManager_top(&engine.sM)->physicsWorld);
+    PhysicsWorld_update(StateManager_top(&engine.sM)->physicsEngine.physicsWorld[0], deltaTime);
     Camera_update(&StateManager_top(&engine.sM)->camera, (float) deltaTime);
     GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
     for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
@@ -97,7 +97,12 @@ void LevelOne_init(State *state) {
     state->keyDown = LevelOne_keyDown;
     state->keyUp = LevelOne_keyUp;
     state->mouseMovement = LevelOne_mouseMovement;
+    PhysicsEngine *physicsEngine = calloc(1, sizeof(PhysicsEngine));
+    PhysicsEngine_init(physicsEngine);
+    state->physicsEngine = *physicsEngine;
+    state->physicsEngine.physicsWorld[0] = PhysicsEngine_newPhysicsWorld(&state->physicsEngine);
 
+    // add wall
     GameObject_init(&state->gameObjects[0]);
     state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Terrain/Wall.obj");
     state->gameObjects[0].Transform.Position.X += 0.f;
@@ -109,7 +114,6 @@ void LevelOne_init(State *state) {
     state->camera.Pitch -= 15.0f;
     Camera_updateCameraVectors(&state->camera);
 
-    // add wall
     // create CollisionBody for object
     CollisionBody* wallCollisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(wallCollisionBody);
@@ -127,7 +131,7 @@ void LevelOne_init(State *state) {
     CollisionBody_addBoxCollider(wallCollisionBody, wallCollider);
     CollisionBody_setPos(wallCollisionBody, 0.f, 0.f, 0.f);
     CollisionBody_setRot(wallCollisionBody, 0.f, 0.f, 0.f);
-    PhysicsWorld_addCollisionBody(&state->physicsWorld, wallCollisionBody);
+    PhysicsWorld_addCollisionBody(state->physicsEngine.physicsWorld[0], wallCollisionBody);
 
     // add ball
     GameObject_init(&state->gameObjects[1]);
@@ -149,7 +153,7 @@ void LevelOne_init(State *state) {
 
     CollisionBody_addSphereCollider(ballCollisionBody, ballCollider);
     CollisionBody_setPos(ballCollisionBody, 0.f, 0.f, 0.f);
-    PhysicsWorld_addCollisionBody(&state->physicsWorld, ballCollisionBody);
+    PhysicsWorld_addCollisionBody(state->physicsEngine.physicsWorld[0], ballCollisionBody);
 
     // add box
 }

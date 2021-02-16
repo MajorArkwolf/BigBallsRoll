@@ -288,6 +288,6 @@ void Engine_loadConfig() {
     //Get Configured Seed.
     lua_getglobal(engine.lua, "seed");
     if (lua_isnumber(engine.lua, 0) == 0) {
-        engine.fov = lua_tonumber(engine.lua, -1);
+        engine.seed = lua_tonumber(engine.lua, -1);
     }
 }

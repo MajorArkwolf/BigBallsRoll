@@ -112,6 +112,9 @@ void Game_init(State *state) {
     lua_pushcfunction(engine.lua, Game_setModel);
     lua_setglobal(engine.lua, "GameObjectSetModel");
 
+    lua_pushnumber(engine.lua, engine.seed);
+    lua_setglobal(engine.lua, "seed");
+
     lua_getglobal(engine.lua, "Init");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));

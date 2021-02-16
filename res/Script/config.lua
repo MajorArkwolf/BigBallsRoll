@@ -2,4 +2,4 @@ width = 1920
 height = 1080
 fov = 60
 fullscreen = false
-seed = 451
+seed = 452

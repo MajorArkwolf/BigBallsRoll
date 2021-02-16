@@ -1,5 +1,6 @@
 #include "include/BigBalls/physicsWorld.h"
 #include <assert.h>
+#include <stdio.h>
 
 int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld) {
     assert(physicsWorld != NULL);
@@ -35,107 +36,65 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
 }
 
 void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
-
+    //TODO: implement
 }
 
-bool PhysicsWorld_moveObj(PhysicsWorld *physicsWorld,
-                          int id,
-                          float newXOffset,
-                          float newYOffset,
-                          float newZOffset){
-    // check that the object does not collide with other objects at new position
-}
-
-GravityNormal* PhysicsWorld_getObjPos(PhysicsWorld *physicsWorld, const int id){
-    CollisionBody* target = PhysicsWorld_findCollisionBody(physicsWorld, id);
-    if (target == NULL) { // object not found
-        return NULL;
+bool testAABBCollision(CollisionBody *a, CollisionBody *b){
+    // determine which coordinate is larger than the other
+    float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
+    if(a->AABBx1 <= a->AABBx2){ // a
+        x1min = a->AABBx1;
+        x1max = a->AABBx2;
     }
-    GravityNormal *res = calloc(1, sizeof(GravityNormal));
-    res->X = target->xPos;
-    res->Y = target->yPos;
-    res->Z = target->zPos;
-    return res;
-}
-
-GravityNormal* PhysicsWorld_getObjRot(PhysicsWorld *physicsWorld, const int id){
-    CollisionBody* target = PhysicsWorld_findCollisionBody(physicsWorld, id);
-    if (target == NULL) { // object not found
-        return NULL;
+    else{
+        x1min = a->AABBx2;
+        x1max = a->AABBx1;
     }
-    GravityNormal *res = calloc(1, sizeof(GravityNormal));
-    res->X = target->xRot;
-    res->Y = target->yRot;
-    res->Z = target->zRot;
-    return res;
-}
-
-void PhysicsWorld_createObjAABB(PhysicsWorld *physicsWorld,
-                                const int ID,
-                                const float* vertsX,
-                                const float* vertsY,
-                                const float* vertsZ,
-                                const int numVerts){
-    assert(numVerts > 0 && physicsWorld != NULL);
-    CollisionBody* target = PhysicsWorld_findCollisionBody(physicsWorld, ID);
-    assert(target != NULL); // ensure that object exists before processing
-    // init values
-    float greatestX = vertsX[0];
-    float lowestX = vertsX[0];
-    float greatestY = vertsY[0];
-    float lowestY = vertsY[0];
-    float greatestZ = vertsZ[0];
-    float lowestZ = vertsZ[0];
-    for(int i = 1; i < numVerts; ++i){
-        if(vertsX[i] > greatestX){ // x
-            greatestX = vertsX[i];
-        }
-        if(vertsX[i] < lowestX){
-            lowestX = vertsX[i];
-        }
-        if(vertsY[i] > greatestY){ // y
-            greatestY = vertsY[i];
-        }
-        if(vertsY[i] < lowestY){
-            lowestY = vertsY[i];
-        }
-        if(vertsZ[i] > greatestZ){ // z
-            greatestZ = vertsZ[i];
-        }
-        if(vertsZ[i] < lowestZ){
-            lowestZ = vertsZ[i];
-        }
+    if(a->AABBy1 <= a->AABBy2){
+        y1min = a->AABBy1;
+        y1max = a->AABBy2;
     }
-    // got dimensions for box, assign to CollisionBody
-    target->AABBx1 = lowestX;
-    target->AABBx2 = greatestX;
-    target->AABBy1 = lowestY;
-    target->AABBy2 = greatestY;
-    target->AABBz1 = lowestZ;
-    target->AABBz2 = greatestZ;
-}
+    else{
+        y1min = a->AABBy2;
+        y1max = a->AABBy1;
+    }
+    if(a->AABBz1 <= a->AABBz2){
+        z1min = a->AABBz1;
+        z1max = a->AABBz2;
+    }
+    else{
+        z1min = a->AABBz2;
+        z1max = a->AABBz1;
+    }
 
-bool testAABBCollision(const float X1POS,
-                       const float Y1POS,
-                       const float Z1POS,
-                       const float X1LEN,
-                       const float Y1LEN,
-                       const float Z1LEN,
-                       const float X2POS,
-                       const float Y2POS,
-                       const float Z2POS,
-                       const float X2LEN,
-                       const float Y2LEN,
-                       const float Z2LEN){
-    const float D1X = X1POS - (X2POS + X2LEN);
-    const float D1Y = Y1POS - (Y2POS + Y2LEN);
-    const float D1Z = Z1POS - (Z2POS + Z2LEN);
-    const float D2X = X2POS - (X1POS + X1LEN);
-    const float D2Y = Y2POS - (Y1POS + Y1LEN);
-    const float D2Z = Z2POS - (Z1POS + Z1LEN);
+    if(b->AABBx1 <= b->AABBx2){ // b
+        x2min = b->AABBx1;
+        x2max = b->AABBx2;
+    }
+    else{
+        x2min = b->AABBx2;
+        x2max = b->AABBx1;
+    }
+    if(b->AABBy1 <= b->AABBy2){
+        y2min = b->AABBy1;
+        y2max = b->AABBy2;
+    }
+    else{
+        y2min = b->AABBy2;
+        y2max = b->AABBy1;
+    }
+    if(b->AABBz1 <= b->AABBz2){
+        z2min = b->AABBz1;
+        z2max = b->AABBz2;
+    }
+    else{
+        z2min = b->AABBz2;
+        z2max = b->AABBz1;
+    }
 
-    // if smallest coord of a box is greater than largest x coord of other box, the boxes cannot be colliding
-    return D1X > 0.0f || D1Y > 0.0f || D1Z > 0.0f || D2X > 0.0f || D2Y > 0.0f || D2Z > 0.0f ? false : true;
+    return (x1min <= x2max && x1max >= x2min) &&
+            (y1min <= y2max && y1max >= y2min) &&
+            (z1min <= z2max && z1max >= z2min);
 }
 
 void detectCollisions(PhysicsWorld* physicsWorld){
@@ -144,21 +103,11 @@ void detectCollisions(PhysicsWorld* physicsWorld){
     for(size_t i = 0; physicsWorld->numCollisionBodies; ++i){
         for(size_t j = 0; physicsWorld->numCollisionBodies; j++){
             if(i != j){ // dont check for collision of the same object
-                if(testAABBCollision(physicsWorld->collisionBodies[i]->AABBx1, // obj 1
-                                  physicsWorld->collisionBodies[i]->AABBy1,
-                                  physicsWorld->collisionBodies[i]->AABBz1,
-                                  physicsWorld->collisionBodies[i]->AABBx2-physicsWorld->collisionBodies[i]->AABBx1,
-                                  physicsWorld->collisionBodies[i]->AABBy2-physicsWorld->collisionBodies[i]->AABBy1,
-                                  physicsWorld->collisionBodies[i]->AABBz2-physicsWorld->collisionBodies[i]->AABBz1,
-                                  physicsWorld->collisionBodies[j]->AABBx1, // obj 2
-                                  physicsWorld->collisionBodies[j]->AABBy1,
-                                  physicsWorld->collisionBodies[j]->AABBz1,
-                                  physicsWorld->collisionBodies[j]->AABBx2-physicsWorld->collisionBodies[i]->AABBx1,
-                                  physicsWorld->collisionBodies[j]->AABBy2-physicsWorld->collisionBodies[i]->AABBy1,
-                                  physicsWorld->collisionBodies[j]->AABBz2-physicsWorld->collisionBodies[i]->AABBz1)) {
+                if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
                     // broad phase collision detected
                     // TODO: narrow phase
                     // TODO: resolve collision
+                    printf("Objects %d and %d are colliding!\n", (int)i ,(int)j);
                 }
             }
         }
@@ -198,7 +147,7 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) 
 
 //TODO: Implement
 void PhysicsWorld_updateGravityNormal(float x, float y, float z) {
-    //Stub
+    //TODO: Stub
 }
 
 //TODO: Temporary

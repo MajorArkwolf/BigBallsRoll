@@ -19,6 +19,12 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->xVel = 0;
     collisionBody->yVel = 0;
     collisionBody->zVel = 0;
+    collisionBody->AABBx1 = 0;
+    collisionBody->AABBy1 = 0;
+    collisionBody->AABBz1 = 0;
+    collisionBody->AABBx2 = 0;
+    collisionBody->AABBy2 = 0;
+    collisionBody->AABBz2 = 0;
     collisionBody->mass = 0;
 }
 
@@ -45,6 +51,8 @@ void CollisionBody_addBoxCollider(CollisionBody *collisionBody,
     collisionBody->BoxColliders[collisionBody->numOfBoxColliders] = boxCollider;
     ++collisionBody->numOfBoxColliders;
     ++collisionBody->numOfColliders;
+    // recreate CollisionBody AABB
+    CollisionBody_updateAABB(collisionBody);
 }
 
 void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
@@ -60,6 +68,8 @@ void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
     collisionBody->SphereColliders[collisionBody->numOfSphereColliders] = sphereCollider;
     ++collisionBody->numOfSphereColliders;
     ++collisionBody->numOfColliders;
+    // recreate CollisionBody AABB
+    CollisionBody_updateAABB(collisionBody);
 }
 
 void CollisionBody_translate(CollisionBody *collisionBody,
@@ -69,18 +79,7 @@ void CollisionBody_translate(CollisionBody *collisionBody,
     collisionBody->xPos += xDist; // update CollisionBody position
     collisionBody->yPos += yDist;
     collisionBody->zPos += zDist;
-    // update relative positions of BoxColliders
-    for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
-        collisionBody->BoxColliders[i]->xOffset += xDist;
-        collisionBody->BoxColliders[i]->yOffset += yDist;
-        collisionBody->BoxColliders[i]->zOffset += zDist;
-    }
-    // update relative positions of SphereColliders
-    for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
-        collisionBody->SphereColliders[i]->xOffset += xDist;
-        collisionBody->SphereColliders[i]->yOffset += yDist;
-        collisionBody->SphereColliders[i]->zOffset += zDist;
-    }
+    CollisionBody_updateAABB(collisionBody);
 }
 
 void CollisionBody_rotate(CollisionBody *collisionBody,
@@ -90,18 +89,7 @@ void CollisionBody_rotate(CollisionBody *collisionBody,
     collisionBody->xRot += xRot; // update CollisionBody rotation
     collisionBody->yRot += yRot;
     collisionBody->zRot += zRot;
-    // update relative rotation of BoxColliders
-    for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
-        collisionBody->BoxColliders[i]->xRot += xRot;
-        collisionBody->BoxColliders[i]->yRot += yRot;
-        collisionBody->BoxColliders[i]->zRot += zRot;
-    }
-    // update relative rotation of SphereColliders
-    for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
-        collisionBody->SphereColliders[i]->xRot += xRot;
-        collisionBody->SphereColliders[i]->yRot += yRot;
-        collisionBody->SphereColliders[i]->zRot += zRot;
-    }
+    CollisionBody_updateAABB(collisionBody);
 }
 
 void CollisionBody_scale(CollisionBody *collisionBody,
@@ -114,6 +102,7 @@ void CollisionBody_scale(CollisionBody *collisionBody,
     for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
         collisionBody->SphereColliders[i]->radius *= scaleFactor;// scale by the average of the three dimensions
     }
+    CollisionBody_updateAABB(collisionBody);
 }
 
 void CollisionBody_sleep(CollisionBody *collisonBody){
@@ -133,4 +122,110 @@ void CollisionBody_stop(CollisionBody *collisionBody){
     collisionBody->forceDirX = 0;
     collisionBody->forceDirY = 0;
     collisionBody->forceDirZ = 0;
+}
+
+void CollisionBody_updateAABB(CollisionBody *collisionBody){
+    assert(collisionBody != NULL);
+    assert(collisionBody != NULL && (collisionBody->numOfBoxColliders != 0 || collisionBody->numOfSphereColliders != 0)); // ensure that one collider exists before processing
+    // declare local vars
+    float greatestX, lowestX, greatestY, lowestY, greatestZ, lowestZ;
+    // TODO: account for rotation (both CollisionBody and collider)
+    // init min/max vertices
+    if(collisionBody->numOfBoxColliders != 0){
+        greatestX = collisionBody->BoxColliders[0]->xOffset + collisionBody->BoxColliders[0]->xLen;
+        lowestX = collisionBody->BoxColliders[0]->xOffset;
+        greatestY = collisionBody->BoxColliders[0]->yOffset + collisionBody->BoxColliders[0]->yLen;;
+        lowestY = collisionBody->BoxColliders[0]->yOffset;
+        greatestZ = collisionBody->BoxColliders[0]->zOffset + collisionBody->BoxColliders[0]->zLen;;
+        lowestZ = collisionBody->BoxColliders[0]->zOffset;
+    }
+    else if(collisionBody->numOfSphereColliders != 0){
+        greatestX = collisionBody->SphereColliders[0]->xOffset + collisionBody->SphereColliders[0]->radius;
+        lowestX = collisionBody->SphereColliders[0]->xOffset - collisionBody->SphereColliders[0]->radius;
+        greatestY = collisionBody->SphereColliders[0]->yOffset + collisionBody->SphereColliders[0]->radius;
+        lowestY = collisionBody->SphereColliders[0]->yOffset - collisionBody->SphereColliders[0]->radius;
+        greatestZ = collisionBody->SphereColliders[0]->zOffset + collisionBody->SphereColliders[0]->radius;
+        lowestZ = collisionBody->SphereColliders[0]->zOffset - collisionBody->SphereColliders[0]->radius;
+    }
+
+    // get all BoxCollider min/max vertices
+    for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
+        if(collisionBody->BoxColliders[0]->xOffset + collisionBody->BoxColliders[0]->xLen > greatestX){ // x
+            greatestX = collisionBody->BoxColliders[0]->xOffset + collisionBody->BoxColliders[0]->xLen;
+        }
+        if(collisionBody->BoxColliders[0]->zOffset + collisionBody->BoxColliders[0]->xLen < lowestX){
+            lowestX = collisionBody->BoxColliders[0]->xOffset;
+        }
+        if(collisionBody->BoxColliders[0]->yOffset + collisionBody->BoxColliders[0]->yLen > greatestY){ // y
+            greatestY = collisionBody->BoxColliders[0]->yOffset + collisionBody->BoxColliders[0]->yLen;
+        }
+        if(collisionBody->BoxColliders[0]->yOffset < lowestY){
+            lowestY = collisionBody->BoxColliders[0]->yOffset;
+        }
+        if(collisionBody->BoxColliders[0]->zOffset + collisionBody->BoxColliders[0]->zLen > greatestZ){ // z
+            greatestZ = collisionBody->BoxColliders[0]->zOffset + collisionBody->BoxColliders[0]->zLen;
+        }
+        if(collisionBody->BoxColliders[0]->zOffset < lowestZ){
+            lowestZ = collisionBody->BoxColliders[0]->zOffset;
+        }
+    }
+    // get all SphereCollider min/max vertices
+    for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
+        if(collisionBody->SphereColliders[0]->xOffset + collisionBody->SphereColliders[0]->radius > greatestX){ // x
+            greatestX = collisionBody->SphereColliders[0]->xOffset + collisionBody->SphereColliders[0]->radius;
+        }
+        if(collisionBody->SphereColliders[0]->xOffset - collisionBody->SphereColliders[0]->radius < lowestX){
+            lowestX = collisionBody->SphereColliders[0]->xOffset - collisionBody->SphereColliders[0]->radius;
+        }
+        if(collisionBody->SphereColliders[0]->yOffset + collisionBody->SphereColliders[0]->radius > greatestY){ // y
+            greatestY = collisionBody->SphereColliders[0]->yOffset + collisionBody->SphereColliders[0]->radius;
+        }
+        if(collisionBody->SphereColliders[0]->yOffset - collisionBody->SphereColliders[0]->radius < lowestY){
+            lowestY = collisionBody->SphereColliders[0]->yOffset - collisionBody->SphereColliders[0]->radius;
+        }
+        if(collisionBody->SphereColliders[0]->zOffset + collisionBody->SphereColliders[0]->radius > greatestZ){ // z
+            greatestZ = collisionBody->SphereColliders[0]->zOffset + collisionBody->SphereColliders[0]->radius;
+        }
+        if(collisionBody->SphereColliders[0]->zOffset - collisionBody->SphereColliders[0]->radius < lowestZ){
+            lowestZ = collisionBody->SphereColliders[0]->zOffset - collisionBody->SphereColliders[0]->radius;
+        }
+    }
+
+    // got dimensions for box, assign to CollisionBody
+    collisionBody->AABBx1 = lowestX;
+    collisionBody->AABBx2 = greatestX;
+    collisionBody->AABBy1 = lowestY;
+    collisionBody->AABBy2 = greatestY;
+    collisionBody->AABBz1 = lowestZ;
+    collisionBody->AABBz2 = greatestZ;
+}
+
+void PhysicsWorld_updateOOBB(CollisionBody *collisionBody){
+    // TODO: stub
+}
+
+void CollisionBody_setPos(CollisionBody *collisionBody,
+                          float x,
+                          float y,
+                          float z){
+    assert(collisionBody != NULL);
+    collisionBody->xPos = x;
+    collisionBody->yPos = y;
+    collisionBody->zPos = z;
+    CollisionBody_updateAABB(collisionBody);
+}
+
+void CollisionBody_setRot(CollisionBody *collisionBody,
+                          float x,
+                          float y,
+                          float z){
+    assert(collisionBody != NULL);
+    collisionBody->xRot = x;
+    collisionBody->yRot = y;
+    collisionBody->zRot = z;
+    CollisionBody_updateAABB(collisionBody);
+}
+
+void CollisionBody_updateOOBB(CollisionBody *collisionBody){
+    // TODO: stub
 }

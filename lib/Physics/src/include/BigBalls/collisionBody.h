@@ -115,3 +115,42 @@ void CollisionBody_awake(CollisionBody *collisionBody);
  * @param physicsEngine
  */
 void CollisionBody_stop(CollisionBody *collisionBody);
+
+/**
+ * Updates the AABB of the CollisionBody
+ * @param collisionBody the CollisionBody that should have its AABB updated
+ */
+void CollisionBody_updateAABB(CollisionBody *collisionBody);
+
+// TODO: Stub
+/**
+ * Updates the OOBB of the CollisionBody
+ * @param collisionBody The CollisionBody that should have its OOBB updated
+ */
+void CollisionBody_updateOOBB(CollisionBody *collisionBody);
+
+/**
+ * Sets the position of the CollisionBody
+ * This moves all colliders relative to this point
+ * @param collisionBody The CollisionBody that should have its position set
+ * @param x The x parameter of the destination coordinate
+ * @param y The y parameter of the destination coordinate
+ * @param z The z parameter of the destination coordinate
+ */
+void CollisionBody_setPos(CollisionBody *collisionBody,
+                            float x,
+                            float y,
+                            float z);
+
+/**
+ * Sets the rotation of the CollisionBody
+ * This rotates all colliders relative to this rotation
+ * @param collisionBody The CollisionBody that should have its rotation set
+ * @param x The x parameter of the target rotation
+ * @param y The y parameter of the target rotation
+ * @param z The z parameter of the target rotation
+ */
+void CollisionBody_setRot(CollisionBody *collisionBody,
+                            float x,
+                            float y,
+                            float z);

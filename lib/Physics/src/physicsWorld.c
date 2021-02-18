@@ -2,6 +2,27 @@
 #include <assert.h>
 #include <stdio.h>
 
+// TODO: move to external math library
+void matrixMultiplication(float **a, float **b, int a_numRow, int a_numCol, int b_numRow, int b_numCol){
+    assert(a != NULL && b != NULL && a_numRow > 0 && a_numCol > 0 && b_numRow > 0 && b_numCol > 0 && a_numCol == b_numRow);
+
+    float res[a_numRow][b_numCol];
+    float sum = 0;
+
+    for(int i = 0; i < a_numRow; ++i)
+    {
+        for(int j = 0; j < b_numCol; ++j)
+        {
+            for(int k = 0; k < b_numRow; ++k){
+                sum += a[i][k]*b[k][j];
+            }
+            res[i][j] = sum;
+            sum = 0;
+        }
+    }
+
+}
+
 int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld) {
     assert(physicsWorld != NULL);
     // increment internal ID count and return new ID
@@ -83,6 +104,7 @@ void detectCollisions(PhysicsWorld* physicsWorld){
     // broad phase
     for(size_t i = 0; i < physicsWorld->numCollisionBodies; ++i){
         for(size_t j = 0; j < physicsWorld->numCollisionBodies; ++j){
+            // TODO: dont test same pair again in reverse order
             if(i != j){ // dont check for collision of the same object
                 if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
                     // broad phase collision detected

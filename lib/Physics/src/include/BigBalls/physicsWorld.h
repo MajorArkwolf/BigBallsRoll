@@ -59,8 +59,24 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int id);
 
 /**
- * Returns a collision body ID and increments collisionBodyIdCount by one
- * @param physicsWorld the physics world containing the new collision body
- * @return the ID
+ * Creates a collision body (a collection of colliders dedicated to detecting collisions of an object)
+ * @param the physics world to add the collision body to
+ * @return int ID of the collision body created
  */
-int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld);
+int PhysicsWorld_createCollisionBody(PhysicsWorld *physicsWorld);
+
+/**
+ * Destroys a collision body
+ * @param physicsWorld the physics world the collision body belongs to
+ * @param ID the ID of the collision body
+ * @return success of operation
+ */
+bool PhysicsWorld_destroyCollisionBody(PhysicsWorld *physicsWorld, int ID);
+
+/**
+ * Updates a Object
+ * @param physicsWorld The physics world containing the object to be updated
+ * @param objId The ID of the object ot be updated
+ * @return success or failure of operation
+ */
+bool PhysicsWorld_updateObj(PhysicsWorld *physicsWorld, int objId);

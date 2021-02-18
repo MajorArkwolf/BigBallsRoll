@@ -35,21 +35,6 @@ PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine);
 void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *physicsWorld);
 
 /**
- * Creates a collision body (a collection of colliders dedicated to detecting collisions of an object)
- * @param the physics world to add the collision body to
- * @return int ID of the collision body created
- */
-int PhysicsEngine_createCollisionBody(PhysicsWorld *physicsWorld);
-
-/**
- * Destroys a collision body
- * @param physicsWorld the physics world the collision body belongs to
- * @param ID the ID of the collision body
- * @return success of operation
- */
-bool PhysicsEngine_destroyCollisionBody(PhysicsWorld *physicsWorld, int ID);
-
-/**
  * Checks if two objects are currently colliding with each other
  * TODO: Usage: move objects, check for collision, if collision then calculate new position, else proceed with movement of object
  * @param ID1
@@ -108,8 +93,3 @@ int PhysicsEngine_addObj(PhysicsEngine *physicsEngine);
 * @return
 */
 bool PhysicsEngine_removeObj(PhysicsEngine *physicsEngine);
-
-bool PhysicsEngine_updateObj(PhysicsEngine *physicsEngine,
-               int objId);
-
-void PhysicsEngine_draw(PhysicsEngine *physicsEngine);

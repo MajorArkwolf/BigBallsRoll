@@ -50,20 +50,3 @@ void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *
         }
     }
 }
-
-int PhysicsEngine_createCollisionBody(PhysicsWorld *physicsWorld) {
-    assert(physicsWorld != NULL);
-    // Allocate memory for collisionBody
-    // Add memory to collision body manager and get ID from manager
-    CollisionBody *newCB = calloc(1, sizeof(CollisionBody));
-    CollisionBody_init(newCB);
-    PhysicsWorld_addCollisionBody(physicsWorld, newCB);
-
-    return newCB->id;
-}
-
-bool PhysicsEngine_destroyCollisionBody(PhysicsWorld *physicsWorld, const int ID) {
-    assert(physicsWorld != NULL);
-    PhysicsWorld_removeCollisionBody(physicsWorld, ID);
-    return true; // stub
-}

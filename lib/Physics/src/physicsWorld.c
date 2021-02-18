@@ -65,6 +65,23 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) 
     }
 }
 
+int PhysicsWorld_createCollisionBody(PhysicsWorld *physicsWorld) {
+    assert(physicsWorld != NULL);
+    // Allocate memory for collisionBody
+    // Add memory to collision body manager and get ID from manager
+    CollisionBody *newCB = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(newCB);
+    PhysicsWorld_addCollisionBody(physicsWorld, newCB);
+
+    return newCB->id;
+}
+
+bool PhysicsWorld_destroyCollisionBody(PhysicsWorld *physicsWorld, const int ID) {
+    assert(physicsWorld != NULL);
+    PhysicsWorld_removeCollisionBody(physicsWorld, ID);
+    return true; // stub
+}
+
 //TODO: Implement
 void PhysicsWorld_updateGravityNormal(float x, float y, float z) {
     //Stub

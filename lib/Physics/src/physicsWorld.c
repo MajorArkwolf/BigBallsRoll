@@ -81,8 +81,8 @@ void detectCollisions(PhysicsWorld* physicsWorld){
     assert(physicsWorld != NULL);
     // TODO: ideally shouldn't check every body against each other - spacial partitioning method ideal
     // broad phase
-    for(size_t i = 0; physicsWorld->numCollisionBodies; ++i){
-        for(size_t j = 0; physicsWorld->numCollisionBodies; ++j){
+    for(size_t i = 0; i < physicsWorld->numCollisionBodies; ++i){
+        for(size_t j = 0; j < physicsWorld->numCollisionBodies; ++j){
             if(i != j){ // dont check for collision of the same object
                 if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
                     // broad phase collision detected
@@ -131,6 +131,7 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
     physicsWorld->collisionBodies[physicsWorld->numCollisionBodies] = collisionBody;
     // Assign ID to BoxCollider
     physicsWorld->collisionBodies[physicsWorld->numCollisionBodies]->id = PhysicsWorld_newCollisionBodyID(physicsWorld);
+    ++physicsWorld->numCollisionBodies;
 }
 
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) {

@@ -11,9 +11,9 @@ typedef struct BoxCollider{
     float xRot;
     float yRot;
     float zRot;
-    float xAbs; // Absolute position of BoxCollider (after local and CollisionBody rotation)
-    float yAbs;
-    float zAbs;
+    float xAbsPos; // Absolute position of BoxCollider (after local and CollisionBody rotation)
+    float yAbsPos;
+    float zAbsPos;
 } BoxCollider;
 
 /**

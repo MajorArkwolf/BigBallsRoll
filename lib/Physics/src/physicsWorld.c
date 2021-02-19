@@ -9,6 +9,7 @@ int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld) {
 }
 
 CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, const int ID) {
+    assert(physicsWorld != NULL && ID >= 0);
     for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
         if (physicsWorld->collisionBodies[i]->id == ID) {
             return physicsWorld->collisionBodies[i];
@@ -18,8 +19,7 @@ CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, const 
 }
 
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
-    assert(a != NULL);
-    assert(b != NULL);
+    assert(a != NULL && b != NULL);
     // determine which coordinate is larger than the other
     float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
     if(a->AABBx1 <= a->AABBx2){ // a
@@ -82,14 +82,13 @@ void detectCollisions(PhysicsWorld* physicsWorld){
     // TODO: ideally shouldn't check every body against each other - spacial partitioning method ideal
     // broad phase
     for(size_t i = 0; i < physicsWorld->numCollisionBodies; ++i){
-        for(size_t j = 0; j < physicsWorld->numCollisionBodies; ++j){
-            // TODO: dont test same pair again in reverse order
-            if(i != j){ // dont check for collision of the same object
+        for(size_t j = 1; j < physicsWorld->numCollisionBodies; ++j){
+            if(i != j && i < j){ // dont check for collision of the same object, or the same pair again (eg. 0 vs 1 AND 1 vs 0)
                 if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
                     // broad phase collision detected
+                    printf("Objects %d and %d are colliding!\n", (int)i ,(int)j);
                     // TODO: narrow phase
                     // TODO: resolve collision
-                    printf("Objects %d and %d are colliding!\n", (int)i ,(int)j);
                 }
             }
         }
@@ -116,7 +115,7 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
 
 void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
     assert(physicsWorld != NULL);
-    //TODO: implement
+    // TODO: implement deltaTime
     detectCollisions(physicsWorld);
 }
 
@@ -136,7 +135,7 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 }
 
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) {
-    assert(physicsWorld != NULL);
+    assert(physicsWorld != NULL && ID >= 0);
     for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
         if (physicsWorld->collisionBodies[i]->id == ID) {
             CollisionBody_free(physicsWorld->collisionBodies[i]);

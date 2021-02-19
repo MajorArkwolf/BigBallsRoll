@@ -60,9 +60,6 @@ void Update(int value) {
     engine.timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
     float deltaTime = (float) (engine.timeSinceStart - oldTime) / 1000.0f;
     StateManager_update(&engine.sM, deltaTime);
-    // Via the physics engine updates the positions, rotations and velocities of objects in a physics world
-    // based on the last known state and the pending forces being applied to these objects
-    // (forces to be applied since last frame)
 }
 
 /**

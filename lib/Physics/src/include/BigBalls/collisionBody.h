@@ -47,6 +47,7 @@ void CollisionBody_init(CollisionBody *collisionBody);
 void CollisionBody_free(CollisionBody *collisionBody);
 
 /**
+ * Adds a BoxCollider to a CollisionBody
  * A heap array was chosen for its ability to be resized, at the cost of performance when being resized (when colliders are added or destroyed).
  * As object creation/destruction are not speed-critical operations in our project this tradeoff seems acceptable
  * (the alternative being two static arrays per CollisionBody (for each type) which seemed a bit excessive)
@@ -99,19 +100,20 @@ void CollisionBody_scale(CollisionBody *collisionBody, float scaleFactor);
 /**
  * Stops a CollisionBody from being considered by collision detection, and stops all forces from moving it (including gravity)
  * Maintains the current velocity of the object
- * TODO: do nothing
+ * @param collisionBody The CollisionBody to put to sleep
+ * TODO: implement
  */
 void CollisionBody_sleep(CollisionBody *collisionBody);
 
 /**
  * Allows forces to act on a CollisionBody and for the body to be involved in collisions after being in a sleep state
- * @param collisionBody
+ * @param collisionBody The CollisionBody to stop sleeping
  */
 void CollisionBody_awake(CollisionBody *collisionBody);
 
 /**
  * Stops movement and removes forces from CollisionBody
- * @param physicsEngine
+ * @param collisionBody The CollisionBody to be stopped
  */
 void CollisionBody_stop(CollisionBody *collisionBody);
 

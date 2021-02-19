@@ -59,12 +59,21 @@ int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld);
 void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime);
 
 //TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
-bool PhysicsWorld_applyForce(PhysicsWorld *physicsWorld,
-                              const float force,
-                              const float xDir,
-                              const float yDir,
-                              const float zDir,
-                              const int objID);
+/**
+ * Applies a force to a CollisionBody
+ * @param physicsWorld the PhysicsWorld the CollisionBody belongs in
+ * @param force the force to be applied to the CollisionBody
+ * @param xDir the X component of the direction of the force to be applied
+ * @param yDir the Y component of the direction of the force to be applied
+ * @param zDir the Z component of the direction of the force to be applied
+ * @param objID the ID of the CollisionBody
+ */
+void PhysicsWorld_applyForce(PhysicsWorld *physicsWorld,
+                              float force,
+                              float xDir,
+                              float yDir,
+                              float zDir,
+                              int objID);
 
 /**
 * Add a game object to the physics engine
@@ -78,4 +87,4 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 * @param physicsWorld The PhysicsWorld to remove a CollisionBody from
 * @param ID The ID of the CollisionBody to be removed
 */
-void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID);
+void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);

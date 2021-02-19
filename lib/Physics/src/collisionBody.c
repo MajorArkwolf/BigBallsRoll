@@ -302,11 +302,11 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
         if(collisionBody->SphereColliders[0]->yAbsPos - collisionBody->SphereColliders[0]->radius < lowestY){
             lowestY = collisionBody->SphereColliders[0]->yAbsPos - collisionBody->SphereColliders[0]->radius;
         }
-        if(collisionBody->SphereColliders[0]->yAbsPos + collisionBody->SphereColliders[0]->radius > greatestZ){ // z
-            greatestZ = collisionBody->SphereColliders[0]->yAbsPos + collisionBody->SphereColliders[0]->radius;
+        if(collisionBody->SphereColliders[0]->zAbsPos + collisionBody->SphereColliders[0]->radius > greatestZ){ // z
+            greatestZ = collisionBody->SphereColliders[0]->zAbsPos + collisionBody->SphereColliders[0]->radius;
         }
-        if(collisionBody->SphereColliders[0]->yAbsPos - collisionBody->SphereColliders[0]->radius < lowestZ){
-            lowestZ = collisionBody->SphereColliders[0]->yAbsPos - collisionBody->SphereColliders[0]->radius;
+        if(collisionBody->SphereColliders[0]->zAbsPos - collisionBody->SphereColliders[0]->radius < lowestZ){
+            lowestZ = collisionBody->SphereColliders[0]->zAbsPos - collisionBody->SphereColliders[0]->radius;
         }
     }
 

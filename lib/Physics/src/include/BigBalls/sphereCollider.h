@@ -14,6 +14,5 @@ typedef struct SphereCollider{
 /**
  * Initialises a SphereCollider
  * @param sphereCollider an instantiated SphereCollider
- * @return
  */
 void SphereCollider_init(SphereCollider *sphereCollider);

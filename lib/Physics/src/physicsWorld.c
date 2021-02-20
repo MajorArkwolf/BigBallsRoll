@@ -106,7 +106,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
 
 void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
     assert(physicsWorld != NULL);
-    for (size_t i = 1; i < physicsWorld->numCollisionBodies; ++i) {
+    for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
         CollisionBody_free(physicsWorld->collisionBodies[i]);
     }
     free(physicsWorld);

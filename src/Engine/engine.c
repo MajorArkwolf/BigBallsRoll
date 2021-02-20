@@ -51,7 +51,7 @@ void changeSize(int w, int h) {
 
 /**
  * Callback function for glut update.
- * @param vlaue
+ * @param value
  */
 void Update(int value) {
     // Timer to start update function again based on frame rate.

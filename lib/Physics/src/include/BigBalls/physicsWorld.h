@@ -8,13 +8,21 @@ typedef struct GravityNormal {
     float Z;
 } GravityNormal;
 
-typedef struct PhysicsWorld{
+typedef struct PhysicsWorld {
     CollisionBody **collisionBodies;
     size_t numCollisionBodies;
     int collisionBodyIdCount;
     float gravity;
     GravityNormal gravityNormal;
+    bool debug;
 } PhysicsWorld;
+
+typedef struct DebugObject {
+    size_t numFaces;
+    size_t numVertices;
+    Face *faces;
+    Vertex *vertices;
+} DebugObject;
 
 //TODO: Temp until vec3 is apart of external library
 GravityNormal GravityNormal_init();
@@ -88,3 +96,5 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 * @param ID The ID of the CollisionBody to be removed
 */
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
+
+void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld);

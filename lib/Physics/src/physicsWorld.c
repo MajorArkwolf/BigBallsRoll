@@ -102,6 +102,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     physicsWorld->collisionBodyIdCount = 0;
     physicsWorld->gravity = 1; //TODO: find default
     physicsWorld->gravityNormal = GravityNormal_init();
+    physicsWorld->debug = false;
 }
 
 void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
@@ -113,10 +114,22 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
     physicsWorld = NULL;
 }
 
+void debugUpdate(PhysicsWorld *physicsWorld, DebugObject *buffer) {
+    assert(physicsWorld != NULL);
+    if (physicsWorld->debug) {
+
+    }
+
+}
+
 void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
     assert(physicsWorld != NULL);
     // TODO: implement deltaTime
     detectCollisions(physicsWorld);
+    if (physicsWorld->debug) {
+        DebugObject *buffer = calloc(1, sizeof(DebugObject) * physicsWorld->numCollisionBodies);
+        debugUpdate(physicsWorld, buffer);
+    }
 }
 
 void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody) {

@@ -20,8 +20,8 @@ typedef struct PhysicsWorld {
 typedef struct DebugObject {
     size_t numFaces;
     size_t numVertices;
-    tempVec3 *vertices;
-
+    float *vertices;
+    size_t *faceIndexes;
 } DebugObject;
 
 //TODO: Temp until vec3 is apart of external library
@@ -97,4 +97,8 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 */
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
+/**
+ * Toggles debug on or off
+ * @param physicsWorld the physics world to toggle debug
+ */
 void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld);

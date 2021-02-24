@@ -42,3 +42,17 @@ void DynamicArray_insertSizeT(SizeTArray *array, size_t index, size_t var) {
     assert(array != NULL && array->used >= index && array->array != NULL);
     array->array[index] = var;
 }
+
+void DynamicArray_eraseFloat(FloatArray *array) {
+    assert(array != NULL);
+    free(array->array);
+    array->used = 0;
+    array->size = 0;
+}
+
+void DynamicArray_eraseSizeT(SizeTArray *array) {
+    assert(array != NULL);
+    free(array->array);
+    array->used = 0;
+    array->size = 0;
+}

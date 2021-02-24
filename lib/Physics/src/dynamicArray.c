@@ -1,34 +1,36 @@
 #include "include/BigBalls/dynamicArray.h"
+#include "assert.h"
 
 //TODO: STUBS
 
-void DynamicArray_pushBackFloat(float *array) {
-
+void DynamicArray_pushBackFloat(float *array, size_t size) {
+    assert(array != NULL);
 }
 
-void DynamicArray_pushBackSizeT(size_t *array) {
-
+void DynamicArray_pushBackSizeT(size_t *array, size_t size) {
+    assert(array != NULL);
 }
 
-void DynamicArray_insertFloat(float *array) {
-
+void DynamicArray_insertFloat(float *array, size_t size) {
+    assert(array != NULL);
 }
 
-void DynamicArray_insertSizeT(size_t *array) {
-
+void DynamicArray_insertSizeT(size_t *array, size_t size) {
+    assert(array != NULL);
 }
 
 //Private Functions
 
-void Memory_reallocFloat(float *array) {
+void Memory_reallocFloat(float *array, size_t size) {
+    assert(array != NULL);
 
 }
 
-void Memory_reallocSizeT(size_t *array) {
-
+void Memory_reallocSizeT(size_t *array, size_t size) {
+    assert(array != NULL);
 }
 
-void Memory_initFloat(float *array) {
+void Memory_initFloat(float *array, size_t size) {
 
 }
 

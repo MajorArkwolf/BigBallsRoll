@@ -3,15 +3,15 @@
 
 void DynamicArray_initFloat(FloatArray *array) {
     assert(array != NULL);
-    array->array = calloc(SCALE_FACTOR, sizeof(float));
-    array->size = SCALE_FACTOR;
+    array->array = calloc(INITIAL_SIZE, sizeof(float));
+    array->size = INITIAL_SIZE;
     array->used = 0;
 }
 
 void DynamicArray_initSizeT(SizeTArray *array) {
     assert(array != NULL);
-    array->array = calloc(SCALE_FACTOR, sizeof(size_t));
-    array->size = SCALE_FACTOR;
+    array->array = calloc(INITIAL_SIZE, sizeof(size_t));
+    array->size = INITIAL_SIZE;
     array->used = 0;
 }
 

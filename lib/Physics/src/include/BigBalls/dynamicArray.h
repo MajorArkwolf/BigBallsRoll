@@ -2,19 +2,20 @@
 #include "stdlib.h"
 
 #define SCALE_FACTOR 2
+#define INITIAL_SIZE 16
 
 // Float Array Object
 typedef struct {
     float *array;
-    size_t used;
-    size_t size;
+    size_t used; // The elements that are 'used', use this as the current max size, for loops or inserting, etc...
+    size_t size; // The size of the array, not needed except for tracking if resize is needed
 } FloatArray;
 
 // SizeTArray Object
 typedef struct {
     size_t *array;
-    size_t used;
-    size_t size;
+    size_t used; // The elements that are 'used', use this as the current max size, for loops or inserting, etc...
+    size_t size; // The size of the array, not needed except for tracking if resize is needed
 } SizeTArray;
 
 /**

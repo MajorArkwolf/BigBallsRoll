@@ -66,14 +66,24 @@ void DynamicArray_insertSizeT(SizeTArray *array, size_t index, size_t var);
 
 /**
  * Frees the contents of the FloatArray, and not the array pointer itself. This is so the array can be erased between frames.
- * Can be used to free the object before freeing the array pointer.
  * @param array the FloatArray with the content to free
  */
 void DynamicArray_eraseFloat(FloatArray *array);
 
 /**
  * Frees the contents of the SizeTArray, and not the array pointer itself. This is so the array can be erased between frames.
- * Can be used to free the object before freeing the array pointer.
  * @param array the SizeTArray with the content to free
  */
 void DynamicArray_eraseSizeT(SizeTArray *array);
+
+/**
+ * Frees the contents of the FloatArray.
+ * @param array the object to free
+ */
+void DynamicArray_freeFloat(FloatArray *array);
+
+/**
+ * Frees the contents of the SizeTArray.
+ * @param array the object to free
+ */
+void DynamicArray_freeSizeT(SizeTArray *array);

@@ -1,5 +1,6 @@
 #pragma once
 #include "collisionBody.h"
+#include "dynamicArray.h"
 
 //TODO: Temp until vec3 is apart of external library
 typedef struct tempVec3 {
@@ -17,12 +18,12 @@ typedef struct PhysicsWorld {
     bool debug;
 } PhysicsWorld;
 
-typedef struct DebugObject {
+typedef struct DebugDraw {
     size_t numFaces;
     size_t numVertices;
-    float *vertices;
-    size_t *faceIndexes;
-} DebugObject;
+    FloatArray *vertices;
+    SizeTArray *faceIndexes;
+} DebugDraw;
 
 //TODO: Temp until vec3 is apart of external library
 //GravityNormal GravityNormal_init();
@@ -97,8 +98,22 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 */
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
+
 /**
- * Toggles debug on or off
+ * Contains the debug draw functions TODO: UPDATE THIS COMMENT
+ * @param physicsWorld the object to draw
+ * @param debug the debug object to store the data in
+ */
+void PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugDraw *debug);
+
+/**
+ * Initialise the debugDraw object, must be called before using.
+ * @param debug the object to initialise
+ */
+void PhysicsWorld_debugDrawInit(DebugDraw *debug);
+
+/**
+ * Toggles debug on or off.
  * @param physicsWorld the physics world to toggle debug
  */
 void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld);

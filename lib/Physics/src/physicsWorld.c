@@ -114,25 +114,10 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
     physicsWorld = NULL;
 }
 
-void debugUpdate(PhysicsWorld *physicsWorld, DebugObject *buffer) {
-    assert(physicsWorld != NULL && buffer != NULL);
-    if (physicsWorld->debug) {
-        for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
-            //TODO: figure out what to grab
-
-        }
-    }
-
-}
-
 void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
     assert(physicsWorld != NULL);
     // TODO: implement deltaTime
     detectCollisions(physicsWorld);
-    if (physicsWorld->debug) {
-        DebugObject *buffer = calloc(1, sizeof(DebugObject) * physicsWorld->numCollisionBodies);
-        debugUpdate(physicsWorld, buffer);
-    }
 }
 
 void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody) {
@@ -163,6 +148,31 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) 
             // reduce size of memory allocation (shouldn't be costly if realloc() realises whats going on)
             physicsWorld->collisionBodies = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * physicsWorld->numCollisionBodies);
         }
+    }
+}
+
+void PhysicsWorld_debugDrawInit(DebugDraw *debug) {
+    assert(debug != NULL);
+    debug->numVertices = 0;
+    debug->numFaces = 0;
+    DynamicArray_initFloat(debug->vertices);
+    DynamicArray_initSizeT(debug->faceIndexes);
+}
+
+void DebugDraw_reset(DebugDraw *debug) {
+    assert(debug != NULL);
+    debug->numVertices = 0;
+    debug->numFaces = 0;
+    DynamicArray_eraseFloat(debug->vertices);
+    DynamicArray_eraseSizeT(debug->faceIndexes);
+}
+
+void PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugDraw *debug) {
+    assert(physicsWorld != NULL && debug != NULL);
+    if (physicsWorld->debug) {
+        //Reset the object
+        DebugDraw_reset(debug);
+        //TODO: Implement and get the stuffs
     }
 }
 

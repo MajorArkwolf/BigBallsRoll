@@ -88,3 +88,5 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 * @param ID The ID of the CollisionBody to be removed
 */
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
+
+bool testAABBCollision(CollisionBody *a, CollisionBody *b);

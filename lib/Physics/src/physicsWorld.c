@@ -18,59 +18,29 @@ CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, const 
     return NULL;
 }
 
+void minMax(float val1, float val2, float* min, float* max){
+    if(val1 <= val2){
+        *min = val1;
+        *max = val2;
+    }
+    else{
+        *min = val2;
+        *max = val1;
+    }
+}
+
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
     assert(a != NULL && b != NULL);
     // determine which coordinate is larger than the other
     float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
-    if(a->AABBx1 <= a->AABBx2){ // a
-        x1min = a->AABBx1;
-        x1max = a->AABBx2;
-    }
-    else{
-        x1min = a->AABBx2;
-        x1max = a->AABBx1;
-    }
-    if(a->AABBy1 <= a->AABBy2){
-        y1min = a->AABBy1;
-        y1max = a->AABBy2;
-    }
-    else{
-        y1min = a->AABBy2;
-        y1max = a->AABBy1;
-    }
-    if(a->AABBz1 <= a->AABBz2){
-        z1min = a->AABBz1;
-        z1max = a->AABBz2;
-    }
-    else{
-        z1min = a->AABBz2;
-        z1max = a->AABBz1;
-    }
 
-    if(b->AABBx1 <= b->AABBx2){ // b
-        x2min = b->AABBx1;
-        x2max = b->AABBx2;
-    }
-    else{
-        x2min = b->AABBx2;
-        x2max = b->AABBx1;
-    }
-    if(b->AABBy1 <= b->AABBy2){
-        y2min = b->AABBy1;
-        y2max = b->AABBy2;
-    }
-    else{
-        y2min = b->AABBy2;
-        y2max = b->AABBy1;
-    }
-    if(b->AABBz1 <= b->AABBz2){
-        z2min = b->AABBz1;
-        z2max = b->AABBz2;
-    }
-    else{
-        z2min = b->AABBz2;
-        z2max = b->AABBz1;
-    }
+    minMax(a->AABBx1, a->AABBx2, &x1min, &x1max);
+    minMax(a->AABBy1, a->AABBy2, &y1min, &y1max);
+    minMax(a->AABBz1, a->AABBz2, &z1min, &z1max);
+
+    minMax(b->AABBx1, b->AABBx2, &x2min, &x2max);
+    minMax(b->AABBy1, b->AABBy2, &y2min, &y2max);
+    minMax(b->AABBz1, b->AABBz2, &z2min, &z2max);
 
     return (x1min <= x2max && x1max >= x2min) &&
            (y1min <= y2max && y1max >= y2min) &&
@@ -82,7 +52,7 @@ void detectCollisions(PhysicsWorld* physicsWorld){
     // TODO: ideally shouldn't check every body against each other - spacial partitioning method ideal
     // broad phase
     for(size_t i = 0; i < physicsWorld->numCollisionBodies; ++i){
-        for(size_t j = 1; j < physicsWorld->numCollisionBodies; ++j){
+        for(size_t j = 0; j < physicsWorld->numCollisionBodies; ++j){
             if(i != j && i < j){ // dont check for collision of the same object, or the same pair again (eg. 0 vs 1 AND 1 vs 0)
                 if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
                     // broad phase collision detected

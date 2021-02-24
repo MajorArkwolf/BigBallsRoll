@@ -101,6 +101,9 @@ void LevelOne_init(State *state) {
     PhysicsEngine_init(physicsEngine);
     state->physicsEngine = *physicsEngine;
     state->physicsEngine.physicsWorld[0] = PhysicsEngine_newPhysicsWorld(&state->physicsEngine);
+    state->camera.Position.Y += 2.0f;
+    state->camera.Pitch -= 15.0f;
+    Camera_updateCameraVectors(&state->camera);
 
     // add wall
     GameObject_init(&state->gameObjects[0]);
@@ -110,14 +113,9 @@ void LevelOne_init(State *state) {
     state->gameObjects[0].Transform.Position.Y -= 0.f;
     state->gameObjects[0].Transform.Rotation.Y += 90.f;
     state->NumOfGameObjects = 1;
-    state->camera.Position.Y += 2.0f;
-    state->camera.Pitch -= 15.0f;
-    Camera_updateCameraVectors(&state->camera);
-
     // create CollisionBody for object
     CollisionBody* wallCollisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(wallCollisionBody);
-
     // create collider
     BoxCollider *wallCollider = calloc(1, sizeof(BoxCollider));
     BoxCollider_init(wallCollider);
@@ -170,5 +168,4 @@ void LevelOne_init(State *state) {
 
     CollisionBody_setPos(boxCollisionBody, 0, 0, 5.f);
     PhysicsWorld_addCollisionBody(state->physicsEngine.physicsWorld[0], boxCollisionBody);
-
 }

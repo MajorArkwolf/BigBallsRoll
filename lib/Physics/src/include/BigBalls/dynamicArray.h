@@ -3,10 +3,26 @@
 
 #define SCALE_FACTOR 2
 
-void DynamicArray_pushBackFloat(float *array, size_t size);
+typedef struct {
+    float *array;
+    size_t used;
+    size_t size;
+} FloatArray;
 
-void DynamicArray_pushBackSizeT(size_t *array, size_t size);
+typedef struct {
+    size_t *array;
+    size_t used;
+    size_t size;
+} SizeTArray;
 
-void DynamicArray_insertFloat(float *array, size_t size);
+void DynamicArray_initFloat(FloatArray *array);
 
-void DynamicArray_insertSizeT(size_t *array, size_t size);
+void DynamicArray_initSizeT(SizeTArray *array);
+
+void DynamicArray_pushBackFloat(FloatArray *array, float var);
+
+void DynamicArray_pushBackSizeT(SizeTArray *array, size_t var);
+
+void DynamicArray_insertFloat(FloatArray *array, size_t index, float var);
+
+void DynamicArray_insertSizeT(SizeTArray *array, size_t index, size_t var);

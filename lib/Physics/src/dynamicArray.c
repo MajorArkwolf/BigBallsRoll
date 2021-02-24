@@ -1,39 +1,44 @@
 #include "include/BigBalls/dynamicArray.h"
 #include "assert.h"
 
-//TODO: STUBS
-
-void DynamicArray_pushBackFloat(float *array, size_t size) {
+void DynamicArray_initFloat(FloatArray *array) {
     assert(array != NULL);
+    array->array = calloc(SCALE_FACTOR, sizeof(float));
+    array->size = SCALE_FACTOR;
+    array->used = 0;
 }
 
-void DynamicArray_pushBackSizeT(size_t *array, size_t size) {
+void DynamicArray_initSizeT(SizeTArray *array) {
     assert(array != NULL);
+    array->array = calloc(SCALE_FACTOR, sizeof(size_t));
+    array->size = SCALE_FACTOR;
+    array->used = 0;
 }
 
-void DynamicArray_insertFloat(float *array, size_t size) {
-    assert(array != NULL);
+void DynamicArray_pushBackFloat(FloatArray *array, float var) {
+    assert(array != NULL && array->array != NULL);
+    if (array->size == array->used) {
+        array->size *= SCALE_FACTOR;
+        array->array = realloc(array->array, array->size * sizeof(float));
+    }
+    array->array[array->used++] = var;
 }
 
-void DynamicArray_insertSizeT(size_t *array, size_t size) {
-    assert(array != NULL);
+void DynamicArray_pushBackSizeT(SizeTArray *array, size_t var) {
+    assert(array != NULL && array->array != NULL);
+    if (array->size == array->used) {
+        array->size *= SCALE_FACTOR;
+        array->array = realloc(array->array, array->size * sizeof(size_t));
+    }
+    array->array[array->used++] = var;
 }
 
-//Private Functions
-
-void Memory_reallocFloat(float *array, size_t size) {
-    assert(array != NULL);
-
+void DynamicArray_insertFloat(FloatArray *array, size_t index, float var) {
+    assert(array != NULL && array->used >= index && array->array != NULL);
+    array->array[index] = var;
 }
 
-void Memory_reallocSizeT(size_t *array, size_t size) {
-    assert(array != NULL);
-}
-
-void Memory_initFloat(float *array, size_t size) {
-
-}
-
-void Memory_initSizeT(size_t *array) {
-
+void DynamicArray_insertSizeT(SizeTArray *array, size_t index, size_t var) {
+    assert(array != NULL && array->used >= index && array->array != NULL);
+    array->array[index] = var;
 }

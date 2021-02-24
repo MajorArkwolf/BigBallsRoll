@@ -2,30 +2,30 @@
 #include "collisionBody.h"
 
 //TODO: Temp until vec3 is apart of external library
-typedef struct GravityNormal {
+typedef struct tempVec3 {
     float X;
     float Y;
     float Z;
-} GravityNormal;
+} tempVec3;
 
 typedef struct PhysicsWorld {
     CollisionBody **collisionBodies;
     size_t numCollisionBodies;
     int collisionBodyIdCount;
     float gravity;
-    GravityNormal gravityNormal;
+    tempVec3 gravityNormal;
     bool debug;
 } PhysicsWorld;
 
 typedef struct DebugObject {
     size_t numFaces;
     size_t numVertices;
-    Face *faces;
-    Vertex *vertices;
+    tempVec3 *vertices;
+
 } DebugObject;
 
 //TODO: Temp until vec3 is apart of external library
-GravityNormal GravityNormal_init();
+//GravityNormal GravityNormal_init();
 
 //TODO: stub, not sure how this will work atm.
 void PhysicsWorld_updateGravityNormal(float x, float y, float z);

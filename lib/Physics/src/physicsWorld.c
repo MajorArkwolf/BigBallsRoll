@@ -101,7 +101,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     physicsWorld->numCollisionBodies = 0;
     physicsWorld->collisionBodyIdCount = 0;
     physicsWorld->gravity = 1; //TODO: find default
-    physicsWorld->gravityNormal = GravityNormal_init();
+    //physicsWorld->gravityNormal = GravityNormal_init(); TODO: Implement
     physicsWorld->debug = false;
 }
 
@@ -115,9 +115,12 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
 }
 
 void debugUpdate(PhysicsWorld *physicsWorld, DebugObject *buffer) {
-    assert(physicsWorld != NULL);
+    assert(physicsWorld != NULL && buffer != NULL);
     if (physicsWorld->debug) {
+        for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
+            //TODO: figure out what to grab
 
+        }
     }
 
 }
@@ -163,16 +166,25 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) 
     }
 }
 
+void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld) {
+    assert(physicsWorld != NULL);
+    if (physicsWorld->debug) {
+        physicsWorld->debug = false;
+    } else {
+        physicsWorld->debug = true;
+    }
+}
+
 //TODO: Implement
 void PhysicsWorld_updateGravityNormal(float x, float y, float z) {
     //TODO: Stub
 }
 
 //TODO: Temporary
-GravityNormal GravityNormal_init() {
+/*GravityNormal GravityNormal_init() {
     GravityNormal gN;
     gN.X = 0.0f;
     gN.Y = 1.0f;
     gN.Z = 0.0f;
     return gN;
-}
+}*/

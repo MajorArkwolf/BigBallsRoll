@@ -20,70 +20,70 @@ typedef struct {
 
 /**
  * Initialise a dynamic float array, must be called on a new FloatArray object.
- * @param array the FloatArray to initialise
+ * @param obj the FloatArray to initialise
  */
-void DynamicArray_initFloat(FloatArray *array);
+void DynamicArray_initFloat(FloatArray *obj);
 
 /**
  * Initialise a dynamic size_t array, must be called on a new SizeTArray object.
- * @param array the SizeTArray to initialise
+ * @param obj the SizeTArray to initialise
  */
-void DynamicArray_initSizeT(SizeTArray *array);
+void DynamicArray_initSizeT(SizeTArray *obj);
 
 /**
  * Pushes a float variable to the back of the Array. If the array is full the array
  * is resized to SCALE_FACTOR its current size using realloc.
- * @param array the array to place the float variable in
+ * @param obj the obj to place the float variable in
  * @param var the float variable to place in the array
  */
-void DynamicArray_pushBackFloat(FloatArray *array, float var);
+void DynamicArray_pushBackFloat(FloatArray *obj, float var);
 
 /**
  * Pushes a size_t variable to the back of the Array. If the array is full the array
  * is resized to SCALE_FACTOR its current size using realloc.
- * @param array the array to place the size_t variable in
+ * @param obj the obj to place the size_t variable in
  * @param var the float variable to place in the array
  */
-void DynamicArray_pushBackSizeT(SizeTArray *array, size_t var);
+void DynamicArray_pushBackSizeT(SizeTArray *obj, size_t var);
 
 /**
  * Inserts a float into the float array. Can only insert up to the used value in the array, to ensure
  * the var isn't overwritten by the pushback function later.
- * @param array the array to insert into
+ * @param obj the obj to insert into
  * @param index the index of the array to insert the var
  * @param var the float variable to insert
  */
-void DynamicArray_insertFloat(FloatArray *array, size_t index, float var);
+void DynamicArray_insertFloat(FloatArray *obj, size_t index, float var);
 
 /**
  * Inserts a size_t into the size_t array. Can only insert up to the used value in the array, to ensure
  * the var isn't overwritten by the pushback function later.
- * @param array the array to insert into
+ * @param obj the obj to insert into
  * @param index the index of the array to insert the var
  * @param var the size_t variable to insert
  */
-void DynamicArray_insertSizeT(SizeTArray *array, size_t index, size_t var);
+void DynamicArray_insertSizeT(SizeTArray *obj, size_t index, size_t var);
 
 /**
  * Frees the contents of the FloatArray, and not the array pointer itself. This is so the array can be erased between frames.
- * @param array the FloatArray with the content to free
+ * @param obj the FloatArray with the content to free
  */
-void DynamicArray_eraseFloat(FloatArray *array);
+void DynamicArray_eraseFloat(FloatArray *obj);
 
 /**
  * Frees the contents of the SizeTArray, and not the array pointer itself. This is so the array can be erased between frames.
- * @param array the SizeTArray with the content to free
+ * @param obj the SizeTArray with the content to free
  */
-void DynamicArray_eraseSizeT(SizeTArray *array);
+void DynamicArray_eraseSizeT(SizeTArray *obj);
 
 /**
  * Frees the contents of the FloatArray.
- * @param array the object to free
+ * @param obj the object to free
  */
-void DynamicArray_freeFloat(FloatArray *array);
+void DynamicArray_freeFloat(FloatArray *obj);
 
 /**
  * Frees the contents of the SizeTArray.
- * @param array the object to free
+ * @param obj the object to free
  */
-void DynamicArray_freeSizeT(SizeTArray *array);
+void DynamicArray_freeSizeT(SizeTArray *obj);

@@ -155,8 +155,20 @@ void PhysicsWorld_debugDrawInit(DebugDraw *debug) {
     assert(debug != NULL);
     debug->numVertices = 0;
     debug->numFaces = 0;
+    debug->vertices = calloc(1, sizeof(FloatArray));
+    debug->faceIndexes = calloc(1, sizeof(SizeTArray));
     DynamicArray_initFloat(debug->vertices);
     DynamicArray_initSizeT(debug->faceIndexes);
+}
+
+void PhysicsWorld_debugDrawFree(DebugDraw *debug) {
+    assert(debug != NULL);
+    debug->numVertices = 0;
+    debug->numFaces = 0;
+    DynamicArray_freeFloat(debug->vertices);
+    DynamicArray_freeSizeT(debug->faceIndexes);
+    free(debug->vertices);
+    free(debug->faceIndexes);
 }
 
 void DebugDraw_reset(DebugDraw *debug) {

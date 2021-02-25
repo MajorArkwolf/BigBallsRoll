@@ -113,6 +113,12 @@ void PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugDraw *debug);
 void PhysicsWorld_debugDrawInit(DebugDraw *debug);
 
 /**
+ * Frees the contents of a DebugDraw object.
+ * @param debug the object to free
+ */
+void PhysicsWorld_debugDrawFree(DebugDraw *debug);
+
+/**
  * Toggles debug on or off.
  * @param physicsWorld the physics world to toggle debug
  */

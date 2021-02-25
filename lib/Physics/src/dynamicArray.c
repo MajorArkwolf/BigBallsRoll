@@ -1,74 +1,75 @@
 #include "include/BigBalls/dynamicArray.h"
 #include "assert.h"
 
-void DynamicArray_initFloat(FloatArray *array) {
-    assert(array != NULL);
-    array->array = calloc(INITIAL_SIZE, sizeof(float));
-    array->size = INITIAL_SIZE;
-    array->used = 0;
+void DynamicArray_initFloat(FloatArray *obj) {
+    assert(obj != NULL);
+    obj->array = calloc(INITIAL_SIZE, sizeof(float));
+    obj->size = INITIAL_SIZE;
+    obj->used = 0;
 }
 
-void DynamicArray_initSizeT(SizeTArray *array) {
-    assert(array != NULL);
-    array->array = calloc(INITIAL_SIZE, sizeof(size_t));
-    array->size = INITIAL_SIZE;
-    array->used = 0;
+void DynamicArray_initSizeT(SizeTArray *obj) {
+    assert(obj != NULL);
+    obj->array = calloc(INITIAL_SIZE, sizeof(size_t));
+    obj->size = INITIAL_SIZE;
+    obj->used = 0;
 }
 
-void DynamicArray_pushBackFloat(FloatArray *array, float var) {
-    assert(array != NULL && array->array != NULL);
-    if (array->size == array->used) {
-        array->size *= SCALE_FACTOR;
-        array->array = realloc(array->array, array->size * sizeof(float));
+void DynamicArray_pushBackFloat(FloatArray *obj, float var) {
+    assert(obj != NULL && obj->array != NULL);
+    if (obj->size == obj->used) {
+        obj->size *= SCALE_FACTOR;
+        obj->array = realloc(obj->array, obj->size * sizeof(float));
     }
-    array->array[array->used++] = var;
+    obj->array[obj->used++] = var;
 }
 
-void DynamicArray_pushBackSizeT(SizeTArray *array, size_t var) {
-    assert(array != NULL && array->array != NULL);
-    if (array->size == array->used) {
-        array->size *= SCALE_FACTOR;
-        array->array = realloc(array->array, array->size * sizeof(size_t));
+void DynamicArray_pushBackSizeT(SizeTArray *obj, size_t var) {
+    assert(obj != NULL && obj->array != NULL);
+    if (obj->size == obj->used) {
+        obj->size *= SCALE_FACTOR;
+        obj->array = realloc(obj->array, obj->size * sizeof(size_t));
     }
-    array->array[array->used++] = var;
+    obj->array[obj->used++] = var;
 }
 
-void DynamicArray_insertFloat(FloatArray *array, size_t index, float var) {
-    assert(array != NULL && array->used >= index && array->array != NULL);
-    array->array[index] = var;
+void DynamicArray_insertFloat(FloatArray *obj, size_t index, float var) {
+    assert(obj != NULL && obj->used >= index && obj->array != NULL);
+    obj->array[index] = var;
 }
 
-void DynamicArray_insertSizeT(SizeTArray *array, size_t index, size_t var) {
-    assert(array != NULL && array->used >= index && array->array != NULL);
-    array->array[index] = var;
+void DynamicArray_insertSizeT(SizeTArray *obj, size_t index, size_t var) {
+    assert(obj != NULL && obj->used >= index && obj->array != NULL);
+    obj->array[index] = var;
 }
 
-void DynamicArray_eraseFloat(FloatArray *array) {
-    assert(array != NULL && array->array != NULL);
-    free(array->array);
-    array->array = calloc(INITIAL_SIZE, sizeof(float));
-    array->size = INITIAL_SIZE;
-    array->used = 0;
+void DynamicArray_eraseFloat(FloatArray *obj) {
+    assert(obj != NULL && obj->array != NULL);
+    free(obj->array);
+    obj->array = calloc(INITIAL_SIZE, sizeof(float));
+    obj->size = INITIAL_SIZE;
+    obj->used = 0;
 }
 
-void DynamicArray_eraseSizeT(SizeTArray *array) {
-    assert(array != NULL && array->array != NULL);
-    free(array->array);
-    array->array = calloc(INITIAL_SIZE, sizeof(float));
-    array->size = INITIAL_SIZE;
-    array->used = 0;
+void DynamicArray_eraseSizeT(SizeTArray *obj) {
+    assert(obj != NULL && obj->array != NULL);
+    free(obj->array);
+    obj->array = calloc(INITIAL_SIZE, sizeof(size_t));
+    obj->size = INITIAL_SIZE;
+    obj->used = 0;
 }
 
-void DynamicArray_freeFloat(FloatArray *array) {
-    assert(array != NULL && array->array != NULL);
-    free(array->array);
-    array->size = 0;
-    array->used = 0;
+void DynamicArray_freeFloat(FloatArray *obj) {
+    assert(obj != NULL && obj->array != NULL);
+    free(obj->array);
+    obj->size = 0;
+    obj->used = 0;
 }
 
-void DynamicArray_freeSizeT(SizeTArray *array) {
-    assert(array != NULL && array->array != NULL);
-    free(array->array);
-    array->size = 0;
-    array->used = 0;
+void DynamicArray_freeSizeT(SizeTArray *obj) {
+    assert(obj != NULL && obj->array != NULL);
+    free(obj->array);
+    obj->size = 0;
+    obj->used = 0;
 }
+

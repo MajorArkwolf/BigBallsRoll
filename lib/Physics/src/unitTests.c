@@ -17,6 +17,14 @@ bool fTolerance(float a, float b, float tolerance){
     }
 }
 
+bool testMatrixMultiplication(){
+    float a[2][2] = {{1.f, 7.f}, {2.f, 4.f}};
+    float b[2][2] = {{3.f, 3.f}, {5.f, 2.f}};
+    float res[2][2] = {{0}};
+    matrixMultiplication(2, 2, 2, 2, a, b, res);
+    assert(res[0][0] == 38 && res[0][1] == 17 && res[1][0] == 26 && res[1][1] == 14);
+}
+
 // test collision between identical objects
 bool testIdenticalCollision(){
     // create CollisionBody for object

@@ -156,4 +156,23 @@ void CollisionBody_setRot(CollisionBody *collisionBody,
                             float y,
                             float z);
 
+/**
+ * Creates a rotation transformation matrix
+ * @param x the number of degrees to rotate about the x axis (right-hand rule)
+ * @param y the number of degrees to rotate about the y axis (right-hand rule)
+ * @param z the number of degrees to rotate about the z axis (right-hand rule)
+ * @param res the resulting transformation matrix
+ */
 void rotationTransformationMatrix(float x, float y, float z, float res[3][3]);
+
+/**
+ * Performs matrix multiplication of two compatible matrices. Throws assertion if matrices are incompatible.
+ * @param a_numRow the number of rows in the first matrix
+ * @param a_numCol the number of columns in the first matrix
+ * @param b_numRow the number of rows in the second matrix
+ * @param b_numCol the number of columns in the second matrix
+ * @param a the first matrix
+ * @param b the second matrix
+ * @param res the resulting matrix
+ */
+void matrixMultiplication(int a_numRow, int a_numCol, int b_numRow, int b_numCol, float a[a_numRow][a_numCol], float b[b_numRow][b_numCol], float res[a_numRow][b_numCol]);

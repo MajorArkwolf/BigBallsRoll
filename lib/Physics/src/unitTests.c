@@ -160,6 +160,35 @@ bool testAABBRotationZ(){
     }
 }
 
+// test positive y rot
+bool testAABBStackedRotation(){
+    // create CollisionBody for object
+    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody);
+    // create collider
+    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider);
+    collider->xLen = 1.f;
+    collider->yLen = 2.f;
+    collider->zLen = 3.f;
+    collider->xRot = 180.f;
+
+    CollisionBody_addBoxCollider(collisionBody, collider);
+    CollisionBody_setRot(collisionBody, 180.f, 0.f, 0.f);
+
+    if(fTolerance(collisionBody->AABBx1, 0.f, 0.0001f) &&
+       fTolerance(collisionBody->AABBy1, 0.f, 0.0001f) &&
+       fTolerance(collisionBody->AABBz1, 0.f, 0.0001f) &&
+       fTolerance(collisionBody->AABBx2, 1.f, 0.0001f) &&
+       fTolerance(collisionBody->AABBy2, 2.f, 0.0001f) &&
+       fTolerance(collisionBody->AABBz2, 3.f, 0.0001f)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 bool testRotationIdentityMatrix(){
     float res[3][3] = {{0}};
     rotationTransformationMatrix(0, 0, 0, res);
@@ -263,6 +292,7 @@ void startTests(){
     printf("Test AABB Rotation X: %d\n", testAABBRotationX());
     printf("Test AABB Rotation Y: %d\n", testAABBRotationY());
     printf("Test AABB Rotation Z: %d\n", testAABBRotationZ());
+    printf("Test AABB Stacked Rotation: %d\n", testAABBStackedRotation());
     printf("Test rotation identity matrix: %d\n", testRotationIdentityMatrix());
     printf("Test x rotation: %d\n", testRotationX());
     printf("Test y rotation: %d\n", testRotationY());

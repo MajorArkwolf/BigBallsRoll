@@ -16,20 +16,9 @@ void rotationTransformationMatrix(float x, float y, float z, float res[3][3]){
     yRad = toRad(y);
     zRad = toRad(z);
 
-    // from https://en.wikipedia.org/wiki/Euler_angles#Geometrical_definition
-    // proper euler angles, XZX rotation matrix
-    /*
-    res[0][0] = cosf(y);
-    res[0][1] = -1.f*cosf(z)*sinf(y);
-    res[0][2] = sinf(y)*sinf(z);
-    res[1][0] = cosf(x)*sinf(y);
-    res[1][1] = cosf(x)*cosf(y)*cosf(z) - sinf(x)*sinf(z);
-    res[1][2] = -1.f*cosf(z)*sinf(x) - cosf(x)*cosf(y)*sinf(z);
-    res[2][0] = sinf(x)*sinf(y);
-    res[2][1] = cosf(x)*sinf(z) + cosf(y)*cosf(z)*sinf(x);
-    res[2][2] = cosf(x)*cosf(z) - cosf(y)*sinf(x)*sinf(z);*/
-
-    // tait-bryan angles, XYZ rotation matrix
+    // tait-bryan angles, XYZ rotation matrix https://en.wikipedia.org/wiki/Euler_angles#Tait%E2%80%93Bryan_angles
+    // "The only difference is that Tait–Bryan angles represent rotations about three distinct axes (e.g. x-y-z, or x-y′-z″), while proper Euler angles use the same axis for both the first and third elemental rotations (e.g., z-x-z, or z-x′-z″)"
+    // follows right-hand rule like glRotate(), but not 100% sure if its the same order rotations are applied (xyz sounds conventional though)
     res[0][0] = cosf(yRad)*cosf(zRad);
     res[0][1] = -1.f*cosf(yRad)*sinf(zRad);
     res[0][2] = sinf(yRad);

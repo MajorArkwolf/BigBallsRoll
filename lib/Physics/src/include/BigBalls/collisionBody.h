@@ -155,3 +155,5 @@ void CollisionBody_setRot(CollisionBody *collisionBody,
                             float x,
                             float y,
                             float z);
+
+void rotationTransformationMatrix(float x, float y, float z, float res[3][3]);

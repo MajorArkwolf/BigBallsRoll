@@ -267,7 +267,6 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
             }
             varInit = true;
         }
-        //TODO: tests assume len is always positive
         testPointMinMax(collisionBody->BoxColliders[i]->xAbsPos, collisionBody->BoxColliders[i]->xAbsLen, &lowestX, &greatestX);
         testPointMinMax(collisionBody->BoxColliders[i]->yAbsPos, collisionBody->BoxColliders[i]->yAbsLen, &lowestY, &greatestY);
         testPointMinMax(collisionBody->BoxColliders[i]->zAbsPos, collisionBody->BoxColliders[i]->zAbsLen, &lowestZ, &greatestZ);

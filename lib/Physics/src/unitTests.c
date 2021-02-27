@@ -1,11 +1,10 @@
-#include "include/BigBalls/unitTests.h"
-#include "include/BigBalls/physicsEngine.h"
 #include <stdbool.h>
 #include <stdio.h>
-#include "include/BigBalls/physicsWorld.h"
-#include "include/BigBalls/collisionBody.h"
 #include <math.h>
 #include <assert.h>
+#include "include/BigBalls/unitTests.h"
+#include "include/BigBalls/physicsWorld.h"
+#include "include/BigBalls/collisionBody.h"
 
 bool fTolerance(float a, float b, float tolerance){
     assert(tolerance >= 0);
@@ -22,7 +21,7 @@ bool testMatrixMultiplication(){
     float b[2][2] = {{3.f, 3.f}, {5.f, 2.f}};
     float res[2][2] = {{0}};
     matrixMultiplication(2, 2, 2, 2, a, b, res);
-    assert(res[0][0] == 38 && res[0][1] == 17 && res[1][0] == 26 && res[1][1] == 14);
+    return res[0][0] == 38 && res[0][1] == 17 && res[1][0] == 26 && res[1][1] == 14;
 }
 
 // test collision between identical objects
@@ -306,5 +305,6 @@ void startTests(){
     printf("Test y rotation: %d\n", testRotationY());
     printf("Test z rotation: %d\n", testRotationZ());
     printf("Test full rotation: %d\n", testFullRotation());
+    printf("Test matrix multiplication: %d\n", testMatrixMultiplication());
 }
 

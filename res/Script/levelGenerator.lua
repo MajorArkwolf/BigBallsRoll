@@ -19,9 +19,9 @@ end
 
  function Generator:Setup(seed, xlength, ylength, zlength, tolerance)
     math.randomseed(seed)
-     self.maxX = xlength
-     self.maxY = ylength
-     self.maxZ = zlength
+    self.maxX = xlength
+    self.maxY = ylength
+    self.maxZ = zlength
     --Setup our primary data structure for a level.
     self.field = InitialiseField(xlength, ylength, zlength)
 
@@ -62,8 +62,10 @@ function GetRandomDirection()
         --west
         direction.z = -1
     elseif (dir == 5) then
+        --up
         direction.y = 1
     else
+        --down
         direction.y = -1
     end
     return direction

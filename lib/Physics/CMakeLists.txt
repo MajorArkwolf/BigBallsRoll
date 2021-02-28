@@ -9,7 +9,8 @@ set(PHYSICS_HEADERS
     "src/include/BigBalls/physicsWorld.h"
     "src/include/BigBalls/boxCollider.h"
     "src/include/BigBalls/sphereCollider.h"
-    "src/include/BigBalls/unitTests.h")
+    "src/include/BigBalls/unitTests.h"
+    "src/include/BigBalls/mathsCommon.h")
 
 set(PHYSICS_SOURCES
     "src/physicsEngine.c"
@@ -17,7 +18,8 @@ set(PHYSICS_SOURCES
     "src/physicsWorld.c"
     "src/boxCollider.c"
     "src/sphereCollider.c"
-    "src/unitTests.c")
+    "src/unitTests.c"
+    "src/mathsCommon.c)
 
 add_library(${PROJECT_NAME} ${PHYSICS_HEADERS} ${PHYSICS_SOURCES})
 add_library(BigBalls::Physics ALIAS ${PROJECT_NAME})

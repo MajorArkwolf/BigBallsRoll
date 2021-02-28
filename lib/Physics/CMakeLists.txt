@@ -19,7 +19,7 @@ set(PHYSICS_SOURCES
     "src/boxCollider.c"
     "src/sphereCollider.c"
     "src/unitTests.c"
-    "src/mathsCommon.c)
+    "src/mathsCommon.c")
 
 add_library(${PROJECT_NAME} ${PHYSICS_HEADERS} ${PHYSICS_SOURCES})
 add_library(BigBalls::Physics ALIAS ${PROJECT_NAME})

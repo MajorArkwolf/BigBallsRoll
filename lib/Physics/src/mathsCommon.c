@@ -1,6 +1,7 @@
 #include "include/BigBalls/mathsCommon.h"
 #include <math.h>
-#include <stdbool.h>
+#include <assert.h>
+#include <stdlib.h>
 
 //TODO: Temporary
 GravityNormal GravityNormal_init() {

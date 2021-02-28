@@ -1,4 +1,6 @@
 #pragma once
+#include <stdbool.h>
+
 // TODO: move to external math library
 
 //TODO: Temp until vec3 is apart of external library

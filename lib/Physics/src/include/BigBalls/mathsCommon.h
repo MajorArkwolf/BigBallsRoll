@@ -11,8 +11,20 @@ typedef struct GravityNormal {
 //TODO: Temp until vec3 is apart of external library
 GravityNormal GravityNormal_init();
 
+/**
+ * Determines if two floats are "equal" given a level of tolerance
+ * @param a the first float
+ * @param b the second float
+ * @param tolerance the tolerance allowed between the two floats for them to be considered equal
+ * @return bool returns true if floats are within tolerance, false otherwise
+ */
 bool fTolerance(float a, float b, float tolerance);
 
+/**
+ * Converts an angle in degrees to radians
+ * @param deg the angle in degrees
+ * @return float the angle in radians
+ */
 float toRad(float deg);
 
 /**
@@ -42,6 +54,20 @@ void matrixMultiplication(int a_numRow,
                           float b[b_numRow][b_numCol],
                           float res[a_numRow][b_numCol]);
 
+/**
+ * Determines if either of the two floats are new min/max values, and returns them if they are
+ * @param val1 the first float
+ * @param val2 the second float
+ * @param min the address of the current minimum value
+ * @param max the address of the current maximum value
+ */
 void minMax(float val1, float val2, float* min, float* max);
 
+/**
+ * Determines if a point and its extension produces a new min or max value
+ * @param pos the position of the point on one axis
+ * @param len the extension of the point to another point on one axis
+ * @param min the address of the current minimum value
+ * @param max the address of the current maximum value
+ */
 void testPointMinMax(float pos, float len, float* min, float* max);

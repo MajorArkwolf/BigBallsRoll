@@ -18,17 +18,6 @@ CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, const 
     return NULL;
 }
 
-void minMax(float val1, float val2, float* min, float* max){
-    if(val1 <= val2){
-        *min = val1;
-        *max = val2;
-    }
-    else{
-        *min = val2;
-        *max = val1;
-    }
-}
-
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
     assert(a != NULL && b != NULL);
     // determine which coordinate is larger than the other
@@ -123,13 +112,4 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) 
 //TODO: Implement
 void PhysicsWorld_updateGravityNormal(float x, float y, float z) {
     //TODO: Stub
-}
-
-//TODO: Temporary
-GravityNormal GravityNormal_init() {
-    GravityNormal gN;
-    gN.X = 0.0f;
-    gN.Y = 1.0f;
-    gN.Z = 0.0f;
-    return gN;
 }

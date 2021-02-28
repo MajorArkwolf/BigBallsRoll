@@ -1,20 +1,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
-#include <assert.h>
 #include "include/BigBalls/unitTests.h"
 #include "include/BigBalls/physicsWorld.h"
 #include "include/BigBalls/collisionBody.h"
-
-bool fTolerance(float a, float b, float tolerance){
-    assert(tolerance >= 0);
-    if(fabsf(a-b) < tolerance){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
+#include "include/BigBalls/mathsCommon.h"
 
 bool testMatrixMultiplication(){
     float a[2][2] = {{1.f, 7.f}, {2.f, 4.f}};

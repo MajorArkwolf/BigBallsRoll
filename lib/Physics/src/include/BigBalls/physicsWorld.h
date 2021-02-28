@@ -1,12 +1,6 @@
 #pragma once
 #include "collisionBody.h"
-
-//TODO: Temp until vec3 is apart of external library
-typedef struct GravityNormal {
-    float X;
-    float Y;
-    float Z;
-} GravityNormal;
+#include "mathsCommon.h"
 
 typedef struct PhysicsWorld{
     CollisionBody **collisionBodies;
@@ -15,9 +9,6 @@ typedef struct PhysicsWorld{
     float gravity;
     GravityNormal gravityNormal;
 } PhysicsWorld;
-
-//TODO: Temp until vec3 is apart of external library
-GravityNormal GravityNormal_init();
 
 //TODO: stub, not sure how this will work atm.
 void PhysicsWorld_updateGravityNormal(float x, float y, float z);

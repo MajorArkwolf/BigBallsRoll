@@ -11,7 +11,8 @@
 
 Engine engine;
 
-float mouse[2];
+/// Used only in engine to keep state of the last position of the mouse, required for smooth mouse movement.
+double lastMousePos[2];
 
 /**
  * Callback function for glut when window size changes.
@@ -57,9 +58,6 @@ void Update(double deltaTime) {
         glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     StateManager_update(&engine.sM, (float)deltaTime);
-    double xpos, ypos;
-    glfwGetCursorPos(engine.window, &xpos, &ypos);
-    StateManager_mouseMove(&engine.sM, xpos, ypos);
 }
 
 /**
@@ -100,9 +98,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
  * @param yPos Coordinates local to the window on the y axis
  */
 static void cursor_position_callback(GLFWwindow* window, double xPos, double yPos) {
-    mouse[0] = xPos;
-    mouse[1] = yPos * -1.0;
-    //StateManager_mouseMove(&engine.sM, xPos, yPos * -1.0f);
+    double xOffset = xPos - lastMousePos[0];
+    double yOffset = yPos - lastMousePos[1];
+    StateManager_mouseMove(&engine.sM, xOffset, yOffset * -1.0);
+    lastMousePos[0] = xPos;
+    lastMousePos[1] = yPos;
 }
 
 /**
@@ -188,7 +188,7 @@ int Engine_run(int argc, char *argv[]) {
         glfwSetInputMode(engine.window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
     }
     glfwSetKeyCallback(engine.window, key_callback);
-    //glfwSetCursorPosCallback(engine.window, cursor_position_callback);
+    glfwSetCursorPosCallback(engine.window, cursor_position_callback);
     glfwSetFramebufferSizeCallback(engine.window, framebuffer_size_callback);
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
@@ -204,14 +204,27 @@ int Engine_run(int argc, char *argv[]) {
     glfwGetFramebufferSize(engine.window, &width, &height);
     framebuffer_size_callback(engine.window, width, height);
 
-    double oldTime = glfwGetTime();
-    double deltaTime = 0.0f;
+    /// This is a semi fixed time step implementation used to help break up our render and physics.
+    double currentTime = glfwGetTime();
+    double accumulator = 0.0;
+    double deltaTime = 0.01;
+    double time = 0.0;
     while(!glfwWindowShouldClose(engine.window)) {
-        float newTime = glfwGetTime();
-        deltaTime = newTime - oldTime;
-        oldTime = newTime;
-        glfwPollEvents();
-        Update(deltaTime);
+        double newTime = glfwGetTime();
+        double frameTime = newTime - currentTime;
+        if (frameTime > 0.25) {
+            frameTime = 0.25;
+        }
+        currentTime = newTime;
+        accumulator += frameTime;
+
+        while (accumulator >= deltaTime) {
+            glfwPollEvents();
+            Update(deltaTime);
+            //Physics update goes here.
+            time += deltaTime;
+            accumulator -= deltaTime;
+        }
         Draw();
     }
 

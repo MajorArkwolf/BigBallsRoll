@@ -7,7 +7,7 @@
 #include "Math/extraMath.h"
 #include "Engine/engine.h"
 
-#define DEFAULT_SENSITIVITY 0.0001f
+#define DEFAULT_SENSITIVITY 0.1f
 
 Camera Camera_construct() {
     Camera cam;

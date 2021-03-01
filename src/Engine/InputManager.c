@@ -1,6 +1,8 @@
 #include "InputManager.h"
 #include "Engine/OpenGL.h"
 #include <ctype.h>
+#include <stdbool.h>
+#include <assert.h>
 
 InputType InputType_convertSpecialKey(int glutKey) {
     switch(glutKey) {
@@ -148,4 +150,7 @@ InputType InputType_convertMouseButton(int glutKey) {
 //        default:
 //            return KEY_NONE;
 //    }
+    assert(false);
+    //Function not implemented yet.
+    return KEY_NONE;
 }

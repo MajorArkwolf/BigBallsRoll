@@ -285,4 +285,9 @@ void Engine_loadConfig() {
     if (lua_isboolean(engine.lua, 0) == 0) {
         engine.fullScreen = lua_toboolean(engine.lua, -1);
     }
+    //Get Configured Seed.
+    lua_getglobal(engine.lua, "seed");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.seed = lua_tonumber(engine.lua, -1);
+    }
 }

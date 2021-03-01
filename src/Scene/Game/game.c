@@ -11,6 +11,10 @@
 #include <assert.h>
 
 int Game_draw(float deltaTime) {
+    lua_getglobal(engine.lua, "Draw");
+    if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
     }
@@ -18,19 +22,13 @@ int Game_draw(float deltaTime) {
 }
 
 int Game_update(float deltaTime) {
-    Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
-    GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
-    if(StateManager_top(&engine.sM)->NumOfGameObjects != 0) {
-        for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects - 1; ++i) {
-            float rotationSpeed = 10.0f;
-            if (i % 2 == 0) {
-                rotationSpeed *= -1.0f;
-            }
-            gameObjects[i].Transform.Rotation.X += rotationSpeed * deltaTime;
-            gameObjects[i].Transform.Rotation.Y += rotationSpeed * deltaTime;
-            gameObjects[i].Transform.Rotation.Z += rotationSpeed * deltaTime;
-        }
+    lua_pushnumber(engine.lua, deltaTime);
+    lua_setglobal(engine.lua, "deltaTime");
+    lua_getglobal(engine.lua, "Update");
+    if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
     }
+    Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
     return 0;
 }
 
@@ -78,6 +76,8 @@ int Game_keyUp(InputType inputType) {
         case KEY_D:
             cam->MoveRight = false;
             break;
+        case KEY_F2:
+            StateManager_pop(&engine.sM);
         default:
             break;
     }
@@ -111,6 +111,9 @@ void Game_init(State *state) {
     lua_setglobal(engine.lua, "GameObjectSetRotation");
     lua_pushcfunction(engine.lua, Game_setModel);
     lua_setglobal(engine.lua, "GameObjectSetModel");
+
+    lua_pushnumber(engine.lua, engine.seed);
+    lua_setglobal(engine.lua, "seed");
 
     lua_getglobal(engine.lua, "Init");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {

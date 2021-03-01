@@ -20,6 +20,7 @@ typedef struct Engine {
     float fov;
     bool lockCamera;
     bool fullScreen;
+    int seed;
     lua_State *lua;
 } Engine;
 

@@ -18,6 +18,12 @@ function InitialiseField(xlength, ylength, zlength)
 end
 
  function Generator:Setup(seed, xlength, ylength, zlength, tolerance)
+    if xlength <= tolerance then
+        xlength = tolerance * 2
+    end
+    if zlength <= tolerance then
+        zlength = tolerance * 2
+    end
     math.randomseed(seed)
     self.maxX = xlength
     self.maxY = ylength
@@ -29,12 +35,17 @@ end
     self.startPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
     self.endPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
     local pointsAreNotApart = true
-
+     count = 0
     while pointsAreNotApart do
         if math.abs(self.startPoint[1] - self.endPoint[1]) < tolerance or math.abs(self.startPoint[3] - self.endPoint[3]) < tolerance then
             self.endPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
         else
             pointsAreNotApart = false
+        end
+        count = count + 1
+        if count > 10 then
+            self.startPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
+            count = 0
         end
     end
      self.field = RandomPath(self.startPoint, self.endPoint, xlength, ylength, zlength, self.field)

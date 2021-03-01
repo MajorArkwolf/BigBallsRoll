@@ -76,7 +76,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 )
 
 if (LINUX)
-    target_link_libraries(${PROJECT_NAME} PRIVATE -lm)
+    target_link_libraries(${PROJECT_NAME} PRIVATE -lm -libdl)
 endif()
 
 # Include and link against dependencies.

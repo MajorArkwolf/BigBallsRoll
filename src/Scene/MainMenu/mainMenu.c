@@ -17,6 +17,7 @@ int MainMenu_update(float deltaTime) {
     for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
         GameObject_update(&gameObjects[i]);
     }
+    engine.lockCamera = false;
     return 0;
 }
 

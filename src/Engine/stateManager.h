@@ -4,7 +4,7 @@
 #include "Engine/GameObjects/gameObject.h"
 #include "Engine/InputManager.h"
 
-#define MAX_GAME_OBJECTS 10000
+#define MAX_GAME_OBJECTS 1000000
 
 /// Simple typedefs to distinguish between a function pointer and a function pointer that takes a float as a parameter
 typedef int (*fnPtr)();

@@ -179,12 +179,68 @@ void DebugDraw_reset(DebugDraw *debug) {
     DynamicArray_eraseSizeT(debug->faceIndexes);
 }
 
+//ARRAY MUST BE SIZE 24
+void getVertices(CollisionBody *collisionBody, float *array) {
+    assert(collisionBody != NULL && array != NULL);
+    //TODO: Check corners are in proper order, reference my cool drawing
+    //0
+    array[0] = collisionBody->AABBx1;
+    array[1] = collisionBody->AABBy1;
+    array[2] = collisionBody->AABBz1;
+
+    //1
+    array[3] = collisionBody->AABBx1;
+    array[4] = collisionBody->AABBy2;
+    array[5] = collisionBody->AABBz1;
+
+    //2
+    array[6] = collisionBody->AABBx2;
+    array[7] = collisionBody->AABBy2;
+    array[8] = collisionBody->AABBz1;
+
+    //3
+    array[9] = collisionBody->AABBx2;
+    array[10] = collisionBody->AABBy1;
+    array[11] = collisionBody->AABBz1;
+
+    //4
+    array[12] = collisionBody->AABBx1;
+    array[13] = collisionBody->AABBy1;
+    array[14] = collisionBody->AABBz2;
+
+    //5
+    array[15] = collisionBody->AABBx1;
+    array[16] = collisionBody->AABBy2;
+    array[17] = collisionBody->AABBz2;
+
+    //6
+    array[18] = collisionBody->AABBx2;
+    array[19] = collisionBody->AABBy2;
+    array[20] = collisionBody->AABBz2;
+
+    //7
+    array[21] = collisionBody->AABBx2;
+    array[22] = collisionBody->AABBy1;
+    array[23] = collisionBody->AABBz2;
+}
+
 void PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugDraw *debug) {
     assert(physicsWorld != NULL && debug != NULL);
     if (physicsWorld->debug) {
         //Reset the object
         DebugDraw_reset(debug);
         //TODO: Implement and get the stuffs
+        float vertices[SQUARE_VERTEX_X3];
+
+        for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
+            getVertices(physicsWorld->collisionBodies[i], vertices);
+            for (size_t j = 0; j < SQUARE_VERTEX_X3; ++j) {
+                DynamicArray_pushBackFloat(debug->vertices, vertices[j]);
+            }
+        }
+        debug->numVertices = debug->vertices->used;
+
+
     }
 }
 

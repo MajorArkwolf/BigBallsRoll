@@ -2,6 +2,8 @@
 #include "collisionBody.h"
 #include "dynamicArray.h"
 
+#define SQUARE_VERTEX_X3 24 //TODO: find better name
+
 //TODO: Temp until vec3 is apart of external library
 typedef struct tempVec3 {
     float X;

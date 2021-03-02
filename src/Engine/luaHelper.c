@@ -1,7 +1,7 @@
 #include "luaHelper.h"
 #include <lualib.h>
 #include <lauxlib.h>
-#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include "Engine/engine.h"

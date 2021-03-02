@@ -13,7 +13,7 @@ typedef int (*fnPtrFl)(float);
 
 typedef int (*fnPtrInput)(InputType);
 
-typedef int (*fnPtrFlFl)(float, float);
+typedef int (*fnPtrDblDbl)(double, double);
 
 /// State Structure
 typedef struct State {
@@ -26,7 +26,7 @@ typedef struct State {
     fnPtr destroy;
     fnPtrInput keyDown;
     fnPtrInput keyUp;
-    fnPtrFlFl mouseMovement;
+    fnPtrDblDbl mouseMovement;
 } State;
 
 /// A Stack implementation that holds a stack of states
@@ -111,7 +111,7 @@ int StateManager_keyUp(StateManager *stateManager, InputType inputType);
  * @param y the difference in y pos
  * @return 0 on success and 1 on failure
  */
-int StateManager_mouseMove(StateManager *stateManager, float x, float y);
+int StateManager_mouseMove(StateManager *stateManager, double x, double y);
 
 /**
  * Initialises a base state for use

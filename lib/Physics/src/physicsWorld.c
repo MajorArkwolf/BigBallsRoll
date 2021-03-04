@@ -155,6 +155,9 @@ void PhysicsWorld_debugDrawInit(DebugDraw *debug) {
     assert(debug != NULL);
     debug->numVertices = 0;
     debug->numFaces = 0;
+    debug->colour[0] = 255;
+    debug->colour[1] = 255;
+    debug->colour[2] = 0;
     debug->vertices = calloc(1, sizeof(FloatArray));
     debug->faceIndexes = calloc(1, sizeof(SizeTArray));
     DynamicArray_initFloat(debug->vertices);
@@ -179,49 +182,57 @@ void DebugDraw_reset(DebugDraw *debug) {
     DynamicArray_eraseSizeT(debug->faceIndexes);
 }
 
-//ARRAY MUST BE SIZE 24
-void getVertices(CollisionBody *collisionBody, float *array) {
-    assert(collisionBody != NULL && array != NULL);
-    //TODO: Check corners are in proper order, reference my cool drawing
-    //0
-    array[0] = collisionBody->AABBx1;
-    array[1] = collisionBody->AABBy1;
-    array[2] = collisionBody->AABBz1;
+void generateAABBBox(CollisionBody *collisionBody, DebugDraw *dd, const size_t *faceOrder, size_t faces) {
+    assert(collisionBody != NULL && dd != NULL && faceOrder != NULL);
+
+    size_t beforeMaxLengthVert = dd->vertices->used;
+
+    //0 (vertex order)
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
 
     //1
-    array[3] = collisionBody->AABBx1;
-    array[4] = collisionBody->AABBy2;
-    array[5] = collisionBody->AABBz1;
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
 
     //2
-    array[6] = collisionBody->AABBx2;
-    array[7] = collisionBody->AABBy2;
-    array[8] = collisionBody->AABBz1;
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
 
     //3
-    array[9] = collisionBody->AABBx2;
-    array[10] = collisionBody->AABBy1;
-    array[11] = collisionBody->AABBz1;
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
 
     //4
-    array[12] = collisionBody->AABBx1;
-    array[13] = collisionBody->AABBy1;
-    array[14] = collisionBody->AABBz2;
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
 
     //5
-    array[15] = collisionBody->AABBx1;
-    array[16] = collisionBody->AABBy2;
-    array[17] = collisionBody->AABBz2;
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
 
     //6
-    array[18] = collisionBody->AABBx2;
-    array[19] = collisionBody->AABBy2;
-    array[20] = collisionBody->AABBz2;
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
 
     //7
-    array[21] = collisionBody->AABBx2;
-    array[22] = collisionBody->AABBy1;
-    array[23] = collisionBody->AABBz2;
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
+
+    //TODO: Put here? and dont pass anything in? if only rendering cubes this will be fine. Not scalable otherwise.
+    //size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
+
+    for (size_t i = 0; i < faces; ++i) {
+        DynamicArray_pushBackSizeT(dd->faceIndexes, beforeMaxLengthVert + faceOrder[i] * 3);
+    }
 }
 
 void PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugDraw *debug) {
@@ -230,17 +241,16 @@ void PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugDraw *debug) {
         //Reset the object
         DebugDraw_reset(debug);
         //TODO: Implement and get the stuffs
-        float vertices[SQUARE_VERTEX_X3];
+
+        //TODO: Is this even a good idea? or just make faceOrder inside genAABBBox? Not sure where we would
+        //Even get face order from? I doubt a collision body would store it. and is static bad idea?
+        static size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
 
         for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
-            getVertices(physicsWorld->collisionBodies[i], vertices);
-            for (size_t j = 0; j < SQUARE_VERTEX_X3; ++j) {
-                DynamicArray_pushBackFloat(debug->vertices, vertices[j]);
-            }
+            generateAABBBox(physicsWorld->collisionBodies[i], debug, faceOrder, 36);
         }
         debug->numVertices = debug->vertices->used;
-
-
+        debug->numFaces = debug->faceIndexes->used;
     }
 }
 

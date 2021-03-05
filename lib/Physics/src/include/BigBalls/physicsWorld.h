@@ -91,7 +91,6 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 */
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
-
 /**
  * Contains the debug draw functions TODO: UPDATE THIS COMMENT
  * @param physicsWorld the object to draw
@@ -99,20 +98,6 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
  * @return true if debug has been updated, else false.
  */
 bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug);
-
-/**
- * Initialise the DebugData object, must be called before using.
- * @param debug the object to initialise
- */
-void PhysicsWorld_DebugDataInit(DebugData *debug);
-
-//void (*PhysicsWorld_DebugDataInit)(DebugData*) = &PhysicsDebug_Init;
-
-/**
- * Frees the contents of a DebugData object.
- * @param debug the object to free
- */
-void PhysicsWorld_DebugDataFree(DebugData *debug);
 
 /**
  * Toggles debug on or off.

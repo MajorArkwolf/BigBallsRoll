@@ -151,95 +151,11 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) 
     }
 }
 
-void PhysicsWorld_debugDrawInit(DebugDraw *debug) {
-    assert(debug != NULL);
-    debug->numVertices = 0;
-    debug->numFaces = 0;
-    debug->colour[0] = 255;
-    debug->colour[1] = 255;
-    debug->colour[2] = 0;
-    debug->vertices = calloc(1, sizeof(FloatArray));
-    debug->faceIndexes = calloc(1, sizeof(SizeTArray));
-    DynamicArray_initFloat(debug->vertices);
-    DynamicArray_initSizeT(debug->faceIndexes);
-}
-
-void PhysicsWorld_debugDrawFree(DebugDraw *debug) {
-    assert(debug != NULL);
-    debug->numVertices = 0;
-    debug->numFaces = 0;
-    DynamicArray_freeFloat(debug->vertices);
-    DynamicArray_freeSizeT(debug->faceIndexes);
-    free(debug->vertices);
-    free(debug->faceIndexes);
-}
-
-void DebugDraw_reset(DebugDraw *debug) {
-    assert(debug != NULL);
-    debug->numVertices = 0;
-    debug->numFaces = 0;
-    DynamicArray_eraseFloat(debug->vertices);
-    DynamicArray_eraseSizeT(debug->faceIndexes);
-}
-
-void generateAABBBox(CollisionBody *collisionBody, DebugDraw *dd, const size_t *faceOrder, size_t faces) {
-    assert(collisionBody != NULL && dd != NULL && faceOrder != NULL);
-
-    size_t beforeMaxLengthVert = dd->vertices->used;
-
-    //0 (vertex order)
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
-
-    //1
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
-
-    //2
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
-
-    //3
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
-
-    //4
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
-
-    //5
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
-
-    //6
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
-
-    //7
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
-
-    //TODO: Put here? and dont pass anything in? if only rendering cubes this will be fine. Not scalable otherwise.
-    //size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
-
-    for (size_t i = 0; i < faces; ++i) {
-        DynamicArray_pushBackSizeT(dd->faceIndexes, beforeMaxLengthVert + faceOrder[i] * 3);
-    }
-}
-
-void PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugDraw *debug) {
+bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug) {
     assert(physicsWorld != NULL && debug != NULL);
     if (physicsWorld->debug) {
         //Reset the object
-        DebugDraw_reset(debug);
+        PhysicsDebug_dataReset(debug);
         //TODO: Implement and get the stuffs
 
         //TODO: Is this even a good idea? or just make faceOrder inside genAABBBox? Not sure where we would
@@ -247,11 +163,13 @@ void PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugDraw *debug) {
         static size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
 
         for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
-            generateAABBBox(physicsWorld->collisionBodies[i], debug, faceOrder, 36);
+            PhysicsDebug_generateAABBBox(physicsWorld->collisionBodies[i], debug, faceOrder, 36);
         }
         debug->numVertices = debug->vertices->used;
         debug->numFaces = debug->faceIndexes->used;
+        return true;
     }
+    return false;
 }
 
 void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld) {

@@ -1,6 +1,6 @@
 #pragma once
 #include "collisionBody.h"
-#include "dynamicArray.h"
+#include "physicsDebug.h"
 
 //TODO: Temp until vec3 is apart of external library
 typedef struct tempVec3 {
@@ -17,14 +17,6 @@ typedef struct PhysicsWorld {
     tempVec3 gravityNormal;
     bool debug;
 } PhysicsWorld;
-
-typedef struct DebugDraw {
-    size_t numFaces;
-    size_t numVertices;
-    FloatArray *vertices;
-    SizeTArray *faceIndexes;
-    float colour[3];
-} DebugDraw;
 
 //TODO: Temp until vec3 is apart of external library
 //GravityNormal GravityNormal_init();
@@ -104,20 +96,23 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
  * Contains the debug draw functions TODO: UPDATE THIS COMMENT
  * @param physicsWorld the object to draw
  * @param debug the debug object to store the data in
+ * @return true if debug has been updated, else false.
  */
-void PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugDraw *debug);
+bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug);
 
 /**
- * Initialise the debugDraw object, must be called before using.
+ * Initialise the DebugData object, must be called before using.
  * @param debug the object to initialise
  */
-void PhysicsWorld_debugDrawInit(DebugDraw *debug);
+void PhysicsWorld_DebugDataInit(DebugData *debug);
+
+//void (*PhysicsWorld_DebugDataInit)(DebugData*) = &PhysicsDebug_Init;
 
 /**
- * Frees the contents of a DebugDraw object.
+ * Frees the contents of a DebugData object.
  * @param debug the object to free
  */
-void PhysicsWorld_debugDrawFree(DebugDraw *debug);
+void PhysicsWorld_DebugDataFree(DebugData *debug);
 
 /**
  * Toggles debug on or off.

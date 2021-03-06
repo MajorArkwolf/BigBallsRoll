@@ -80,7 +80,7 @@ if (LINUX)
 endif()
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU glfw stb OpenAL SndFile::sndfile BigBalls::Physics lua ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU glfw stb OpenAL SndFile::sndfile BigBalls::Physics lua libcester ${CMAKE_DL_LIBS})
 
 if (GenerateDoxygen)
     find_package(Doxygen)

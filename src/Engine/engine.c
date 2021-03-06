@@ -58,7 +58,6 @@ void Update(double deltaTime) {
         glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     StateManager_update(&engine.sM, (float)deltaTime);
-}
 
 /**
  * Callback function for Draw
@@ -140,6 +139,7 @@ int Engine_run(int argc, char *argv[]) {
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+    PhysicsEngine_init(&engine.physicsEngine);
 	
 	//Initialise LUA state
     engine.lua = luaL_newstate();

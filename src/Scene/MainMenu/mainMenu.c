@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <Engine/engine.h>
 #include "Scene/Game/game.h"
+#include "Scene/LevelOne/LevelOne.h"
 #include "Engine/stateManager.h"
 
 int MainMenu_draw(float deltaTime) {
@@ -71,6 +72,12 @@ int MainMenu_keyUp(InputType inputType) {
             State_init(state);
             StateManager_push(&engine.sM, state);
             Game_init(state);
+            return 0;
+        case KEY_P:
+            state = calloc(1, sizeof(State));
+            State_init(state);
+            StateManager_push(&engine.sM, state);
+            LevelOne_init(state);
             return 0;
         default:
             break;

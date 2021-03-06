@@ -15,6 +15,7 @@ typedef struct Engine {
     TextureManager textureManager;
     AudioEngine audioEngine;
     AudioManager audioManager;
+    PhysicsEngine physicsEngine;
     char *cwd;
     int width;
     int height;

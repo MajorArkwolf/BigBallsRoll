@@ -178,6 +178,7 @@ int Engine_run(int argc, char *argv[]) {
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+    PhysicsEngine_init(&engine.physicsEngine);
 	
 	//Initialise LUA state
     engine.lua = luaL_newstate();

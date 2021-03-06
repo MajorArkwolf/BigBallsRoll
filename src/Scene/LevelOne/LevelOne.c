@@ -10,7 +10,7 @@ int LevelOne_draw(float deltaTime) {
 }
 
 int LevelOne_update(float deltaTime) {
-    PhysicsWorld_update(StateManager_top(&engine.sM)->physicsEngine.physicsWorld[0], deltaTime);
+    PhysicsWorld_update(StateManager_top(&engine.sM)->physicsWorld, deltaTime);
     Camera_update(&StateManager_top(&engine.sM)->camera, (float) deltaTime);
     GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
     for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
@@ -97,10 +97,7 @@ void LevelOne_init(State *state) {
     state->keyDown = LevelOne_keyDown;
     state->keyUp = LevelOne_keyUp;
     state->mouseMovement = LevelOne_mouseMovement;
-    PhysicsEngine *physicsEngine = calloc(1, sizeof(PhysicsEngine));
-    PhysicsEngine_init(physicsEngine);
-    state->physicsEngine = *physicsEngine;
-    state->physicsEngine.physicsWorld[0] = PhysicsEngine_newPhysicsWorld(&state->physicsEngine);
+    state->physicsWorld = PhysicsEngine_newPhysicsWorld(&engine.physicsEngine);
     state->camera.Position.Y += 2.0f;
     state->camera.Pitch -= 15.0f;
     Camera_updateCameraVectors(&state->camera);
@@ -129,7 +126,7 @@ void LevelOne_init(State *state) {
     CollisionBody_addBoxCollider(wallCollisionBody, wallCollider);
     CollisionBody_setPos(wallCollisionBody, 0.f, 0.f, 0.f);
     CollisionBody_setRot(wallCollisionBody, 0.f, 90.f, 0.f);
-    PhysicsWorld_addCollisionBody(state->physicsEngine.physicsWorld[0], wallCollisionBody);
+    PhysicsWorld_addCollisionBody(state->physicsWorld, wallCollisionBody);
 
     // add ball at rotation destination
     GameObject_init(&state->gameObjects[1]);
@@ -147,7 +144,7 @@ void LevelOne_init(State *state) {
 
     CollisionBody_addSphereCollider(ballCollisionBody, ballCollider);
     CollisionBody_setPos(ballCollisionBody, 0.f, 0.f, -10.f);
-    PhysicsWorld_addCollisionBody(state->physicsEngine.physicsWorld[0], ballCollisionBody);
+    PhysicsWorld_addCollisionBody(state->physicsWorld, ballCollisionBody);
 
     // add box at position pre-rotation
     GameObject_init(&state->gameObjects[2]);
@@ -167,5 +164,5 @@ void LevelOne_init(State *state) {
     CollisionBody_addBoxCollider(boxCollisionBody, boxCollider);
 
     CollisionBody_setPos(boxCollisionBody, 0, 0, 5.f);
-    PhysicsWorld_addCollisionBody(state->physicsEngine.physicsWorld[0], boxCollisionBody);
+    PhysicsWorld_addCollisionBody(state->physicsWorld, boxCollisionBody);
 }

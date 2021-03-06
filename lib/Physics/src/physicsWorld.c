@@ -20,9 +20,10 @@ CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, const 
 
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
     assert(a != NULL && b != NULL);
-    // determine which coordinate is larger than the other
+    // the min and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
     float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
 
+    // determine which coordinate is larger than the other, for each coordinate pair of each CollisionBody
     minMax(a->AABBx1, a->AABBx2, &x1min, &x1max);
     minMax(a->AABBy1, a->AABBy2, &y1min, &y1max);
     minMax(a->AABBz1, a->AABBz2, &z1min, &z1max);

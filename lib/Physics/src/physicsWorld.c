@@ -42,14 +42,13 @@ void detectCollisions(PhysicsWorld* physicsWorld){
     // TODO: ideally shouldn't check every body against each other - spacial partitioning method ideal
     // broad phase
     for(size_t i = 0; i < physicsWorld->numCollisionBodies; ++i){
-        for(size_t j = 0; j < physicsWorld->numCollisionBodies; ++j){
-            if(i != j && i < j){ // dont check for collision of the same object, or the same pair again (eg. 0 vs 1 AND 1 vs 0)
-                if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
-                    // broad phase collision detected
-                    printf("Objects %d and %d are colliding!\n", (int)i ,(int)j);
-                    // TODO: narrow phase
-                    // TODO: resolve collision
-                }
+        for(size_t j = i + 1; j < physicsWorld->numCollisionBodies; ++j){ // only checks collisions of different CollisionBodies, where j is always greater than i
+                                                                          // (avoids repeat inverse tests eg. checking 1-0 AND 0-1 would be redundant and inefficient)
+            if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
+                // broad phase collision detected
+                printf("Objects %d and %d are colliding!\n", (int)i ,(int)j);
+                // TODO: narrow phase
+                // TODO: resolve collision
             }
         }
     }

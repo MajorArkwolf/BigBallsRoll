@@ -127,10 +127,9 @@ void CollisionBody_stop(CollisionBody *collisionBody){
     collisionBody->xVel = 0;
     collisionBody->yVel = 0;
     collisionBody->zVel = 0;
-    collisionBody->force = 0;
-    collisionBody->forceDirX = 0;
-    collisionBody->forceDirY = 0;
-    collisionBody->forceDirZ = 0;
+    collisionBody->forceX = 0;
+    collisionBody->forceY = 0;
+    collisionBody->forceZ = 0;
 }
 
 void CollisionBody_updateAABB(CollisionBody *collisionBody){

@@ -1,5 +1,4 @@
 #include "unitTestEntry.h"
-#define __BASE_FILE__ ""
 #define CESTER_NO_MAIN
 #include <exotic/cester.h>
 
@@ -10,8 +9,9 @@
 CESTER_TEST(test_one, inst,
         cester_assert_equal(NULL, ((void*)0));
 )
-
+CESTER_BODY(
 bool beginUnitTests(int argc, char* argv[]) {
     CESTER_REGISTER_TEST(test_one);
     return CESTER_RUN_ALL_TESTS(argc, argv);
 }
+)

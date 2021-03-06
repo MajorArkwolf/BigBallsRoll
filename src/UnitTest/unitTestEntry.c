@@ -9,6 +9,7 @@
 CESTER_TEST(test_one, inst,
         cester_assert_equal(NULL, ((void*)0));
 )
+
 CESTER_BODY(
 bool beginUnitTests(int argc, char* argv[]) {
     CESTER_REGISTER_TEST(test_one);

@@ -60,8 +60,8 @@ void matrixMultiplication(int a_numRow,
  * Determines if either of the two floats are new min/max values, and returns them if they are
  * @param val1 the first float
  * @param val2 the second float
- * @param min the address of the current minimum value
- * @param max the address of the current maximum value
+ * @param min updates passed in value with the smallest value from val1 or val2
+ * @param max updates passed in value with the greatest value from val1 or val2
  */
 void minMax(float val1, float val2, float* min, float* max);
 

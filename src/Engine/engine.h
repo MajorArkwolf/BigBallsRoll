@@ -36,6 +36,10 @@ extern Engine engine;
  */
 int Engine_run(int argc, char *argv[]);
 
+void Engine_toggleCameraLock();
+
+void Engine_cameraLock(bool lockCamera);
+
 /**
  * Frees any memory the engine is using on the heap
  */

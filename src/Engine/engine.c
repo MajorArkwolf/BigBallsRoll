@@ -57,7 +57,8 @@ void Update(double deltaTime) {
     } else if (!engine.lockCamera && mouseMode != GLFW_CURSOR_NORMAL) {
         glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
-    StateManager_update(&engine.sM, (float)deltaTime);
+    StateManager_update(&engine.sM, (float) deltaTime);
+}
 
 /**
  * Callback function for Draw

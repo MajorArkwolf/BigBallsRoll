@@ -81,7 +81,7 @@ int LevelOne_keyUp(InputType inputType) {
     return 0;
 }
 
-int LevelOne_mouseMovement(float x, float y) {
+int LevelOne_mouseMovement(double x, double y) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {

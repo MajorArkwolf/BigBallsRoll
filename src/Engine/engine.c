@@ -1,6 +1,4 @@
 #include "engine.h"
-#include "Engine/OpenGL.h"
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -8,22 +6,21 @@
 #include <lualib.h>
 #include <lua.h>
 #include "Helper/stringPath.h"
-#include "Engine/Audio/audioEngine.h"
 #include "Engine/luaHelper.h"
 #include "Scene/MainMenu/mainMenu.h"
 
-const float FRAMERATE = 1 / 60.0f;                     // ~60 FPS.
-const float FRAMERATE_MILLIS = 1 / 60.0f * 1000;       // Millisecond version of framerate.
-const float PHYSICS_MILLIS = 200;
-
 Engine engine;
+
+/// Used only in engine to keep state of the last position of the mouse, required for smooth mouse movement.
+double lastMousePos[2];
 
 /**
  * Callback function for glut when window size changes.
+ * @param window the window context of the engine
  * @param w the new width
  * @param h the new height
  */
-void changeSize(int w, int h) {
+void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
 
     // Prevent a divide by zero, when window is too short
     // (you cant make a window of zero width).
@@ -51,15 +48,16 @@ void changeSize(int w, int h) {
 
 /**
  * Callback function for glut update.
- * @param value
+ * @param deltaTime Time since last frame
  */
-void Update(int value) {
-    // Timer to start update function again based on frame rate.
-    glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
-    int oldTime = engine.timeSinceStart;
-    engine.timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
-    float deltaTime = (float) (engine.timeSinceStart - oldTime) / 1000.0f;
-    StateManager_update(&engine.sM, deltaTime);
+void Update(double deltaTime) {
+    int mouseMode = glfwGetInputMode(engine.window, GLFW_CURSOR);
+    if (engine.lockCamera && mouseMode == GLFW_CURSOR_NORMAL) {
+        glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    } else if (!engine.lockCamera && mouseMode != GLFW_CURSOR_NORMAL) {
+        glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    StateManager_update(&engine.sM, (float) deltaTime);
 }
 
 /**
@@ -67,84 +65,44 @@ void Update(int value) {
  */
 void Draw(void) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
-    // Move cursor back to middle if camera lock is on
-    if (engine.lockCamera) {
-        glutWarpPointer(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
-    }
+
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-
     Camera_lookAt(cam);
-    glColor3f(255, 255, 255);
-
     StateManager_draw(&engine.sM, 0.0f);
-
-    glutSwapBuffers();
+    glfwSwapBuffers(engine.window);
 }
 
-/**
- * Process key press for normal keys, callback function for glut
- * @param key character of the key that was pressed.
- * @param xx Unknown
- * @param yy Unknown
- */
-void processNormalKeys(unsigned char key, int xx, int yy) {
-    InputType inputType = InputType_convertRegularKey((char) key);
-    StateManager_keyDown(&engine.sM, inputType);
-}
 
-/**
- * Process key release for normal keys, callback function for glut
- * @param key character of the key that was pressed.
- * @param xx Unknown
- * @param yy Unknown
- */
-void processNormalKeysUp(unsigned char key, int xx, int yy) {
-    InputType inputType = InputType_convertRegularKey((char) key);
-    if (inputType == KEY_ESC) {
-        Engine_stop();
-        exit(EXIT_SUCCESS);
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    InputType inputType = InputType_convertRegularKey(key);
+    if (action == GLFW_PRESS) {
+        StateManager_keyDown(&engine.sM, inputType);
+    } else if (action == GLFW_RELEASE) {
+        if (inputType == KEY_F1) {
+            //Toggle the lock Camera.
+            engine.lockCamera = !engine.lockCamera;
+        }
+        if (inputType == KEY_ESC) {
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        }
+        StateManager_keyUp(&engine.sM, inputType);
     }
-    StateManager_keyUp(&engine.sM, inputType);
-}
-
-/**
- * Process key press for special keys, callback function for glut
- * @param key int representation of the key that was pressed.
- * @param xx Unknown
- * @param yy Unknown
- */
-void pressKey(int key, int xx, int yy) {
-    InputType inputType = InputType_convertSpecialKey(key);
-    StateManager_keyDown(&engine.sM, inputType);
-    //glutSetWindow(mainWindow);
-    //glutPostRedisplay();
-}
-
-/**
- * Process key release for special keys, callback function for glut
- * @param key int representation of the key that was pressed.
- * @param x Unknown
- * @param y Unknown
- */
-void releaseKey(int key, int x, int y) {
-    InputType inputType = InputType_convertSpecialKey(key);
-    if (inputType == KEY_F1) {
-        //Toggle the lock Camera.
-        engine.lockCamera = !engine.lockCamera;
-    }
-    StateManager_keyUp(&engine.sM, inputType);
 }
 
 /**
  * Callback function for the mouse movement.
- * @param x Coordinates local to the window on the x axis
- * @param y Coordinates local to the window on the y axis
+ * @param window The active engine window
+ * @param xPos Coordinates local to the window on the x axis
+ * @param yPos Coordinates local to the window on the y axis
  */
-void mouseMove(int x, int y) {
-    float lastX = (float) x - glutGet(GLUT_WINDOW_WIDTH) / 2;
-    float lastY = ((float) y - glutGet(GLUT_WINDOW_HEIGHT) / 2) * -1;
-    StateManager_mouseMove(&engine.sM, lastX, lastY);
+static void cursor_position_callback(GLFWwindow* window, double xPos, double yPos) {
+    double xOffset = xPos - lastMousePos[0];
+    double yOffset = yPos - lastMousePos[1];
+    StateManager_mouseMove(&engine.sM, xOffset, yOffset * -1.0);
+    lastMousePos[0] = xPos;
+    lastMousePos[1] = yPos;
 }
 
 /**
@@ -161,6 +119,10 @@ void mouseButton(int button, int state, int x, int y) {
     //StateManager_keyDown(&engine.sM, inputType);
 }
 
+void error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Error: %s\n", description);
+}
 
 int Engine_run(int argc, char *argv[]) {
     //Engine Defaults
@@ -202,41 +164,33 @@ int Engine_run(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-
+    glfwSetErrorCallback(error_callback);
     //Initialise our Window and OpenGL context.
-    glutInit(&argc, argv);
-    //Set the window position to the centre of the screen.
-    int x_offset = glutGet(GLUT_SCREEN_WIDTH) / 2 - engine.width / 2;
-    int y_offset = glutGet(GLUT_SCREEN_HEIGHT) / 2 - engine.height / 2;
-
-    glutInitWindowPosition(x_offset, y_offset);
-    glutInitWindowSize(engine.width, engine.height);
-    glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE |
-                        GLUT_RGBA);
-    glutCreateWindow("Plachinko");
-    if (!glutExtensionSupported("GL_EXT_abgr")) {
-        printf("Couldn't find abgr extension.\n");
-        exit(EXIT_FAILURE);
+    if (!glfwInit()){
+        return EXIT_FAILURE;
     }
-
     if (engine.fullScreen) {
-        glutFullScreen();
+        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+    }
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+    glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    engine.window = glfwCreateWindow(engine.width, engine.height, "Big Balls Roll", NULL, NULL);
+    if(engine.window == NULL) {
+        glfwTerminate();
+        return EXIT_FAILURE;
     }
 
-    // Render Que
-    glutDisplayFunc(Draw);
-    glutReshapeFunc(changeSize);
-    glutIdleFunc(Draw);
-
-    // register callbacks
-    glutIgnoreKeyRepeat(0);
-    glutKeyboardFunc(processNormalKeys);
-    glutKeyboardUpFunc(processNormalKeysUp);
-    glutSpecialFunc(pressKey);
-    glutSpecialUpFunc(releaseKey);
-    glutMouseFunc(mouseButton);
-    glutPassiveMotionFunc(mouseMove);
-
+    glfwMakeContextCurrent(engine.window);
+    glfwSwapInterval(1);
+    glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if (glfwRawMouseMotionSupported()) {
+        glfwSetInputMode(engine.window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    }
+    glfwSetKeyCallback(engine.window, key_callback);
+    glfwSetCursorPosCallback(engine.window, cursor_position_callback);
+    glfwSetFramebufferSizeCallback(engine.window, framebuffer_size_callback);
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -245,9 +199,39 @@ int Engine_run(int argc, char *argv[]) {
     engine.textureManager.renderSetup = true;
     TextureManager_bindTexturesToRenderer(&engine.textureManager);
 
-    glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
-    engine.timeSinceStart = glutGet(GLUT_ELAPSED_TIME);
-    glutMainLoop();
+    // Set the view port for the window.
+    int width = 0;
+    int height = 0;
+    glfwGetFramebufferSize(engine.window, &width, &height);
+    framebuffer_size_callback(engine.window, width, height);
+
+    /// This is a semi fixed time step implementation used to help break up our render and physics.
+    double currentTime = glfwGetTime();
+    double accumulator = 0.0;
+    double deltaTime = 0.01;
+    double time = 0.0;
+    while(!glfwWindowShouldClose(engine.window)) {
+        double newTime = glfwGetTime();
+        double frameTime = newTime - currentTime;
+        if (frameTime > 0.25) {
+            frameTime = 0.25;
+        }
+        currentTime = newTime;
+        accumulator += frameTime;
+
+        while (accumulator >= deltaTime) {
+            glfwPollEvents();
+            Update(deltaTime);
+            //Physics update goes here.
+            time += deltaTime;
+            accumulator -= deltaTime;
+        }
+        Draw();
+    }
+
+    glfwDestroyWindow(engine.window);
+    glfwTerminate();
+    Engine_stop();
     return EXIT_SUCCESS;
 }
 
@@ -285,5 +269,10 @@ void Engine_loadConfig() {
     lua_getglobal(engine.lua, "fullscreen");
     if (lua_isboolean(engine.lua, 0) == 0) {
         engine.fullScreen = lua_toboolean(engine.lua, -1);
+    }
+    //Get Configured Seed.
+    lua_getglobal(engine.lua, "seed");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.seed = lua_tonumber(engine.lua, -1);
     }
 }

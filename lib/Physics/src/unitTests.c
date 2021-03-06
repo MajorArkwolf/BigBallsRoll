@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include "include/BigBalls/unitTests.h"
 #include "include/BigBalls/physicsWorld.h"

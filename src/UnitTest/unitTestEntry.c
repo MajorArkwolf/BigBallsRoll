@@ -1,4 +1,5 @@
 #include "unitTestEntry.h"
+#define __BASE_FILE__ ""
 #define CESTER_NO_MAIN
 #include <exotic/cester.h>
 

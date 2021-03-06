@@ -162,51 +162,51 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
         float final[3][1] = {{0}};
         matrixMultiplication(3, 3, 3, 1, T3, pos, final);
         // store resulting position in BoxCollider object so it can be accessed later
-        collisionBody->BoxColliders[i]->xAbsPos = final[0][0];
-        collisionBody->BoxColliders[i]->yAbsPos = final[1][0];
-        collisionBody->BoxColliders[i]->zAbsPos = final[2][0];
+        collisionBody->BoxColliders[i]->xFinalPos = final[0][0];
+        collisionBody->BoxColliders[i]->yFinalPos = final[1][0];
+        collisionBody->BoxColliders[i]->zFinalPos = final[2][0];
         // do trig to find out new extents
         // allocate second position vector of collider
-        float len[3][1] = {{collisionBody->BoxColliders[i]->xAbsPos + collisionBody->BoxColliders[i]->xLen}, {collisionBody->BoxColliders[i]->yAbsPos +collisionBody->BoxColliders[i]->yLen}, {collisionBody->BoxColliders[i]->zAbsPos +collisionBody->BoxColliders[i]->zLen}};
+        float len[3][1] = {{collisionBody->BoxColliders[i]->xFinalPos + collisionBody->BoxColliders[i]->xLen}, {collisionBody->BoxColliders[i]->yFinalPos +collisionBody->BoxColliders[i]->yLen}, {collisionBody->BoxColliders[i]->zFinalPos +collisionBody->BoxColliders[i]->zLen}};
         // apply transformation matrix to position vector
         float finalLen[3][1] = {{0}};
         matrixMultiplication(3, 3, 3, 1, T3, len, finalLen);
         // convert back from point to an extension of position
-        collisionBody->BoxColliders[i]->xAbsLen = finalLen[0][0] - collisionBody->BoxColliders[i]->xAbsPos;
-        collisionBody->BoxColliders[i]->yAbsLen = finalLen[1][0] - collisionBody->BoxColliders[i]->yAbsPos;
-        collisionBody->BoxColliders[i]->zAbsLen = finalLen[2][0] - collisionBody->BoxColliders[i]->zAbsPos;
+        collisionBody->BoxColliders[i]->xFinalLen = finalLen[0][0] - collisionBody->BoxColliders[i]->xFinalPos;
+        collisionBody->BoxColliders[i]->yFinalLen = finalLen[1][0] - collisionBody->BoxColliders[i]->yFinalPos;
+        collisionBody->BoxColliders[i]->zFinalLen = finalLen[2][0] - collisionBody->BoxColliders[i]->zFinalPos;
 
         // check for new min/max points
         if(!varInit){
-            if(collisionBody->BoxColliders[0]->xAbsLen > 0){
-                greatestX = collisionBody->BoxColliders[0]->xAbsPos + collisionBody->BoxColliders[0]->xAbsLen;
-                lowestX = collisionBody->BoxColliders[0]->xAbsPos;
+            if(collisionBody->BoxColliders[0]->xFinalLen > 0){
+                greatestX = collisionBody->BoxColliders[0]->xFinalPos + collisionBody->BoxColliders[0]->xFinalLen;
+                lowestX = collisionBody->BoxColliders[0]->xFinalPos;
             }
             else{
-                greatestX = collisionBody->BoxColliders[0]->xAbsPos;
-                lowestX = collisionBody->BoxColliders[0]->xAbsPos + collisionBody->BoxColliders[0]->xAbsLen;
+                greatestX = collisionBody->BoxColliders[0]->xFinalPos;
+                lowestX = collisionBody->BoxColliders[0]->xFinalPos + collisionBody->BoxColliders[0]->xFinalLen;
             }
-            if(collisionBody->BoxColliders[0]->yAbsLen > 0){
-                greatestY = collisionBody->BoxColliders[0]->yAbsPos + collisionBody->BoxColliders[0]->yAbsLen;
-                lowestY = collisionBody->BoxColliders[0]->yAbsPos;
-            }
-            else{
-                greatestY = collisionBody->BoxColliders[0]->yAbsPos;
-                lowestY = collisionBody->BoxColliders[0]->yAbsPos + collisionBody->BoxColliders[0]->yAbsLen;
-            }
-            if(collisionBody->BoxColliders[0]->zAbsLen > 0){
-                greatestZ = collisionBody->BoxColliders[0]->zAbsPos + collisionBody->BoxColliders[0]->zAbsLen;
-                lowestZ = collisionBody->BoxColliders[0]->zAbsPos;
+            if(collisionBody->BoxColliders[0]->yFinalLen > 0){
+                greatestY = collisionBody->BoxColliders[0]->yFinalPos + collisionBody->BoxColliders[0]->yFinalLen;
+                lowestY = collisionBody->BoxColliders[0]->yFinalPos;
             }
             else{
-                greatestZ = collisionBody->BoxColliders[0]->zAbsPos;
-                lowestZ = collisionBody->BoxColliders[0]->zAbsPos + collisionBody->BoxColliders[0]->zAbsLen;
+                greatestY = collisionBody->BoxColliders[0]->yFinalPos;
+                lowestY = collisionBody->BoxColliders[0]->yFinalPos + collisionBody->BoxColliders[0]->yFinalLen;
+            }
+            if(collisionBody->BoxColliders[0]->zFinalLen > 0){
+                greatestZ = collisionBody->BoxColliders[0]->zFinalPos + collisionBody->BoxColliders[0]->zFinalLen;
+                lowestZ = collisionBody->BoxColliders[0]->zFinalPos;
+            }
+            else{
+                greatestZ = collisionBody->BoxColliders[0]->zFinalPos;
+                lowestZ = collisionBody->BoxColliders[0]->zFinalPos + collisionBody->BoxColliders[0]->zFinalLen;
             }
             varInit = true;
         }
-        testPointMinMax(collisionBody->BoxColliders[i]->xAbsPos, collisionBody->BoxColliders[i]->xAbsLen, &lowestX, &greatestX);
-        testPointMinMax(collisionBody->BoxColliders[i]->yAbsPos, collisionBody->BoxColliders[i]->yAbsLen, &lowestY, &greatestY);
-        testPointMinMax(collisionBody->BoxColliders[i]->zAbsPos, collisionBody->BoxColliders[i]->zAbsLen, &lowestZ, &greatestZ);
+        testPointMinMax(collisionBody->BoxColliders[i]->xFinalPos, collisionBody->BoxColliders[i]->xFinalLen, &lowestX, &greatestX);
+        testPointMinMax(collisionBody->BoxColliders[i]->yFinalPos, collisionBody->BoxColliders[i]->yFinalLen, &lowestY, &greatestY);
+        testPointMinMax(collisionBody->BoxColliders[i]->zFinalPos, collisionBody->BoxColliders[i]->zFinalLen, &lowestZ, &greatestZ);
     }
 
     // get all SphereCollider min/max vertices
@@ -217,28 +217,28 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
         float final[3][1] = {{0}, {0}, {0}};
         matrixMultiplication(3, 3, 3, 1, T1, pos, final);
         // store resulting position in SphereCollider to be accessed later
-        collisionBody->SphereColliders[i]->xAbsPos = final[0][0];
-        collisionBody->SphereColliders[i]->yAbsPos = final[1][0];
-        collisionBody->SphereColliders[i]->zAbsPos = final[2][0];
+        collisionBody->SphereColliders[i]->xFinalPos = final[0][0];
+        collisionBody->SphereColliders[i]->yFinalPos = final[1][0];
+        collisionBody->SphereColliders[i]->zFinalPos = final[2][0];
 
         if(!varInit){
-            greatestX = collisionBody->SphereColliders[i]->xAbsPos + collisionBody->SphereColliders[i]->radius;
-            lowestX = collisionBody->SphereColliders[i]->xAbsPos - collisionBody->SphereColliders[i]->radius;
-            greatestY = collisionBody->SphereColliders[i]->yAbsPos + collisionBody->SphereColliders[i]->radius;
-            lowestY = collisionBody->SphereColliders[i]->yAbsPos - collisionBody->SphereColliders[i]->radius;
-            greatestZ = collisionBody->SphereColliders[i]->zAbsPos + collisionBody->SphereColliders[i]->radius;
-            lowestZ = collisionBody->SphereColliders[i]->zAbsPos - collisionBody->SphereColliders[i]->radius;
+            greatestX = collisionBody->SphereColliders[i]->xFinalPos + collisionBody->SphereColliders[i]->radius;
+            lowestX = collisionBody->SphereColliders[i]->xFinalPos - collisionBody->SphereColliders[i]->radius;
+            greatestY = collisionBody->SphereColliders[i]->yFinalPos + collisionBody->SphereColliders[i]->radius;
+            lowestY = collisionBody->SphereColliders[i]->yFinalPos - collisionBody->SphereColliders[i]->radius;
+            greatestZ = collisionBody->SphereColliders[i]->zFinalPos + collisionBody->SphereColliders[i]->radius;
+            lowestZ = collisionBody->SphereColliders[i]->zFinalPos - collisionBody->SphereColliders[i]->radius;
 
             varInit = true;
         }
         // check for new min/max points
-        testPointMinMax(collisionBody->SphereColliders[i]->xAbsPos, collisionBody->SphereColliders[i]->radius, &lowestX, &greatestX);
+        testPointMinMax(collisionBody->SphereColliders[i]->xFinalPos, collisionBody->SphereColliders[i]->radius, &lowestX, &greatestX);
         // "len" extends in both directions from position
-        testPointMinMax(collisionBody->SphereColliders[i]->xAbsPos, -1.f*collisionBody->SphereColliders[i]->radius, &lowestX, &greatestX);
-        testPointMinMax(collisionBody->SphereColliders[i]->yAbsPos, collisionBody->SphereColliders[i]->radius, &lowestY, &greatestY);
-        testPointMinMax(collisionBody->SphereColliders[i]->yAbsPos, -1.f*collisionBody->SphereColliders[i]->radius, &lowestY, &greatestY);
-        testPointMinMax(collisionBody->SphereColliders[i]->zAbsPos, collisionBody->SphereColliders[i]->radius, &lowestZ, &greatestZ);
-        testPointMinMax(collisionBody->SphereColliders[i]->zAbsPos, -1.f*collisionBody->SphereColliders[i]->radius, &lowestZ, &greatestZ);
+        testPointMinMax(collisionBody->SphereColliders[i]->xFinalPos, -1.f*collisionBody->SphereColliders[i]->radius, &lowestX, &greatestX);
+        testPointMinMax(collisionBody->SphereColliders[i]->yFinalPos, collisionBody->SphereColliders[i]->radius, &lowestY, &greatestY);
+        testPointMinMax(collisionBody->SphereColliders[i]->yFinalPos, -1.f*collisionBody->SphereColliders[i]->radius, &lowestY, &greatestY);
+        testPointMinMax(collisionBody->SphereColliders[i]->zFinalPos, collisionBody->SphereColliders[i]->radius, &lowestZ, &greatestZ);
+        testPointMinMax(collisionBody->SphereColliders[i]->zFinalPos, -1.f*collisionBody->SphereColliders[i]->radius, &lowestZ, &greatestZ);
     }
 
     // got dimensions for box, assign to CollisionBody

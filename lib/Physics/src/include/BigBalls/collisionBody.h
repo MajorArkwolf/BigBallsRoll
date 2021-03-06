@@ -1,5 +1,4 @@
 #pragma once
-
 #include <stdlib.h>
 #include "boxCollider.h"
 #include "sphereCollider.h"
@@ -22,7 +21,16 @@ typedef struct CollisionBody{
     float xVel; // current velocity of CollisionBody (as a vector)
     float yVel;
     float zVel;
+    float forceX; // force vector TODO: implement with Vec3 struct
+    float forceY;
+    float forceZ;
     float mass; // physical mass of CollisionBody
+    float AABBx1; // two coordinates required for AABB
+    float AABBy1;
+    float AABBz1;
+    float AABBx2;
+    float AABBy2;
+    float AABBz2;
 } CollisionBody;
 
 /**
@@ -38,6 +46,7 @@ void CollisionBody_init(CollisionBody *collisionBody);
 void CollisionBody_free(CollisionBody *collisionBody);
 
 /**
+ * Adds a BoxCollider to a CollisionBody
  * A heap array was chosen for its ability to be resized, at the cost of performance when being resized (when colliders are added or destroyed).
  * As object creation/destruction are not speed-critical operations in our project this tradeoff seems acceptable
  * (the alternative being two static arrays per CollisionBody (for each type) which seemed a bit excessive)
@@ -86,3 +95,62 @@ void CollisionBody_rotate(CollisionBody *collisionBody,
  * (scale factor of 1 would have no change, 0.5 would be half size, 2 would be double size)
  */
 void CollisionBody_scale(CollisionBody *collisionBody, float scaleFactor);
+
+/**
+ * Stops a CollisionBody from being considered by collision detection, and stops all forces from moving it (including gravity)
+ * Maintains the current velocity of the object
+ * @param collisionBody The CollisionBody to put to sleep
+ * TODO: implement
+ */
+void CollisionBody_sleep(CollisionBody *collisionBody);
+
+/**
+ * Allows forces to act on a CollisionBody and for the body to be involved in collisions after being in a sleep state
+ * @param collisionBody The CollisionBody to stop sleeping
+ */
+void CollisionBody_awake(CollisionBody *collisionBody);
+
+/**
+ * Stops movement and removes forces from CollisionBody
+ * @param collisionBody The CollisionBody to be stopped
+ */
+void CollisionBody_stop(CollisionBody *collisionBody);
+
+/**
+ * Updates the AABB of the CollisionBody
+ * @param collisionBody the CollisionBody that should have its AABB updated
+ */
+void CollisionBody_updateAABB(CollisionBody *collisionBody);
+
+// TODO: Stub
+/**
+ * Updates the OOBB of the CollisionBody
+ * @param collisionBody The CollisionBody that should have its OOBB updated
+ */
+void CollisionBody_updateOOBB(CollisionBody *collisionBody);
+
+/**
+ * Sets the position of the CollisionBody
+ * This moves all colliders relative to this point
+ * @param collisionBody The CollisionBody that should have its position set
+ * @param x The x parameter of the destination coordinate
+ * @param y The y parameter of the destination coordinate
+ * @param z The z parameter of the destination coordinate
+ */
+void CollisionBody_setPos(CollisionBody *collisionBody,
+                            float x,
+                            float y,
+                            float z);
+
+/**
+ * Sets the rotation of the CollisionBody
+ * This rotates all colliders relative to this rotation
+ * @param collisionBody The CollisionBody that should have its rotation set
+ * @param x The x parameter of the target rotation
+ * @param y The y parameter of the target rotation
+ * @param z The z parameter of the target rotation
+ */
+void CollisionBody_setRot(CollisionBody *collisionBody,
+                            float x,
+                            float y,
+                            float z);

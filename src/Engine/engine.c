@@ -51,9 +51,9 @@ void changeSize(int w, int h) {
 
 /**
  * Callback function for glut update.
- * @param vlaue
+ * @param value
  */
-void Update(int vlaue) {
+void Update(int value) {
     // Timer to start update function again based on frame rate.
     glutTimerFunc(FRAMERATE_MILLIS, Update, 0);
     int oldTime = engine.timeSinceStart;
@@ -178,6 +178,7 @@ int Engine_run(int argc, char *argv[]) {
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+    PhysicsEngine_init(&engine.physicsEngine);
 	
 	//Initialise LUA state
     engine.lua = luaL_newstate();

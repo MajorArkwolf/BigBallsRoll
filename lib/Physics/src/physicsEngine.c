@@ -1,24 +1,36 @@
-#include "include/BigBalls/physicsEngine.h"
-
 #include <stdlib.h>
 #include <assert.h>
-#include "include/BigBalls/collisionBodyManager.h"
+#include <stdio.h>
+#include "include/BigBalls/physicsEngine.h"
 
-void physicsWorldInit(PhysicsEngine *physicsEngine){
-    assert(physicsEngine != NULL);
-    // init collision body manager
-    physicsEngine->collisionBodyManager = NULL;
+void PhysicsEngine_init(PhysicsEngine *physicsEngine) {
+    assert(physicsEngine != NULL && physicsEngine->physicsWorld == NULL); // would cause leaks if PhysicsWorld is not NULL
+    physicsEngine->physicsWorld = calloc(1, sizeof(PhysicsWorld**));
+    physicsEngine->numOfPhysicsWorlds = 0;
 }
 
-int createCollisionBody(PhysicsEngine *physicsEngine){
+void PhysicsEngine_free(PhysicsEngine *physicsEngine) {
     assert(physicsEngine != NULL);
-    // Allocate memory for collisionbody
-    // Add memory to collision body manager and get ID from manager
-    return 0; // stub
+    for (size_t i = 0; i < physicsEngine->numOfPhysicsWorlds; ++i) {
+        if (physicsEngine->physicsWorld != NULL) {
+            PhysicsWorld_free(physicsEngine->physicsWorld[i]);
+        }
+    }
+    free(physicsEngine->physicsWorld);
+    physicsEngine->numOfPhysicsWorlds = 0;
 }
 
-bool destroyCollisionBody(PhysicsEngine *physicsEngine,
-                          int id){
+PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine) {
     assert(physicsEngine != NULL);
-    return true; // stub
+    if(physicsEngine->numOfPhysicsWorlds == 0){
+        physicsEngine->physicsWorld[0] = calloc(1, sizeof(PhysicsWorld));
+    }
+    else{
+        physicsEngine->physicsWorld = realloc(physicsEngine->physicsWorld, sizeof(PhysicsWorld) * physicsEngine->numOfPhysicsWorlds);
+    }
+    //initialise new Physics World
+    PhysicsWorld_init(physicsEngine->physicsWorld[physicsEngine->numOfPhysicsWorlds]);
+    assert(physicsEngine->physicsWorld != NULL);
+    ++physicsEngine->numOfPhysicsWorlds;
+    return physicsEngine->physicsWorld[physicsEngine->numOfPhysicsWorlds - 1];
 }

@@ -80,4 +80,10 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 */
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
+/**
+ * Checks if the two axis-aligned bounding boxes of two CollisionBodies are colliding
+ * @param a the first CollisionBody
+ * @param b the second CollisionBody
+ * @return bool determination of collision (true = colliding)
+ */
 bool testAABBCollision(CollisionBody *a, CollisionBody *b);

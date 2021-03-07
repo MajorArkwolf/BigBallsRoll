@@ -87,10 +87,8 @@ int Game_keyUp(InputType inputType) {
 }
 
 int Game_mouseMovement(double x, double y) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {
-        //Camera_mouseLook(cam, x, y);
         mouse[0] = x;
         mouse[1] = y;
     }

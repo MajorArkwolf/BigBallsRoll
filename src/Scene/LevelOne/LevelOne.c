@@ -1,6 +1,7 @@
 #include "LevelOne.h"
 #include <stdlib.h>
 #include <Engine/engine.h>
+#include "../src/Engine/Physics/physicsInterface.h"
 
 int LevelOne_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
@@ -17,15 +18,7 @@ int LevelOne_update(float deltaTime) {
         GameObject_update(&gameObjects[i]);
     }
     // TODO: physics debug renderer
-    //(if debug){
-        //...
-        //for(AABB in AABBS)
-            //glColor3f(0,1,0);
-            //glBegin(GL_POLYGON);
-            //for(vertex in AABB)
-                //glVertex3f;
-            //glEnd;
-    //}
+    PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
     return 0;
 }
 
@@ -48,6 +41,8 @@ int LevelOne_keyDown(InputType inputType) {
         case KEY_D:
             cam->MoveRight = true;
             break;
+        case KEY_T:
+            PhysicsWorld_debugToggle(StateManager_top(&engine.sM)->physicsWorld);
         default:
             break;
     }
@@ -128,8 +123,9 @@ void LevelOne_init(State *state) {
     CollisionBody_setRot(wallCollisionBody, 0.f, 90.f, 0.f);
     PhysicsWorld_addCollisionBody(state->physicsWorld, wallCollisionBody);
 
+
     // add ball at rotation destination
-    GameObject_init(&state->gameObjects[1]);
+    /*GameObject_init(&state->gameObjects[1]);
     state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
     state->gameObjects[1].Transform.Position.Z = -10.f;
     ++state->NumOfGameObjects;
@@ -164,5 +160,5 @@ void LevelOne_init(State *state) {
     CollisionBody_addBoxCollider(boxCollisionBody, boxCollider);
 
     CollisionBody_setPos(boxCollisionBody, 0, 0, 5.f);
-    PhysicsWorld_addCollisionBody(state->physicsWorld, boxCollisionBody);
+    PhysicsWorld_addCollisionBody(state->physicsWorld, boxCollisionBody);*/
 }

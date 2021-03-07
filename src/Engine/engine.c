@@ -8,6 +8,7 @@
 #include "Helper/stringPath.h"
 #include "Engine/luaHelper.h"
 #include "Scene/MainMenu/mainMenu.h"
+#include "Physics/physicsInterface.h"
 
 Engine engine;
 
@@ -141,6 +142,8 @@ int Engine_run(int argc, char *argv[]) {
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
     PhysicsEngine_init(&engine.physicsEngine);
+    //For testing atm
+    PhysicsInterface_init();
 	
 	//Initialise LUA state
     engine.lua = luaL_newstate();

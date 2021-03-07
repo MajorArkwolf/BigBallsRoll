@@ -1,5 +1,6 @@
 #include "include/BigBalls/physicsDebug.h"
 #include <assert.h>
+#include <stdio.h>
 
 void PhysicsDebug_dataInit(DebugData *debug) {
     assert(debug != NULL);
@@ -82,5 +83,6 @@ void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd, c
 
     for (size_t i = 0; i < faceOrderSize; ++i) {
         DynamicArray_pushBackSizeT(dd->faceIndexes, beforeMaxLengthVert + faceOrder[i] * 3);
+     //   printf("%zu\n", beforeMaxLengthVert + faceOrder[i] * 3);
     }
 }

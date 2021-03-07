@@ -1,5 +1,6 @@
 #pragma once
 #include "collisionBody.h"
+#include "mathsCommon.h"
 #include "physicsDebug.h"
 
 //TODO: Temp until vec3 is apart of external library
@@ -104,3 +105,11 @@ bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug);
  * @param physicsWorld the physics world to toggle debug
  */
 void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld);
+
+/**
+ * Checks if the two axis-aligned bounding boxes of two CollisionBodies are colliding
+ * @param a the first CollisionBody
+ * @param b the second CollisionBody
+ * @return bool determination of collision (true = colliding)
+ */
+bool testAABBCollision(CollisionBody *a, CollisionBody *b);

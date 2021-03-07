@@ -21,10 +21,9 @@ typedef struct CollisionBody{
     float xVel; // current velocity of CollisionBody (as a vector)
     float yVel;
     float zVel;
-    float force; // force in Netwons currently applied to CollisionBody
-    float forceDirX; // force direction vector
-    float forceDirY;
-    float forceDirZ;
+    float forceX; // force vector TODO: implement with Vec3 struct
+    float forceY;
+    float forceZ;
     float mass; // physical mass of CollisionBody
     float AABBx1; // two coordinates required for AABB
     float AABBy1;

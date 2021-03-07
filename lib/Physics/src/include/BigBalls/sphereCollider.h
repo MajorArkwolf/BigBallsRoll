@@ -5,9 +5,9 @@ typedef struct SphereCollider{
     float xOffset;
     float yOffset;
     float zOffset;
-    float xAbsPos; // absolute position of SphereCollider (after CollisionBody rotation)
-    float yAbsPos;
-    float zAbsPos;
+    float xFinalPos; // absolute position of SphereCollider (after CollisionBody rotation)
+    float yFinalPos;
+    float zFinalPos;
     float radius;
 } SphereCollider;
 

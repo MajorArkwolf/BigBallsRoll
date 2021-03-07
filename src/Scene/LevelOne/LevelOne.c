@@ -17,8 +17,6 @@ int LevelOne_update(float deltaTime) {
     for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
         GameObject_update(&gameObjects[i]);
     }
-    // TODO: physics debug renderer
-    PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
     return 0;
 }
 

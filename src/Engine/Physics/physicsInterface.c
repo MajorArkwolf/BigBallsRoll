@@ -56,7 +56,7 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
 //        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 //    }
 
-    if(PhysicsWorld_draw(physicsWorld, &dd)) {
+    if(physicsWorld != NULL && PhysicsWorld_draw(physicsWorld, &dd)) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glBegin(GL_TRIANGLES);
 

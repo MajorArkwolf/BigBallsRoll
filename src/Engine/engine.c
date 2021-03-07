@@ -72,6 +72,7 @@ void Draw(void) {
     glLoadIdentity();
     Camera_lookAt(cam);
     StateManager_draw(&engine.sM, 0.0f);
+    PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
     glfwSwapBuffers(engine.window);
 }
 

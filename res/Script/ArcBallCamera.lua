@@ -17,16 +17,16 @@ end
 function ArcBallCamera:Update(deltaTime, trackingID)
     self.rotationAround = self.rotationAround + (MouseDeltaX * deltaTime)
     self.radius = self.radius + (MouseDeltaY * deltaTime * -1)
-    --self.pitch = self.pitch + (MouseDeltaY * deltaTime * -1)
-    trackingPosition = GameObjectGetPosition(trackingID)
-    trackingRotation = GameObjectGetRotation(trackingID)
-    theta = trackingRotation[2] + self.rotationAround
-    horizontalDistance = CalculateHorizontalDistance(self.radius, self.pitch)
-    offsetX = horizontalDistance * math.sin(math.rad(theta))
-    offsetZ = horizontalDistance * math.cos(math.rad(theta))
-    xFinalPosition = trackingPosition[1] - offsetX
-    zFinalPosition = trackingPosition[3] - offsetZ
-    CameraSetPosition(xFinalPosition, CalculateVerticalDistance(self.radius, 20), zFinalPosition)
+    local trackingPosition = GameObjectGetPosition(trackingID)
+    local trackingRotation = GameObjectGetRotation(trackingID)
+    local theta = trackingRotation[2] + self.rotationAround
+    local horizontalDistance = CalculateHorizontalDistance(self.radius, self.pitch)
+    local offsetX = horizontalDistance * math.sin(math.rad(theta))
+    local offsetZ = horizontalDistance * math.cos(math.rad(theta))
+    local xFinalPosition = trackingPosition[1] - offsetX
+    local yFinalPosition = trackingPosition[2] + CalculateVerticalDistance(self.radius, 20)
+    local zFinalPosition = trackingPosition[3] - offsetZ
+    CameraSetPosition(xFinalPosition, yFinalPosition, zFinalPosition)
     CameraSetPitch(self.pitch)
     CameraSetYaw(90  - theta)
     CameraUpdateView()

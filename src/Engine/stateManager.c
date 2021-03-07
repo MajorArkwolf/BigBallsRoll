@@ -105,4 +105,5 @@ void State_init(State *state) {
     state->keyUp = NULL;
     state->mouseMovement = NULL;
     state->camera = Camera_construct();
+    state->physicsWorld = NULL;
 }

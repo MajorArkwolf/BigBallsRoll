@@ -1,7 +1,7 @@
 #include "LevelOne.h"
 #include <stdlib.h>
 #include <Engine/engine.h>
-#include "../src/Engine/Physics/physicsInterface.h"
+
 
 int LevelOne_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
@@ -17,8 +17,6 @@ int LevelOne_update(float deltaTime) {
     for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
         GameObject_update(&gameObjects[i]);
     }
-    // TODO: physics debug renderer
-    PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
     return 0;
 }
 

@@ -165,8 +165,8 @@ bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug) {
         for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
             PhysicsDebug_generateAABBBox(physicsWorld->collisionBodies[i], debug, faceOrder, 36);
         }
-        debug->numVertices = debug->vertices->used;
-        debug->numFaces = debug->faceIndexes->used;
+        debug->numVertices = debug->vertices->size;
+        debug->numFaces = debug->faceIndexes->size;
         return true;
     }
     return false;

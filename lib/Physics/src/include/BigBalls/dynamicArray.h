@@ -2,20 +2,20 @@
 #include "stdlib.h"
 
 #define SCALE_FACTOR 2
-#define INITIAL_SIZE 16
+#define INITIAL_CAPACITY 16
 
 // Float Array Object
 typedef struct {
     float *array;
-    size_t used; // The elements that are 'used', use this as the current max size, for loops or inserting, etc...
-    size_t size; // The size of the array, not needed except for tracking if resize is needed
+    size_t size; // The size of the array
+    size_t capacity; // The capacity of the array, not needed except for tracking if resize is needed
 } FloatArray;
 
 // SizeTArray Object
 typedef struct {
     size_t *array;
-    size_t used; // The elements that are 'used', use this as the current max size, for loops or inserting, etc...
-    size_t size; // The size of the array, not needed except for tracking if resize is needed
+    size_t size; // The size of the array
+    size_t capacity; // The capacity of the array, not needed except for tracking if resize is needed
 } SizeTArray;
 
 /**
@@ -32,7 +32,7 @@ void DynamicArray_initSizeT(SizeTArray *obj);
 
 /**
  * Pushes a float variable to the back of the Array. If the array is full the array
- * is resized to SCALE_FACTOR its current size using realloc.
+ * is resized to SCALE_FACTOR its current capacity using realloc.
  * @param obj the obj to place the float variable in
  * @param var the float variable to place in the array
  */
@@ -40,14 +40,14 @@ void DynamicArray_pushBackFloat(FloatArray *obj, float var);
 
 /**
  * Pushes a size_t variable to the back of the Array. If the array is full the array
- * is resized to SCALE_FACTOR its current size using realloc.
+ * is resized to SCALE_FACTOR its current capacity using realloc.
  * @param obj the obj to place the size_t variable in
  * @param var the float variable to place in the array
  */
 void DynamicArray_pushBackSizeT(SizeTArray *obj, size_t var);
 
 /**
- * Inserts a float into the float array. Can only insert up to the used value in the array, to ensure
+ * Inserts a float into the float array. Can only insert up to the size of the array, to ensure
  * the var isn't overwritten by the pushback function later.
  * @param obj the obj to insert into
  * @param index the index of the array to insert the var
@@ -56,7 +56,7 @@ void DynamicArray_pushBackSizeT(SizeTArray *obj, size_t var);
 void DynamicArray_insertFloat(FloatArray *obj, size_t index, float var);
 
 /**
- * Inserts a size_t into the size_t array. Can only insert up to the used value in the array, to ensure
+ * Inserts a size_t into the size_t array. Can only insert up to the size of the array, to ensure
  * the var isn't overwritten by the pushback function later.
  * @param obj the obj to insert into
  * @param index the index of the array to insert the var

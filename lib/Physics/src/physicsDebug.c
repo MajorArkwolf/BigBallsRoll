@@ -35,7 +35,7 @@ void PhysicsDebug_dataFree(DebugData *debug) {
 void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd, const size_t *faceOrder, size_t faceOrderSize) {
     assert(collisionBody != NULL && dd != NULL && faceOrder != NULL);
 
-    size_t beforeMaxLengthVert = dd->vertices->used;
+    size_t beforeMaxLengthVert = dd->vertices->size;
 
     //0 (vertex order)
     DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);

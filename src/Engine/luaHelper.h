@@ -62,3 +62,5 @@ int LuaHelper_setCameraYaw(lua_State *L);
 int LuaHelper_setCameraPitch(lua_State *L);
 
 int LuaHelper_CameraUpdateView(lua_State *L);
+
+int LuaHelper_CameraLookAt(lua_State *L);

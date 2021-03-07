@@ -3,6 +3,8 @@
 #include "Engine/luaHelper.h"
 #include <assert.h>
 
+double mouse[2];
+
 int Game_draw(float deltaTime) {
     lua_getglobal(engine.lua, "Draw");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
@@ -18,10 +20,16 @@ int Game_update(float deltaTime) {
     lua_pushnumber(engine.lua, deltaTime);
     lua_setglobal(engine.lua, "deltaTime");
     lua_getglobal(engine.lua, "Update");
+    lua_pushnumber(engine.lua, mouse[0]);
+    lua_setglobal(engine.lua, "MouseDeltaX");
+    lua_pushnumber(engine.lua, mouse[1]);
+    lua_setglobal(engine.lua, "MouseDeltaY");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
+    mouse[0] = 0.0;
+    mouse[1] = 0.0;
     return 0;
 }
 
@@ -81,7 +89,9 @@ int Game_mouseMovement(double x, double y) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {
-        Camera_mouseLook(cam, x, y);
+        //Camera_mouseLook(cam, x, y);
+        mouse[0] = x;
+        mouse[1] = y;
     }
     return 0;
 }
@@ -94,6 +104,8 @@ void Game_init(State *state) {
     state->keyUp = Game_keyUp;
     state->mouseMovement = Game_mouseMovement;
     char file[] = "game.lua";
+    mouse[0] = 0.0;
+    mouse[1] = 0.0;
     LuaHelper_loadScript(file);
     LuaHelper_init();
 }

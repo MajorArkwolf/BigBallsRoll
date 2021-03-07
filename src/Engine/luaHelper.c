@@ -28,6 +28,8 @@ void LuaHelper_init() {
     lua_setglobal(engine.lua, "CameraSetPitch");
     lua_pushcfunction(engine.lua, LuaHelper_CameraUpdateView);
     lua_setglobal(engine.lua, "CameraUpdateView");
+    lua_pushcfunction(engine.lua, LuaHelper_CameraLookAt);
+    lua_setglobal(engine.lua, "CameraLookAt");
 
 
     lua_pushnumber(engine.lua, engine.seed);
@@ -155,4 +157,13 @@ int LuaHelper_setCameraPitch(lua_State *L) {
 
 int LuaHelper_CameraUpdateView(lua_State *L) {
     Camera_updateCameraVectors(&StateManager_top(&engine.sM)->camera);
+    return 0;
+}
+
+int LuaHelper_CameraLookAt(lua_State *L) {
+    float X = lua_tonumber(L, 1);
+    float Y = lua_tonumber(L, 2);
+    float Z = lua_tonumber(L, 3);
+    Camera_lookAtObject(&StateManager_top(&engine.sM)->camera, X, Y, Z);
+    return 0;
 }

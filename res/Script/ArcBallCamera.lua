@@ -11,10 +11,13 @@ end
 function ArcBallCamera:Init(newRadius)
     self.radius = newRadius
     self.rotationAround = 0.0
-    self.pitch = -30
+    self.pitch = -20
 end
 
 function ArcBallCamera:Update(deltaTime, trackingID)
+    self.rotationAround = self.rotationAround + (MouseDeltaX * deltaTime)
+    self.radius = self.radius + (MouseDeltaY * deltaTime * -1)
+    --self.pitch = self.pitch + (MouseDeltaY * deltaTime * -1)
     trackingPosition = GameObjectGetPosition(trackingID)
     trackingRotation = GameObjectGetRotation(trackingID)
     theta = trackingRotation[2] + self.rotationAround
@@ -24,10 +27,9 @@ function ArcBallCamera:Update(deltaTime, trackingID)
     xFinalPosition = trackingPosition[1] - offsetX
     zFinalPosition = trackingPosition[3] - offsetZ
     CameraSetPosition(xFinalPosition, CalculateVerticalDistance(self.radius, 20), zFinalPosition)
-    CameraSetYaw(90  - theta)
     CameraSetPitch(self.pitch)
+    CameraSetYaw(90  - theta)
     CameraUpdateView()
-
 end
 
 return ArcBallCamera

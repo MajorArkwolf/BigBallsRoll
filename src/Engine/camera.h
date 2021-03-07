@@ -58,3 +58,5 @@ void Camera_lookAt(Camera *cam);
  * @param dt delta time since last update
  */
 void Camera_update(Camera * cam, float dt);
+
+void Camera_lookAtObject(Camera *cam, float x, float y, float z) ;

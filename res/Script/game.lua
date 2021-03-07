@@ -11,7 +11,6 @@ end
 
 function Update()
     camera:Update(deltaTime, player)
-    camera.rotationAround = camera.rotationAround + (10 * deltaTime)
 end
 
 function Draw()

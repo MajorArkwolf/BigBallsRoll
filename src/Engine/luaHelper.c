@@ -4,10 +4,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include "Scene/Game/game.h"
 #include "Engine/engine.h"
 
 void LuaHelper_init() {
     //Register functions for lua.
+
+    //Game Objects
     lua_pushcfunction(engine.lua, LuaHelper_addGameObject);
     lua_setglobal(engine.lua, "GameObjectRegister");
     lua_pushcfunction(engine.lua, LuaHelper_setPosition);
@@ -23,6 +26,8 @@ void LuaHelper_init() {
     lua_pushcfunction(engine.lua, LuaHelper_setCameraPosition);
     lua_setglobal(engine.lua, "CameraSetPosition");
     lua_pushcfunction(engine.lua, LuaHelper_setCameraYaw);
+
+    // Camera
     lua_setglobal(engine.lua, "CameraSetYaw");
     lua_pushcfunction(engine.lua, LuaHelper_setCameraPitch);
     lua_setglobal(engine.lua, "CameraSetPitch");
@@ -31,10 +36,13 @@ void LuaHelper_init() {
     lua_pushcfunction(engine.lua, LuaHelper_CameraLookAt);
     lua_setglobal(engine.lua, "CameraLookAt");
 
+    // Scene
+    lua_setglobal(engine.lua, "GameNextLevel");
+    lua_pushcfunction(engine.lua, LuaHelper_GameNextLevel);
+
 
     lua_pushnumber(engine.lua, engine.seed);
     lua_setglobal(engine.lua, "seed");
-
     lua_getglobal(engine.lua, "Init");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
@@ -165,5 +173,10 @@ int LuaHelper_CameraLookAt(lua_State *L) {
     float Y = lua_tonumber(L, 2);
     float Z = lua_tonumber(L, 3);
     Camera_lookAtObject(&StateManager_top(&engine.sM)->camera, X, Y, Z);
+    return 0;
+}
+
+int LuaHelper_GameNextLevel(lua_State *L) {
+    Game_NextLevel(StateManager_top(&engine.sM));
     return 0;
 }

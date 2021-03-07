@@ -15,8 +15,10 @@ function ArcBallCamera:Init(newRadius)
 end
 
 function ArcBallCamera:Update(deltaTime, trackingID)
-    self.rotationAround = self.rotationAround + (MouseDeltaX * deltaTime)
     self.radius = self.radius + (MouseDeltaY * deltaTime * -1)
+    if self.radius < 5 then
+        self.radius = 5
+    end
     local trackingPosition = GameObjectGetPosition(trackingID)
     local trackingRotation = GameObjectGetRotation(trackingID)
     local theta = trackingRotation[2] + self.rotationAround

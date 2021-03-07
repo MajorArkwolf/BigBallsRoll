@@ -108,3 +108,7 @@ void Game_init(State *state) {
     LuaHelper_loadScript(file);
     LuaHelper_init();
 }
+
+void Game_NextLevel(State *state) {
+    state->NumOfGameObjects = 0;
+}

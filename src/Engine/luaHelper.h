@@ -89,3 +89,10 @@ int LuaHelper_CameraUpdateView(lua_State *L);
  * @return how many parameters are returned
  */
 int LuaHelper_CameraLookAt(lua_State *L);
+
+/**
+ * Reset the game world so a new level can be loaded.
+ * @param L lua's state to get the information from LUA
+ * @return how many parameters are returned
+ */
+int LuaHelper_GameNextLevel(lua_State *L);

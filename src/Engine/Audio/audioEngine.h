@@ -8,6 +8,10 @@
 
 #define MAX_SOURCES 10000
 
+typedef struct AudioPresets {
+    double MasterVolume;
+} AudioPresets;
+
 typedef struct AudioEngine {
     ALCdevice *Device;
     ALCcontext *Context;
@@ -90,3 +94,9 @@ void AudioEngine_updateSource(ALuint id, Vec3 *position, Vec3 *velocity);
  * @param audioEngine AudioEngine to shutdown.
  */
 void AudioEngine_free(AudioEngine *audioEngine);
+
+/**
+ * Initialises the audio presets such as volume
+ * @param ap structure to initialise
+ */
+void AudioEngine_AudioPresets_init(AudioPresets *ap);

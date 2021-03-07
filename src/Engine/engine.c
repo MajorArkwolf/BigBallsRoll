@@ -145,6 +145,9 @@ int Engine_run(int argc, char *argv[]) {
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
 
+    // Init here to avoid config values being overwritten.
+    AudioEngine_AudioPresets_init(&engine.audioPresets);
+
     //Initialise our Services
     TextureManager_init(&engine.textureManager);
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
@@ -284,6 +287,11 @@ void Engine_loadConfig() {
     lua_getglobal(engine.lua, "seed");
     if (lua_isnumber(engine.lua, 0) == 0) {
         engine.seed = lua_tonumber(engine.lua, -1);
+    }
+    //Get master volume
+    lua_getglobal(engine.lua, "master_volume");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.audioPresets.MasterVolume = lua_tonumber(engine.lua, -1);
     }
 }
 

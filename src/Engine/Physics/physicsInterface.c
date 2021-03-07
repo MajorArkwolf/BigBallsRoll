@@ -45,17 +45,6 @@ void txt() {
 }
 
 void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
-//    if (render == true && debuginfo != NULL) {
-//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//        glBegin(GL_TRIANGLES);
-//        for (size_t i = 0; i < totalSize; i += 3) {
-//            glColor3f(color.x, color.y, color.z);
-//            glVertex3f(vertix[face.x], vertix[face.y], vertix[face.z])
-//        }
-//        glEnd();
-//        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-//    }
-
     if(physicsWorld != NULL && PhysicsWorld_draw(physicsWorld, &dd)) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glBegin(GL_TRIANGLES);
@@ -64,6 +53,9 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
             glColor3f(dd.colour[0], dd.colour[1], dd.colour[2]);
             glVertex3f(dd.vertices->array[dd.faceIndexes->array[i]], dd.vertices->array[dd.faceIndexes->array[i] + 1], dd.vertices->array[dd.faceIndexes->array[i] + 2]);
         }
+        glEnd();
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        txt();
     }
 }
 

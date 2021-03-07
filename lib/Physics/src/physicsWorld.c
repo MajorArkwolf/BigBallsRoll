@@ -121,8 +121,7 @@ bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug) {
         //Even get face order from? I doubt a collision body would store it. and is static bad idea?
         //New order (me)
         static size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
-        //OG order (me + peter)
-        //static size_t faceOrder[36] = {0,1,2,2,3,0,1,4,5,5,2,1,4,6,7,7,5,4,6,0,3,3,7,6,4,1,0,0,6,4,5,2,3,3,7,5};
+
         for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
             PhysicsDebug_generateAABBBox(physicsWorld->collisionBodies[i], debug, faceOrder, 36);
         }

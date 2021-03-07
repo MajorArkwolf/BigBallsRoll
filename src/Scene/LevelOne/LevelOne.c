@@ -1,11 +1,11 @@
 #include "LevelOne.h"
 #include <stdlib.h>
 #include <Engine/engine.h>
-#include "../src/Engine/Physics/physicsInterface.h"
+
 
 int LevelOne_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
-        //GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
+        GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
     }
     return 0;
 }

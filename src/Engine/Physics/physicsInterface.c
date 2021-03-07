@@ -60,18 +60,10 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glBegin(GL_TRIANGLES);
 
-        /*for (size_t i = 0; i < dd.numFaces; ++i) {
+        for (size_t i = 0; i < dd.numFaces; ++i) {
             glColor3f(dd.colour[0], dd.colour[1], dd.colour[2]);
             glVertex3f(dd.vertices->array[dd.faceIndexes->array[i]], dd.vertices->array[dd.faceIndexes->array[i] + 1], dd.vertices->array[dd.faceIndexes->array[i] + 2]);
-        }*/
-
-        glColor3f(255, 255, 0);
-        glVertex3f( 0.0f, 1.0f, 0.0f);		// Top
-        glVertex3f(-1.0f,-1.0f, 0.0f);		// Bottom Left
-        glVertex3f( 1.0f,-1.0f, 0.0f);
-        glEnd();
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        txt();
+        }
     }
 }
 

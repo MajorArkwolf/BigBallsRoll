@@ -77,8 +77,9 @@ int Game_keyUp(InputType inputType) {
         case KEY_D:
             cam->MoveRight = false;
             break;
-        case KEY_F2:
+        case KEY_ESC:
             StateManager_pop(&engine.sM);
+            break;
         default:
             break;
     }

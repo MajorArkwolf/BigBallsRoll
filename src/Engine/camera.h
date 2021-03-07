@@ -59,4 +59,11 @@ void Camera_lookAt(Camera *cam);
  */
 void Camera_update(Camera * cam, float dt);
 
+/**
+ * Updates the front vector.
+ * @param cam
+ * @param x objects x position
+ * @param y objects y position
+ * @param z objects z position
+ */
 void Camera_lookAtObject(Camera *cam, float x, float y, float z) ;

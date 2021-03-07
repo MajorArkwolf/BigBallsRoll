@@ -37,8 +37,15 @@ extern Engine engine;
  */
 int Engine_run(int argc, char *argv[]);
 
+/**
+ * Toggles the camera from the locked state.
+ */
 void Engine_toggleCameraLock();
 
+/**
+ * Locks the camera if the value passed in is true.
+ * @param lockCamera
+ */
 void Engine_cameraLock(bool lockCamera);
 
 /**

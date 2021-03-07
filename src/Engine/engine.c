@@ -90,13 +90,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (action == GLFW_PRESS) {
         StateManager_keyDown(&engine.sM, inputType);
     } else if (action == GLFW_RELEASE) {
-        if (inputType == KEY_F1) {
-            //Toggle the lock Camera.
-            Engine_toggleCameraLock();
-        }
-        if (inputType == KEY_ESC) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
-        }
         StateManager_keyUp(&engine.sM, inputType);
     }
 }

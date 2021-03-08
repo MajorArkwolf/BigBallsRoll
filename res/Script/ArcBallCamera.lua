@@ -21,13 +21,13 @@ function ArcBallCamera:Update(deltaTime, trackingID)
     end
     local trackingPosition = GameObjectGetPosition(trackingID)
     local trackingRotation = GameObjectGetRotation(trackingID)
-    local theta = trackingRotation[2] + self.rotationAround
+    local theta = trackingRotation.y + self.rotationAround
     local horizontalDistance = CalculateHorizontalDistance(self.radius, self.pitch)
     local offsetX = horizontalDistance * math.sin(math.rad(theta))
     local offsetZ = horizontalDistance * math.cos(math.rad(theta))
-    local xFinalPosition = trackingPosition[1] - offsetX
-    local yFinalPosition = trackingPosition[2] + CalculateVerticalDistance(self.radius, 20)
-    local zFinalPosition = trackingPosition[3] - offsetZ
+    local xFinalPosition = trackingPosition.x - offsetX
+    local yFinalPosition = trackingPosition.y + CalculateVerticalDistance(self.radius, 20)
+    local zFinalPosition = trackingPosition.z - offsetZ
     CameraSetPosition(xFinalPosition, yFinalPosition, zFinalPosition)
     CameraSetPitch(self.pitch)
     CameraSetYaw(90  - theta)

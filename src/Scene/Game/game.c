@@ -34,48 +34,61 @@ int Game_update(float deltaTime) {
 }
 
 int Game_keyDown(InputType inputType) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
-    switch (inputType) {
-        case KEY_UP_ARROW:
-        case KEY_W:
-            cam->MoveForward = true;
-            break;
-        case KEY_DOWN_ARROW:
-        case KEY_S:
-            cam->MoveBackward = true;
-            break;
-        case KEY_LEFT_ARROW:
-        case KEY_A:
-            cam->MoveLeft = true;
-            break;
-        case KEY_RIGHT_ARROW:
-        case KEY_D:
-            cam->MoveRight = true;
-            break;
-        default:
-            break;
+    lua_getglobal(engine.lua, "InputKeyboardDown");
+    lua_pushinteger(engine.lua, inputType);
+    if (lua_pcall(engine.lua, 1, 1, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
     }
+//    Camera *cam = &StateManager_top(&engine.sM)->camera;
+//    switch (inputType) {
+//        case KEY_UP_ARROW:
+//        case KEY_W:
+//            cam->MoveForward = true;
+//            break;
+//        case KEY_DOWN_ARROW:
+//        case KEY_S:
+//            cam->MoveBackward = true;
+//            break;
+//        case KEY_LEFT_ARROW:
+//        case KEY_A:
+//            cam->MoveLeft = true;
+//            break;
+//        case KEY_RIGHT_ARROW:
+//        case KEY_D:
+//            cam->MoveRight = true;
+//            break;
+//        default:
+//            break;
+//    }
     return 0;
 }
 
 int Game_keyUp(InputType inputType) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
+    //Camera *cam = &StateManager_top(&engine.sM)->camera;
+    lua_getglobal(engine.lua, "InputKeyboardUp");
+    lua_pushinteger(engine.lua, (int)inputType);
+    if (lua_pcall(engine.lua, 1, 1, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
     switch (inputType) {
-        case KEY_UP_ARROW:
-        case KEY_W:
-            cam->MoveForward = false;
-            break;
-        case KEY_DOWN_ARROW:
-        case KEY_S:
-            cam->MoveBackward = false;
-            break;
-        case KEY_LEFT_ARROW:
-        case KEY_A:
-            cam->MoveLeft = false;
-            break;
-        case KEY_RIGHT_ARROW:
-        case KEY_D:
-            cam->MoveRight = false;
+//        case KEY_UP_ARROW:
+//        case KEY_W:
+//            cam->MoveForward = false;
+//            break;
+//        case KEY_DOWN_ARROW:
+//        case KEY_S:
+//            cam->MoveBackward = false;
+//            break;
+//        case KEY_LEFT_ARROW:
+//        case KEY_A:
+//            cam->MoveLeft = false;
+//            break;
+//        case KEY_RIGHT_ARROW:
+//        case KEY_D:
+//            cam->MoveRight = false;
+//            break;
+        case KEY_F1:
+            Engine_toggleCameraLock();
             break;
         case KEY_ESC:
             StateManager_pop(&engine.sM);

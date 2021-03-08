@@ -96,3 +96,5 @@ int LuaHelper_CameraLookAt(lua_State *L);
  * @return how many parameters are returned
  */
 int LuaHelper_GameNextLevel(lua_State *L);
+
+int LuaHelper_NormaliseVec3(lua_State *L);

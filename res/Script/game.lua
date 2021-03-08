@@ -1,19 +1,19 @@
 
 function Init()
+    player = dofile("res/Script/Player.lua")
+    gen = dofile("res/Script/levelGenerator.lua")
     timer = 0
     -- 0 = not running, 1 = running, 2 = done
     generation_running = 0
     level = 1
-
-    gen = dofile("res/Script/levelGenerator.lua")
     gen:Init(seed)
     gen:Setup(50, 1, 50, 10)
     gen:RegisterGameObjects()
     local position = {}
-    position[1] = gen.startPoint[1] + 0.5
-    position[2] = gen.startPoint[2] + 1.5
-    position[3] = gen.startPoint[3] + 0.5
-    player = dofile("res/Script/Player.lua")
+    position.x = gen.startPoint[1] + 0.5
+    position.y = gen.startPoint[2] + 1.5
+    position.z = gen.startPoint[3] + 0.5
+
     player:Init(position)
 end
 
@@ -25,9 +25,9 @@ function NextLevel()
     GameNextLevel()
     gen:RegisterGameObjects()
     local position = {}
-    position[1] = gen.startPoint[1] + 0.5
-    position[2] = gen.startPoint[2] + 1.5
-    position[3] = gen.startPoint[3] + 0.5
+    position.x = gen.startPoint[1] + 0.5
+    position.y = gen.startPoint[2] + 1.5
+    position.z = gen.startPoint[3] + 0.5
     player:Init(position)
     level = level + 1
     end
@@ -51,7 +51,7 @@ function Update()
     GenerateNextLevel()
     player:Update(deltaTime)
     if timer > 5 then
-        NextLevel()
+        --NextLevel()
         timer = 0
     end
     timer = timer + deltaTime
@@ -59,4 +59,28 @@ end
 
 function Draw()
 
+end
+
+function InputKeyboardDown(input)
+    if input == 22 then
+        player.forward = true
+    elseif input == 18 then
+        player.backward = true
+    elseif input == 0 then
+        player.left = true
+    elseif input == 3 then
+        player.right = true
+    end
+end
+
+function InputKeyboardUp(input)
+    if input == 22 then
+        player.forward = false
+    elseif input == 18 then
+        player.backward = false
+    elseif input == 0 then
+        player.left = false
+    elseif input == 3 then
+        player.right = false
+    end
 end

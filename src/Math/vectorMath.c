@@ -26,10 +26,12 @@ Vec3 VectorMath_crossProductVec3ByVec3(Vec3 const *firstVec3, Vec3 const *second
 }
 
 Vec3 VectorMath_normaliseVec3(Vec3 const *vec3) {
-    Vec3 newVec;
-    float mag = sqrtf((vec3->X * vec3->X) + (vec3->Y * vec3->Y) + (vec3->Z * vec3->Z));
-    newVec.X = vec3->X / mag;
-    newVec.Y = vec3->Y / mag;
-    newVec.Z = vec3->Z / mag;
+    Vec3 newVec = Vec3_construct();
+    float mag = sqrtf(powf(vec3->X, 2.0f) + powf(vec3->Y, 2.0f) + powf(vec3->Z, 2.0f));
+    if (mag >= 0.0f) {
+        newVec.X = vec3->X / mag;
+        newVec.Y = vec3->Y / mag;
+        newVec.Z = vec3->Z / mag;
+    }
     return newVec;
 }

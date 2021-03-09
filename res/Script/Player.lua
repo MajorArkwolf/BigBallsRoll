@@ -46,14 +46,12 @@ end
 
 function Player:Update(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
-    print("First:", self.position.x, self.position.y, self.position.z)
     self.rotation = GameObjectGetRotation(self.gameObjectID)
     self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime)
     self:Move(deltaTime)
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
     self.camera:Update(deltaTime, self.gameObjectID)
-    print("Second: ",self.position.x, self.position.y, self.position.z)
 end
 
 return Player

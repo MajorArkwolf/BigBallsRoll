@@ -67,8 +67,8 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     assert(textureManager != NULL);
 
     const int DesiredChannels = 0;
-    char *fulldir = calloc(sizeof(char), (strlen(cwd) + 100));
-    char *imgdir = calloc(sizeof(char), (strlen(cwd) + 100));
+    char *fulldir = calloc((strlen(cwd) + 100), sizeof(char));
+    char *imgdir = calloc((strlen(cwd) + 100), sizeof(char));
 
     strcpy(fulldir, cwd);
     strcat(fulldir, RESOURCE_LOADER_FILE_LOCATION);
@@ -111,7 +111,7 @@ bool TextureManager_loadTexture(TextureManager *textureManager, char *cwd, char 
 
         const int NumOfTex = textureManager->NumOfTextures;
         const int DesiredChannels = 0;
-        char *imgdir = calloc(sizeof(char), (strlen(cwd) + 100));
+        char *imgdir = calloc((strlen(cwd) + 100), sizeof(char));
         strcpy(imgdir, cwd);
         strcat(imgdir, RESOURCE_FILE_LOCATION);
 

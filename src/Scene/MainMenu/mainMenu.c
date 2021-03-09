@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <Engine/engine.h>
 #include "Scene/Game/game.h"
+#include "Scene/LevelOne/LevelOne.h"
 #include "Engine/stateManager.h"
 
 int MainMenu_draw(float deltaTime) {
@@ -17,6 +18,7 @@ int MainMenu_update(float deltaTime) {
     for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
         GameObject_update(&gameObjects[i]);
     }
+    engine.lockCamera = false;
     return 0;
 }
 
@@ -71,13 +73,19 @@ int MainMenu_keyUp(InputType inputType) {
             StateManager_push(&engine.sM, state);
             Game_init(state);
             return 0;
+        case KEY_P:
+            state = calloc(1, sizeof(State));
+            State_init(state);
+            StateManager_push(&engine.sM, state);
+            LevelOne_init(state);
+            return 0;
         default:
             break;
     }
     return 0;
 }
 
-int MainMenu_mouseMovement(float x, float y) {
+int MainMenu_mouseMovement(double x, double y) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {

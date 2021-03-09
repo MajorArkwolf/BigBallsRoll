@@ -1,16 +1,11 @@
-#include "include/BigBalls/physicsEngine.h"
-
 #include <stdlib.h>
 #include <assert.h>
-#include "include/BigBalls/physicsWorld.h"
-
-//TODO: Arbitrary number, find out if its necessary to be dynamic
-#define PHYSICS_WORLD_MAX 15
+#include <stdio.h>
+#include "include/BigBalls/physicsEngine.h"
 
 void PhysicsEngine_init(PhysicsEngine *physicsEngine) {
-    //TODO: confirm this will work, dont want people calling this when PW is not null and causing leaks
-    assert(physicsEngine != NULL && physicsEngine->physicsWorld == NULL);
-    physicsEngine->physicsWorld = calloc(PHYSICS_WORLD_MAX, sizeof(PhysicsWorld));
+    assert(physicsEngine != NULL && physicsEngine->physicsWorld == NULL); // would cause leaks if PhysicsWorld is not NULL
+    physicsEngine->physicsWorld = calloc(1, sizeof(PhysicsWorld**));
     physicsEngine->numOfPhysicsWorlds = 0;
 }
 
@@ -27,6 +22,12 @@ void PhysicsEngine_free(PhysicsEngine *physicsEngine) {
 
 PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine) {
     assert(physicsEngine != NULL);
+    if(physicsEngine->numOfPhysicsWorlds == 0){
+        physicsEngine->physicsWorld[0] = calloc(1, sizeof(PhysicsWorld));
+    }
+    else{
+        physicsEngine->physicsWorld = realloc(physicsEngine->physicsWorld, sizeof(PhysicsWorld) * physicsEngine->numOfPhysicsWorlds);
+    }
     //initialise new Physics World
     PhysicsWorld_init(physicsEngine->physicsWorld[physicsEngine->numOfPhysicsWorlds]);
     assert(physicsEngine->physicsWorld != NULL);

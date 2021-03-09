@@ -4,8 +4,10 @@
 #include "Engine/modelManager.h"
 #include "Engine/stateManager.h"
 #include "Engine/textureManager.h"
+#include "BigBalls/physicsEngine.h"
 #include <stdbool.h>
 #include <lua.h>
+#include "Engine/OpenGL.h"
 
 typedef struct Engine {
     int timeSinceStart;
@@ -14,13 +16,16 @@ typedef struct Engine {
     TextureManager textureManager;
     AudioEngine audioEngine;
     AudioManager audioManager;
+    PhysicsEngine physicsEngine;
     char *cwd;
     int width;
     int height;
     float fov;
     bool lockCamera;
     bool fullScreen;
+    int seed;
     lua_State *lua;
+    GLFWwindow* window;
 } Engine;
 
 extern Engine engine;

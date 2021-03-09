@@ -102,7 +102,7 @@ void LevelOne_init(State *state) {
     state->gameObjects[0].Transform.Position.Z += 0.f;
     state->gameObjects[0].Transform.Position.Y -= 0.f;
     state->gameObjects[0].Transform.Rotation.Y += 90.f;
-    /*state->NumOfGameObjects = 1;
+    state->NumOfGameObjects = 1;
     // create CollisionBody for object
     CollisionBody* wallCollisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(wallCollisionBody);
@@ -138,25 +138,25 @@ void LevelOne_init(State *state) {
 
     CollisionBody_addSphereCollider(ballCollisionBody, ballCollider);
     CollisionBody_setPos(ballCollisionBody, 0.f, 0.f, -10.f);
-    PhysicsWorld_addCollisionBody(state->physicsWorld, ballCollisionBody);*/
+    PhysicsWorld_addCollisionBody(state->physicsWorld, ballCollisionBody);
 
     // add box at position pre-rotation
-    GameObject_init(&state->gameObjects[0]);
-    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Off/bluecube.off");
-    //state->gameObjects[2].Transform.Position.Z = 5.f;
-    state->NumOfGameObjects = 1;
+    GameObject_init(&state->gameObjects[2]);
+    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Off/bluecube.off");
+    state->gameObjects[2].Transform.Position.Z = 5.f;
+    ++state->NumOfGameObjects;
 
     CollisionBody *boxCollisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(boxCollisionBody);
 
     BoxCollider *boxCollider = calloc(1, sizeof(BoxCollider));
     BoxCollider_init(boxCollider);
-   // boxCollider->zOffset = 5.f;
+    boxCollider->zOffset = 5.f;
     boxCollider->xLen = 1.f;
     boxCollider->yLen = 1.f;
     boxCollider->zLen = 1.f;
     CollisionBody_addBoxCollider(boxCollisionBody, boxCollider);
 
-    CollisionBody_setPos(boxCollisionBody, 0, 0, 0.f);
+    CollisionBody_setPos(boxCollisionBody, 0, 0, 5.f);
     PhysicsWorld_addCollisionBody(state->physicsWorld, boxCollisionBody);
 }

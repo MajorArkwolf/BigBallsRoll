@@ -1,6 +1,9 @@
 
 function Init()
-    player = dofile("res/Script/Player.lua")
+    worldUp = {}
+    worldUp.x = 0.0
+    worldUp.y = 1.0
+    worldUp.z = 0.0
     gen = dofile("res/Script/levelGenerator.lua")
     timer = 0
     -- 0 = not running, 1 = running, 2 = done
@@ -13,7 +16,7 @@ function Init()
     position.x = gen.startPoint[1] + 0.5
     position.y = gen.startPoint[2] + 1.5
     position.z = gen.startPoint[3] + 0.5
-
+    player = dofile("res/Script/Player.lua")
     player:Init(position)
 end
 
@@ -51,7 +54,7 @@ function Update()
     GenerateNextLevel()
     player:Update(deltaTime)
     if timer > 5 then
-        --NextLevel()
+        NextLevel()
         timer = 0
     end
     timer = timer + deltaTime

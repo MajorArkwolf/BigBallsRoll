@@ -15,7 +15,11 @@ function ArcBallCamera:Init(newRadius)
 end
 
 function ArcBallCamera:Update(deltaTime, trackingID)
-    self.radius = self.radius + (MouseDeltaY * deltaTime * -1)
+    -- There is a chance that MouseDeltaY will not be set on first load
+    -- however we need the camera to update to calculate its position, this stops a nil from occuring.
+    if MouseDeltaY ~= nil then
+        self.radius = self.radius + (MouseDeltaY * deltaTime * -1)
+    end
     if self.radius < 5 then
         self.radius = 5
     end

@@ -1,8 +1,4 @@
 local Player = {}
-worldUp = {}
-worldUp.x = 0.0
-worldUp.y = 1.0
-worldUp.z = 0.0
 
 function Player:Init(position)
     self.gameObjectID = GameObjectRegister()
@@ -11,7 +7,7 @@ function Player:Init(position)
     GameObjectSetModel(self.gameObjectID, "Ball.obj")
     self.camera = dofile("res/Script/ArcBallCamera.lua")
     self.camera:Init(20)
-    self.camera:Update(deltaTime, self.gameObjectID)
+    self.camera:Update(0.0, self.gameObjectID)
     self.forward = false
     self.backward = false
     self.left = false
@@ -50,12 +46,14 @@ end
 
 function Player:Update(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
+    print("First:", self.position.x, self.position.y, self.position.z)
     self.rotation = GameObjectGetRotation(self.gameObjectID)
     self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime)
     self:Move(deltaTime)
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
     self.camera:Update(deltaTime, self.gameObjectID)
+    print("Second: ",self.position.x, self.position.y, self.position.z)
 end
 
 return Player

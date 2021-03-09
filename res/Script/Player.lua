@@ -12,12 +12,27 @@ function Player:Init(position)
     self.backward = false
     self.left = false
     self.right = false
-    self.velocity = 2
+    self.playerMoveOn = false
+    self.velocity = 4
+end
+
+function Player:ReInit()
+    self.gameObjectID = GameObjectRegister()
+    GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+    GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
+    GameObjectSetModel(self.gameObjectID, "Ball.obj")
+    self.camera:Update(0.0, self.gameObjectID)
 end
 
 function CalculateRightVector(front)
     local result = NormaliseVec(front)
     return CrossProductVec(result, worldUp)
+end
+
+function Player:Fall(deltaTime)
+    self.position = GameObjectGetPosition(self.gameObjectID)
+    self.position.y = self.position.y - (7 * deltaTime)
+    GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
 end
 
 function Player:Move(deltaTime)
@@ -48,7 +63,9 @@ function Player:Update(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
     self.rotation = GameObjectGetRotation(self.gameObjectID)
     self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime)
-    self:Move(deltaTime)
+    if self.playerMoveOn then
+        self:Move(deltaTime)
+    end
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
     self.camera:Update(deltaTime, self.gameObjectID)

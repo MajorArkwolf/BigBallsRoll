@@ -18,6 +18,13 @@ function Init()
     position.z = gen.startPoint[3] + 0.5
     player = dofile("res/Script/Player.lua")
     player:Init(position)
+    player.playerMoveOn = true
+    endNode = dofile("res/Script/EndNode.lua")
+    endNode:Init(gen.endPoint[1], gen.endPoint[2], gen.endPoint[3], gen.boardID)
+    startNode = dofile("res/Script/StartNode.lua")
+    startNode:Init(gen.startPoint[1], gen.startPoint[2], gen.startPoint[3], gen.boardID)
+    startNode.playerStarted = true
+    startNode.boardIsReady = true
 end
 
 function NextLevel()
@@ -27,11 +34,12 @@ function NextLevel()
     generation_running = 0
     GameNextLevel()
     gen:RegisterGameObjects()
-    local position = {}
-    position.x = gen.startPoint[1] + 0.5
-    position.y = gen.startPoint[2] + 1.5
-    position.z = gen.startPoint[3] + 0.5
-    player:Init(position)
+
+    endNode:Init(gen.endPoint[1], gen.endPoint[2], gen.endPoint[3], gen.boardID)
+    startNode:Init(gen.startPoint[1], gen.startPoint[2], gen.startPoint[3], gen.boardID)
+    startNode:FreshBoard(player)
+    player:ReInit()
+
     level = level + 1
     end
 
@@ -53,12 +61,16 @@ end
 function Update()
     GenerateNextLevel()
     player:Update(deltaTime)
-    if timer > 5 then
-        NextLevel()
-        timer = 0
+    if endNode:CheckEndTrigger(player) then
+        if endNode:DestroyRandomBlock() then
+            NextLevel()
+        end
+    else
+        startNode:CheckStartTrigger(player, deltaTime)
+        timer = timer + deltaTime
     end
-    timer = timer + deltaTime
 end
+
 
 function Draw()
 

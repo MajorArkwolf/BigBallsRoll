@@ -143,7 +143,6 @@ int Engine_run(int argc, char *argv[]) {
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
     PhysicsEngine_init(&engine.physicsEngine);
-    //For testing atm
     PhysicsInterface_init();
 	
 	//Initialise LUA state
@@ -245,6 +244,7 @@ void Engine_stop() {
     AudioEngine_free(&engine.audioEngine);
     ModelManager_free(&engine.modelManager);
     TextureManager_free(&engine.textureManager);
+    PhysicsInterface_free();
     StateManager_free(&engine.sM);
     lua_close(engine.lua);
     free(engine.cwd);

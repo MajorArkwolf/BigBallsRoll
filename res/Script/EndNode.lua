@@ -9,7 +9,6 @@ function EndNode:Init(x, y, z, board)
     self.position.z = z
     self.width = 0
     self.board = board
-    --print(#board)
     self.finishedLevel = false
 end
 

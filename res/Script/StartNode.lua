@@ -28,7 +28,6 @@ function StartNode:FreshBoard(player)
     offsetFromFinish.x = player.position.x - round(player.position.x)
     offsetFromFinish.y = 0
     offsetFromFinish.z = player.position.z - round(player.position.z)
-    print(offsetFromFinish.x, offsetFromFinish.y, offsetFromFinish.z)
     player.position.x = position.x + offsetFromFinish.x
     player.position.y = position.y + 1.5
     player.position.z = position.z + offsetFromFinish.z

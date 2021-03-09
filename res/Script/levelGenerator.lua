@@ -182,21 +182,31 @@ function RandomPath(startPoint, endPoint, gridMaxX, gridMaxY, gridMaxZ, field)
 end
 
 function Generator:RegisterGameObjects()
+    self.boardID = {}
+    self.boardID[1] = 0
+    local id = 2
     for keyx, valuex in ipairs(self.field) do
         for keyy, valuey in ipairs(valuex) do
             for keyz, valuez in ipairs(valuey) do
                 if (valuez == true) then
-                    object = GameObjectRegister()
+                    local object = GameObjectRegister()
                     GameObjectSetPosition(object, keyx, keyy, keyz)
                     local total = keyx + keyy + keyz
                     if (keyx == self.startPoint[1] and keyy == self.startPoint[2] and keyz == self.startPoint[3]) then
                         GameObjectSetModel(object, "Off/redcube.off")
+                        self.boardID[id] = object
+                        id = id + 1
                     elseif (keyx == self.endPoint[1] and keyy == self.endPoint[2] and keyz == self.endPoint[3]) then
                         GameObjectSetModel(object, "Off/greencube.off")
+                        self.boardID[1] = object
                     elseif (math.fmod(total, 2) == 0) then
                         GameObjectSetModel(object, "Off/bluecube.off")
+                        self.boardID[id] = object
+                        id = id + 1
                     else
                         GameObjectSetModel(object, "Off/darkbluecube.off")
+                        self.boardID[id] = object
+                        id = id + 1
                     end
                 end
             end

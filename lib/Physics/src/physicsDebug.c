@@ -33,8 +33,8 @@ void PhysicsDebug_dataFree(DebugData *debug) {
     free(debug->faceIndexes);
 }
 
-void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd, const size_t *faceOrder, size_t faceOrderSize) {
-    assert(collisionBody != NULL && dd != NULL && faceOrder != NULL);
+void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd) {
+    assert(collisionBody != NULL && dd != NULL);
 
     size_t beforeMaxLengthVert = dd->vertices->size;
 
@@ -78,10 +78,9 @@ void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd, c
     DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
     DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
 
-    //TODO: Put here? and dont pass anything in? if only rendering cubes this will be fine. Not scalable otherwise.
-    //size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
+    static const size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
 
-    for (size_t i = 0; i < faceOrderSize; ++i) {
+    for (size_t i = 0; i < 36; ++i) {
         DynamicArray_pushBackSizeT(dd->faceIndexes, beforeMaxLengthVert + faceOrder[i] * 3);
     }
 }

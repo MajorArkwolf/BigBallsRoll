@@ -35,5 +35,5 @@ void PhysicsDebug_dataFree(DebugData *debug);
  * @param faceOrder The Face vertices order.
  * @param faceOrderSize The size of the faceOrder Array.
  */
-void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd, const size_t *faceOrder, size_t faceOrderSize);
+void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd);
 

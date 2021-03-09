@@ -115,15 +115,9 @@ bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug) {
     if (physicsWorld->debug) {
         //Reset the object
         PhysicsDebug_dataReset(debug);
-        //TODO: Implement and get the stuffs
-
-        //TODO: Is this even a good idea? or just make faceOrder inside genAABBBox? Not sure where we would
-        //Even get face order from? I doubt a collision body would store it. and is static bad idea?
-        //New order (me)
-        static size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
 
         for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
-            PhysicsDebug_generateAABBBox(physicsWorld->collisionBodies[i], debug, faceOrder, 36);
+            PhysicsDebug_generateAABBBox(physicsWorld->collisionBodies[i], debug);
         }
         debug->numVertices = debug->vertices->size;
         debug->numFaces = debug->faceIndexes->size;

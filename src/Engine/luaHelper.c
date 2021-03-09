@@ -80,6 +80,18 @@ int LuaHelper_addGameObject(lua_State *L) {
     return 1;
 }
 
+int lua_toggleGameObjectRender(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    bool disableRendering = lua_toboolean(L, 2);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    gameObject->DisableRendering = disableRendering;
+    lua_pop(L, 2);
+    return 0;
+}
+
 int LuaHelper_setPosition(lua_State *L) {
     size_t id = lua_tonumber(L, 1);
     if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
@@ -282,10 +294,12 @@ void LuaHelper_init() {
     lua_setglobal(engine.lua, "GameObjectGetRotation");
     lua_pushcfunction(engine.lua, LuaHelper_setModel);
     lua_setglobal(engine.lua, "GameObjectSetModel");
-    lua_pushcfunction(engine.lua, LuaHelper_setCameraPosition);
-    lua_setglobal(engine.lua, "CameraSetPosition");
+    lua_pushcfunction(engine.lua, lua_toggleGameObjectRender);
+    lua_setglobal(engine.lua, "GameObjectToggleRender");
 
     // Camera
+    lua_pushcfunction(engine.lua, LuaHelper_setCameraPosition);
+    lua_setglobal(engine.lua, "CameraSetPosition");
     lua_pushcfunction(engine.lua, LuaHelper_setCameraYaw);
     lua_setglobal(engine.lua, "CameraSetYaw");
     lua_pushcfunction(engine.lua, LuaHelper_setCameraPitch);

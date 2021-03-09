@@ -59,8 +59,8 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     physicsWorld->collisionBodies = NULL;
     physicsWorld->numCollisionBodies = 0;
     physicsWorld->collisionBodyIdCount = 0;
-    physicsWorld->gravity = 1; //TODO: find default
-    physicsWorld->gravityNormal = GravityNormal_init();
+    physicsWorld->gravity = 1;
+    GravityNormal_init(&physicsWorld->gravityNormal);
 }
 
 void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
@@ -126,7 +126,8 @@ bool PhysicsWorld_destroyCollisionBody(PhysicsWorld *physicsWorld, const int ID)
     return true; // stub
 }
 
-//TODO: Implement
-void PhysicsWorld_updateGravityNormal(float x, float y, float z) {
-    //TODO: Stub
+void PhysicsWorld_updateGravityNormal(PhysicsWorld *physicsWorld, float x, float y, float z) {
+    physicsWorld->gravityNormal.X = x;
+    physicsWorld->gravityNormal.Y = y;
+    physicsWorld->gravityNormal.Z = z;
 }

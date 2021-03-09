@@ -10,9 +10,6 @@ typedef struct PhysicsWorld{
     GravityNormal gravityNormal;
 } PhysicsWorld;
 
-//TODO: stub, not sure how this will work atm.
-void PhysicsWorld_updateGravityNormal(float x, float y, float z);
-
 /**
  * Searches for a CollisionBody by ID in a PhysicsWorld
  * Returns NULL if match is not found
@@ -87,3 +84,13 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
  * @return bool determination of collision (true = colliding)
  */
 bool testAABBCollision(CollisionBody *a, CollisionBody *b);
+
+/**
+ * Updates the gravity normal for the current physicsWorld. Game engine will calculate the vector and pass in 3
+ * floats to ensure compatibility instead of a struct or array.
+ * @param physicsWorld the physics world to update
+ * @param x coordinate
+ * @param y coordinate
+ * @param z coordinate
+ */
+void PhysicsWorld_updateGravityNormal(PhysicsWorld *physicsWorld, float x, float y, float z);

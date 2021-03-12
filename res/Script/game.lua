@@ -41,7 +41,7 @@ function NextLevel()
     player:ReInit()
 
     level = level + 1
-    end
+end
 
 function GenerateNextLevel()
     if generation_running == 0 then

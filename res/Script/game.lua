@@ -34,12 +34,10 @@ function NextLevel()
     generation_running = 0
     GameNextLevel()
     gen:RegisterGameObjects()
-
     endNode:Init(gen.endPoint[1], gen.endPoint[2], gen.endPoint[3], gen.boardID)
     startNode:Init(gen.startPoint[1], gen.startPoint[2], gen.startPoint[3], gen.boardID)
     startNode:FreshBoard(player)
     player:ReInit()
-
     level = level + 1
 end
 

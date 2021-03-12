@@ -2,13 +2,15 @@
 #include <assert.h>
 #include <stdio.h>
 
+//Face order
+const size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
+//Face colours
+const size_t BroadPhaseDebugColour[3] = {255,255,0};
+
 void PhysicsDebug_dataInit(DebugData *debug) {
     assert(debug != NULL);
     debug->numVertices = 0;
     debug->numFaces = 0;
-    debug->colour[0] = 255;
-    debug->colour[1] = 255;
-    debug->colour[2] = 0;
     debug->vertices = calloc(1, sizeof(FloatArray));
     debug->faceIndexes = calloc(1, sizeof(SizeTArray));
     DynamicArray_initFloat(debug->vertices);
@@ -77,8 +79,6 @@ void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd) {
     DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
     DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
     DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
-
-    static const size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
 
     for (size_t i = 0; i < 36; ++i) {
 

@@ -2,14 +2,19 @@
 #include "collisionBody.h"
 #include "dynamicArray.h"
 
-const size_t BroadPhaseDebugColour[3] = {255,255,0};
-
+/**
+ * DebugData object.
+ *
+ * FaceIndexes contains the index to the first of its three vertices which are stored in *vertices, as well as the colour of that face.
+ * The first value in FaceIndexes will be the index to the first face.
+ * The 3 values following this represent the R,G,B values of that face.
+ * Format is as follows: FACE_INDEX,R,G,B,FACE_INDEX,R,G,B....
+ */
 typedef struct DebugData {
     size_t numFaces;
     size_t numVertices;
     FloatArray *vertices;
     SizeTArray *faceIndexes;
-    float colour[3];
 } DebugData;
 
 

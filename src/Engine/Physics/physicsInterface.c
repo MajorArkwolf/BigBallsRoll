@@ -27,8 +27,6 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
                 glVertex3f(dd.vertices->array[dd.faceIndexes->array[i] + 0],
                            dd.vertices->array[dd.faceIndexes->array[i] + 1],
                            dd.vertices->array[dd.faceIndexes->array[i] + 2]);
-
-            printf("%zu %zu %zu %f %f %f\n", dd.faceIndexes->array[i], dd.faceIndexes->array[i + 1], dd.faceIndexes->array[i + 2], dd.vertices->array[dd.faceIndexes->array[i] + 3], dd.vertices->array[dd.faceIndexes->array[i] + 4], dd.vertices->array[dd.faceIndexes->array[i] + 5]);
         }
         glEnd();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

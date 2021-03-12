@@ -2,6 +2,8 @@
 #include "collisionBody.h"
 #include "dynamicArray.h"
 
+const size_t BroadPhaseDebugColour[3] = {255,255,0};
+
 typedef struct DebugData {
     size_t numFaces;
     size_t numVertices;
@@ -9,6 +11,7 @@ typedef struct DebugData {
     SizeTArray *faceIndexes;
     float colour[3];
 } DebugData;
+
 
 /**
  * Initialise the DebugData object, must be called before using.

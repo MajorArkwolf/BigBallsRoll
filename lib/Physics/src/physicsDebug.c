@@ -81,6 +81,11 @@ void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd) {
     static const size_t faceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
 
     for (size_t i = 0; i < 36; ++i) {
+
         DynamicArray_pushBackSizeT(dd->faceIndexes, beforeMaxLengthVert + faceOrder[i] * 3);
+
+        DynamicArray_pushBackSizeT(dd->faceIndexes, BroadPhaseDebugColour[0]);
+        DynamicArray_pushBackSizeT(dd->faceIndexes, BroadPhaseDebugColour[1]);
+        DynamicArray_pushBackSizeT(dd->faceIndexes, BroadPhaseDebugColour[2]);
     }
 }

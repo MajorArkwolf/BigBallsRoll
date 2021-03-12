@@ -22,9 +22,13 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glBegin(GL_TRIANGLES);
 
-        for (size_t i = 0; i < dd.numFaces; ++i) {
-            glColor3f(dd.colour[0], dd.colour[1], dd.colour[2]);
-            glVertex3f(dd.vertices->array[dd.faceIndexes->array[i]], dd.vertices->array[dd.faceIndexes->array[i] + 1], dd.vertices->array[dd.faceIndexes->array[i] + 2]);
+        for (size_t i = 0; i < dd.numFaces; i = i + 4) {
+                glColor3f(dd.faceIndexes->array[i + 1], dd.faceIndexes->array[i + 2], dd.faceIndexes->array[i + 3]);
+                glVertex3f(dd.vertices->array[dd.faceIndexes->array[i] + 0],
+                           dd.vertices->array[dd.faceIndexes->array[i] + 1],
+                           dd.vertices->array[dd.faceIndexes->array[i] + 2]);
+
+            printf("%zu %zu %zu %f %f %f\n", dd.faceIndexes->array[i], dd.faceIndexes->array[i + 1], dd.faceIndexes->array[i + 2], dd.vertices->array[dd.faceIndexes->array[i] + 3], dd.vertices->array[dd.faceIndexes->array[i] + 4], dd.vertices->array[dd.faceIndexes->array[i] + 5]);
         }
         glEnd();
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

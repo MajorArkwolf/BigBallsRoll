@@ -200,6 +200,21 @@ int Engine_run(int argc, char *argv[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
+    glEnable (GL_NORMALIZE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    GLfloat light_ambient     [] = { 0.9f, 0.9f, 0.9f, 1.0f };
+    GLfloat light_diffuse     [] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat light_specular    [] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat light_position    [] = { 1.0f, 30.0f, 1.0f, 0.0f };
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light_ambient);
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
+    glLightfv (GL_LIGHT0, GL_DIFFUSE, light_ambient);
+    glLightfv (GL_LIGHT0, GL_AMBIENT, light_diffuse);
+    glLightfv (GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv (GL_LIGHT0, GL_POSITION, light_position);
+    glCullFace(GL_FRONT);
+    glFrontFace(GL_CW);
 
     engine.textureManager.renderSetup = true;
     TextureManager_bindTexturesToRenderer(&engine.textureManager);

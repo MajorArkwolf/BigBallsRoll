@@ -21,17 +21,22 @@ void Mesh_init(Mesh *mesh) {
 }
 
 void Model_draw(Model *model) {
+    float floatArray[4] = {0};
     int lastTexture = GL_NONE;
     glColor3f(1, 1, 1);
     for (size_t index = 0; index < model->NumOfMesh; ++index) {
         for (size_t i = 0; i < model->Mesh[index].NumOfFaces; ++i) {
-
             int matIndex = model->Mesh[index].Faces[i].MaterialIndex;
-            if (matIndex >= 0 && model->Mesh[index].Materials != NULL &&
-                model->Mesh[index].Materials[matIndex].DiffuseTexture != NULL) {
-                if (lastTexture != model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID) {
-                    lastTexture = (int) model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID;
-                    //TODO: this is broken and hardcoded, this is for testing purposes only.
+            if (matIndex >= 0 && model->Mesh[index].Materials != NULL) {
+                Material* mat = model->Mesh[index].Materials;
+                glMaterialf(GL_FRONT, GL_AMBIENT, mat->Ambient[0]);
+                glMaterialf(GL_FRONT, GL_DIFFUSE, mat->Diffuse[0]);
+                glMaterialf(GL_FRONT, GL_SPECULAR, mat->Specular[0]);
+                if (model->Mesh[index].Materials[matIndex].DiffuseTexture != NULL) {
+                    if (lastTexture != model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID) {
+                        lastTexture = (int) model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID;
+                        //TODO: this is broken and hardcoded, this is for testing purposes only.
+                    }
                 }
             }
             glBindTexture(GL_TEXTURE_2D, lastTexture);
@@ -53,6 +58,10 @@ void Model_draw(Model *model) {
                 glVertex3f(model->Mesh[index].Vertices[index_val].X,
                            model->Mesh[index].Vertices[index_val].Y,
                            model->Mesh[index].Vertices[index_val].Z);
+                if (model->Mesh[index].NumOfNormals > 0) {
+                    int normal_index_val = model->Mesh[index].Faces[i].Point[x].NormalID;
+                    glNormal3f(model->Mesh[index].Normals[normal_index_val].X, model->Mesh[index].Normals[normal_index_val].Y, model->Mesh[index].Normals[normal_index_val].Z);
+                }
             }
             glEnd();
         }

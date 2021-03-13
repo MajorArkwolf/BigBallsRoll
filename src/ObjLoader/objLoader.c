@@ -133,22 +133,26 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
 
     //We need to count what is coming, so this loop is to figure out our memory allocation.
     while (fgets(buff, sizeof buff, fptr) != NULL) {
-        if (buff[0] == '#') {
+        if (buff[0] == '#' || buff[0] == '\n' || buff[0] == '\r') {
             //Catch and remove any comments.
             continue;
         }
         sscanf(buff, "%9s", discard);
         if (strcmp(discard, "v") == 0) {
             ++v;
+            continue;
         }
         if (strcmp(discard, "vt") == 0) {
             ++vt;
+            continue;
         }
         if (strcmp(discard, "vn") == 0) {
             ++vn;
+            continue;
         }
         if (strcmp(discard, "f") == 0) {
             ++f;
+            continue;
         }
         if (strcmp(discard, "mtllib") == 0) {
             char dir[10000];
@@ -158,6 +162,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
             strcat(dir, mtlFile);
             ObjLoader_loadMTL(mesh, dir);
             assert(mesh->NumOfMaterials != 0);
+            continue;
         }
     }
     if (v == 0 || f == 0) {
@@ -182,7 +187,7 @@ bool ObjLoader_loadMesh(Mesh *mesh, FILE *fptr, char *cwd) {
     //The current bound mtl
     int activeMTL = -1;
     while (fgets(buff, sizeof buff, fptr) != NULL) {
-        if (buff[0] == '#') {
+        if (buff[0] == '#' || buff[0] == '\n' || buff[0] == '\r') {
             //Catch and remove any comments.
             continue;
         }

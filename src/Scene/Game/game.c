@@ -36,30 +36,9 @@ int Game_update(float deltaTime) {
 int Game_keyDown(InputType inputType) {
     lua_getglobal(engine.lua, "InputKeyboardDown");
     lua_pushinteger(engine.lua, inputType);
-    if (lua_pcall(engine.lua, 1, 1, 0) == LUA_OK) {
+    if (lua_pcall(engine.lua, 1, 0, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
-//    Camera *cam = &StateManager_top(&engine.sM)->camera;
-//    switch (inputType) {
-//        case KEY_UP_ARROW:
-//        case KEY_W:
-//            cam->MoveForward = true;
-//            break;
-//        case KEY_DOWN_ARROW:
-//        case KEY_S:
-//            cam->MoveBackward = true;
-//            break;
-//        case KEY_LEFT_ARROW:
-//        case KEY_A:
-//            cam->MoveLeft = true;
-//            break;
-//        case KEY_RIGHT_ARROW:
-//        case KEY_D:
-//            cam->MoveRight = true;
-//            break;
-//        default:
-//            break;
-//    }
     return 0;
 }
 
@@ -67,7 +46,7 @@ int Game_keyUp(InputType inputType) {
     //Camera *cam = &StateManager_top(&engine.sM)->camera;
     lua_getglobal(engine.lua, "InputKeyboardUp");
     lua_pushinteger(engine.lua, (int)inputType);
-    if (lua_pcall(engine.lua, 1, 1, 0) == LUA_OK) {
+    if (lua_pcall(engine.lua, 1, 0, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     switch (inputType) {
@@ -108,6 +87,16 @@ int Game_mouseMovement(double x, double y) {
     return 0;
 }
 
+int Game_mouseKey(int button, int buttonState) {
+    lua_getglobal(engine.lua, "InputMouseButton");
+    lua_pushinteger(engine.lua, button);
+    lua_pushinteger(engine.lua, buttonState);
+    if (lua_pcall(engine.lua, 2, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
+    return 0;
+}
+
 void Game_init(State *state) {
     Engine_cameraLock(true);
     state->update = Game_update;
@@ -115,6 +104,7 @@ void Game_init(State *state) {
     state->keyDown = Game_keyDown;
     state->keyUp = Game_keyUp;
     state->mouseMovement = Game_mouseMovement;
+    state->mouseKeys = Game_mouseKey;
     char file[] = "game.lua";
     mouse[0] = 0.0;
     mouse[1] = 0.0;
@@ -123,5 +113,8 @@ void Game_init(State *state) {
 }
 
 void Game_NextLevel(State *state) {
+    for (size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        GameObject_free(&state->gameObjects[i]);
+    }
     state->NumOfGameObjects = 0;
 }

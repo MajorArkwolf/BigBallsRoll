@@ -32,11 +32,12 @@ function NextLevel()
         GenerateNextLevel()
     end
     generation_running = 0
+    -- This next function is a C API call
     GameNextLevel()
     gen:RegisterGameObjects()
-    endNode:Init(gen.endPoint[1], gen.endPoint[2], gen.endPoint[3], gen.boardID)
     startNode:Init(gen.startPoint[1], gen.startPoint[2], gen.startPoint[3], gen.boardID)
-    startNode:FreshBoard(player)
+    startNode:FreshBoard(5, player, endNode)
+    endNode:Init(gen.endPoint[1], gen.endPoint[2], gen.endPoint[3], gen.boardID)
     player:ReInit()
     level = level + 1
 end
@@ -64,8 +65,10 @@ function Update()
             NextLevel()
         end
     else
-        startNode:CheckStartTrigger(player, deltaTime)
-        timer = timer + deltaTime
+        if startNode:CheckStartTrigger(player, deltaTime) then
+            -- If game has started then let the timer continue
+            timer = timer + deltaTime
+        end
     end
 end
 
@@ -95,5 +98,20 @@ function InputKeyboardUp(input)
         player.left = false
     elseif input == 3 then
         player.right = false
+    end
+end
+
+function InputMouseButton(button, buttonState)
+    -- Left Mouse Button
+    if button == 66 then
+
+    end
+    --Right Mouse Button
+    if button == 67 then
+        if buttonState == 1 then
+            player.rotatePlayerOn = true
+        else
+            player.rotatePlayerOn = false
+        end
     end
 end

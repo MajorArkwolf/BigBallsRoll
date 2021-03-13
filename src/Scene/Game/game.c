@@ -1,14 +1,9 @@
 #include "game.h"
-#include <stdlib.h>
 #include <Engine/engine.h>
-#include "Engine/InputManager.h"
 #include "Engine/luaHelper.h"
-#include "Helper/stringPath.h"
-
-#include <lualib.h>
-#include <lauxlib.h>
-#include <string.h>
 #include <assert.h>
+
+double mouse[2];
 
 int Game_draw(float deltaTime) {
     lua_getglobal(engine.lua, "Draw");
@@ -25,10 +20,16 @@ int Game_update(float deltaTime) {
     lua_pushnumber(engine.lua, deltaTime);
     lua_setglobal(engine.lua, "deltaTime");
     lua_getglobal(engine.lua, "Update");
+    lua_pushnumber(engine.lua, mouse[0]);
+    lua_setglobal(engine.lua, "MouseDeltaX");
+    lua_pushnumber(engine.lua, mouse[1]);
+    lua_setglobal(engine.lua, "MouseDeltaY");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
+    mouse[0] = 0.0;
+    mouse[1] = 0.0;
     return 0;
 }
 
@@ -76,8 +77,9 @@ int Game_keyUp(InputType inputType) {
         case KEY_D:
             cam->MoveRight = false;
             break;
-        case KEY_F2:
+        case KEY_ESC:
             StateManager_pop(&engine.sM);
+            break;
         default:
             break;
     }
@@ -85,87 +87,24 @@ int Game_keyUp(InputType inputType) {
 }
 
 int Game_mouseMovement(double x, double y) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {
-        Camera_mouseLook(cam, x, y);
+        mouse[0] = x;
+        mouse[1] = y;
     }
     return 0;
 }
 
 void Game_init(State *state) {
+    Engine_cameraLock(true);
     state->update = Game_update;
     state->draw = Game_draw;
     state->keyDown = Game_keyDown;
     state->keyUp = Game_keyUp;
     state->mouseMovement = Game_mouseMovement;
     char file[] = "game.lua";
+    mouse[0] = 0.0;
+    mouse[1] = 0.0;
     LuaHelper_loadScript(file);
-
-    //Register functions for lua.
-    lua_pushcfunction(engine.lua, Game_addGameObject);
-    lua_setglobal(engine.lua, "GameObjectRegister");
-    lua_pushcfunction(engine.lua, Game_setPosition);
-    lua_setglobal(engine.lua, "GameObjectSetPosition");
-    lua_pushcfunction(engine.lua, Game_setRotation);
-    lua_setglobal(engine.lua, "GameObjectSetRotation");
-    lua_pushcfunction(engine.lua, Game_setModel);
-    lua_setglobal(engine.lua, "GameObjectSetModel");
-
-    lua_pushnumber(engine.lua, engine.seed);
-    lua_setglobal(engine.lua, "seed");
-
-    lua_getglobal(engine.lua, "Init");
-    if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
-        lua_pop(engine.lua, lua_gettop(engine.lua));
-    }
-}
-
-int Game_addGameObject(lua_State *L) {
-    //Get the ID ready for lua to manipulate a game object.
-    State *state = StateManager_top(&engine.sM);
-    size_t id = state->NumOfGameObjects;
-    GameObject_init(&state->gameObjects[id]);
-    ++state->NumOfGameObjects;
-    lua_pushnumber(L, id);
-    return 1;
-}
-
-int Game_setPosition(lua_State *L) {
-    size_t id = lua_tonumber(L, 1);
-    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
-        return 0;
-    }
-    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
-    gameObject->Transform.Position.X = lua_tonumber(L, 2);
-    gameObject->Transform.Position.Y = lua_tonumber(L, 3);
-    gameObject->Transform.Position.Z = lua_tonumber(L, 4);
-
-    return 0;
-}
-
-int Game_setRotation(lua_State *L) {
-    size_t id = lua_tonumber(L, 1);
-    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
-        return 0;
-    }
-    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
-    gameObject->Transform.Rotation.X = lua_tonumber(L, 2);
-    gameObject->Transform.Rotation.Y = lua_tonumber(L, 3);
-    gameObject->Transform.Rotation.Z = lua_tonumber(L, 4);
-
-    return 0;
-}
-
-int Game_setModel(lua_State *L) {
-    size_t id = lua_tonumber(L, 1);
-    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
-        return 0;
-    }
-    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
-    size_t length = 0;
-    const char* model = luaL_checklstring(L, 2,  &length);
-    gameObject->ModelID = ModelManager_findModel(&engine.modelManager, model);
-
-    return 0;
+    LuaHelper_init();
 }

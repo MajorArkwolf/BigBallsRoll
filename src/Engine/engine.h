@@ -14,6 +14,7 @@ typedef struct Engine {
     StateManager sM;
     TextureManager textureManager;
     AudioEngine audioEngine;
+    AudioPresets audioPresets;
     AudioManager audioManager;
     char *cwd;
     int width;
@@ -35,6 +36,17 @@ extern Engine engine;
  * @return 0 on success 1 on failure
  */
 int Engine_run(int argc, char *argv[]);
+
+/**
+ * Toggles the camera from the locked state.
+ */
+void Engine_toggleCameraLock();
+
+/**
+ * Locks the camera if the value passed in is true.
+ * @param lockCamera
+ */
+void Engine_cameraLock(bool lockCamera);
 
 /**
  * Frees any memory the engine is using on the heap

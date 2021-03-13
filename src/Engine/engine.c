@@ -50,7 +50,7 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
  * Callback function for glut update.
  * @param deltaTime Time since last frame
  */
-void Update(double deltaTime) {
+void FixedUpdate(double deltaTime) {
     int mouseMode = glfwGetInputMode(engine.window, GLFW_CURSOR);
     if (engine.lockCamera && mouseMode == GLFW_CURSOR_NORMAL) {
         glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -58,6 +58,16 @@ void Update(double deltaTime) {
         glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     StateManager_update(&engine.sM, (float)deltaTime);
+}
+
+void Update(double deltaTime) {
+    State *state = StateManager_top(&engine.sM);
+    for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        if (state->gameObjects[i].SoundID > 0) {
+            AudioEngine_updateSource(state->gameObjects[i].SoundID, &state->gameObjects[i].Transform.Position,
+                                     &state->gameObjects[i].Transform.Rotation);
+        }
+    }
 }
 
 /**
@@ -80,13 +90,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (action == GLFW_PRESS) {
         StateManager_keyDown(&engine.sM, inputType);
     } else if (action == GLFW_RELEASE) {
-        if (inputType == KEY_F1) {
-            //Toggle the lock Camera.
-            engine.lockCamera = !engine.lockCamera;
-        }
-        if (inputType == KEY_ESC) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
-        }
         StateManager_keyUp(&engine.sM, inputType);
     }
 }
@@ -134,6 +137,9 @@ int Engine_run(int argc, char *argv[]) {
 
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
+
+    // Init here to avoid config values being overwritten.
+    AudioEngine_AudioPresets_init(&engine.audioPresets);
 
     //Initialise our Services
     TextureManager_init(&engine.textureManager);
@@ -220,11 +226,12 @@ int Engine_run(int argc, char *argv[]) {
 
         while (accumulator >= deltaTime) {
             glfwPollEvents();
-            Update(deltaTime);
+            FixedUpdate(deltaTime);
             //Physics update goes here.
             time += deltaTime;
             accumulator -= deltaTime;
         }
+        Update(frameTime);
         Draw();
     }
 
@@ -274,4 +281,17 @@ void Engine_loadConfig() {
     if (lua_isnumber(engine.lua, 0) == 0) {
         engine.seed = lua_tonumber(engine.lua, -1);
     }
+    //Get master volume
+    lua_getglobal(engine.lua, "master_volume");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.audioPresets.MasterVolume = lua_tonumber(engine.lua, -1);
+    }
+}
+
+void Engine_toggleCameraLock() {
+    engine.lockCamera = !engine.lockCamera;
+}
+
+void Engine_cameraLock(bool lockCamera) {
+    engine.lockCamera = lockCamera;
 }

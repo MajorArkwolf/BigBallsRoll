@@ -93,7 +93,7 @@ InputType InputType_convertRegularKey(int key);
 
 /**
  * Converts a glfw mouse key into our engine enum representation
- * @param glutKey integer representation by glut
+ * @param button integer representation by glfw
  * @return enum of the representation of our key
  */
-InputType InputType_convertMouseButton(int nutton);
+InputType InputType_convertMouseButton(int button);

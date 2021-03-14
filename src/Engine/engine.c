@@ -203,11 +203,13 @@ int Engine_run(int argc, char *argv[]) {
     glEnable (GL_NORMALIZE);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    GLfloat light_ambient     [] = { 0.9f, 0.9f, 0.9f, 1.0f };
+    glEnable(GL_SMOOTH);
+    GLfloat GlobalLight_ambient     [] = { 0.6f, 0.6f, 0.6f, 1.0f };
+    GLfloat light_ambient     [] = { 0.8f, 0.8f, 0.8f, 1.0f };
     GLfloat light_diffuse     [] = { 1.0f, 1.0f, 1.0f, 1.0f };
     GLfloat light_specular    [] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    GLfloat light_position    [] = { 1.0f, 30.0f, 1.0f, 0.0f };
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light_ambient);
+    GLfloat light_position    [] = { 0.0f, 1.0f, 0.0f, 0.0f };
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLight_ambient);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
     glLightfv (GL_LIGHT0, GL_DIFFUSE, light_ambient);
     glLightfv (GL_LIGHT0, GL_AMBIENT, light_diffuse);

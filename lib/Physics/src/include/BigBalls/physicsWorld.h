@@ -1,14 +1,26 @@
 #pragma once
 #include "collisionBody.h"
 #include "mathsCommon.h"
+#include "physicsDebug.h"
 
-typedef struct PhysicsWorld{
+//TODO: Temp until vec3 is apart of external library
+typedef struct tempVec3 {
+    float X;
+    float Y;
+    float Z;
+} tempVec3;
+
+typedef struct PhysicsWorld {
     CollisionBody **collisionBodies;
     size_t numCollisionBodies;
     int collisionBodyIdCount;
     float gravity;
-    GravityNormal gravityNormal;
+    tempVec3 gravityNormal;
+    bool debug;
 } PhysicsWorld;
+
+//TODO: Temp until vec3 is apart of external library
+//GravityNormal GravityNormal_init();
 
 //TODO: stub, not sure how this will work atm.
 void PhysicsWorld_updateGravityNormal(float x, float y, float z);
@@ -79,6 +91,20 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
 * @param ID The ID of the CollisionBody to be removed
 */
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
+
+/**
+ * Contains the debug draw functions TODO: UPDATE THIS COMMENT
+ * @param physicsWorld the object to draw
+ * @param debug the debug object to store the data in
+ * @return true if debug has been updated, else false.
+ */
+bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug);
+
+/**
+ * Toggles debug on or off.
+ * @param physicsWorld the physics world to toggle debug
+ */
+void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld);
 
 /**
  * Checks if the two axis-aligned bounding boxes of two CollisionBodies are colliding

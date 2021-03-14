@@ -59,7 +59,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     physicsWorld->collisionBodies = NULL;
     physicsWorld->numCollisionBodies = 0;
     physicsWorld->collisionBodyIdCount = 0;
-    physicsWorld->gravity = 1;
+    physicsWorld->gravity = -9.8f;
     GravityNormal_init(&physicsWorld->gravityNormal);
 }
 

@@ -20,7 +20,7 @@ typedef struct PhysicsWorld{
 CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
 /**
- * Initialises a PhysicsWorld object
+ * Initialises a PhysicsWorld object. Gravity is set to a default value of -9.8 (earths gravity)
  * @param physicsWorld The PhysicsWorld to be initialised
  */
 void PhysicsWorld_init(PhysicsWorld *physicsWorld);

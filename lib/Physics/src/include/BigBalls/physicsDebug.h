@@ -38,10 +38,8 @@ void PhysicsDebug_dataFree(DebugData *debug);
 
 /**
  * Generates the vertices and Face indexes for a CollisionBody. Updates the DebugData object with this new information.
+ * After adding a face index a RBG value is also stored for that face.
  * @param collisionBody The collision body to generate vertices and face indices for.
  * @param dd The debug object to store this info in.
- * @param faceOrder The Face vertices order.
- * @param faceOrderSize The size of the faceOrder Array.
  */
 void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd);
-

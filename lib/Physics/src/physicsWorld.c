@@ -61,6 +61,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     physicsWorld->collisionBodyIdCount = 0;
     physicsWorld->gravity = -9.8f;
     GravityNormal_init(&physicsWorld->gravityNormal);
+    physicsWorld->debug = false;
 }
 
 void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
@@ -107,6 +108,27 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) 
             physicsWorld->collisionBodies = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * physicsWorld->numCollisionBodies);
         }
     }
+}
+
+bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug) {
+    assert(physicsWorld != NULL && debug != NULL);
+    if (physicsWorld->debug) {
+        //Reset the object
+        PhysicsDebug_dataReset(debug);
+
+        for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
+            PhysicsDebug_generateAABBBox(physicsWorld->collisionBodies[i], debug);
+        }
+        debug->numVertices = debug->vertices->size;
+        debug->numFaces = debug->faceIndexes->size;
+        return true;
+    }
+    return false;
+}
+
+void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld) {
+    assert(physicsWorld != NULL);
+    physicsWorld->debug = !physicsWorld->debug;
 }
 
 void PhysicsWorld_updateGravityNormal(PhysicsWorld *physicsWorld, float x, float y, float z) {

@@ -128,11 +128,7 @@ bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug) {
 
 void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld) {
     assert(physicsWorld != NULL);
-    if (physicsWorld->debug) {
-        physicsWorld->debug = false;
-    } else {
-        physicsWorld->debug = true;
-    }
+    physicsWorld->debug = !physicsWorld->debug;
 }
 
 //TODO: Implement

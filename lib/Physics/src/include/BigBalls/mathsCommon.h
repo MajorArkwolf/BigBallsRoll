@@ -3,15 +3,13 @@
 
 // TODO: move to external math library
 
-//TODO: Temp until vec3 is apart of external library
 typedef struct GravityNormal {
     float X;
     float Y;
     float Z;
 } GravityNormal;
 
-//TODO: Temp until vec3 is apart of external library
-GravityNormal GravityNormal_init();
+void GravityNormal_init(GravityNormal *gN);
 
 /**
  * Determines if two floats are "equal" given a level of tolerance

@@ -59,8 +59,8 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     physicsWorld->collisionBodies = NULL;
     physicsWorld->numCollisionBodies = 0;
     physicsWorld->collisionBodyIdCount = 0;
-    physicsWorld->gravity = 1; //TODO: find default
-    //physicsWorld->gravityNormal = GravityNormal_init(); TODO: Implement
+    physicsWorld->gravity = -9.8f;
+    GravityNormal_init(&physicsWorld->gravityNormal);
     physicsWorld->debug = false;
 }
 
@@ -131,16 +131,8 @@ void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld) {
     physicsWorld->debug = !physicsWorld->debug;
 }
 
-//TODO: Implement
-void PhysicsWorld_updateGravityNormal(float x, float y, float z) {
-    //TODO: Stub
+void PhysicsWorld_updateGravityNormal(PhysicsWorld *physicsWorld, float x, float y, float z) {
+    physicsWorld->gravityNormal.X = x;
+    physicsWorld->gravityNormal.Y = y;
+    physicsWorld->gravityNormal.Z = z;
 }
-
-//TODO: Temporary
-/*GravityNormal GravityNormal_init() {
-    GravityNormal gN;
-    gN.X = 0.0f;
-    gN.Y = 1.0f;
-    gN.Z = 0.0f;
-    return gN;
-}*/

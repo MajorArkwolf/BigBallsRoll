@@ -4,13 +4,10 @@
 #include <assert.h>
 #include <stdlib.h>
 
-//TODO: Temporary
-GravityNormal GravityNormal_init() {
-    GravityNormal gN;
-    gN.X = 0.0f;
-    gN.Y = 1.0f;
-    gN.Z = 0.0f;
-    return gN;
+void GravityNormal_init(GravityNormal *gN) {
+    gN->X = 0.0f;
+    gN->Y = -1.0f;
+    gN->Z = 0.0f;
 }
 
 bool fTolerance(float a, float b, float tolerance){

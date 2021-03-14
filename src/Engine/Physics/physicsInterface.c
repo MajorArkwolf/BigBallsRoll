@@ -1,6 +1,5 @@
 #include "physicsInterface.h"
 #include "Engine/OpenGL.h"
-#include "stdio.h"
 
 //Global Debug Data
 DebugData dd;

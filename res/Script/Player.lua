@@ -15,6 +15,7 @@ function Player:Init(position)
     self.playerMoveOn = false
     self.rotatePlayerOn = false
     self.velocity = 4
+    self.mouseSensitivity = 3
 end
 
 function Player:ReInit()
@@ -64,7 +65,7 @@ function Player:Update(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
     self.rotation = GameObjectGetRotation(self.gameObjectID)
     if self.rotatePlayerOn then
-        self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime)
+        self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime * self.mouseSensitivity)
     end
     if self.playerMoveOn then
         self:Move(deltaTime)

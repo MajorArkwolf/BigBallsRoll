@@ -64,16 +64,16 @@ void PhysicsWorld_applyForce(PhysicsWorld *physicsWorld,
                               int objID);
 
 /**
-* Add a game object to the physics engine
+ * Add a game object to the physics engine
  * @param physicsWorld the PhysicsWorld to add a CollisionBody to
  * @param collisionBody the CollisionBody to add to the PhysicsWorld
 */
 void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody);
 
 /**
-* Remove a game object from the physics engine
-* @param physicsWorld The PhysicsWorld to remove a CollisionBody from
-* @param ID The ID of the CollisionBody to be removed
+ * Remove a game object from the physics engine
+ * @param physicsWorld The PhysicsWorld to remove a CollisionBody from
+ * @param ID The ID of the CollisionBody to be removed
 */
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
 

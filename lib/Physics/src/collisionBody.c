@@ -139,41 +139,36 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
     bool varInit = false;
 
     // create CollisionBody rotation matrix
-    float T1[3][3] = {{0}};
-    rotationTransformationMatrix(collisionBody->xRot,
-                                 collisionBody->yRot,
-                                 collisionBody->zRot,
-                                 T1);
+    Matrix44 T1 = rotationTransformationMatrix(collisionBody->xRot,
+                                               collisionBody->yRot,
+                                               collisionBody->zRot);
     // get all BoxCollider min/max vertices
     for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){
         // create BoxCollider rotation matrix
-        float T2[3][3] = {{0}};
-        rotationTransformationMatrix(collisionBody->BoxColliders[i]->xRot,
-                                     collisionBody->BoxColliders[i]->yRot,
-                                     collisionBody->BoxColliders[i]->zRot,
-                                     T2);
+        Matrix44 T2 = rotationTransformationMatrix(collisionBody->BoxColliders[i]->xRot,
+                                                   collisionBody->BoxColliders[i]->yRot,
+                                                   collisionBody->BoxColliders[i]->zRot);
         // create overall transformation matrix from CollisionBody and BoxCollider rotation matrices
-        float T3[3][3] = {{0}};
-        matrixMultiplication(3, 3, 3, 3, T1, T2, T3);
+        Matrix44 T3 = matrixMultiplication44_44(T1, T2);
         // allocate position vector of BoxCollider
-        float pos[3][1] = {{collisionBody->xPos}, {collisionBody->yPos}, {collisionBody->zPos}};
+        Matrix41 pos = {collisionBody->xPos, collisionBody->yPos, collisionBody->zPos, 0}; // TODO: should this be the collider position rather than collisionbody?
         // apply transformation matrix to position vector
-        float final[3][1] = {{0}};
-        matrixMultiplication(3, 3, 3, 1, T3, pos, final);
+        Matrix41 finalPos = matrixMultiplication44_41(T3, pos);
         // store resulting position in BoxCollider object so it can be accessed later
-        collisionBody->BoxColliders[i]->xFinalPos = final[0][0];
-        collisionBody->BoxColliders[i]->yFinalPos = final[1][0];
-        collisionBody->BoxColliders[i]->zFinalPos = final[2][0];
+        collisionBody->BoxColliders[i]->xFinalPos = finalPos.elem[0];
+        collisionBody->BoxColliders[i]->yFinalPos = finalPos.elem[1];
+        collisionBody->BoxColliders[i]->zFinalPos = finalPos.elem[2];
         // do trig to find out new extents
         // allocate second position vector of collider
-        float len[3][1] = {{collisionBody->BoxColliders[i]->xFinalPos + collisionBody->BoxColliders[i]->xLen}, {collisionBody->BoxColliders[i]->yFinalPos +collisionBody->BoxColliders[i]->yLen}, {collisionBody->BoxColliders[i]->zFinalPos +collisionBody->BoxColliders[i]->zLen}};
+        Matrix41 len = {collisionBody->BoxColliders[i]->xFinalPos + collisionBody->BoxColliders[i]->xLen,
+                        collisionBody->BoxColliders[i]->yFinalPos +collisionBody->BoxColliders[i]->yLen,
+                        collisionBody->BoxColliders[i]->zFinalPos +collisionBody->BoxColliders[i]->zLen};
         // apply transformation matrix to position vector
-        float finalLen[3][1] = {{0}};
-        matrixMultiplication(3, 3, 3, 1, T3, len, finalLen);
+        Matrix41 finalLen = matrixMultiplication44_41(T3, len);
         // convert back from point to an extension of position
-        collisionBody->BoxColliders[i]->xFinalLen = finalLen[0][0] - collisionBody->BoxColliders[i]->xFinalPos;
-        collisionBody->BoxColliders[i]->yFinalLen = finalLen[1][0] - collisionBody->BoxColliders[i]->yFinalPos;
-        collisionBody->BoxColliders[i]->zFinalLen = finalLen[2][0] - collisionBody->BoxColliders[i]->zFinalPos;
+        collisionBody->BoxColliders[i]->xFinalLen = finalLen.elem[0] - collisionBody->BoxColliders[i]->xFinalPos;
+        collisionBody->BoxColliders[i]->yFinalLen = finalLen.elem[1] - collisionBody->BoxColliders[i]->yFinalPos;
+        collisionBody->BoxColliders[i]->zFinalLen = finalLen.elem[2] - collisionBody->BoxColliders[i]->zFinalPos;
 
         // check for new min/max points
         if(!varInit){
@@ -211,14 +206,13 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
     // get all SphereCollider min/max vertices
     for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
         // allocate position vector of SphereCollider
-        float pos[3][1] = {{collisionBody->xPos}, {collisionBody->yPos}, {collisionBody->zPos}};
+        Matrix41 pos = {collisionBody->xPos, collisionBody->yPos, collisionBody->zPos}; // TODO: should this be the collider position rather than collisionbody?
         // apply CollisionBody rotation transformation matrix to position vector (a sphere cannot be rotated from the perspective of the physics engine)
-        float final[3][1] = {{0}, {0}, {0}};
-        matrixMultiplication(3, 3, 3, 1, T1, pos, final);
+        Matrix41 finalPos = matrixMultiplication44_41(T1, pos);
         // store resulting position in SphereCollider to be accessed later
-        collisionBody->SphereColliders[i]->xFinalPos = final[0][0];
-        collisionBody->SphereColliders[i]->yFinalPos = final[1][0];
-        collisionBody->SphereColliders[i]->zFinalPos = final[2][0];
+        collisionBody->SphereColliders[i]->xFinalPos = finalPos.elem[0];
+        collisionBody->SphereColliders[i]->yFinalPos = finalPos.elem[1];
+        collisionBody->SphereColliders[i]->zFinalPos = finalPos.elem[2];
 
         if(!varInit){
             greatestX = collisionBody->SphereColliders[i]->xFinalPos + collisionBody->SphereColliders[i]->radius;

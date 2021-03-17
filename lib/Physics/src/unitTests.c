@@ -6,7 +6,21 @@
 #include "include/BigBalls/collisionBody.h"
 #include "include/BigBalls/mathsCommon.h"
 
-bool testMatrixMultiplication(){
+/**
+bool testIdentity44(){
+    Matrix44 sus = identiy44();
+    return sus.elem[0] == {1, 0, 0, 0};
+}
+
+bool testMatrixMultiplication44_44(){
+    float a[2][2] = {{1.f, 7.f}, {2.f, 4.f}};
+    float b[2][2] = {{3.f, 3.f}, {5.f, 2.f}};
+    float res[2][2] = {{0}};
+    matrixMultiplication(2, 2, 2, 2, a, b, res);
+    return res[0][0] == 38 && res[0][1] == 17 && res[1][0] == 26 && res[1][1] == 14;
+}
+
+bool testMatrixMultiplication44_41(){
     float a[2][2] = {{1.f, 7.f}, {2.f, 4.f}};
     float b[2][2] = {{3.f, 3.f}, {5.f, 2.f}};
     float res[2][2] = {{0}};
@@ -297,4 +311,4 @@ void startTests(){
     printf("Test full rotation: %d\n", testFullRotation());
     printf("Test matrix multiplication: %d\n", testMatrixMultiplication());
 }
-
+**/

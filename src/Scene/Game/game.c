@@ -78,6 +78,10 @@ int Game_keyUp(InputType inputType) {
             cam->MoveRight = false;
             break;
         case KEY_ESC:
+            lua_getglobal(engine.lua, "DeInit");
+            if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+                lua_pop(engine.lua, lua_gettop(engine.lua));
+            }
             StateManager_pop(&engine.sM);
             break;
         default:

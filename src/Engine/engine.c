@@ -162,8 +162,8 @@ int Engine_run(int argc, char *argv[]) {
     StateManager_init(&engine.sM);
     State *state = malloc(sizeof(State));
     State_init(state);
-    MainMenu_init(state);
     StateManager_push(&engine.sM, state);
+    MainMenu_init(state);
     if (engine.sM.stack[engine.sM.top] == NULL) {
         printf("Game stack failed to start.");
         return EXIT_FAILURE;

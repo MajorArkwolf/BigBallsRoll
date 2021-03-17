@@ -9,6 +9,13 @@ function Init()
     GameObjectSetModel(player, "Ball.obj")
 end
 
+function DeInit()
+    camera = nil
+    player = nil
+    gen = nil
+
+end
+
 function Update()
     camera:Update(deltaTime, player)
 end

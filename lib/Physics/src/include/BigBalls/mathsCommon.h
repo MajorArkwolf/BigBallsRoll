@@ -66,7 +66,23 @@ Matrix41 matrixMultiplication44_41(Matrix44 a, Matrix41 b);
  * Creates a 4 by 4 identity matrix
  * @return Matrix44 a 4 by 4 identity matrix
  */
-Matrix44 identiy44();
+Matrix44 identity44();
+
+/**
+ * Determines if two 4 by 4 matrices are equal
+ * @param a the first 4 by 4 matrix
+ * @param b the second 4 by 4 matrix
+ * @return bool the equivalence of the two matrices
+ */
+bool compareMatrix44(Matrix44 a, Matrix44 b);
+
+/**
+ * Determines if two 4 by 1 matrices are equal
+ * @param a the first 4 by 1 matrix
+ * @param b the second 4 by 1 matrix
+ * @return bool the equivalence of the two matrices
+ */
+bool compareMatrix41(Matrix41 a, Matrix41 b);
 
 /**
  * Determines if either of the two floats are new min/max values, and returns them if they are

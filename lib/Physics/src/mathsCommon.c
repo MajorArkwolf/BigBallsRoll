@@ -1,6 +1,7 @@
 #include "include/BigBalls/mathsCommon.h"
 #include <math.h>
 #include <assert.h>
+#include <stdlib.h>
 
 //TODO: Temporary
 GravityNormal GravityNormal_init() {
@@ -31,6 +32,26 @@ Matrix44 identity44() {
                     .elem[2] = {0, 0, 1, 0},
                     .elem[3] = {0, 0, 0, 1}};
     return res;
+}
+
+bool compareMatrix44(Matrix44 a, Matrix44 b){
+    for(size_t i = 0; i < 4; ++i){
+        for(size_t j = 0; j < 4; ++j){
+            if(a.elem[i][j] != b.elem[i][j]){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool compareMatrix41(Matrix41 a, Matrix41 b){
+    for(size_t i = 0; i < 4; ++i){
+        if(a.elem[i] != b.elem[i]){
+            return false;
+        }
+    }
+    return true;
 }
 
 Matrix44 rotationTransformationMatrix(float x, float y, float z){
@@ -71,11 +92,11 @@ Matrix44 matrixMultiplication44_44(Matrix44 a, Matrix44 b){
 }
 
 Matrix41 matrixMultiplication44_41(Matrix44 a, Matrix41 b){
-    Matrix41 res = {0, 0, 0, 0};
+    Matrix41 res;
     for(int i = 0; i < 4; ++i) { // for every row of a
         float sum = 0;
-        for(int k = 0; k < 4; ++k){ // for every row of b
-            sum += a.elem[i][k]*b.elem[k];
+        for(int j = 0; j < 4; ++j){ // for every row of b
+            sum += a.elem[i][j]*b.elem[j];
         }
         res.elem[i] = sum;
     }

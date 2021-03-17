@@ -6,26 +6,41 @@
 #include "include/BigBalls/collisionBody.h"
 #include "include/BigBalls/mathsCommon.h"
 
-/**
 bool testIdentity44(){
-    Matrix44 sus = identiy44();
-    return sus.elem[0] == {1, 0, 0, 0};
+    Matrix44 sus = identity44();
+    Matrix44 target = {.elem[0] = {1, 0, 0, 0},
+                       .elem[1] = {0, 1, 0, 0},
+                       .elem[2] = {0, 0, 1, 0},
+                       .elem[3] = {0, 0, 0, 1}};
+    return compareMatrix44(sus, target);
 }
 
 bool testMatrixMultiplication44_44(){
-    float a[2][2] = {{1.f, 7.f}, {2.f, 4.f}};
-    float b[2][2] = {{3.f, 3.f}, {5.f, 2.f}};
-    float res[2][2] = {{0}};
-    matrixMultiplication(2, 2, 2, 2, a, b, res);
-    return res[0][0] == 38 && res[0][1] == 17 && res[1][0] == 26 && res[1][1] == 14;
+    Matrix44 a = {.elem[0] = {5, 2, 6, 1},
+                  .elem[1] = {0, 6, 2, 0},
+                  .elem[2] = {3, 8, 1, 4},
+                  .elem[3] = {1, 8 ,5, 6}};
+    Matrix44 b = {.elem[0] = {7, 5, 8, 0},
+                  .elem[1] = {1, 8, 2, 6},
+                  .elem[2] = {9, 4, 3, 8},
+                  .elem[3] = {5, 3, 7, 9}};
+    Matrix44 sus = matrixMultiplication44_44(a, b);
+    Matrix44 target = {.elem[0] = {96, 68, 69, 69},
+                       .elem[1] = {24, 56, 18, 52},
+                       .elem[2] = {58, 95, 71, 92},
+                       .elem[3] = {90, 107, 81, 142}};
+    return compareMatrix44(sus, target);
 }
 
 bool testMatrixMultiplication44_41(){
-    float a[2][2] = {{1.f, 7.f}, {2.f, 4.f}};
-    float b[2][2] = {{3.f, 3.f}, {5.f, 2.f}};
-    float res[2][2] = {{0}};
-    matrixMultiplication(2, 2, 2, 2, a, b, res);
-    return res[0][0] == 38 && res[0][1] == 17 && res[1][0] == 26 && res[1][1] == 14;
+    Matrix44 a = {.elem[0] = {5, 45, -3, 4},
+                  .elem[1] = {3, -2, 11, 9},
+                  .elem[2] = {2, 31, 6, 22},
+                  .elem[3] = {6, -5 ,-9, 7}};
+    Matrix41 b = {2, -3, 4, 5};
+    Matrix41 sus = matrixMultiplication44_41(a, b);
+    Matrix41 target = {-117, 101, 45, 26};
+    return compareMatrix41(sus, target);
 }
 
 // test collision between identical objects
@@ -201,18 +216,17 @@ bool testAABBStackedRotation(){
 }
 
 bool testRotationIdentityMatrix(){
-    float res[3][3] = {{0}};
-    rotationTransformationMatrix(0, 0, 0, res);
+    Matrix44 res = rotationTransformationMatrix(0, 0, 0);
     // no rotation should result in identity matrix
-    if(res[0][0] == 1 &&
-        res[0][1] == 0 &&
-        res[0][2] == 0 &&
-        res[1][0] == 0 &&
-        res[1][1] == 1 &&
-        res[1][2] == 0 &&
-        res[2][0] == 0 &&
-        res[2][1] == 0 &&
-        res[2][2] == 1){
+    if(res.elem[0][0] == 1 &&
+        res.elem[0][1] == 0 &&
+        res.elem[0][2] == 0 &&
+        res.elem[1][0] == 0 &&
+        res.elem[1][1] == 1 &&
+        res.elem[1][2] == 0 &&
+        res.elem[2][0] == 0 &&
+        res.elem[2][1] == 0 &&
+        res.elem[2][2] == 1){
             return true;
     }
     else{
@@ -221,17 +235,16 @@ bool testRotationIdentityMatrix(){
 }
 
 bool testRotationX(){
-    float res[3][3] = {{0}};
-    rotationTransformationMatrix(90.f,0.f,0.f, res);
-    if(res[0][0] == 1 &&
-       res[0][1] == 0 &&
-       res[0][2] == 0 &&
-       res[1][0] == 0 &&
-       res[1][1] == cosf(90*(float)M_PI/180.f) &&
-       res[1][2] == -1.f*sinf(90*(float)M_PI/180.f) &&
-       res[2][0] == 0 &&
-       res[2][1] == sinf(90*(float)M_PI/180.f) &&
-       res[2][2] == cosf(90*(float)M_PI/180.f)) {
+    Matrix44 res = rotationTransformationMatrix(90.f,0.f,0.f);
+    if(res.elem[0][0] == 1 &&
+       res.elem[0][1] == 0 &&
+       res.elem[0][2] == 0 &&
+       res.elem[1][0] == 0 &&
+       res.elem[1][1] == cosf(90*(float)M_PI/180.f) &&
+       res.elem[1][2] == -1.f*sinf(90*(float)M_PI/180.f) &&
+       res.elem[2][0] == 0 &&
+       res.elem[2][1] == sinf(90*(float)M_PI/180.f) &&
+       res.elem[2][2] == cosf(90*(float)M_PI/180.f)) {
         return true;
     }
     else{
@@ -240,17 +253,16 @@ bool testRotationX(){
 }
 
 bool testRotationY(){
-    float res[3][3] = {{0}};
-    rotationTransformationMatrix(0, 90, 0, res);
-    if(res[0][0] == cosf(90*(float)M_PI/180.f) &&
-       res[0][1] == 0 &&
-       res[0][2] == sinf(90*(float)M_PI/180.f) &&
-       res[1][0] == 0 &&
-       res[1][1] == 1 &
-       res[1][2] == 0 &&
-       res[2][0] == -1.f*sinf(90*(float)M_PI/180.f) &&
-       res[2][1] == 0 &&
-       res[2][2] == cosf(90*(float)M_PI/180.f)) {
+    Matrix44 res = rotationTransformationMatrix(0, 90, 0);
+    if(res.elem[0][0] == cosf(90*(float)M_PI/180.f) &&
+       res.elem[0][1] == 0 &&
+       res.elem[0][2] == sinf(90*(float)M_PI/180.f) &&
+       res.elem[1][0] == 0 &&
+       res.elem[1][1] == 1 &
+       res.elem[1][2] == 0 &&
+       res.elem[2][0] == -1.f*sinf(90*(float)M_PI/180.f) &&
+       res.elem[2][1] == 0 &&
+       res.elem[2][2] == cosf(90*(float)M_PI/180.f)) {
         return true;
     }
     else{
@@ -259,17 +271,16 @@ bool testRotationY(){
 }
 
 bool testRotationZ(){
-    float res[3][3] = {{0}};
-    rotationTransformationMatrix(0, 0, 90, res);
-    if(res[0][0] == cosf(90*(float)M_PI/180.f) &&
-       res[0][1] == -1.f*sinf(90*(float)M_PI/180.f)  &&
-       res[0][2] == 0 &&
-       res[1][0] == sinf(90*(float)M_PI/180.f) &&
-       res[1][1] == cosf(90*(float)M_PI/180.f) &
-       res[1][2] == 0 &&
-       res[2][0] == 0 &&
-       res[2][1] == 0 &&
-       res[2][2] == 1) {
+    Matrix44 res = rotationTransformationMatrix(0, 0, 90);
+    if(res.elem[0][0] == cosf(90*(float)M_PI/180.f) &&
+       res.elem[0][1] == -1.f*sinf(90*(float)M_PI/180.f)  &&
+       res.elem[0][2] == 0 &&
+       res.elem[1][0] == sinf(90*(float)M_PI/180.f) &&
+       res.elem[1][1] == cosf(90*(float)M_PI/180.f) &
+       res.elem[1][2] == 0 &&
+       res.elem[2][0] == 0 &&
+       res.elem[2][1] == 0 &&
+       res.elem[2][2] == 1) {
         return true;
     }
     else{
@@ -278,17 +289,16 @@ bool testRotationZ(){
 }
 
 bool testFullRotation(){
-    float res[3][3] = {{0}};
-    rotationTransformationMatrix(360,360,360, res);
-    if(fTolerance(res[0][0], 1.f, 0.0001f) &&
-        fTolerance(res[0][1], 0.f, 0.0001f) &&
-        fTolerance(res[0][2], 0.f, 0.0001f) &&
-        fTolerance(res[1][0], 0.f, 0.0001f) &&
-        fTolerance(res[1][1], 1.f, 0.0001f) &&
-        fTolerance(res[1][2], 0.f, 0.0001f) &&
-        fTolerance(res[2][0], 0.f, 0.0001f) &&
-        fTolerance(res[2][1], 0.f, 0.0001f) &&
-        fTolerance(res[2][2], 1.f, 0.0001f)){
+    Matrix44 res = rotationTransformationMatrix(360,360,360);
+    if(fTolerance(res.elem[0][0], 1.f, 0.0001f) &&
+        fTolerance(res.elem[0][1], 0.f, 0.0001f) &&
+        fTolerance(res.elem[0][2], 0.f, 0.0001f) &&
+        fTolerance(res.elem[1][0], 0.f, 0.0001f) &&
+        fTolerance(res.elem[1][1], 1.f, 0.0001f) &&
+        fTolerance(res.elem[1][2], 0.f, 0.0001f) &&
+        fTolerance(res.elem[2][0], 0.f, 0.0001f) &&
+        fTolerance(res.elem[2][1], 0.f, 0.0001f) &&
+        fTolerance(res.elem[2][2], 1.f, 0.0001f)){
         return true;
     }
     else{
@@ -309,6 +319,8 @@ void startTests(){
     printf("Test y rotation: %d\n", testRotationY());
     printf("Test z rotation: %d\n", testRotationZ());
     printf("Test full rotation: %d\n", testFullRotation());
-    printf("Test matrix multiplication: %d\n", testMatrixMultiplication());
+    printf("Test 4x4 * 4x4 matrix multiplication: %d\n", testMatrixMultiplication44_44());
+    printf("Test 4x4 * 4x1 matrix multiplication: %d\n", testMatrixMultiplication44_41());
+    printf("Test 4 by 4 identity matrix: %d\n", testIdentity44());
 }
-**/
+

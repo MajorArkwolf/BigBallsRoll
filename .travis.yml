@@ -29,12 +29,11 @@ jobs:
 
 
 before_install: 
-    - chmod +x ./.travis/install-cmake.sh ./.travis/build.sh
+    - chmod +x ./.travis/install-cmake.sh ./.travis/build.sh ./.travis/cppcheck.sh
     - ./.travis/install-cmake.sh
 script: 
     - ./.travis/build.sh
-    - cppcheck src/ --enable=warning,style,performance,portability --inconclusive --error-exitcode=1
-    - cppcheck lib/Physics/src --enable=warning,style,performance,portability --inconclusive --error-exitcode=1
+    - ./.travis/cppcheck.sh
     - build/BigBalls --test
     
 after_success:

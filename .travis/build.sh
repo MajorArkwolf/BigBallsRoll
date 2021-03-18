@@ -11,7 +11,7 @@ fi
 if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
     mkdir -p build
     cd build
-    cmake ${build_args} -D CMAKE_GENERATOR_PLATFORM=x64
+    cmake -G "Visual Studio 15 2017" "${build_args}" -D CMAKE_GENERATOR_PLATFORM=x64
     cmake --build .
 else
   mkdir build && cd build

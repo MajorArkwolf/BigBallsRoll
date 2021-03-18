@@ -28,12 +28,12 @@ jobs:
       - MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin"
 
 before_install: 
-    - chmod +x ./.travis/install-cmake.sh ./.travis/build.sh ./.travis/cppcheck.sh
+    - chmod +x ./.travis/install-cmake.sh ./.travis/build.sh ./.travis/cppcheck.sh ./.travis/runtests.sh
     - ./.travis/install-cmake.sh
 script: 
     - ./.travis/build.sh
     - ./.travis/cppcheck.sh
-    - build/BigBalls --test
+    - ./.travis/runtests.sh
     
 after_success:
     - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh

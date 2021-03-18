@@ -5,5 +5,5 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
 fi
 
 if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
-  build/BigBalls.exe --test
+  build/Debug/BigBalls.exe --test
 fi

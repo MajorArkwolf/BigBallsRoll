@@ -60,7 +60,8 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     physicsWorld->numCollisionBodies = 0;
     physicsWorld->collisionBodyIdCount = 0;
     physicsWorld->gravity = -9.8f;
-    GravityNormal_init(&physicsWorld->gravityNormal);
+    tempVec3_init(&physicsWorld->gravityNormal);
+    physicsWorld->gravityNormal.Y = -1;
     physicsWorld->debug = false;
 }
 

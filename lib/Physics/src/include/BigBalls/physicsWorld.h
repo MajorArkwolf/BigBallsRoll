@@ -2,13 +2,7 @@
 #include "collisionBody.h"
 #include "mathsCommon.h"
 #include "physicsDebug.h"
-
-//TODO: Temp until vec3 is apart of external library
-typedef struct tempVec3 {
-    float X;
-    float Y;
-    float Z;
-} tempVec3;
+#include "mathsCommon.h"
 
 typedef struct PhysicsWorld {
     CollisionBody **collisionBodies;
@@ -29,7 +23,8 @@ typedef struct PhysicsWorld {
 CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
 /**
- * Initialises a PhysicsWorld object. Gravity is set to a default value of -9.8 (earths gravity)
+ * Initialises a PhysicsWorld object. Gravity is set to a default value of -9.8 (earths gravity).
+ * The gravityNormal vector is set to [0,-1,0] by default.
  * @param physicsWorld The PhysicsWorld to be initialised
  */
 void PhysicsWorld_init(PhysicsWorld *physicsWorld);

@@ -3,13 +3,18 @@
 
 // TODO: move to external math library
 
-typedef struct GravityNormal {
+//TODO: Temp until vec3 is apart of external library
+typedef struct tempVec3 {
     float X;
     float Y;
     float Z;
-} GravityNormal;
+} tempVec3;
 
-void GravityNormal_init(GravityNormal *gN);
+/**
+ * Initialise a vec3 object.
+ * @param vec the vector to be initialised
+ */
+void tempVec3_init(tempVec3 *vec);
 
 /**
  * Determines if two floats are "equal" given a level of tolerance

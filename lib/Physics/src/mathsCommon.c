@@ -4,10 +4,10 @@
 #include <assert.h>
 #include <stdlib.h>
 
-void GravityNormal_init(GravityNormal *gN) {
-    gN->X = 0.0f;
-    gN->Y = -1.0f;
-    gN->Z = 0.0f;
+void tempVec3_init(tempVec3 *vec3) {
+    vec3->X = 0.0f;
+    vec3->Y = 0.0f;
+    vec3->Z = 0.0f;
 }
 
 bool fTolerance(float a, float b, float tolerance){

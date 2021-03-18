@@ -24,7 +24,7 @@ function Player:ReInit()
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
     GameObjectSetModel(self.gameObjectID, "Ball.obj")
-    self.camera:Update(0.0, self.gameObjectID)
+    self:Update(0.0)
 end
 
 function CalculateRightVector(front)

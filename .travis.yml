@@ -15,10 +15,10 @@ jobs:
       apt:
         sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
-        packages: [clang-9, libstdc++-9-dev, ninja-build, libglew-dev
-                    libsndio-dev libflac-dev libspeex-dev libopus-dev
-                    libogg-dev libvorbis-dev libasound2-dev libvorbis-dev
-                    libxinerama-dev libxcursor-dev libxi-dev libxrandr-dev, cppcheck]
+        packages: [clang-9, libstdc++-9-dev, ninja-build, libglew-dev,
+                    libsndio-dev, libflac-dev, libspeex-dev, libopus-dev,
+                    libogg-dev, libvorbis-dev, libasound2-dev, libvorbis-dev,
+                    libxinerama-dev, libxcursor-dev, libxi-dev, libxrandr-dev, cppcheck]
     env:
       - CC=clang-9 CXX=clang++-9
 

@@ -2,7 +2,7 @@
 
 set -x
 
-build_args='-G Ninja -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .'
+build_args='-DCMAKE_EXPORT_COMPILE_COMMANDS=ON .'
 
 if [[ "${TRAVIS_EVENT_TYPE}" == "pull_request" ]]; then
     build_args+=' -DWarningsAsErrors:BOOL=ON '
@@ -15,6 +15,6 @@ if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
     cmake --build .
 else
   mkdir build && cd build
-  /usr/local/bin/cmake "${build_args}" ..
+  /usr/local/bin/cmake -G Ninja "${build_args}" ..
   ninja
 fi

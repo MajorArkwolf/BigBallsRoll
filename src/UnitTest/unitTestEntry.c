@@ -1,7 +1,6 @@
 #include "unitTestEntry.h"
-#define CESTER_NO_MAIN
-#include <exotic/cester.h>
 #include "ModelUnitTests.h"
+#include "cester.h"
 
 // For more information on how to add and do unit tests view these links.
 // https://exoticlibraries.github.io/libcester/docs/manual_test_registration.html

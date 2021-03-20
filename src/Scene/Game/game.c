@@ -34,48 +34,40 @@ int Game_update(float deltaTime) {
 }
 
 int Game_keyDown(InputType inputType) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
-    switch (inputType) {
-        case KEY_UP_ARROW:
-        case KEY_W:
-            cam->MoveForward = true;
-            break;
-        case KEY_DOWN_ARROW:
-        case KEY_S:
-            cam->MoveBackward = true;
-            break;
-        case KEY_LEFT_ARROW:
-        case KEY_A:
-            cam->MoveLeft = true;
-            break;
-        case KEY_RIGHT_ARROW:
-        case KEY_D:
-            cam->MoveRight = true;
-            break;
-        default:
-            break;
+    lua_getglobal(engine.lua, "InputKeyboardDown");
+    lua_pushinteger(engine.lua, inputType);
+    if (lua_pcall(engine.lua, 1, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     return 0;
 }
 
 int Game_keyUp(InputType inputType) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
+    //Camera *cam = &StateManager_top(&engine.sM)->camera;
+    lua_getglobal(engine.lua, "InputKeyboardUp");
+    lua_pushinteger(engine.lua, (int)inputType);
+    if (lua_pcall(engine.lua, 1, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
     switch (inputType) {
-        case KEY_UP_ARROW:
-        case KEY_W:
-            cam->MoveForward = false;
-            break;
-        case KEY_DOWN_ARROW:
-        case KEY_S:
-            cam->MoveBackward = false;
-            break;
-        case KEY_LEFT_ARROW:
-        case KEY_A:
-            cam->MoveLeft = false;
-            break;
-        case KEY_RIGHT_ARROW:
-        case KEY_D:
-            cam->MoveRight = false;
+//        case KEY_UP_ARROW:
+//        case KEY_W:
+//            cam->MoveForward = false;
+//            break;
+//        case KEY_DOWN_ARROW:
+//        case KEY_S:
+//            cam->MoveBackward = false;
+//            break;
+//        case KEY_LEFT_ARROW:
+//        case KEY_A:
+//            cam->MoveLeft = false;
+//            break;
+//        case KEY_RIGHT_ARROW:
+//        case KEY_D:
+//            cam->MoveRight = false;
+//            break;
+        case KEY_F1:
+            Engine_toggleCameraLock();
             break;
         case KEY_ESC:
             lua_getglobal(engine.lua, "DeInit");
@@ -99,6 +91,16 @@ int Game_mouseMovement(double x, double y) {
     return 0;
 }
 
+int Game_mouseKey(int button, int buttonState) {
+    lua_getglobal(engine.lua, "InputMouseButton");
+    lua_pushinteger(engine.lua, button);
+    lua_pushinteger(engine.lua, buttonState);
+    if (lua_pcall(engine.lua, 2, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
+    return 0;
+}
+
 void Game_init(State *state) {
     Engine_cameraLock(true);
     state->update = Game_update;
@@ -106,9 +108,17 @@ void Game_init(State *state) {
     state->keyDown = Game_keyDown;
     state->keyUp = Game_keyUp;
     state->mouseMovement = Game_mouseMovement;
+    state->mouseKeys = Game_mouseKey;
     char file[] = "game.lua";
     mouse[0] = 0.0;
     mouse[1] = 0.0;
     LuaHelper_loadScript(file);
     LuaHelper_init();
+}
+
+void Game_NextLevel(State *state) {
+    for (size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        GameObject_free(&state->gameObjects[i]);
+    }
+    state->NumOfGameObjects = 0;
 }

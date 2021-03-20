@@ -17,38 +17,42 @@ function InitialiseField(xlength, ylength, zlength)
     return field
 end
 
- function Generator:Setup(seed, xlength, ylength, zlength, tolerance)
-    if xlength <= tolerance then
-        xlength = tolerance * 2
-    end
-    if zlength <= tolerance then
-        zlength = tolerance * 2
-    end
+function Generator:Init(seed)
     math.randomseed(seed)
-    self.maxX = xlength
-    self.maxY = ylength
-    self.maxZ = zlength
-    --Setup our primary data structure for a level.
-    self.field = InitialiseField(xlength, ylength, zlength)
+end
 
-    --Generate our two main points that will be used to check to ensure we have our start and win condition
-    self.startPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
-    self.endPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
-    local pointsAreNotApart = true
-     count = 0
-    while pointsAreNotApart do
-        if math.abs(self.startPoint[1] - self.endPoint[1]) < tolerance or math.abs(self.startPoint[3] - self.endPoint[3]) < tolerance then
-            self.endPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
-        else
-            pointsAreNotApart = false
-        end
-        count = count + 1
-        if count > 10 then
-            self.startPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
-            count = 0
-        end
-    end
-     self.field = RandomPath(self.startPoint, self.endPoint, xlength, ylength, zlength, self.field)
+function Generator:Setup(xlength, ylength, zlength, tolerance)
+   if xlength <= tolerance then
+       xlength = tolerance * 2
+   end
+   if zlength <= tolerance then
+       zlength = tolerance * 2
+   end
+
+   self.maxX = xlength
+   self.maxY = ylength
+   self.maxZ = zlength
+   --Setup our primary data structure for a level.
+   self.field = InitialiseField(xlength, ylength, zlength)
+
+   --Generate our two main points that will be used to check to ensure we have our start and win condition
+   self.startPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
+   self.endPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
+   local pointsAreNotApart = true
+   count = 0
+   while pointsAreNotApart do
+       if math.abs(self.startPoint[1] - self.endPoint[1]) < tolerance or math.abs(self.startPoint[3] - self.endPoint[3]) < tolerance then
+           self.endPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
+       else
+           pointsAreNotApart = false
+       end
+       count = count + 1
+       if count > 10 then
+           self.startPoint = {math.random(1, xlength), math.random(1, ylength), math.random(1, zlength)}
+           count = 0
+       end
+   end
+   self.field = RandomPath(self.startPoint, self.endPoint, xlength, ylength, zlength, self.field)
 end
 
 function GetRandomDirection()
@@ -178,21 +182,31 @@ function RandomPath(startPoint, endPoint, gridMaxX, gridMaxY, gridMaxZ, field)
 end
 
 function Generator:RegisterGameObjects()
+    self.boardID = {}
+    self.boardID[1] = 0
+    local id = 2
     for keyx, valuex in ipairs(self.field) do
         for keyy, valuey in ipairs(valuex) do
             for keyz, valuez in ipairs(valuey) do
                 if (valuez == true) then
-                    object = GameObjectRegister()
+                    local object = GameObjectRegister()
                     GameObjectSetPosition(object, keyx, keyy, keyz)
                     local total = keyx + keyy + keyz
                     if (keyx == self.startPoint[1] and keyy == self.startPoint[2] and keyz == self.startPoint[3]) then
                         GameObjectSetModel(object, "Obj/Terrain/redcube.obj")
+                        self.boardID[id] = object
+                        id = id + 1
                     elseif (keyx == self.endPoint[1] and keyy == self.endPoint[2] and keyz == self.endPoint[3]) then
                         GameObjectSetModel(object, "Obj/Terrain/greencube.obj")
+                        self.boardID[1] = object
                     elseif (math.fmod(total, 2) == 0) then
                         GameObjectSetModel(object, "Obj/Terrain/lightbluecube.obj")
+                        self.boardID[id] = object
+                        id = id + 1
                     else
                         GameObjectSetModel(object, "Obj/Terrain/darkbluecube.obj")
+                        self.boardID[id] = object
+                        id = id + 1
                     end
                 end
             end

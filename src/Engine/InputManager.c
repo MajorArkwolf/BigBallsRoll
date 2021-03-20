@@ -141,15 +141,15 @@ InputType InputType_convertRegularKey(int key) {
     }
 }
 
-InputType InputType_convertMouseButton(int glutKey) {
-//    switch (glutKey) {
-//        case (GLUT_LEFT_BUTTON):
-//            return MOUSE_LEFT_BUTTON;
-//        case (GLUT_RIGHT_BUTTON):
-//            return MOUSE_RIGHT_BUTTON;
-//        default:
-//            return KEY_NONE;
-//    }
+InputType InputType_convertMouseButton(int button) {
+    switch (button) {
+        case(GLFW_MOUSE_BUTTON_LEFT):
+            return MOUSE_LEFT_BUTTON;
+        case(GLFW_MOUSE_BUTTON_RIGHT):
+            return MOUSE_RIGHT_BUTTON;
+        default:
+            return KEY_NONE;
+    }
     assert(false);
     //Function not implemented yet.
     return KEY_NONE;

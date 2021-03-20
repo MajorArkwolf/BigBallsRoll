@@ -15,20 +15,25 @@ jobs:
       apt:
         sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
-        packages: [clang-9, libstdc++-9-dev, ninja-build, libgl1-mesa-dev, libx11-dev,
-                   libxrandr-dev, libudev-dev, libfreetype6-dev, libopenal-dev,
-                   libflac++-dev, libvorbis-dev, libxinerama-dev, libxcursor-dev,
-                   libxi-dev, freeglut3, freeglut3-dev, libglew-dev, cppcheck]
+        packages: [clang-9, libstdc++-9-dev, ninja-build, libglew-dev,
+                    libsndio-dev, libflac-dev, libspeex-dev, libopus-dev,
+                    libogg-dev, libvorbis-dev, libasound2-dev, libvorbis-dev,
+                    libxinerama-dev, libxcursor-dev, libxi-dev, libxrandr-dev, cppcheck]
     env:
       - CC=clang-9 CXX=clang++-9
 
+  - name: "Windows: Visual Studio 2017"
+    os: windows
+    env:
+      - MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin"
+
 before_install: 
-    - chmod +x ./.travis/install-cmake.sh ./.travis/build.sh
-    - ./.travis/install-cmake.sh
+    - chmod +x ./.travis/install.sh ./.travis/build.sh ./.travis/cppcheck.sh ./.travis/runtests.sh
+    - ./.travis/install.sh
 script: 
     - ./.travis/build.sh
-    - cppcheck src/ --enable=warning,style,performance,portability --inconclusive --error-exitcode=1
-    - build/BigBalls --test
+    - ./.travis/cppcheck.sh
+    - ./.travis/runtests.sh
     
 after_success:
     - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh

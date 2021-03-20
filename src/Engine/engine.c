@@ -214,8 +214,8 @@ int Engine_run(int argc, char *argv[]) {
     GLfloat light_position    [] = { 0.0f, 1.0f, 0.0f, 0.0f };
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLight_ambient);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
-    glLightfv (GL_LIGHT0, GL_DIFFUSE, light_ambient);
-    glLightfv (GL_LIGHT0, GL_AMBIENT, light_diffuse);
+    glLightfv (GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv (GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv (GL_LIGHT0, GL_SPECULAR, light_specular);
     glLightfv (GL_LIGHT0, GL_POSITION, light_position);
     glCullFace(GL_FRONT);

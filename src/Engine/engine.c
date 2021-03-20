@@ -109,17 +109,17 @@ static void cursor_position_callback(GLFWwindow* window, double xPos, double yPo
 }
 
 /**
- * Callback function for when a mouse button is pressed
- * @param button int representation of the button
- * @param state Unknown
- * @param x Unknown
- * @param y Unknown
+ * Callback function for the mouse buttons.
+ * @param window The active engine window
+ * @param button mouse button pressed
+ * @param action if pressed or released
+ * @param mods unknown
  */
-void mouseButton(int button, int state, int x, int y) {
-    //InputType inputType = InputType_convertMouseButton(button);
-    // Check state to determine if down or up then send down the stack.
-    //StateManager_keyUp(&engine.sM, inputType);
-    //StateManager_keyDown(&engine.sM, inputType);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    InputType input = InputType_convertMouseButton(button);
+    int buttonState = action == GLFW_PRESS;
+    StateManager_mouseKeys(&engine.sM, input, buttonState);
 }
 
 void error_callback(int error, const char* description)
@@ -196,6 +196,9 @@ int Engine_run(int argc, char *argv[]) {
     glfwSetKeyCallback(engine.window, key_callback);
     glfwSetCursorPosCallback(engine.window, cursor_position_callback);
     glfwSetFramebufferSizeCallback(engine.window, framebuffer_size_callback);
+    glfwSetMouseButtonCallback(engine.window, mouse_button_callback);
+    glfwSetInputMode(engine.window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
+
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);

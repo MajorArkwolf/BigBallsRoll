@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
+#include "OpenGL.h"
+
+#define MAX_OPENGL_LIGHTS 10
 
 int StateManager_scale(StateManager *stateManager) {
     stateManager->capacity *= 2;
@@ -114,4 +117,14 @@ void State_init(State *state) {
     state->mouseMovement = NULL;
     state->mouseKeys = NULL;
     state->camera = Camera_construct();
+    state->registeredLightIDs = 0;
+}
+
+size_t State_registerLight(State *state) {
+    if (state->registeredLightIDs < MAX_OPENGL_LIGHTS) {
+        glEnable(GL_LIGHT0 + state->registeredLightIDs);
+        state->registeredLightIDs++;
+        return state->registeredLightIDs;
+    }
+    return 0;
 }

@@ -22,6 +22,7 @@ typedef struct State {
     GameObject gameObjects[MAX_GAME_OBJECTS];
     Camera camera;
     size_t NumOfGameObjects;
+    size_t registeredLightIDs;
     fnPtr init;
     fnPtrFl update;
     fnPtrFl draw;
@@ -130,3 +131,10 @@ int StateManager_mouseKeys(StateManager *stateManager, int button, int buttonSta
  * @param state State to initialise, must be allocated prior to being passed in
  */
 void State_init(State *state);
+
+/**
+ * Register a new light
+ * @param state Current game state
+ * @return return an ID between 1 and the max opengl lights possible, 0 is an error.
+ */
+size_t State_registerLight(State *state);

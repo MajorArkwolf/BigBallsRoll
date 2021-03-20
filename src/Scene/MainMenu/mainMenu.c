@@ -78,28 +78,11 @@ int MainMenu_keyDown(InputType inputType) {
 }
 
 int MainMenu_keyUp(InputType inputType) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
     State *state;
     switch (inputType) {
         case KEY_ESC:
             glfwSetWindowShouldClose(engine.window, GLFW_TRUE);
             break;
-//        case KEY_UP_ARROW:
-//        case KEY_W:
-//            cam->MoveForward = false;
-//            break;
-//        case KEY_DOWN_ARROW:
-//        case KEY_S:
-//            cam->MoveBackward = false;
-//            break;
-//        case KEY_LEFT_ARROW:
-//        case KEY_A:
-//            cam->MoveLeft = false;
-//            break;
-//        case KEY_RIGHT_ARROW:
-//        case KEY_D:
-//            cam->MoveRight = false;
-//            break;
         case KEY_SPACEBAR:
             PauseMenu(true);
             state = malloc(sizeof (State));

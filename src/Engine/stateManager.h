@@ -138,3 +138,9 @@ void State_init(State *state);
  * @return return an ID between 1 and the max opengl lights possible, 0 is an error.
  */
 size_t State_registerLight(State *state);
+
+/**
+ * Deregister all lights in a given scene
+ * @param state the state to deregister lights from
+ */
+void State_deregisterLights(State *state);

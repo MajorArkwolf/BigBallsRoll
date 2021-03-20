@@ -128,3 +128,10 @@ size_t State_registerLight(State *state) {
     }
     return 0;
 }
+
+void State_deregisterLights(State *state) {
+    for (size_t i = 0; i < state->registeredLightIDs; ++i) {
+        glDisable(GL_LIGHT0 + i);
+    }
+    state->registeredLightIDs = 0;
+}

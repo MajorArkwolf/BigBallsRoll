@@ -93,10 +93,7 @@ void Game_NextLevel(State *state) {
 }
 
 int Game_destroy() {
-    State *state = StateManager_top(&engine.sM);
-    for (size_t i = 0; i < state->registeredLightIDs; ++i) {
-        glDisable(GL_LIGHT0 + i);
-    }
+    State_deregisterLights(StateManager_top(&engine.sM));
     return 0;
 }
 

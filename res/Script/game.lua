@@ -25,6 +25,16 @@ function Init()
     startNode:Init(gen.startPoint[1], gen.startPoint[2], gen.startPoint[3], gen.boardID)
     startNode.playerStarted = true
     startNode.boardIsReady = true
+    gg_lights = {}
+    gg_lights[1] = dofile("res/Script/light.lua")
+    gg_lights[1]:Init(false)
+    gg_lights[1]:SetAmbient(0.6, 0.6, 0.6)
+    gg_lights[2] = dofile("res/Script/light.lua")
+    gg_lights[2]:Init(true)
+    gg_lights[2]:SetAmbient(0.8, 0.8, 0.8)
+    gg_lights[2]:SetDiffuse(1.0, 1.0, 1.0)
+    gg_lights[2]:SetSpecular(1.0, 1.0, 1.0)
+    gg_lights[2]:SetPosition(0, 1, 0)
 end
 
 function NextLevel()
@@ -61,6 +71,7 @@ function DeInit()
     camera = nil
     player = nil
     gen = nil
+    gg_lights = nil
 
 end
 

@@ -1,4 +1,14 @@
 function Init()
+    mm_lights = {}
+    mm_lights[1] = dofile("res/Script/light.lua")
+    mm_lights[1]:Init(false)
+    mm_lights[1]:SetAmbient(0.6, 0.6, 0.6)
+    mm_lights[2] = dofile("res/Script/light.lua")
+    mm_lights[2]:Init(true)
+    mm_lights[2]:SetAmbient(0.8, 0.8, 0.8)
+    mm_lights[2]:SetDiffuse(1.0, 1.0, 1.0)
+    mm_lights[2]:SetSpecular(1.0, 1.0, 1.0)
+    mm_lights[2]:SetPosition(0, 1, 0)
     local boardDimensions = {}
     boardDimensions.x = 20
     boardDimensions.y = -5
@@ -94,5 +104,17 @@ function GenerateBoard(xLength, yHeight, zLength)
         end
         board[count] = object
         count = count + 1
+    end
+end
+
+function MainMenuPause()
+    for key, value in ipairs(mm_lights) do
+        value:Disable()
+    end
+end
+
+function MainMenuUnpause()
+    for key, value in ipairs(mm_lights) do
+        value:Enable()
     end
 end

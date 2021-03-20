@@ -286,6 +286,15 @@ int LuaHelper_RegisterLight(lua_State *L) {
     return 1;
 }
 
+int LuaHelper_DisableLight(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    if (id > 0) {
+        --id;
+        glDisable(GL_LIGHT0 + id);
+    }
+    return 0;
+}
+
 int LuaHelper_LightDiffuse(lua_State *L) {
     int id = lua_tonumber(L, 1);
     GLfloat light_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -299,7 +308,8 @@ int LuaHelper_LightDiffuse(lua_State *L) {
         --id;
         glLightfv(GL_LIGHT0 + id, GL_DIFFUSE, light_diffuse);
     }
-    return 1;
+    lua_pop(L, 4);
+    return 0;
 }
 
 int LuaHelper_LightAmbient(lua_State *L) {
@@ -310,12 +320,14 @@ int LuaHelper_LightAmbient(lua_State *L) {
     light_ambient[2] = lua_tonumber(L, 4);
     if (id == 0) {
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light_ambient);
+        glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
     }
     if (id > 0) {
         --id;
         glLightfv(GL_LIGHT0 + id, GL_AMBIENT, light_ambient);
     }
-    return 1;
+    lua_pop(L, 4);
+    return 0;
 }
 
 int LuaHelper_LightSpecular(lua_State *L) {
@@ -331,7 +343,8 @@ int LuaHelper_LightSpecular(lua_State *L) {
         --id;
         glLightfv(GL_LIGHT0 + id, GL_SPECULAR, light_specular);
     }
-    return 1;
+    lua_pop(L, 4);
+    return 0;
 }
 
 int LuaHelper_LightPosition(lua_State *L) {
@@ -347,11 +360,12 @@ int LuaHelper_LightPosition(lua_State *L) {
         --id;
         glLightfv(GL_LIGHT0 + id, GL_POSITION, light_position);
     }
-    return 1;
+    lua_pop(L, 4);
+    return 0;
 }
 
 void LuaHelper_init() {
-    //Register functions for lua.
+    // Register functions for lua.
     // Math
     lua_pushcfunction(engine.lua, LuaHelper_NormaliseVec3);
     lua_setglobal(engine.lua, "NormaliseVec");
@@ -393,6 +407,8 @@ void LuaHelper_init() {
     //Light
     lua_pushcfunction(engine.lua, LuaHelper_RegisterLight);
     lua_setglobal(engine.lua, "LightRegister");
+    lua_pushcfunction(engine.lua, LuaHelper_DisableLight);
+    lua_setglobal(engine.lua, "LightDisable");
     lua_pushcfunction(engine.lua, LuaHelper_LightDiffuse);
     lua_setglobal(engine.lua, "LightDiffuse");
     lua_pushcfunction(engine.lua, LuaHelper_LightAmbient);

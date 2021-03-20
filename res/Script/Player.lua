@@ -7,7 +7,6 @@ function Player:Init(position)
     GameObjectSetModel(self.gameObjectID, "Ball.obj")
     self.camera = dofile("res/Script/ArcBallCamera.lua")
     self.camera:Init(20)
-    self.camera:Update(0.0, self.gameObjectID)
     self.forward = false
     self.backward = false
     self.left = false
@@ -17,6 +16,7 @@ function Player:Init(position)
     self.velocity = 4
     self.mouseSensitivityX = 3
     self.mouseSensitivityY = 3
+    self.camera:Update(0.0, self.gameObjectID, self.mouseSensitivityX)
 end
 
 function Player:ReInit()

@@ -9,3 +9,7 @@ if [[ "${TRAVIS_OS_NAME}" != "windows" ]]; then
   cd cmake-3.17.0-rc1-Linux-x86_64
   sudo cp -rf {bin,share} /usr/local/
 fi
+
+if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
+  choco install -y windows-sdk-10.1 --version 10.1.18362.1
+fi

@@ -158,17 +158,6 @@ int Engine_run(int argc, char *argv[]) {
     AudioManager_init(&engine.audioManager);
     AudioManager_loadSounds(&engine.audioManager, engine.cwd);
 
-    //Initialise our Game State.
-    StateManager_init(&engine.sM);
-    State *state = malloc(sizeof(State));
-    State_init(state);
-    StateManager_push(&engine.sM, state);
-    MainMenu_init(state);
-    if (engine.sM.stack[engine.sM.top] == NULL) {
-        printf("Game stack failed to start.");
-        return EXIT_FAILURE;
-    }
-
     glfwSetErrorCallback(error_callback);
     //Initialise our Window and OpenGL context.
     if (!glfwInit()){
@@ -205,19 +194,19 @@ int Engine_run(int argc, char *argv[]) {
     glEnable(GL_TEXTURE_2D);
     glEnable (GL_NORMALIZE);
     glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+//    glEnable(GL_LIGHT0);
     glEnable(GL_SMOOTH);
-    GLfloat GlobalLight_ambient     [] = { 0.6f, 0.6f, 0.6f, 1.0f };
-    GLfloat light_ambient     [] = { 0.8f, 0.8f, 0.8f, 1.0f };
-    GLfloat light_diffuse     [] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    GLfloat light_specular    [] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    GLfloat light_position    [] = { 0.0f, 1.0f, 0.0f, 0.0f };
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLight_ambient);
-    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
-    glLightfv (GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv (GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv (GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv (GL_LIGHT0, GL_POSITION, light_position);
+//    GLfloat GlobalLight_ambient     [] = { 0.6f, 0.6f, 0.6f, 1.0f };
+//    GLfloat light_ambient     [] = { 0.8f, 0.8f, 0.8f, 1.0f };
+//    GLfloat light_diffuse     [] = { 1.0f, 1.0f, 1.0f, 1.0f };
+//    GLfloat light_specular    [] = { 1.0f, 1.0f, 1.0f, 1.0f };
+//    GLfloat light_position    [] = { 0.0f, 1.0f, 0.0f, 0.0f };
+//    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalLight_ambient);
+//    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
+//    glLightfv (GL_LIGHT0, GL_AMBIENT, light_ambient);
+//    glLightfv (GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+//    glLightfv (GL_LIGHT0, GL_SPECULAR, light_specular);
+//    glLightfv (GL_LIGHT0, GL_POSITION, light_position);
     glCullFace(GL_FRONT);
     glFrontFace(GL_CW);
 
@@ -229,6 +218,17 @@ int Engine_run(int argc, char *argv[]) {
     int height = 0;
     glfwGetFramebufferSize(engine.window, &width, &height);
     framebuffer_size_callback(engine.window, width, height);
+
+    //Initialise our Game State.
+    StateManager_init(&engine.sM);
+    State *state = malloc(sizeof(State));
+    State_init(state);
+    StateManager_push(&engine.sM, state);
+    MainMenu_init(state);
+    if (engine.sM.stack[engine.sM.top] == NULL) {
+        printf("Game stack failed to start.");
+        return EXIT_FAILURE;
+    }
 
     /// This is a semi fixed time step implementation used to help break up our render and physics.
     double currentTime = glfwGetTime();

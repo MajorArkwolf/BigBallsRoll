@@ -5,7 +5,7 @@ pipeline {
 		stage('PreSetup') {
 			steps {
 				echo 'PreSetup..'
-				sh 'git lfs pull'
+				sh 'git lfs install --skip-smudge'
 			}
 		}
         stage('Build') {

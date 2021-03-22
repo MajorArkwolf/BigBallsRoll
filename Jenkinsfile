@@ -5,6 +5,7 @@ pipeline {
 		stage('PreSetup') {
 			steps {
 				echo 'PreSetup..'
+				sh 'git submodule update --init --recursive'
 			}
 		}
         stage('Build') {
@@ -12,7 +13,7 @@ pipeline {
                 echo 'Building..'
 				sh script:'''
                     #!/bin/bash
-				    cmake -S . -G "Visual Studio 16 2019" -DCMAKE_DISABLE_FIND_PACKAGE_WindowsSDK=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DWarningsAsErrors:BOOL=ON -D CMAKE_GENERATOR_PLATFORM=x64
+				    cmake -S . -B build -G 'Visual Studio 16 2019' -DWarningsAsErrors:BOOL=ON
 				    cd build
 				    cmake --build .
 				'''

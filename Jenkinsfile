@@ -5,6 +5,7 @@ pipeline {
 		stage('PreSetup') {
 			steps {
 				echo 'PreSetup..'
+				sh 'git lfs pull'
 			}
 		}
         stage('Build') {

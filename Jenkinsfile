@@ -3,7 +3,9 @@ pipeline {
 
     stages {
 		stage('PreSetup') {
-			echo 'PreSetup..'
+			steps {
+				echo 'PreSetup..'
+			}
 		}
         stage('Build') {
             steps {

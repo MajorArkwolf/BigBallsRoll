@@ -5,6 +5,7 @@ pipeline {
 		stage('PreSetup') {
 			steps {
 				echo 'PreSetup..'
+				sh 'echo "test"'
 			}
 		}
         stage('Build') {

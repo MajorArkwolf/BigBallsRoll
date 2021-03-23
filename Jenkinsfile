@@ -26,7 +26,7 @@ pipeline {
 		    echo "${JOB_NAME} ${NODE_NAME} ${WORKSPACE}"
 		    sh script:'''
                     #!/bin/bash
-		    cd build/Debug
+		    cd ${WORKSPACE}/build/Debug
 		    BigBalls.exe --test
 		    '''
             }

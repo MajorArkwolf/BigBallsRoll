@@ -23,6 +23,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
+		    echo "${JOB_NAME} ${NODE_NAME} ${WORKSPACE}"
 		    sh script:'''
                     #!/bin/bash
 		    cd build/Debug

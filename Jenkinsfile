@@ -13,7 +13,7 @@ pipeline {
                 echo 'Building..'
 				sh script:'''
                     #!/bin/bash
-				    cmake -S . -B build -G 'Visual Studio 16 2019' -DWarningsAsErrors:BOOL=ON
+				    cmake -S . -B build -G 'Visual Studio 16 2019' -DWarningsAsErrors:BOOL=ON -DCopyResources:BOOL=ON
 				    cd build
 				    cmake --build .
 				'''
@@ -23,7 +23,12 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
-				sh 'build/BigBalls.exe --test'
+		    echo "${JOB_NAME} ${NODE_NAME} ${WORKSPACE}"
+		    sh script:'''
+                    #!/bin/bash
+		    cd ${WORKSPACE}/build/Debug
+		    ./BigBalls.exe --test
+		    '''
             }
         }
         stage('Deploy') {

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <Engine/engine.h>
 
+
 int LevelOne_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
@@ -16,16 +17,6 @@ int LevelOne_update(float deltaTime) {
     for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
         GameObject_update(&gameObjects[i]);
     }
-    // TODO: physics debug renderer
-    //(if debug){
-        //...
-        //for(AABB in AABBS)
-            //glColor3f(0,1,0);
-            //glBegin(GL_POLYGON);
-            //for(vertex in AABB)
-                //glVertex3f;
-            //glEnd;
-    //}
     return 0;
 }
 
@@ -48,6 +39,8 @@ int LevelOne_keyDown(InputType inputType) {
         case KEY_D:
             cam->MoveRight = true;
             break;
+        case KEY_T:
+            PhysicsWorld_debugToggle(StateManager_top(&engine.sM)->physicsWorld);
         default:
             break;
     }
@@ -81,7 +74,7 @@ int LevelOne_keyUp(InputType inputType) {
     return 0;
 }
 
-int LevelOne_mouseMovement(float x, float y) {
+int LevelOne_mouseMovement(double x, double y) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {
@@ -118,7 +111,7 @@ void LevelOne_init(State *state) {
     BoxCollider_init(wallCollider);
     wallCollider->xOffset = 0.f;
     wallCollider->yOffset = 0.f;
-    wallCollider->zOffset = 0.f;
+    wallCollider->zOffset = -1.f;
     wallCollider->xLen = 10.f;
     wallCollider->yLen = 1.f;
     wallCollider->zLen = 1.f;
@@ -127,6 +120,7 @@ void LevelOne_init(State *state) {
     CollisionBody_setPos(wallCollisionBody, 0.f, 0.f, 0.f);
     CollisionBody_setRot(wallCollisionBody, 0.f, 90.f, 0.f);
     PhysicsWorld_addCollisionBody(state->physicsWorld, wallCollisionBody);
+
 
     // add ball at rotation destination
     GameObject_init(&state->gameObjects[1]);
@@ -148,7 +142,7 @@ void LevelOne_init(State *state) {
 
     // add box at position pre-rotation
     GameObject_init(&state->gameObjects[2]);
-    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Off/boxcube.off");
+    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Off/bluecube.off");
     state->gameObjects[2].Transform.Position.Z = 5.f;
     ++state->NumOfGameObjects;
 
@@ -158,9 +152,9 @@ void LevelOne_init(State *state) {
     BoxCollider *boxCollider = calloc(1, sizeof(BoxCollider));
     BoxCollider_init(boxCollider);
     boxCollider->zOffset = 5.f;
-    boxCollider->xLen = 4.f;
-    boxCollider->yLen = 4.f;
-    boxCollider->zLen = 4.f;
+    boxCollider->xLen = 1.f;
+    boxCollider->yLen = 1.f;
+    boxCollider->zLen = 1.f;
     CollisionBody_addBoxCollider(boxCollisionBody, boxCollider);
 
     CollisionBody_setPos(boxCollisionBody, 0, 0, 5.f);

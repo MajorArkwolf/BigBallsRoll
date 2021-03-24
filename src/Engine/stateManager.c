@@ -87,10 +87,10 @@ int StateManager_keyUp(StateManager *stateManager, InputType inputType) {
     return 1;
 }
 
-int StateManager_mouseMove(StateManager *stateManager, float x, float y) {
+int StateManager_mouseMove(StateManager *stateManager, double x, double y) {
     State *state = StateManager_top(stateManager);
     if (state->mouseMovement != NULL) {
-        return state->mouseMovement(x, y);
+        return state->mouseMovement((float)x, (float)y);
     }
     return 1;
 }
@@ -105,4 +105,5 @@ void State_init(State *state) {
     state->keyUp = NULL;
     state->mouseMovement = NULL;
     state->camera = Camera_construct();
+    state->physicsWorld = NULL;
 }

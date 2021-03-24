@@ -4,14 +4,17 @@
 // TODO: move to external math library
 
 //TODO: Temp until vec3 is apart of external library
-typedef struct GravityNormal {
+typedef struct tempVec3 {
     float X;
     float Y;
     float Z;
-} GravityNormal;
+} tempVec3;
 
-//TODO: Temp until vec3 is apart of external library
-GravityNormal GravityNormal_init();
+/**
+ * Initialise a vec3 object.
+ * @param vec the vector to be initialised
+ */
+void tempVec3_init(tempVec3 *vec);
 
 typedef struct Matrix44 { // 4 by 4 matrix
     float elem[4][4];

@@ -1,17 +1,17 @@
 #pragma once
 #include "collisionBody.h"
 #include "mathsCommon.h"
+#include "physicsDebug.h"
+#include "mathsCommon.h"
 
-typedef struct PhysicsWorld{
+typedef struct PhysicsWorld {
     CollisionBody **collisionBodies;
     size_t numCollisionBodies;
     int collisionBodyIdCount;
     float gravity;
-    GravityNormal gravityNormal;
+    tempVec3 gravityNormal;
+    bool debug;
 } PhysicsWorld;
-
-//TODO: stub, not sure how this will work atm.
-void PhysicsWorld_updateGravityNormal(float x, float y, float z);
 
 /**
  * Searches for a CollisionBody by ID in a PhysicsWorld
@@ -23,7 +23,8 @@ void PhysicsWorld_updateGravityNormal(float x, float y, float z);
 CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
 /**
- * Initialises a PhysicsWorld object
+ * Initialises a PhysicsWorld object. Gravity is set to a default value of -9.8 (earths gravity).
+ * The gravityNormal vector is set to [0,-1,0] by default.
  * @param physicsWorld The PhysicsWorld to be initialised
  */
 void PhysicsWorld_init(PhysicsWorld *physicsWorld);
@@ -67,18 +68,32 @@ void PhysicsWorld_applyForce(PhysicsWorld *physicsWorld,
                               int objID);
 
 /**
-* Add a game object to the physics engine
+ * Add a game object to the physics engine
  * @param physicsWorld the PhysicsWorld to add a CollisionBody to
  * @param collisionBody the CollisionBody to add to the PhysicsWorld
 */
 void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody);
 
 /**
-* Remove a game object from the physics engine
-* @param physicsWorld The PhysicsWorld to remove a CollisionBody from
-* @param ID The ID of the CollisionBody to be removed
+ * Remove a game object from the physics engine
+ * @param physicsWorld The PhysicsWorld to remove a CollisionBody from
+ * @param ID The ID of the CollisionBody to be removed
 */
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
+
+/**
+ * Contains the debug draw functions TODO: UPDATE THIS COMMENT
+ * @param physicsWorld the object to draw
+ * @param debug the debug object to store the data in
+ * @return true if debug has been updated, else false.
+ */
+bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug);
+
+/**
+ * Toggles debug on or off.
+ * @param physicsWorld the physics world to toggle debug
+ */
+void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld);
 
 /**
  * Checks if the two axis-aligned bounding boxes of two CollisionBodies are colliding
@@ -87,3 +102,13 @@ void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, int ID);
  * @return bool determination of collision (true = colliding)
  */
 bool testAABBCollision(CollisionBody *a, CollisionBody *b);
+
+/**
+ * Updates the gravity normal for the current physicsWorld. Game engine will calculate the vector and pass in 3
+ * floats to ensure compatibility instead of a struct or array.
+ * @param physicsWorld the physics world to update
+ * @param x coordinate
+ * @param y coordinate
+ * @param z coordinate
+ */
+void PhysicsWorld_updateGravityNormal(PhysicsWorld *physicsWorld, float x, float y, float z);

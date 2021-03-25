@@ -1,7 +1,6 @@
-#include "include/BigBalls/collisionBody.h"
-#include "include/BigBalls/mathsCommon.h"
 #include <assert.h>
 #include <stdbool.h>
+#include "include/BigBalls/collisionBody.h"
 
 void CollisionBody_init(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
@@ -132,84 +131,89 @@ void CollisionBody_stop(CollisionBody *collisionBody){
     collisionBody->forceZ = 0;
 }
 
+BoxColliderVerts getBoxColliderVerts(CollisionBody* collisionBody, BoxCollider* boxCollider){
+    BoxColliderVerts res;
+    Matrix41 vert1 = {collisionBody->xPos + boxCollider->xOffset,
+                      collisionBody->yPos + boxCollider->yOffset,
+                      collisionBody->zPos + boxCollider->zOffset,
+                      1}; // point to be transformed
+    Matrix41 vert2 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
+                      collisionBody->yPos + boxCollider->yOffset,
+                      collisionBody->zPos + boxCollider->zOffset,
+                      1}; // point to be transformed
+    Matrix41 vert3 = {collisionBody->xPos + boxCollider->xOffset,
+                      collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
+                      collisionBody->zPos + boxCollider->zOffset,
+                      1}; // point to be transformed
+    Matrix41 vert4 = {collisionBody->xPos + boxCollider->xOffset,
+                      collisionBody->yPos + boxCollider->yOffset,
+                      collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
+                      1}; // point to be transformed
+    Matrix41 vert5 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
+                      collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
+                      collisionBody->zPos + boxCollider->zOffset,
+                      1}; // point to be transformed
+    Matrix41 vert6 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
+                      collisionBody->yPos + boxCollider->yOffset,
+                      collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
+                      1}; // point to be transformed
+    Matrix41 vert7 = {collisionBody->xPos + boxCollider->xOffset,
+                      collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
+                      collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
+                      1}; // point to be transformed
+    Matrix41 vert8 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
+                      collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
+                      collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
+                      1}; // point to be transformed
+    res.verts[0] = vert1;
+    res.verts[1] = vert2;
+    res.verts[2] = vert3;
+    res.verts[3] = vert4;
+    res.verts[4] = vert5;
+    res.verts[5] = vert6;
+    res.verts[6] = vert7;
+    res.verts[7] = vert8;
+    return res;
+}
+
 void CollisionBody_updateAABB(CollisionBody *collisionBody){
     assert(collisionBody != NULL && (collisionBody->numOfBoxColliders != 0 || collisionBody->numOfSphereColliders != 0)); // ensure that one collider exists before processing
-    // declare local vars
-    float greatestX, lowestX, greatestY, lowestY, greatestZ, lowestZ;
+    float greatestX, lowestX, greatestY, lowestY, greatestZ, lowestZ; // must be initialised to a point on a collider post-rotation
     bool varInit = false;
 
-    // create CollisionBody rotation matrix
+    // CollisionBody rotation matrix
     Matrix44 T1 = createRotMat(collisionBody->xRot,
                                collisionBody->yRot,
                                collisionBody->zRot);
     // get all BoxCollider min/max vertices
     for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){ // for each collider
-        // create BoxCollider rotation matrix
+        // BoxCollider rotation matrix
         Matrix44 T2 = createRotMat(collisionBody->BoxColliders[i]->xRot,
                                    collisionBody->BoxColliders[i]->yRot,
                                    collisionBody->BoxColliders[i]->zRot);
-        // create overall transformation matrix from CollisionBody and BoxCollider rotation matrices
+        // Combined transformation matrix
         Matrix44 T3 = matrixMultiplication44_44(T2, T1);
-        Matrix41 pos = {collisionBody->xPos + collisionBody->BoxColliders[i]->xOffset,
-                        collisionBody->yPos + collisionBody->BoxColliders[i]->yOffset,
-                        collisionBody->zPos + collisionBody->BoxColliders[i]->zOffset,
-                        1};
-        Matrix41 finalPos = matrixMultiplication44_41(T3, pos); // rotate position of collider in the scene
-        // store resulting position in BoxCollider object so it can be accessed later
-        collisionBody->BoxColliders[i]->xFinalPos = finalPos.elem[0];
-        collisionBody->BoxColliders[i]->yFinalPos = finalPos.elem[1];
-        collisionBody->BoxColliders[i]->zFinalPos = finalPos.elem[2];
-        // TODO: do trig to find out new extents
-        // allocate second position vector of collider
-        Matrix41 len = {collisionBody->xPos + collisionBody->BoxColliders[i]->xOffset + collisionBody->BoxColliders[i]->xLen,
-                        collisionBody->yPos + collisionBody->BoxColliders[i]->yOffset + collisionBody->BoxColliders[i]->yLen,
-                        collisionBody->zPos + collisionBody->BoxColliders[i]->zOffset + collisionBody->BoxColliders[i]->zLen};
-        //Matrix41 len = {collisionBody->xPos + collisionBody->BoxColliders[i]->xOffset + collisionBody->BoxColliders[i]->xLen,
-          //              collisionBody->yPos + collisionBody->BoxColliders[i]->yOffset + collisionBody->BoxColliders[i]->yLen,
-            //            collisionBody->zPos + collisionBody->BoxColliders[i]->zOffset + collisionBody->BoxColliders[i]->zLen};
-        Matrix41 finalLen = matrixMultiplication44_41(T3, len);
-        collisionBody->BoxColliders[i]->xFinalLen = finalLen.elem[0] - collisionBody->BoxColliders[i]->xFinalPos;
-        collisionBody->BoxColliders[i]->yFinalLen = finalLen.elem[1] - collisionBody->BoxColliders[i]->yFinalPos;
-        collisionBody->BoxColliders[i]->zFinalLen = finalLen.elem[2] - collisionBody->BoxColliders[i]->zFinalPos;
-
-        // check for new min/max points
-        if(!varInit){
-            if(collisionBody->BoxColliders[0]->xFinalLen > 0){
-                greatestX = collisionBody->BoxColliders[0]->xFinalPos + collisionBody->BoxColliders[0]->xFinalLen;
-                lowestX = collisionBody->BoxColliders[0]->xFinalPos;
+        BoxColliderVerts verts = getBoxColliderVerts(collisionBody, collisionBody->BoxColliders[i]);
+        for(size_t j = 0; j < 8; ++j){ // for each vertex of BoxCollider
+            Matrix41 transformedVert = matrixMultiplication44_41(T3, verts.verts[j]);
+            if(!varInit){ // init min/max values
+                greatestX = lowestX = transformedVert.elem[0];
+                greatestY = lowestY = transformedVert.elem[1];
+                greatestZ = lowestZ = transformedVert.elem[2];
+                varInit = true;
             }
-            else{
-                greatestX = collisionBody->BoxColliders[0]->xFinalPos;
-                lowestX = collisionBody->BoxColliders[0]->xFinalPos + collisionBody->BoxColliders[0]->xFinalLen;
-            }
-            if(collisionBody->BoxColliders[0]->yFinalLen > 0){
-                greatestY = collisionBody->BoxColliders[0]->yFinalPos + collisionBody->BoxColliders[0]->yFinalLen;
-                lowestY = collisionBody->BoxColliders[0]->yFinalPos;
-            }
-            else{
-                greatestY = collisionBody->BoxColliders[0]->yFinalPos;
-                lowestY = collisionBody->BoxColliders[0]->yFinalPos + collisionBody->BoxColliders[0]->yFinalLen;
-            }
-            if(collisionBody->BoxColliders[0]->zFinalLen > 0){
-                greatestZ = collisionBody->BoxColliders[0]->zFinalPos + collisionBody->BoxColliders[0]->zFinalLen;
-                lowestZ = collisionBody->BoxColliders[0]->zFinalPos;
-            }
-            else{
-                greatestZ = collisionBody->BoxColliders[0]->zFinalPos;
-                lowestZ = collisionBody->BoxColliders[0]->zFinalPos + collisionBody->BoxColliders[0]->zFinalLen;
-            }
-            varInit = true;
+            testPointMinMax(transformedVert.elem[0], 0, &lowestX, &greatestX);
+            testPointMinMax(transformedVert.elem[1], 0, &lowestY, &greatestY);
+            testPointMinMax(transformedVert.elem[2], 0, &lowestZ, &greatestZ);
         }
-        // TODO: minima pre-rotation isnt neccesarily minima post rotation
-        testPointMinMax(collisionBody->BoxColliders[i]->xFinalPos, collisionBody->BoxColliders[i]->xFinalLen, &lowestX, &greatestX);
-        testPointMinMax(collisionBody->BoxColliders[i]->yFinalPos, collisionBody->BoxColliders[i]->yFinalLen, &lowestY, &greatestY);
-        testPointMinMax(collisionBody->BoxColliders[i]->zFinalPos, collisionBody->BoxColliders[i]->zFinalLen, &lowestZ, &greatestZ);
     }
 
     // get all SphereCollider min/max vertices
     for(size_t i = 0; i < collisionBody->numOfSphereColliders; ++i){
         // allocate position vector of SphereCollider
-        Matrix41 pos = {collisionBody->xPos, collisionBody->yPos, collisionBody->zPos}; // TODO: should this be the collider position rather than collisionbody?
+        Matrix41 pos = {collisionBody->xPos + collisionBody->SphereColliders[i]->xOffset,
+                        collisionBody->yPos + collisionBody->SphereColliders[i]->yOffset,
+                        collisionBody->zPos + collisionBody->SphereColliders[i]->zOffset};
         // apply CollisionBody rotation transformation matrix to position vector (a sphere cannot be rotated from the perspective of the physics engine)
         Matrix41 finalPos = matrixMultiplication44_41(T1, pos);
         // store resulting position in SphereCollider to be accessed later
@@ -218,13 +222,9 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
         collisionBody->SphereColliders[i]->zFinalPos = finalPos.elem[2];
 
         if(!varInit){
-            greatestX = collisionBody->SphereColliders[i]->xFinalPos + collisionBody->SphereColliders[i]->radius;
-            lowestX = collisionBody->SphereColliders[i]->xFinalPos - collisionBody->SphereColliders[i]->radius;
-            greatestY = collisionBody->SphereColliders[i]->yFinalPos + collisionBody->SphereColliders[i]->radius;
-            lowestY = collisionBody->SphereColliders[i]->yFinalPos - collisionBody->SphereColliders[i]->radius;
-            greatestZ = collisionBody->SphereColliders[i]->zFinalPos + collisionBody->SphereColliders[i]->radius;
-            lowestZ = collisionBody->SphereColliders[i]->zFinalPos - collisionBody->SphereColliders[i]->radius;
-
+            greatestX = lowestX = collisionBody->SphereColliders[i]->xFinalPos + collisionBody->SphereColliders[i]->radius;
+            greatestY = lowestY = collisionBody->SphereColliders[i]->yFinalPos + collisionBody->SphereColliders[i]->radius;
+            greatestZ = lowestZ = collisionBody->SphereColliders[i]->zFinalPos + collisionBody->SphereColliders[i]->radius;
             varInit = true;
         }
         // check for new min/max points

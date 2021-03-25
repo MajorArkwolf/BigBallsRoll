@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "boxCollider.h"
 #include "sphereCollider.h"
+#include "mathsCommon.h"
 
 typedef struct CollisionBody{
     // implementation of stack
@@ -32,6 +33,11 @@ typedef struct CollisionBody{
     float AABBy2;
     float AABBz2;
 } CollisionBody;
+
+// struct to wrap array to make it easy to pass in and out of functions, and keep data on the stack for performance benefits
+typedef struct BoxColliderVerts{
+    Matrix41 verts[8];
+} BoxColliderVerts;
 
 /**
  * Initialise collisionBody

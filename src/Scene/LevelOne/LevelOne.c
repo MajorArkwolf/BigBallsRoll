@@ -117,12 +117,10 @@ void LevelOne_init(State *state) {
     wallCollider->xLen = 10.f;
     wallCollider->yLen = 1.f;
     wallCollider->zLen = 1.f;
-
     CollisionBody_addBoxCollider(wallCollisionBody, wallCollider);
     CollisionBody_setPos(wallCollisionBody, 0.f, 0.f, 0.f);
     CollisionBody_setRot(wallCollisionBody, 45.f, 45.f, 45.f);
     PhysicsWorld_addCollisionBody(state->physicsWorld, wallCollisionBody);
-
 
     // add ball at rotation destination
     GameObject_init(&state->gameObjects[1]);
@@ -135,8 +133,7 @@ void LevelOne_init(State *state) {
 
     SphereCollider *ballCollider = calloc(1, sizeof(SphereCollider));
     SphereCollider_init(ballCollider);
-    ballCollider->radius = 1.f;
-    ballCollider->zOffset = -10.f;
+    ballCollider->radius = 0.5f;
 
     CollisionBody_addSphereCollider(ballCollisionBody, ballCollider);
     CollisionBody_setPos(ballCollisionBody, 0.f, 0.f, -10.f);

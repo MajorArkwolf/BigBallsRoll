@@ -52,28 +52,6 @@ bool compareMatrix41(Matrix41 a, Matrix41 b){
     return true;
 }
 
-Matrix44 rotationTransformationMatrix(float x, float y, float z){
-    float xRad = toRad(x);
-    float yRad = toRad(y);
-    float zRad = toRad(z);
-
-    // tait-bryan angles, XYZ rotation matrix https://en.wikipedia.org/wiki/Euler_angles#Tait%E2%80%93Bryan_angles
-    // "The only difference is that Tait–Bryan angles represent rotations about three distinct axes (e.g. x-y-z, or x-y′-z″), while proper Euler angles use the same axis for both the first and third elemental rotations (e.g., z-x-z, or z-x′-z″)"
-    // follows right-hand rule like glRotate(), but not 100% sure if its the same order rotations are applied (xyz sounds conventional though)
-    // order should only impact impact of gimbal lock
-    Matrix44 res = identity44();
-    res.elem[0][0] = cosf(yRad)*cosf(zRad);
-    res.elem[0][1] = -1.f*cosf(yRad)*sinf(zRad);
-    res.elem[0][2] = sinf(yRad);
-    res.elem[1][0] = cosf(xRad)*sinf(zRad) + cosf(zRad)*sinf(xRad)*sinf(yRad);
-    res.elem[1][1] = cosf(xRad)*cosf(zRad) - sinf(xRad)*sinf(yRad)*sinf(zRad);
-    res.elem[1][2] = -1.f*cosf(yRad)*sinf(xRad);
-    res.elem[2][0] = sinf(xRad)*sinf(zRad) - cosf(xRad)*cosf(zRad)*sinf(yRad);
-    res.elem[2][1] = cosf(zRad)*sinf(xRad) + cosf(xRad)*sinf(yRad)*sinf(zRad);
-    res.elem[2][2] = cosf(xRad)*cosf(yRad);
-    return res;
-}
-
 Matrix44 matrixMultiplication44_44(Matrix44 a, Matrix44 b){
     Matrix44 res;
     res = identity44();
@@ -130,4 +108,28 @@ void testPointMinMax(const float pos, const float len, float* min, float* max){
             *min = pos + len;
         }
     }
+}
+
+Matrix44 rotateAboutVec(float xVec, float yVec, float zVec, float rotDeg){
+    Matrix44 res = {.elem[0][3] = 0, .elem[1][3] = 0, .elem[2][3] = 0, .elem[3] = {0, 0, 0, 1}};
+    float rot = rotDeg * M_PI/180;
+    // rotation implementation taken from OpenGL documentation https://docs.gl/gl2/glRotate
+    res.elem[0][0] = (powf(xVec, 2) * (1 - cosf(rot))) + cosf(rot);
+    res.elem[0][1] = (xVec * yVec * (1 - cosf(rot))) - zVec * sinf(rot);
+    res.elem[0][2] = (xVec * zVec * (1 - cosf(rot))) + yVec * sinf(rot);
+    res.elem[1][0] = (yVec * xVec * (1 - cosf(rot))) + zVec * sinf(rot);
+    res.elem[1][1] = (powf(yVec, 2) * (1 - cosf(rot))) + cosf(rot);
+    res.elem[1][2] = (yVec * zVec * (1 - cosf(rot))) - xVec * sinf(rot);
+    res.elem[2][0] = (xVec * zVec * (1 - cosf(rot))) - yVec * sinf(rot);
+    res.elem[2][1] = (yVec * zVec * (1 - cosf(rot))) + xVec * sinf(rot);
+    res.elem[2][2] = (powf(zVec, 2) * (1 - cosf(rot))) + cosf(rot);
+    return res;
+}
+
+Matrix44 createRotMat(float xDeg, float yDeg, float zDeg){
+    Matrix44 x = rotateAboutVec(1, 0, 0, xDeg);
+    Matrix44 y = rotateAboutVec(0, 1, 0, yDeg);
+    Matrix44 z = rotateAboutVec(0, 0, 1, zDeg);
+
+    return matrixMultiplication44_44(z , matrixMultiplication44_44(y, x));
 }

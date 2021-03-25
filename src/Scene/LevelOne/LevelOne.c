@@ -99,9 +99,11 @@ void LevelOne_init(State *state) {
     GameObject_init(&state->gameObjects[0]);
     state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Terrain/Wall.obj");
     state->gameObjects[0].Transform.Position.X += 0.f;
-    state->gameObjects[0].Transform.Position.Z += 0.f;
     state->gameObjects[0].Transform.Position.Y -= 0.f;
-    state->gameObjects[0].Transform.Rotation.Y += 90.f;
+    state->gameObjects[0].Transform.Position.Z += 0.f;
+    state->gameObjects[0].Transform.Rotation.X += 45.f;
+    state->gameObjects[0].Transform.Rotation.Y += 45.f;
+    state->gameObjects[0].Transform.Rotation.Z += 45.f;
     state->NumOfGameObjects = 1;
     // create CollisionBody for object
     CollisionBody* wallCollisionBody = calloc(1, sizeof(CollisionBody));
@@ -111,14 +113,14 @@ void LevelOne_init(State *state) {
     BoxCollider_init(wallCollider);
     wallCollider->xOffset = 0.f;
     wallCollider->yOffset = 0.f;
-    wallCollider->zOffset = -1.f;
+    wallCollider->zOffset = 0.f;
     wallCollider->xLen = 10.f;
     wallCollider->yLen = 1.f;
     wallCollider->zLen = 1.f;
 
     CollisionBody_addBoxCollider(wallCollisionBody, wallCollider);
     CollisionBody_setPos(wallCollisionBody, 0.f, 0.f, 0.f);
-    CollisionBody_setRot(wallCollisionBody, 0.f, 90.f, 0.f);
+    CollisionBody_setRot(wallCollisionBody, 45.f, 45.f, 45.f);
     PhysicsWorld_addCollisionBody(state->physicsWorld, wallCollisionBody);
 
 
@@ -151,7 +153,6 @@ void LevelOne_init(State *state) {
 
     BoxCollider *boxCollider = calloc(1, sizeof(BoxCollider));
     BoxCollider_init(boxCollider);
-    boxCollider->zOffset = 5.f;
     boxCollider->xLen = 1.f;
     boxCollider->yLen = 1.f;
     boxCollider->zLen = 1.f;

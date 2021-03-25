@@ -216,6 +216,7 @@ bool testAABBStackedRotation(){
     }
 }
 
+/**
 bool testRotationIdentityMatrix(){
     Matrix44 res = rotationTransformationMatrix(0, 0, 0);
     // no rotation should result in identity matrix
@@ -233,8 +234,9 @@ bool testRotationIdentityMatrix(){
     else{
         return false;
     }
-}
+}*/
 
+/**
 bool testRotationX(){
     Matrix44 res = rotationTransformationMatrix(90.f,0.f,0.f);
     if(res.elem[0][0] == 1 &&
@@ -305,6 +307,24 @@ bool testFullRotation(){
     else{
         return false;
     }
+}*/
+
+bool coolTest(){
+    Matrix41 myCoord = {.elem[0] = 1,
+                        .elem[1] = 1,
+                        .elem[2] = 1,
+                        .elem[3] = 1};
+
+    Matrix44 res = createRotMat(45, 45, 45); // 45, 45, 45 rotation
+    Matrix41 final = matrixMultiplication44_41(res, myCoord);
+    if(fTolerance(final.elem[0], 45*M_PI/180.f, 0.001f) &&
+       fTolerance(final.elem[1], 45*M_PI/180.f, 0.001f) &&
+       fTolerance(final.elem[2], 45*M_PI/180.f,0.001f)){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 void startTests(){
@@ -315,13 +335,13 @@ void startTests(){
     printf("Test AABB Rotation Y: %d\n", testAABBRotationY());
     printf("Test AABB Rotation Z: %d\n", testAABBRotationZ());
     printf("Test AABB Stacked Rotation: %d\n", testAABBStackedRotation());
-    printf("Test rotation identity matrix: %d\n", testRotationIdentityMatrix());
-    printf("Test x rotation: %d\n", testRotationX());
-    printf("Test y rotation: %d\n", testRotationY());
-    printf("Test z rotation: %d\n", testRotationZ());
-    printf("Test full rotation: %d\n", testFullRotation());
+    //printf("Test rotation identity matrix: %d\n", testRotationIdentityMatrix());
+    //printf("Test x rotation: %d\n", testRotationX());
+    //printf("Test y rotation: %d\n", testRotationY());
+    //printf("Test z rotation: %d\n", testRotationZ());
+    //printf("Test full rotation: %d\n", testFullRotation());
     printf("Test 4x4 * 4x4 matrix multiplication: %d\n", testMatrixMultiplication44_44());
     printf("Test 4x4 * 4x1 matrix multiplication: %d\n", testMatrixMultiplication44_41());
     printf("Test 4 by 4 identity matrix: %d\n", testIdentity44());
+    printf("cool test: %d\n", coolTest());
 }
-

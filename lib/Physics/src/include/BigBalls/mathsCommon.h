@@ -41,15 +41,6 @@ bool fTolerance(float a, float b, float tolerance);
 float toRad(float deg);
 
 /**
- * Creates a rotation transformation matrix
- * @param x the number of degrees to rotate about the x axis (right-hand rule)
- * @param y the number of degrees to rotate about the y axis (right-hand rule)
- * @param z the number of degrees to rotate about the z axis (right-hand rule)
- * @return Matrix44 the resulting 4 by 4 transformation matrix
- */
-Matrix44 rotationTransformationMatrix(float x, float y, float z);
-
-/**
  * Performs matrix multiplication of two 4 by 4 matrices
  * @param a the first 4 by 4 matrix
  * @param b the second 4 by 4 matrix
@@ -104,3 +95,22 @@ void minMax(float val1, float val2, float* min, float* max);
  * @param max the address of the current maximum value
  */
 void testPointMinMax(float pos, float len, float* min, float* max);
+
+/**
+ * Creates a transformation matrix that rotates about a vector rotDeg degrees
+ * @param xVec x component of vec
+ * @param yVec y component of vec
+ * @param zVec z component of vec
+ * @param rotDeg degrees of anti-clockwise rotation about vector
+ * @return Matrix44 transformation matrix
+ */
+Matrix44 rotateAboutVec(float xVec, float yVec, float zVec, float rotDeg);
+
+/**
+ * Creates a transformation matrix that rotates about the x, y and z axes by xDeg, yDeg and zDeg degrees respectively
+ * @param xDeg degrees about x axis
+ * @param yDeg degrees about y axis
+ * @param zDeg degrees about z axis
+ * @return Matrix44 transformation matrix
+ */
+Matrix44 createRotMat(float xDeg, float yDeg, float zDeg);

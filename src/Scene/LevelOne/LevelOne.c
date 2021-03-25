@@ -4,6 +4,10 @@
 
 
 int LevelOne_draw(float deltaTime) {
+    StateManager_top(&engine.sM)->gameObjects[0].Transform.Rotation.X += 1;
+    StateManager_top(&engine.sM)->gameObjects[0].Transform.Rotation.Y += 1;
+    StateManager_top(&engine.sM)->gameObjects[0].Transform.Rotation.Z += 1;
+    CollisionBody_rotate(StateManager_top(&engine.sM)->physicsWorld->collisionBodies[0], 1, 1, 1);
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
     }
@@ -99,7 +103,7 @@ void LevelOne_init(State *state) {
     GameObject_init(&state->gameObjects[0]);
     state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Terrain/Wall.obj");
     state->gameObjects[0].Transform.Position.X += 0.f;
-    state->gameObjects[0].Transform.Position.Y -= 0.f;
+    state->gameObjects[0].Transform.Position.Y += 0.f;
     state->gameObjects[0].Transform.Position.Z += 0.f;
     state->gameObjects[0].Transform.Rotation.X += 45.f;
     state->gameObjects[0].Transform.Rotation.Y += 45.f;
@@ -113,7 +117,7 @@ void LevelOne_init(State *state) {
     BoxCollider_init(wallCollider);
     wallCollider->xOffset = 0.f;
     wallCollider->yOffset = 0.f;
-    wallCollider->zOffset = 0.f;
+    wallCollider->zOffset = -1.f;
     wallCollider->xLen = 10.f;
     wallCollider->yLen = 1.f;
     wallCollider->zLen = 1.f;

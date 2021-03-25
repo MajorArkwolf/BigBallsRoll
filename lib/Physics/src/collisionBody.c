@@ -136,35 +136,35 @@ BoxColliderVerts getBoxColliderVerts(CollisionBody* collisionBody, BoxCollider* 
     Matrix41 vert1 = {collisionBody->xPos + boxCollider->xOffset,
                       collisionBody->yPos + boxCollider->yOffset,
                       collisionBody->zPos + boxCollider->zOffset,
-                      1}; // point to be transformed
+                      0}; // point to be transformed
     Matrix41 vert2 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
                       collisionBody->yPos + boxCollider->yOffset,
                       collisionBody->zPos + boxCollider->zOffset,
-                      1}; // point to be transformed
+                      0}; // point to be transformed
     Matrix41 vert3 = {collisionBody->xPos + boxCollider->xOffset,
                       collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
                       collisionBody->zPos + boxCollider->zOffset,
-                      1}; // point to be transformed
+                      0}; // point to be transformed
     Matrix41 vert4 = {collisionBody->xPos + boxCollider->xOffset,
                       collisionBody->yPos + boxCollider->yOffset,
                       collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
-                      1}; // point to be transformed
+                      0}; // point to be transformed
     Matrix41 vert5 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
                       collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
                       collisionBody->zPos + boxCollider->zOffset,
-                      1}; // point to be transformed
+                      0}; // point to be transformed
     Matrix41 vert6 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
                       collisionBody->yPos + boxCollider->yOffset,
                       collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
-                      1}; // point to be transformed
+                      0}; // point to be transformed
     Matrix41 vert7 = {collisionBody->xPos + boxCollider->xOffset,
                       collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
                       collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
-                      1}; // point to be transformed
+                      0}; // point to be transformed
     Matrix41 vert8 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
                       collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
                       collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
-                      1}; // point to be transformed
+                      0}; // point to be transformed
     res.verts[0] = vert1;
     res.verts[1] = vert2;
     res.verts[2] = vert3;

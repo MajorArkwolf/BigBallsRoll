@@ -54,11 +54,7 @@ else
   CREDITS="$AUTHOR_NAME authored & $COMMITTER_NAME committed"
 fi
 
-if [[ $TRAVIS_PULL_REQUEST != false ]]; then
-  URL="https://github.com/$TRAVIS_REPO_SLUG/pull/$TRAVIS_PULL_REQUEST"
-else
-  URL=""
-fi
+URL="$URL_PATH/pull/${JOB_NAME:10}"
 
 TIMESTAMP=$(date -u +%FT%TZ)
 WEBHOOK_DATA='{

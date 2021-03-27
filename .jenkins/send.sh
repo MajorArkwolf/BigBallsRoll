@@ -36,6 +36,7 @@ AUTHOR_NAME="$(git log -1 "$GIT_COMMIT" --pretty="%aN")"
 COMMITTER_NAME="$(git log -1 "$GIT_COMMIT" --pretty="%cN")"
 COMMIT_SUBJECT="$(git log -1 "$GIT_COMMIT" --pretty="%s")"
 COMMIT_MESSAGE="$(git log -1 "$GIT_COMMIT" --pretty="%b")" | sed -E ':a;N;$!ba;s/\r{0,1}\n/\\n/g'
+URL_PATH="${GIT_URL::-4}"
 
 if [ ${#COMMIT_SUBJECT} -gt 256 ]; then
   COMMIT_SUBJECT="$(echo "$COMMIT_SUBJECT" | cut -c 1-253)"
@@ -66,7 +67,7 @@ WEBHOOK_DATA='{
   "embeds": [ {
     "color": '$EMBED_COLOR',
     "author": {
-      "name": "Job #'"$TRAVIS_JOB_NUMBER"' (Build #'"$TRAVIS_BUILD_NUMBER"') '"$STATUS_MESSAGE"' - '"$TRAVIS_REPO_SLUG"'",
+      "name": "Job '"$JOB_NAME"' (Build #'"$BUILD_NUMBER"') '"$STATUS_MESSAGE"'",
       "url": "'"$BUILD_URL"'",
       "icon_url": "'$AVATAR'"
     },
@@ -76,12 +77,12 @@ WEBHOOK_DATA='{
     "fields": [
       {
         "name": "Commit",
-        "value": "'"[\`${GIT_COMMIT:0:7}\`](https://github.com/$GIT_URL/commit/$GIT_COMMIT)"'",
+        "value": "'"[\`${GIT_COMMIT:0:7}\`]($URL_PATH/commit/$GIT_COMMIT)"'",
         "inline": true
       },
       {
         "name": "Branch",
-        "value": "'"[\`$JOB_NAME\`](https://github.com/$GIT_URL)"'",
+        "value": "'"[\`$JOB_NAME\`]($URL_PATH/$JOB_NAME)"'",
         "inline": true
       }
     ],

@@ -7,8 +7,8 @@ pipeline {
 			    sh 'git submodule update --init --recursive'
 		    }
 		}
-	 stage('Build') {
-            steps {
+	stage('Build') {
+       steps {
                 echo 'Building..'
 		    sh script:'''
                 #!/bin/bash
@@ -16,9 +16,9 @@ pipeline {
 		        cd build
 		        cmake --build .
 		    '''
-	    }
+	        }
 	}
-        stage('Test') {
+       stage('Test') {
             steps {
                 echo 'Testing..'
 		        echo "${JOB_NAME} ${NODE_NAME} ${WORKSPACE}"
@@ -34,11 +34,15 @@ pipeline {
                 echo 'Deploying....'
             }
         }
-        stage('Notify') {
-            steps {
-                sh 'chmod 755 .jenkins/send.sh'
-                sh '.jenkins/send.sh'
-            }
+    }
+    post {
+        success {
+            sh 'chmod 755 .jenkins/send.sh'
+            sh '.jenkins/send.sh success $WEBHOOK_URL'
+        }
+        failure {
+            sh 'chmod 755 .jenkins/send.sh'
+            sh '.jenkins/send.sh failure $WEBHOOK_URL'
         }
     }
 }

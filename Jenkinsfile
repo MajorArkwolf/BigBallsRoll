@@ -34,5 +34,11 @@ pipeline {
                 echo 'Deploying....'
             }
         }
+        stage('Notify') {
+            steps {
+                sh 'chmod 755 .jenkins/send.sh'
+                sh 'send.sh'
+            }
+        }
     }
 }

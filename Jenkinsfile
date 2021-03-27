@@ -44,5 +44,9 @@ pipeline {
             sh 'chmod 755 .jenkins/send.sh'
             sh '.jenkins/send.sh failure $WEBHOOK_URL'
         }
+	aborted {
+            sh 'chmod 755 .jenkins/send.sh'
+            sh '.jenkins/send.sh failure $WEBHOOK_URL'   
+	}
     }
 }

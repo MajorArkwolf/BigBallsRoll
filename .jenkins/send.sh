@@ -4,19 +4,19 @@ case $1 in
   "building" )
     EMBED_COLOR=15105570
     STATUS_MESSAGE="Building"
-    AVATAR="https://travis-ci.com/images/logos/TravisCI-Mascot-red.png"
+    AVATAR="https://iconsplace.com/wp-content/uploads/_icons/ff0000/256/png/error-icon-14-256.png"
     ;;
 
   "success" )
     EMBED_COLOR=3066993
     STATUS_MESSAGE="Passed"
-    AVATAR="https://travis-ci.com/images/logos/TravisCI-Mascot-blue.png"
+    AVATAR="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Green_tick.svg/1024px-Green_tick.svg.png"
     ;;
 
   "failure" )
     EMBED_COLOR=15158332
     STATUS_MESSAGE="Failed"
-    AVATAR="https://travis-ci.com/images/logos/TravisCI-Mascot-red.png"
+    AVATAR="https://iconsplace.com/wp-content/uploads/_icons/ff0000/256/png/error-icon-14-256.png"
     ;;
 
   * )
@@ -63,7 +63,7 @@ fi
 TIMESTAMP=$(date -u +%FT%TZ)
 WEBHOOK_DATA='{
   "username": "",
-  "avatar_url": "https://travis-ci.com/images/logos/TravisCI-Mascot-1.png",
+  "avatar_url": "https://itisatechiesworld.files.wordpress.com/2015/01/cool-jenkins2x3.png",
   "embeds": [ {
     "color": '$EMBED_COLOR',
     "author": {
@@ -82,7 +82,7 @@ WEBHOOK_DATA='{
       },
       {
         "name": "Branch",
-        "value": "'"[\`$JOB_NAME\`]($URL_PATH/$JOB_NAME)"'",
+        "value": "'"[\`$JOB_NAME\`]($URL_PATH/pull/${JOB_NAME:10})"'",
         "inline": true
       }
     ],

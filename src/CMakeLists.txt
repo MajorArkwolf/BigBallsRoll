@@ -41,9 +41,6 @@ target_sources(${PROJECT_NAME} PRIVATE
     Scene/MainMenu/mainMenu.c
     Scene/Game/game.c
     Scene/LevelOne/LevelOne.c
-
-    # Unit Tests
-    UnitTest/unitTestEntry.c
 )
 
 # Include project header files.

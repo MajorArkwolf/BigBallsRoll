@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
+#include "Engine/engine.h"
 
 /**
  * 1) Identify the error code.
@@ -105,11 +106,12 @@ ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *vel
     if (audioEngine->MaxNumSources == MAX_SOURCES) {
         return 0;
     }
+    AudioPresets *ap = &engine.audioPresets;
     alGenSources((ALuint)1, &audioEngine->Sources[audioEngine->MaxNumSources]);// check for errors
     getErrorString(alGetError());
     alSourcef(audioEngine->Sources[audioEngine->MaxNumSources], AL_PITCH, 1);
     getErrorString(alGetError());
-    alSourcef(audioEngine->Sources[audioEngine->MaxNumSources], AL_GAIN, 1);
+    alSourcef(audioEngine->Sources[audioEngine->MaxNumSources], AL_GAIN, ap->MasterVolume);
     getErrorString(alGetError());
     if (position != NULL) {
         alSource3f(audioEngine->Sources[audioEngine->MaxNumSources],
@@ -151,4 +153,8 @@ void AudioEngine_free(AudioEngine *audioEngine) {
     alcMakeContextCurrent(NULL);
     alcDestroyContext(audioEngine->Context);
     alcCloseDevice(audioEngine->Device);
+}
+
+void AudioEngine_AudioPresets_init(AudioPresets *ap) {
+    ap->MasterVolume = 100.0;
 }

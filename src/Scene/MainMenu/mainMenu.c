@@ -51,6 +51,9 @@ int MainMenu_keyUp(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     State *state;
     switch (inputType) {
+        case KEY_ESC:
+            glfwSetWindowShouldClose(engine.window, GLFW_TRUE);
+            break;
         case KEY_UP_ARROW:
         case KEY_W:
             cam->MoveForward = false;

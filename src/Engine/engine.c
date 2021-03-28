@@ -221,7 +221,6 @@ int Engine_run(int argc, char *argv[]) {
     double currentTime = glfwGetTime();
     double accumulator = 0.0;
     double deltaTime = 0.01;
-    double time = 0.0;
     while(!glfwWindowShouldClose(engine.window)) {
         double newTime = glfwGetTime();
         double frameTime = newTime - currentTime;
@@ -235,7 +234,6 @@ int Engine_run(int argc, char *argv[]) {
             glfwPollEvents();
             FixedUpdate(deltaTime);
             //Physics update goes here.
-            time += deltaTime;
             accumulator -= deltaTime;
         }
         Update(frameTime);

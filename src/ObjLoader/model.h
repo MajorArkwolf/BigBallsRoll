@@ -1,7 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <stdbool.h>
-#include <Math/vec3.h>
+#include "Math/vec3.h"
 #include "Engine/textureManager.h"
 
 /// Colour represented in RGBA format and in that order.

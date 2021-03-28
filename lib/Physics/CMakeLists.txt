@@ -11,7 +11,6 @@ set(PHYSICS_HEADERS
     "src/include/BigBalls/sphereCollider.h"
     "src/include/BigBalls/dynamicArray.h"
     "src/include/BigBalls/physicsDebug.h"
-    "src/include/BigBalls/unitTests.h"
     "src/include/BigBalls/mathsCommon.h")
 
 set(PHYSICS_SOURCES
@@ -22,7 +21,6 @@ set(PHYSICS_SOURCES
     "src/sphereCollider.c"
     "src/dynamicArray.c"
     "src/physicsDebug.c"
-    "src/unitTests.c"
     "src/mathsCommon.c")
 
 add_library(${PROJECT_NAME} ${PHYSICS_HEADERS} ${PHYSICS_SOURCES})

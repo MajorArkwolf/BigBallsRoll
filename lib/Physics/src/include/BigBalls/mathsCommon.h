@@ -14,7 +14,15 @@ typedef struct tempVec3 {
  * Initialise a vec3 object.
  * @param vec the vector to be initialised
  */
-void tempVec3_init(tempVec3 *vec);
+void tempVec3_init(tempVec3 *vec3);
+
+typedef struct Matrix44 { // 4 by 4 matrix
+    float elem[4][4];
+} Matrix44;
+
+typedef struct Matrix41{ // 4 by 1 matrix
+    float elem[4];
+} Matrix41;
 
 /**
  * Determines if two floats are "equal" given a level of tolerance
@@ -33,31 +41,42 @@ bool fTolerance(float a, float b, float tolerance);
 float toRad(float deg);
 
 /**
- * Creates a rotation transformation matrix
- * @param x the number of degrees to rotate about the x axis (right-hand rule)
- * @param y the number of degrees to rotate about the y axis (right-hand rule)
- * @param z the number of degrees to rotate about the z axis (right-hand rule)
- * @param res the resulting transformation matrix
+ * Performs matrix multiplication of two 4 by 4 matrices
+ * @param a the first 4 by 4 matrix
+ * @param b the second 4 by 4 matrix
+ * @return Matrix44 the resulting matrix from the multiplication operation
  */
-void rotationTransformationMatrix(float x, float y, float z, float res[3][3]);
+Matrix44 matrixMultiplication44_44(Matrix44 a, Matrix44 b);
 
 /**
- * Performs matrix multiplication of two compatible matrices. Throws assertion if matrices are incompatible.
- * @param a_numRow the number of rows in the first matrix
- * @param a_numCol the number of columns in the first matrix
- * @param b_numRow the number of rows in the second matrix
- * @param b_numCol the number of columns in the second matrix
- * @param a the first matrix
- * @param b the second matrix
- * @param res the resulting matrix
+ * Performs matrix multiplication - premultiplying a 4 by 1 matrix by a 4 by 4 matrix, resulting in a 4 by 1 matrix
+ * @param a the first matrix (4 by 4)
+ * @param b the second matrix (4 by 1)
+ * @return the resulting matrix (4 by 1)
  */
-void matrixMultiplication(int a_numRow,
-                          int a_numCol,
-                          int b_numRow,
-                          int b_numCol,
-                          float a[a_numRow][a_numCol],
-                          float b[b_numRow][b_numCol],
-                          float res[a_numRow][b_numCol]);
+Matrix41 matrixMultiplication44_41(Matrix44 a, Matrix41 b);
+
+/**
+ * Creates a 4 by 4 identity matrix
+ * @return Matrix44 a 4 by 4 identity matrix
+ */
+Matrix44 identity44();
+
+/**
+ * Determines if two 4 by 4 matrices are equal
+ * @param a the first 4 by 4 matrix
+ * @param b the second 4 by 4 matrix
+ * @return bool the equivalence of the two matrices
+ */
+bool compareMatrix44(Matrix44 a, Matrix44 b);
+
+/**
+ * Determines if two 4 by 1 matrices are equal
+ * @param a the first 4 by 1 matrix
+ * @param b the second 4 by 1 matrix
+ * @return bool the equivalence of the two matrices
+ */
+bool compareMatrix41(Matrix41 a, Matrix41 b);
 
 /**
  * Determines if either of the two floats are new min/max values, and returns them if they are
@@ -76,3 +95,22 @@ void minMax(float val1, float val2, float* min, float* max);
  * @param max the address of the current maximum value
  */
 void testPointMinMax(float pos, float len, float* min, float* max);
+
+/**
+ * Creates a transformation matrix that rotates about a vector rotDeg degrees
+ * @param xVec x component of vec
+ * @param yVec y component of vec
+ * @param zVec z component of vec
+ * @param rotDeg degrees of anti-clockwise rotation about vector
+ * @return Matrix44 transformation matrix
+ */
+Matrix44 rotateAboutVec(float xVec, float yVec, float zVec, float rotDeg);
+
+/**
+ * Creates a transformation matrix that rotates about the x, y and z axes by xDeg, yDeg and zDeg degrees respectively
+ * @param xDeg degrees about x axis
+ * @param yDeg degrees about y axis
+ * @param zDeg degrees about z axis
+ * @return Matrix44 transformation matrix
+ */
+Matrix44 createRotMat(float xDeg, float yDeg, float zDeg);

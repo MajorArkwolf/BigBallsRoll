@@ -79,7 +79,6 @@ Matrix41 matrixMultiplication44_41(Matrix44 a, Matrix41 b){
     return res;
 }
 
-
 void minMax(float val1, float val2, float* min, float* max){
     if(val1 <= val2){
         *min = val1;

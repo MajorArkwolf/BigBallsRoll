@@ -161,6 +161,7 @@ void LevelOne_init(State *state) {
 
     BoxCollider *boxCollider = calloc(1, sizeof(BoxCollider));
     BoxCollider_init(boxCollider);
+
     boxCollider->xLen = 1.f;
     boxCollider->yLen = 1.f;
     boxCollider->zLen = 1.f;

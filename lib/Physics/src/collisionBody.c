@@ -147,40 +147,7 @@ void CollisionBody_stop(CollisionBody *collisionBody){
 }
 
 BoxColliderVerts getBoxColliderVerts(BoxCollider* boxCollider, Matrix41 transCollisionBodyPos){
-    BoxColliderVerts res;/*
-    Matrix41 vert1 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset,
-                      transCollisionBodyPos.elem[1] + boxCollider->yOffset,
-                      transCollisionBodyPos.elem[2] + boxCollider->zOffset,
-                      0}; // point to be transformed
-    Matrix41 vert2 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset + boxCollider->xLen,
-                      transCollisionBodyPos.elem[1] + boxCollider->yOffset,
-                      transCollisionBodyPos.elem[2] + boxCollider->zOffset,
-                      0}; // point to be transformed
-    Matrix41 vert3 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset,
-                      transCollisionBodyPos.elem[1] + boxCollider->yOffset + boxCollider->yLen,
-                      transCollisionBodyPos.elem[2] + boxCollider->zOffset,
-                      0}; // point to be transformed
-    Matrix41 vert4 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset,
-                      transCollisionBodyPos.elem[1] + boxCollider->yOffset,
-                      transCollisionBodyPos.elem[2] + boxCollider->zOffset + boxCollider->zLen,
-                      0}; // point to be transformed
-    Matrix41 vert5 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset + boxCollider->xLen,
-                      transCollisionBodyPos.elem[1] + boxCollider->yOffset + boxCollider->yLen,
-                      transCollisionBodyPos.elem[2] + boxCollider->zOffset,
-                      0}; // point to be transformed
-    Matrix41 vert6 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset + boxCollider->xLen,
-                      transCollisionBodyPos.elem[1] + boxCollider->yOffset,
-                      transCollisionBodyPos.elem[2] + boxCollider->zOffset + boxCollider->zLen,
-                      0}; // point to be transformed
-    Matrix41 vert7 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset,
-                      transCollisionBodyPos.elem[1] + boxCollider->yOffset + boxCollider->yLen,
-                      transCollisionBodyPos.elem[2] + boxCollider->zOffset + boxCollider->zLen,
-                      0}; // point to be transformed
-    Matrix41 vert8 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset + boxCollider->xLen,
-                      transCollisionBodyPos.elem[1] + boxCollider->yOffset + boxCollider->yLen,
-                      transCollisionBodyPos.elem[2] + boxCollider->zOffset + boxCollider->zLen,
-                      0}; // point to be transformed
-    */
+    BoxColliderVerts res;
     Matrix41 vert1 = {boxCollider->xOffset,
                       boxCollider->yOffset,
                       boxCollider->zOffset,

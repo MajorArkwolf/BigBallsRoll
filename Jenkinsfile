@@ -21,7 +21,8 @@ pipeline {
        stage('Test') {
             steps {
                 echo 'Testing..'
-		        echo "${JOB_NAME} ${NODE_NAME} ${WORKSPACE}"
+		        sh 'cppcheck src/ --enable=warning,style,performance,portability --inconclusive --error-exitcode=1'
+		        sh 'cppcheck lib/Physics/src --enable=warning,style,performance,portability --inconclusive --error-exitcode=1'
 		        /*sh script:'''
                     #!/bin/bash
 		            cd ${WORKSPACE}/build/Debug

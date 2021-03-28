@@ -9,15 +9,17 @@
 char *getCurrentWorkingDirectory(char *path) {
     size_t mallocSize = strlen(path) * sizeof(char) + 1;
     char *newStr = malloc(mallocSize);
-    if (newStr == NULL) {
+    if (newStr != NULL) {
         printf("malloc failed while getting current working directory.");
         assert(false);
+        strcpy(newStr, path);
+        replaceChar(newStr, '\\', '/');
+        size_t indexOf = getLastOccurrenceInString('/', newStr);
+        newStr[indexOf + 1] = '\0';
+        return newStr;
     }
-    strcpy(newStr, path);
-    replaceChar(newStr, '\\', '/');
-    size_t indexOf = getLastOccurrenceInString('/', newStr);
-    newStr[indexOf + 1] = '\0';
-    return newStr;
+    assert(false);
+    return NULL;
 }
 
 char *getFileTypeFromPath(char *path) {

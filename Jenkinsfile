@@ -23,11 +23,11 @@ pipeline {
                 echo 'Testing..'
 		        sh 'cppcheck src/ --enable=warning,style,performance,portability --inconclusive --error-exitcode=1'
 		        sh 'cppcheck lib/Physics/src --enable=warning,style,performance,portability --inconclusive --error-exitcode=1'
-		        sh script:'''
+		        /*sh script:'''
                     #!/bin/bash
 		            cd ${WORKSPACE}/build/Debug
 		            ./BigBalls.exe --test
-		        '''
+		        '''*/
             }
         }
         stage('Deploy') {

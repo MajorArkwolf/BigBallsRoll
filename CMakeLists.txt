@@ -41,6 +41,9 @@ add_subdirectory(lib)
 # Define source files.
 add_subdirectory(src)
 
+#Tesinting framework
+add_subdirectory(tests)
+
 if (MSVC)
     string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 endif()

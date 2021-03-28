@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdbool.h>
+#include <math.h>
 #include "include/BigBalls/collisionBody.h"
 
 void CollisionBody_init(CollisionBody *collisionBody){
@@ -91,9 +92,23 @@ void CollisionBody_rotate(CollisionBody *collisionBody,
                           float yRot,
                           float zRot){
     assert(collisionBody != NULL);
-    collisionBody->xRot += xRot; // update CollisionBody rotation
-    collisionBody->yRot += yRot;
-    collisionBody->zRot += zRot;
+    float newRotX = collisionBody->xRot + xRot; // update CollisionBody rotation
+    float newRotY = collisionBody->yRot + yRot;
+    float newRotZ = collisionBody->zRot + zRot;
+
+    if(newRotX != 0){
+        newRotX = fmodf(newRotX, 360.f);
+    }
+    if(newRotY != 0){
+        newRotY = fmodf(newRotY, 360.f);
+    }
+    if(newRotZ != 0){
+        newRotZ = fmodf(newRotZ, 360.f);
+    }
+
+    collisionBody->xRot = newRotX;
+    collisionBody->yRot = newRotY;
+    collisionBody->zRot = newRotZ;
     CollisionBody_updateAABB(collisionBody);
 }
 
@@ -131,39 +146,72 @@ void CollisionBody_stop(CollisionBody *collisionBody){
     collisionBody->forceZ = 0;
 }
 
-BoxColliderVerts getBoxColliderVerts(CollisionBody* collisionBody, BoxCollider* boxCollider){
-    BoxColliderVerts res;
-    Matrix41 vert1 = {collisionBody->xPos + boxCollider->xOffset,
-                      collisionBody->yPos + boxCollider->yOffset,
-                      collisionBody->zPos + boxCollider->zOffset,
+BoxColliderVerts getBoxColliderVerts(BoxCollider* boxCollider, Matrix41 transCollisionBodyPos){
+    BoxColliderVerts res;/*
+    Matrix41 vert1 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset,
+                      transCollisionBodyPos.elem[1] + boxCollider->yOffset,
+                      transCollisionBodyPos.elem[2] + boxCollider->zOffset,
                       0}; // point to be transformed
-    Matrix41 vert2 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
-                      collisionBody->yPos + boxCollider->yOffset,
-                      collisionBody->zPos + boxCollider->zOffset,
+    Matrix41 vert2 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset + boxCollider->xLen,
+                      transCollisionBodyPos.elem[1] + boxCollider->yOffset,
+                      transCollisionBodyPos.elem[2] + boxCollider->zOffset,
                       0}; // point to be transformed
-    Matrix41 vert3 = {collisionBody->xPos + boxCollider->xOffset,
-                      collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
-                      collisionBody->zPos + boxCollider->zOffset,
+    Matrix41 vert3 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset,
+                      transCollisionBodyPos.elem[1] + boxCollider->yOffset + boxCollider->yLen,
+                      transCollisionBodyPos.elem[2] + boxCollider->zOffset,
                       0}; // point to be transformed
-    Matrix41 vert4 = {collisionBody->xPos + boxCollider->xOffset,
-                      collisionBody->yPos + boxCollider->yOffset,
-                      collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
+    Matrix41 vert4 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset,
+                      transCollisionBodyPos.elem[1] + boxCollider->yOffset,
+                      transCollisionBodyPos.elem[2] + boxCollider->zOffset + boxCollider->zLen,
                       0}; // point to be transformed
-    Matrix41 vert5 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
-                      collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
-                      collisionBody->zPos + boxCollider->zOffset,
+    Matrix41 vert5 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset + boxCollider->xLen,
+                      transCollisionBodyPos.elem[1] + boxCollider->yOffset + boxCollider->yLen,
+                      transCollisionBodyPos.elem[2] + boxCollider->zOffset,
                       0}; // point to be transformed
-    Matrix41 vert6 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
-                      collisionBody->yPos + boxCollider->yOffset,
-                      collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
+    Matrix41 vert6 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset + boxCollider->xLen,
+                      transCollisionBodyPos.elem[1] + boxCollider->yOffset,
+                      transCollisionBodyPos.elem[2] + boxCollider->zOffset + boxCollider->zLen,
                       0}; // point to be transformed
-    Matrix41 vert7 = {collisionBody->xPos + boxCollider->xOffset,
-                      collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
-                      collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
+    Matrix41 vert7 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset,
+                      transCollisionBodyPos.elem[1] + boxCollider->yOffset + boxCollider->yLen,
+                      transCollisionBodyPos.elem[2] + boxCollider->zOffset + boxCollider->zLen,
                       0}; // point to be transformed
-    Matrix41 vert8 = {collisionBody->xPos + boxCollider->xOffset + boxCollider->xLen,
-                      collisionBody->yPos + boxCollider->yOffset + boxCollider->yLen,
-                      collisionBody->zPos + boxCollider->zOffset + boxCollider->zLen,
+    Matrix41 vert8 = {transCollisionBodyPos.elem[0] + boxCollider->xOffset + boxCollider->xLen,
+                      transCollisionBodyPos.elem[1] + boxCollider->yOffset + boxCollider->yLen,
+                      transCollisionBodyPos.elem[2] + boxCollider->zOffset + boxCollider->zLen,
+                      0}; // point to be transformed
+    */
+    Matrix41 vert1 = {boxCollider->xOffset,
+                      boxCollider->yOffset,
+                      boxCollider->zOffset,
+                      0}; // point to be transformed
+    Matrix41 vert2 = {boxCollider->xOffset + boxCollider->xLen,
+                      boxCollider->yOffset,
+                      boxCollider->zOffset,
+                      0}; // point to be transformed
+    Matrix41 vert3 = {boxCollider->xOffset,
+                      boxCollider->yOffset + boxCollider->yLen,
+                      boxCollider->zOffset,
+                      0}; // point to be transformed
+    Matrix41 vert4 = {boxCollider->xOffset,
+                      boxCollider->yOffset,
+                      boxCollider->zOffset + boxCollider->zLen,
+                      0}; // point to be transformed
+    Matrix41 vert5 = {boxCollider->xOffset + boxCollider->xLen,
+                      boxCollider->yOffset + boxCollider->yLen,
+                      boxCollider->zOffset,
+                      0}; // point to be transformed
+    Matrix41 vert6 = {boxCollider->xOffset + boxCollider->xLen,
+                      boxCollider->yOffset,
+                      boxCollider->zOffset + boxCollider->zLen,
+                      0}; // point to be transformed
+    Matrix41 vert7 = {boxCollider->xOffset,
+                      boxCollider->yOffset + boxCollider->yLen,
+                      boxCollider->zOffset + boxCollider->zLen,
+                      0}; // point to be transformed
+    Matrix41 vert8 = {boxCollider->xOffset + boxCollider->xLen,
+                      boxCollider->yOffset + boxCollider->yLen,
+                      boxCollider->zOffset + boxCollider->zLen,
                       0}; // point to be transformed
     res.verts[0] = vert1;
     res.verts[1] = vert2;
@@ -185,26 +233,32 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
     Matrix44 T1 = createRotMat(collisionBody->xRot,
                                collisionBody->yRot,
                                collisionBody->zRot);
+    Matrix41 collisionBodyPos = {collisionBody->xPos,
+                                 collisionBody->yPos,
+                                 collisionBody->zPos,
+                                 0};
+    Matrix41 transCollisionBodyPos = matrixMultiplication44_41(T1, collisionBodyPos);
+
     // get all BoxCollider min/max vertices
     for(size_t i = 0; i < collisionBody->numOfBoxColliders; ++i){ // for each collider
         // BoxCollider rotation matrix
         Matrix44 T2 = createRotMat(collisionBody->BoxColliders[i]->xRot,
                                    collisionBody->BoxColliders[i]->yRot,
                                    collisionBody->BoxColliders[i]->zRot);
-        // Combined transformation matrix
-        Matrix44 T3 = matrixMultiplication44_44(T2, T1);
-        BoxColliderVerts verts = getBoxColliderVerts(collisionBody, collisionBody->BoxColliders[i]);
+        BoxColliderVerts verts = getBoxColliderVerts(collisionBody->BoxColliders[i], transCollisionBodyPos);
+
+        Matrix44 T3 = matrixMultiplication44_44(T1, T2);
         for(size_t j = 0; j < 8; ++j){ // for each vertex of BoxCollider
             Matrix41 transformedVert = matrixMultiplication44_41(T3, verts.verts[j]); // TODO: may be more efficient transforming a single point and determining extents from it, see previous commits
             if(!varInit){ // init min/max values
-                greatestX = lowestX = transformedVert.elem[0];
-                greatestY = lowestY = transformedVert.elem[1];
-                greatestZ = lowestZ = transformedVert.elem[2];
+                greatestX = lowestX = transformedVert.elem[0] + collisionBody->xPos;
+                greatestY = lowestY = transformedVert.elem[1] + collisionBody->yPos;
+                greatestZ = lowestZ = transformedVert.elem[2] + collisionBody->zPos;
                 varInit = true;
             }
-            testPointMinMax(transformedVert.elem[0], 0, &lowestX, &greatestX);
-            testPointMinMax(transformedVert.elem[1], 0, &lowestY, &greatestY);
-            testPointMinMax(transformedVert.elem[2], 0, &lowestZ, &greatestZ);
+            testPointMinMax(transformedVert.elem[0] + collisionBody->xPos, 0, &lowestX, &greatestX);
+            testPointMinMax(transformedVert.elem[1] + collisionBody->yPos, 0, &lowestY, &greatestY);
+            testPointMinMax(transformedVert.elem[2] + collisionBody->zPos, 0, &lowestZ, &greatestZ);
         }
     }
 
@@ -263,6 +317,15 @@ void CollisionBody_setRot(CollisionBody *collisionBody,
                           float y,
                           float z){
     assert(collisionBody != NULL);
+    if(x != 0){
+        x = fmodf(x, 360.f);
+    }
+    if(y != 0){
+        y = fmodf(y, 360.f);
+    }
+    if(z != 0){
+        z = fmodf(z, 360.f);
+    }
     collisionBody->xRot = x;
     collisionBody->yRot = y;
     collisionBody->zRot = z;

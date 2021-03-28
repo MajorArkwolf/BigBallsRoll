@@ -8,9 +8,16 @@ int LevelOne_draw(float deltaTime) {
     StateManager_top(&engine.sM)->gameObjects[0].Transform.Rotation.Y += 1;
     StateManager_top(&engine.sM)->gameObjects[0].Transform.Rotation.Z += 1;
     CollisionBody_rotate(StateManager_top(&engine.sM)->physicsWorld->collisionBodies[0], 1, 1, 1);
+
+    StateManager_top(&engine.sM)->gameObjects[3].Transform.Rotation.X += -1;
+    StateManager_top(&engine.sM)->gameObjects[3].Transform.Rotation.Y += -1;
+    StateManager_top(&engine.sM)->gameObjects[3].Transform.Rotation.Z += -1;
+    CollisionBody_rotate(StateManager_top(&engine.sM)->physicsWorld->collisionBodies[3], -1, -1, -1);
+
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
     }
+
     return 0;
 }
 
@@ -161,4 +168,31 @@ void LevelOne_init(State *state) {
 
     CollisionBody_setPos(boxCollisionBody, 0, 0, 5.f);
     PhysicsWorld_addCollisionBody(state->physicsWorld, boxCollisionBody);
+
+    // add wall
+    GameObject_init(&state->gameObjects[3]);
+    state->gameObjects[3].ModelID = ModelManager_findModel(&engine.modelManager, "Terrain/Wall.obj");
+    state->gameObjects[3].Transform.Position.X += 10.f;
+    state->gameObjects[3].Transform.Position.Y += 0.f;
+    state->gameObjects[3].Transform.Position.Z += 0.f;
+    state->gameObjects[3].Transform.Rotation.X += 400.f;
+    state->gameObjects[3].Transform.Rotation.Y += 400.f;
+    state->gameObjects[3].Transform.Rotation.Z += 400.f;
+    ++state->NumOfGameObjects;
+    // create CollisionBody for object
+    CollisionBody* wallCollisionBody2 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(wallCollisionBody2);
+    // create collider
+    BoxCollider* wallCollider2 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(wallCollider2);
+    wallCollider2->xOffset = 0.f;
+    wallCollider2->yOffset = 0.f;
+    wallCollider2->zOffset = -1.f;
+    wallCollider2->xLen = 10.f;
+    wallCollider2->yLen = 1.f;
+    wallCollider2->zLen = 1.f;
+    CollisionBody_addBoxCollider(wallCollisionBody2, wallCollider2);
+    CollisionBody_setPos(wallCollisionBody2, 10.f, 0.f, 0.f);
+    CollisionBody_setRot(wallCollisionBody2, 400.f, 400.f, 400.f);
+    PhysicsWorld_addCollisionBody(state->physicsWorld, wallCollisionBody2);
 }

@@ -25,11 +25,15 @@ char *getCurrentWorkingDirectory(char *path) {
 char *getFileTypeFromPath(char *path) {
     const int LEN = 4;
     char *ext = calloc(LEN, sizeof(char)); // file extension can be at most 4 characters
-    if (ext == NULL) {
-        printf("malloc failed while getting file type path.");
-        assert(false);
+    if (path != NULL) {
+        if (ext == NULL) {
+            printf("malloc failed while getting file type path.");
+            assert(false);
+        }
+        size_t indexOf = getLastOccurrenceInString('.', path);
+        strncpy(ext, path + indexOf + 1, LEN - 1); // preserve null terminator
+    } else {
+        strcpy(ext, "");
     }
-    size_t indexOf = getLastOccurrenceInString('.', path);
-    strncpy(ext, path + indexOf + 1, LEN-1); // preserve null terminator
     return ext;
 }

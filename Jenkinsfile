@@ -26,7 +26,7 @@ pipeline {
 		        sh script:'''
                     #!/bin/bash
 		            cd ${WORKSPACE}/build/Debug
-		            ./tests.exe
+		            ./BigBalls.exe --test
 		        '''
             }
         }

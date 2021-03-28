@@ -16,6 +16,8 @@ typedef int (*fnPtrInput)(InputType);
 
 typedef int (*fnPtrDblDbl)(double, double);
 
+typedef int (*fnPtrIntInt)(int, int);
+
 /// State Structure
 typedef struct State {
     GameObject gameObjects[MAX_GAME_OBJECTS];
@@ -29,6 +31,7 @@ typedef struct State {
     fnPtrInput keyDown;
     fnPtrInput keyUp;
     fnPtrDblDbl mouseMovement;
+    fnPtrIntInt mouseKeys;
 } State;
 
 /// A Stack implementation that holds a stack of states
@@ -114,6 +117,15 @@ int StateManager_keyUp(StateManager *stateManager, InputType inputType);
  * @return 0 on success and 1 on failure
  */
 int StateManager_mouseMove(StateManager *stateManager, double x, double y);
+
+/**
+ * Passes the mouse button state to the game
+ * @param stateManager state manager to check the stack of
+ * @param button the button id being pressed
+ * @param buttonState if the button is pressed or released
+ * @return
+ */
+int StateManager_mouseKeys(StateManager *stateManager, int button, int buttonState);
 
 /**
  * Initialises a base state for use

@@ -51,7 +51,7 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
  * Callback function for glut update.
  * @param deltaTime Time since last frame
  */
-void Update(double deltaTime) {
+void FixedUpdate(double deltaTime) {
     int mouseMode = glfwGetInputMode(engine.window, GLFW_CURSOR);
     if (engine.lockCamera && mouseMode == GLFW_CURSOR_NORMAL) {
         glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -59,6 +59,16 @@ void Update(double deltaTime) {
         glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     StateManager_update(&engine.sM, (float) deltaTime);
+}
+
+void Update(double deltaTime) {
+    State *state = StateManager_top(&engine.sM);
+    for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        if (state->gameObjects[i].SoundID > 0) {
+            AudioEngine_updateSource(state->gameObjects[i].SoundID, &state->gameObjects[i].Transform.Position,
+                                     &state->gameObjects[i].Transform.Rotation);
+        }
+    }
 }
 
 /**
@@ -82,13 +92,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (action == GLFW_PRESS) {
         StateManager_keyDown(&engine.sM, inputType);
     } else if (action == GLFW_RELEASE) {
-        if (inputType == KEY_F1) {
-            //Toggle the lock Camera.
-            engine.lockCamera = !engine.lockCamera;
-        }
-        if (inputType == KEY_ESC) {
-            glfwSetWindowShouldClose(window, GLFW_TRUE);
-        }
         StateManager_keyUp(&engine.sM, inputType);
     }
 }
@@ -108,17 +111,17 @@ static void cursor_position_callback(GLFWwindow* window, double xPos, double yPo
 }
 
 /**
- * Callback function for when a mouse button is pressed
- * @param button int representation of the button
- * @param state Unknown
- * @param x Unknown
- * @param y Unknown
+ * Callback function for the mouse buttons.
+ * @param window The active engine window
+ * @param button mouse button pressed
+ * @param action if pressed or released
+ * @param mods unknown
  */
-void mouseButton(int button, int state, int x, int y) {
-    //InputType inputType = InputType_convertMouseButton(button);
-    // Check state to determine if down or up then send down the stack.
-    //StateManager_keyUp(&engine.sM, inputType);
-    //StateManager_keyDown(&engine.sM, inputType);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    InputType input = InputType_convertMouseButton(button);
+    int buttonState = action == GLFW_PRESS;
+    StateManager_mouseKeys(&engine.sM, input, buttonState);
 }
 
 void error_callback(int error, const char* description)
@@ -136,6 +139,9 @@ int Engine_run(int argc, char *argv[]) {
 
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
+
+    // Init here to avoid config values being overwritten.
+    AudioEngine_AudioPresets_init(&engine.audioPresets);
 
     //Initialise our Services
     TextureManager_init(&engine.textureManager);
@@ -194,6 +200,9 @@ int Engine_run(int argc, char *argv[]) {
     glfwSetKeyCallback(engine.window, key_callback);
     glfwSetCursorPosCallback(engine.window, cursor_position_callback);
     glfwSetFramebufferSizeCallback(engine.window, framebuffer_size_callback);
+    glfwSetMouseButtonCallback(engine.window, mouse_button_callback);
+    glfwSetInputMode(engine.window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
+
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -224,11 +233,12 @@ int Engine_run(int argc, char *argv[]) {
 
         while (accumulator >= deltaTime) {
             glfwPollEvents();
-            Update(deltaTime);
+            FixedUpdate(deltaTime);
             //Physics update goes here.
             time += deltaTime;
             accumulator -= deltaTime;
         }
+        Update(frameTime);
         Draw();
     }
 
@@ -279,4 +289,17 @@ void Engine_loadConfig() {
     if (lua_isnumber(engine.lua, 0) == 0) {
         engine.seed = lua_tonumber(engine.lua, -1);
     }
+    //Get master volume
+    lua_getglobal(engine.lua, "master_volume");
+    if (lua_isnumber(engine.lua, 0) == 0) {
+        engine.audioPresets.MasterVolume = lua_tonumber(engine.lua, -1);
+    }
+}
+
+void Engine_toggleCameraLock() {
+    engine.lockCamera = !engine.lockCamera;
+}
+
+void Engine_cameraLock(bool lockCamera) {
+    engine.lockCamera = lockCamera;
 }

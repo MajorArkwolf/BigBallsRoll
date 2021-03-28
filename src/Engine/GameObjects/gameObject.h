@@ -10,6 +10,7 @@ typedef struct GameObject {
     unsigned int SoundID;
     char *Name;
     bool StaticObject;
+    bool DisableRendering;
 } GameObject;
 
 /**

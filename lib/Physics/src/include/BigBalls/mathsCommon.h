@@ -14,7 +14,7 @@ typedef struct tempVec3 {
  * Initialise a vec3 object.
  * @param vec the vector to be initialised
  */
-void tempVec3_init(tempVec3 *vec);
+void tempVec3_init(tempVec3 *vec3);
 
 typedef struct Matrix44 { // 4 by 4 matrix
     float elem[4][4];

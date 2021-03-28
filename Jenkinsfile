@@ -25,7 +25,7 @@ pipeline {
 		        sh 'cppcheck lib/Physics/src --enable=warning,style,performance,portability --inconclusive --error-exitcode=1'
 		        sh script:'''
                     #!/bin/bash
-		            cd ${WORKSPACE}/build/tests/Debug
+		            cd ${WORKSPACE}/build/Debug
 		            ./tests.exe
 		        '''
             }

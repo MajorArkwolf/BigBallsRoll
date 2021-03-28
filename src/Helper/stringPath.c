@@ -9,15 +9,16 @@
 char *getCurrentWorkingDirectory(char *path) {
     size_t mallocSize = strlen(path) * sizeof(char) + 1;
     char *newStr = malloc(mallocSize);
-    if (newStr == NULL) {
-        printf("malloc failed while getting current working directory.");
-        assert(false);
+    if (newStr != NULL) {
+        strcpy(newStr, path);
+        replaceChar(newStr, '\\', '/');
+        size_t indexOf = getLastOccurrenceInString('/', newStr);
+        newStr[indexOf + 1] = '\0';
+        return newStr;
     }
-    strcpy(newStr, path);
-    replaceChar(newStr, '\\', '/');
-    size_t indexOf = getLastOccurrenceInString('/', newStr);
-    newStr[indexOf + 1] = '\0';
-    return newStr;
+    printf("malloc failed while getting current working directory.");
+    assert(false);
+    return NULL;
 }
 
 char *getFileTypeFromPath(char *path) {
@@ -26,8 +27,13 @@ char *getFileTypeFromPath(char *path) {
     if (ext == NULL) {
         printf("malloc failed while getting file type path.");
         assert(false);
+        return NULL;
     }
-    size_t indexOf = getLastOccurrenceInString('.', path);
-    strncpy(ext, path + indexOf + 1, LEN-1); // preserve null terminator
+    if (path != NULL) {
+        size_t indexOf = getLastOccurrenceInString('.', path);
+        strncpy(ext, path + indexOf + 1, LEN - 1); // preserve null terminator
+    } else {
+        strcpy(ext, "");
+    }
     return ext;
 }

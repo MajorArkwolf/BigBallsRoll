@@ -1,13 +1,19 @@
 #include "stringHelper.h"
 #include <string.h>
+#include <assert.h>
+#include <stdbool.h>
 
 size_t getLastOccurrenceInString(char findThis, char* stringToCheck) {
-    char *lastSlash = strrchr(stringToCheck, findThis);
-    size_t indexValue = (lastSlash - stringToCheck) / sizeof(char);
-    if (indexValue + 1 >= strlen(stringToCheck)) {
-        return 0;
+    if (stringToCheck != NULL) {
+        char *lastSlash = strrchr(stringToCheck, findThis);
+        size_t indexValue = (lastSlash - stringToCheck) / sizeof(char);
+        if (indexValue + 1 >= strlen(stringToCheck)) {
+            return 0;
+        }
+        return indexValue;
     }
-    return indexValue;
+    assert(false);
+    return 0;
 }
 
 int replaceChar(char *str, char orig, char rep) {

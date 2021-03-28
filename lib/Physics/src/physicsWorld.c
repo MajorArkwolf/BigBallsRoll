@@ -71,7 +71,6 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
         CollisionBody_free(physicsWorld->collisionBodies[i]);
     }
     free(physicsWorld);
-    physicsWorld = NULL;
 }
 
 void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){

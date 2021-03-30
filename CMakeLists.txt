@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # Set the project details.
-set(PROJECT_NAME 289)
+set(PROJECT_NAME BigBalls)
 project(${PROJECT_NAME} LANGUAGES C)
 
 # Treat warnings as errors.
@@ -33,15 +33,16 @@ add_executable(${PROJECT_NAME})
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_STANDARD 11)
 
 # Find dependencies.
-# find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
 
 # Build 3rd Party Libraries
 add_subdirectory(lib)
 
 # Define source files.
 add_subdirectory(src)
+
+#Tesinting framework
+#add_subdirectory(tests)
 
 if (MSVC)
     string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -53,7 +54,7 @@ if (WarningsAsErrors)
             $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Werror>
             $<$<CXX_COMPILER_ID:MSVC>:/WX>
             )
-endif()
+endif(WarningsAsErrors)
 
 # Set compile flags.
 target_compile_options(${PROJECT_NAME} PRIVATE
@@ -78,11 +79,11 @@ target_link_options(${PROJECT_NAME} PRIVATE
 )
 
 if (LINUX)
-    target_link_libraries(${PROJECT_NAME} PRIVATE -lm)
+    target_link_libraries(${PROJECT_NAME} PRIVATE -lm -ldl -lpthread)
 endif()
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU GLUT::GLUT stb_image ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU glfw stb OpenAL SndFile::sndfile BigBalls::Physics lua unity ${CMAKE_DL_LIBS})
 
 if (GenerateDoxygen)
     find_package(Doxygen)

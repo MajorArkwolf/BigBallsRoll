@@ -8,6 +8,7 @@
 typedef struct ModelManager{
     Model Models[MAX_MODELS];
     size_t NumOfModels;
+    char *cwd;
 } ModelManager;
 
 /**
@@ -33,9 +34,9 @@ void ModelManager_loadModels(ModelManager *modelManger, char* cwd);
  * Find a model based off its relevant path from the res folder and return the index id to it
  * @param modelManger model manager to search in
  * @param modelName string name to look up
- * @return the id of where it exists in the array, 0 if not found.
+ * @return the id of where it exists in the array, or a new initialised index if not found.
  */
-size_t ModelManager_findModel(ModelManager *modelManger, char *modelName);
+size_t ModelManager_findModel(ModelManager *modelManger, const char *modelName);
 
 /**
  * Return a model based of the index value.

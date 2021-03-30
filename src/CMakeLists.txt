@@ -15,18 +15,32 @@ target_sources(${PROJECT_NAME} PRIVATE
     Math/extraMath.c
 
     # Objloader
-    ObjLoader/modelLoading.c
+    ObjLoader/modelLoader.c
     ObjLoader/objLoader.c
     ObjLoader/model.c
 
     # Engine
+    Engine/engine.c
     Engine/camera.c
     Engine/stateManager.c
-    Engine/gameObject.c
+    Engine/GameObjects/gameObject.c
     Engine/modelManager.c
+    Engine/InputManager.c
+    Engine/textureManager.c
+    Engine/luaHelper.c
+    ## Audio
+    Engine/Audio/sound.c
+    Engine/Audio/audioEngine.c
+    Engine/Audio/audioManager.c
 
     #Scenes
     Scene/MainMenu/mainMenu.c
+    Scene/Game/game.c
+    Scene/LevelOne/LevelOne.c
+
+    #Unit Tests
+    tests/tests.c
+    tests/ModelUnitTests.c
 )
 
 # Include project header files.

@@ -1,18 +1,25 @@
-# ICT289 - (Insert Group Name)
+<h1 align="center">
+   ICT289 - Team Big Balls
+   <br>
+   <br>
+   <img src="https://i.imgur.com/xumKzG5.png" alt="plum" width="200"></a>
+</h1>
+
+
 
 [![Build Status](https://www.travis-ci.com/MajorArkwolf/ICT289.svg?token=cpQtXoFFuizqCsLDGgMe&branch=main)](https://www.travis-ci.com/MajorArkwolf/ICT289)
 
 ## Dependencies
-Linux: ``` sudo apt install clang ninja-build freeglut3 freeglut3-dev libglew-dev doxygen graphviz```
+Linux: ```sudo apt install clang ninja-build libglew-dev libsndio-dev libflac-dev libspeex-dev libopus-dev libogg-dev libvorbis-dev libasound2-dev libvorbis-dev libxinerama-dev
+libxcursor-dev libxi-dev libxrandr-dev doxygen graphviz```
 
 Note: It is recommended that you download and install cmake from somewhere else other then apt as the cmake version is extremely dated. [Click here for example](https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line). 
 
-
-Windows: ``` vcpkg install freeglut doxygen graphviz```
-
+No longer needed, ignore this step: 
+Windows: ```vcpkg install libflac:x64-windows libogg:x64-windows libvorbis:x64-windows opus:x64-windows doxygen graphviz```
 Note: VCPKG is windows package manager, you can download it [here](https://github.com/microsoft/vcpkg). Please ensure you read how to use it. Also be aware, by default it will install x86 binaries over x64. You can change the default by addint a system enviroment variable like so ``VCPKG_DEFAULT_TRIPLET=x64-windows``
 
-macOS: ``` brew install freeglut cmake ninja llvm --with-toolchain```
+macOS: ``` brew install vorbis-tools opus-tools cmake ninja llvm --with-toolchain```
 ___
 ## Cloning
 ### GIT LFS

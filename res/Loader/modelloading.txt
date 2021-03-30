@@ -1,3 +1,8 @@
 Off/bone.off
 Off/colourcube.off
+Off/bluecube.off
+Off/darkbluecube.off
+Off/greencube.off
+Off/redcube.off
 Off/boxtorus.off
+Obj/Goblin/goblin_warrior_spear.obj

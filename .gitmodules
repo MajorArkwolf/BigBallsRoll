@@ -1,0 +1,12 @@
+[submodule "lib/libsndfile"]
+	path = lib/libsndfile
+	url = https://github.com/libsndfile/libsndfile.git
+[submodule "lib/openal"]
+	path = lib/openal
+	url = https://github.com/kcat/openal-soft.git
+[submodule "lib/glfw"]
+	path = lib/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "lib/unity"]
+	path = lib/unity
+	url = https://github.com/ThrowTheSwitch/Unity.git

@@ -11,14 +11,13 @@
 
 ## Dependencies
 Linux: ```sudo apt install clang ninja-build libglew-dev libsndio-dev libflac-dev libspeex-dev libopus-dev libogg-dev libvorbis-dev libasound2-dev libvorbis-dev libxinerama-dev
-libxcursor-dev libxi-dev libxrandr-dev```
+libxcursor-dev libxi-dev libxrandr-dev doxygen graphviz```
 
 Note: It is recommended that you download and install cmake from somewhere else other then apt as the cmake version is extremely dated. [Click here for example](https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line). 
 
 No longer needed, ignore this step: 
-Windows: ```vcpkg install libflac:x64-windows libogg:x64-windows libvorbis:x64-windows opus:x64-windows```
-
-Note: VCPKG is windows package manager, you can download it [here](https://github.com/microsoft/vcpkg). Please ensure you read how to use it. Also be aware, by default it will install x86 binaries over x64. You can change the default by adding it to a system enviroment variable like so ``VCPKG_DEFAULT_TRIPLET=x64-windows``
+Windows: ```vcpkg install libflac:x64-windows libogg:x64-windows libvorbis:x64-windows opus:x64-windows doxygen graphviz```
+Note: VCPKG is windows package manager, you can download it [here](https://github.com/microsoft/vcpkg). Please ensure you read how to use it. Also be aware, by default it will install x86 binaries over x64. You can change the default by addint a system enviroment variable like so ``VCPKG_DEFAULT_TRIPLET=x64-windows``
 
 macOS: ``` brew install vorbis-tools opus-tools cmake ninja llvm --with-toolchain```
 ___

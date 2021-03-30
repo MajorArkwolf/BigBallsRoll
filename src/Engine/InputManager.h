@@ -85,22 +85,15 @@ typedef enum InputType {
 } InputType;
 
 /**
- * Converts a glut key to our engine enum representation
- * @param glutKey special keys are represented as ints
+ * Converts a glfw key to our engine enum representation
+ * @param key normal keys are represented as chars
  * @return enum of the representation of our key
  */
-InputType InputType_convertSpecialKey(int glutKey);
+InputType InputType_convertRegularKey(int key);
 
 /**
- * Converts a glut key to our engine enum representation
- * @param glutKey normal keys are represented as chars
+ * Converts a glfw mouse key into our engine enum representation
+ * @param button integer representation by glfw
  * @return enum of the representation of our key
  */
-InputType InputType_convertRegularKey(char glutKey);
-
-/**
- * Converts a glut mouse key into our engine enum representation
- * @param glutKey integer representation by glut
- * @return enum of the representation of our key
- */
-InputType InputType_convertMouseButton(int glutKey);
+InputType InputType_convertMouseButton(int button);

@@ -7,7 +7,7 @@
 #include "Math/extraMath.h"
 #include "Engine/engine.h"
 
-#define DEFAULT_SENSITIVITY 0.01f
+#define DEFAULT_SENSITIVITY 0.1f
 
 Camera Camera_construct() {
     Camera cam;
@@ -97,4 +97,11 @@ void Camera_lookAt(Camera *cam) {
             cam->Position.X, cam->Position.Y, cam->Position.Z,
             cam->Position.X + cam->Front.X, cam->Position.Y + cam->Front.Y, cam->Position.Z + cam->Front.Z,
             cam->Up.X, cam->Up.Y, cam->Up.Z);
+}
+
+void Camera_lookAtObject(Camera *cam, float x, float y, float z) {
+    cam->Front.X = x;
+    cam->Front.Y = y;
+    cam->Front.Z = z;
+    cam->Front = VectorMath_normaliseVec3(&cam->Front);
 }

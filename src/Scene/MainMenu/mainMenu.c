@@ -1,7 +1,7 @@
 #include "mainMenu.h"
 #include <stdlib.h>
 #include <Engine/engine.h>
-#include "Scene/LevelOne/LevelOne.h"
+#include "Scene/Game/game.h"
 #include "Engine/stateManager.h"
 
 int MainMenu_draw(float deltaTime) {
@@ -17,6 +17,7 @@ int MainMenu_update(float deltaTime) {
     for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
         GameObject_update(&gameObjects[i]);
     }
+    engine.lockCamera = false;
     return 0;
 }
 
@@ -49,6 +50,9 @@ int MainMenu_keyUp(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     State *state;
     switch (inputType) {
+        case KEY_ESC:
+            glfwSetWindowShouldClose(engine.window, GLFW_TRUE);
+            break;
         case KEY_UP_ARROW:
         case KEY_W:
             cam->MoveForward = false;
@@ -68,9 +72,8 @@ int MainMenu_keyUp(InputType inputType) {
         case KEY_SPACEBAR:
             state = malloc(sizeof (State));
             State_init(state);
-            LevelOne_init(state);
-            AudioEngine_stop_all(&engine.audioEngine);
             StateManager_push(&engine.sM, state);
+            Game_init(state);
             return 0;
         default:
             break;
@@ -78,7 +81,7 @@ int MainMenu_keyUp(InputType inputType) {
     return 0;
 }
 
-int MainMenu_mouseMovement(float x, float y) {
+int MainMenu_mouseMovement(double x, double y) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {

@@ -43,7 +43,7 @@ void ModelManager_loadModels(ModelManager *modelManger, char *cwd) {
     free(fulldir);
 }
 
-size_t ModelManager_findModel(ModelManager *modelManger, char *modelName) {
+size_t ModelManager_findModel(ModelManager *modelManger, const char *modelName) {
     assert(modelManger != NULL);
     for (size_t i = 0; i < modelManger->NumOfModels; ++i) {
         if (strcmp(modelName, modelManger->Models[i].Name) == 0) {

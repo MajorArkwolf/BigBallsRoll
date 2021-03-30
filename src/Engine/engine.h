@@ -5,6 +5,8 @@
 #include "Engine/stateManager.h"
 #include "Engine/textureManager.h"
 #include <stdbool.h>
+#include <lua.h>
+#include "Engine/OpenGL.h"
 
 typedef struct Engine {
     int timeSinceStart;
@@ -12,12 +14,17 @@ typedef struct Engine {
     StateManager sM;
     TextureManager textureManager;
     AudioEngine audioEngine;
+    AudioPresets audioPresets;
     AudioManager audioManager;
     char *cwd;
     int width;
     int height;
     float fov;
     bool lockCamera;
+    bool fullScreen;
+    int seed;
+    lua_State *lua;
+    GLFWwindow* window;
 } Engine;
 
 extern Engine engine;
@@ -31,6 +38,22 @@ extern Engine engine;
 int Engine_run(int argc, char *argv[]);
 
 /**
+ * Toggles the camera from the locked state.
+ */
+void Engine_toggleCameraLock();
+
+/**
+ * Locks the camera if the value passed in is true.
+ * @param lockCamera
+ */
+void Engine_cameraLock(bool lockCamera);
+
+/**
  * Frees any memory the engine is using on the heap
  */
 void Engine_stop();
+
+/**
+ * Load the config lua to set the default values.
+ */
+void Engine_loadConfig();

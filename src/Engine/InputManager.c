@@ -1,154 +1,156 @@
 #include "InputManager.h"
 #include "Engine/OpenGL.h"
 #include <ctype.h>
+#include <stdbool.h>
+#include <assert.h>
 
 InputType InputType_convertSpecialKey(int glutKey) {
     switch(glutKey) {
-//        case(GLUT_KEY_ALT_L):
-//            return KEY_LALT;
-//        case(GLUT_KEY_ALT_R):
-//            return KEY_RALT;
-//        case(GLUT_KEY_CTRL_L):
-//            return KEY_LCNTRL;
-//        case(GLUT_KEY_CTRL_R):
-//            return KEY_RCNTRL;
-        case(GLUT_KEY_F1):
+        default:
+            return KEY_NONE;
+    }
+}
+
+InputType InputType_convertRegularKey(int key) {
+    switch (key) {
+        case(GLFW_KEY_ESCAPE):
+            //Escape key
+            return KEY_ESC;
+        case(GLFW_KEY_A):
+            return KEY_A;
+        case(GLFW_KEY_B):
+            return KEY_B;
+        case(GLFW_KEY_C):
+            return KEY_C;
+        case(GLFW_KEY_D):
+            return KEY_D;
+        case(GLFW_KEY_E):
+            return KEY_E;
+        case(GLFW_KEY_F):
+            return KEY_F;
+        case(GLFW_KEY_G):
+            return KEY_G;
+        case(GLFW_KEY_H):
+            return KEY_H;
+        case(GLFW_KEY_I):
+            return KEY_I;
+        case(GLFW_KEY_J):
+            return KEY_J;
+        case(GLFW_KEY_K):
+            return KEY_K;
+        case(GLFW_KEY_L):
+            return KEY_L;
+        case(GLFW_KEY_M):
+            return KEY_M;
+        case(GLFW_KEY_N):
+            return KEY_N;
+        case(GLFW_KEY_O):
+            return KEY_O;
+        case(GLFW_KEY_P):
+            return KEY_P;
+        case(GLFW_KEY_Q):
+            return KEY_Q;
+        case(GLFW_KEY_R):
+            return KEY_R;
+        case(GLFW_KEY_S):
+            return KEY_S;
+        case(GLFW_KEY_T):
+            return KEY_T;
+        case(GLFW_KEY_U):
+            return KEY_U;
+        case(GLFW_KEY_V):
+            return KEY_V;
+        case(GLFW_KEY_W):
+            return KEY_W;
+        case(GLFW_KEY_X):
+            return KEY_X;
+        case(GLFW_KEY_Y):
+            return KEY_Y;
+        case(GLFW_KEY_Z):
+            return KEY_Z;
+        case (GLFW_KEY_GRAVE_ACCENT):
+            return KEY_TILDE;
+        case (GLFW_KEY_1):
+            return KEY_1;
+        case (GLFW_KEY_2):
+            return KEY_2;
+        case (GLFW_KEY_3):
+            return KEY_3;
+        case (GLFW_KEY_4):
+            return KEY_4;
+        case (GLFW_KEY_5):
+            return KEY_5;
+        case (GLFW_KEY_6):
+            return KEY_6;
+        case (GLFW_KEY_7):
+            return KEY_7;
+        case (GLFW_KEY_8):
+            return KEY_8;
+        case (GLFW_KEY_9):
+            return KEY_9;
+        case (GLFW_KEY_0):
+            return KEY_0;
+        case (GLFW_KEY_MINUS):
+            return KEY_DASH;
+        case (GLFW_KEY_EQUAL):
+            return KEY_EQUALS;
+        case (GLFW_KEY_SPACE):
+            return KEY_SPACEBAR;
+        case(GLFW_KEY_LEFT_ALT):
+            return KEY_LALT;
+        case(GLFW_KEY_RIGHT_ALT):
+            return KEY_RALT;
+        case(GLFW_KEY_LEFT_CONTROL):
+            return KEY_LCNTRL;
+        case(GLFW_KEY_RIGHT_CONTROL):
+            return KEY_RCNTRL;
+        case(GLFW_KEY_F1):
             return KEY_F1;
-        case(GLUT_KEY_F2):
+        case(GLFW_KEY_F2):
             return KEY_F2;
-        case(GLUT_KEY_F3):
+        case(GLFW_KEY_F3):
             return KEY_F3;
-        case(GLUT_KEY_F4):
+        case(GLFW_KEY_F4):
             return KEY_F4;
-        case(GLUT_KEY_F5):
+        case(GLFW_KEY_F5):
             return KEY_F5;
-        case(GLUT_KEY_F6):
+        case(GLFW_KEY_F6):
             return KEY_F6;
-        case(GLUT_KEY_F7):
+        case(GLFW_KEY_F7):
             return KEY_F7;
-        case(GLUT_KEY_F8):
+        case(GLFW_KEY_F8):
             return KEY_F8;
-        case(GLUT_KEY_F9):
+        case(GLFW_KEY_F9):
             return KEY_F9;
-        case(GLUT_KEY_F10):
+        case(GLFW_KEY_F10):
             return KEY_F10;
-        case(GLUT_KEY_F11):
+        case(GLFW_KEY_F11):
             return KEY_F11;
-        case(GLUT_KEY_F12):
+        case(GLFW_KEY_F12):
             return KEY_F12;
-        case(GLUT_KEY_UP):
+        case(GLFW_KEY_UP):
             return KEY_UP_ARROW;
-        case(GLUT_KEY_LEFT):
+        case(GLFW_KEY_LEFT):
             return KEY_LEFT_ARROW;
-        case(GLUT_KEY_RIGHT):
+        case(GLFW_KEY_RIGHT):
             return KEY_RIGHT_ARROW;
-        case(GLUT_KEY_DOWN):
+        case(GLFW_KEY_DOWN):
             return KEY_DOWN_ARROW;
         default:
             return KEY_NONE;
     }
 }
 
-InputType InputType_convertRegularKey(char glutKey) {
-    if (glutKey >= 'A' && glutKey <= 'z') {
-        glutKey = (char) tolower(glutKey);
-    }
-    switch (glutKey) {
-        case(27):
-            //Escape key
-            return KEY_ESC;
-        case('a'):
-            return KEY_A;
-        case('b'):
-            return KEY_B;
-        case('c'):
-            return KEY_C;
-        case('d'):
-            return KEY_D;
-        case('e'):
-            return KEY_E;
-        case('f'):
-            return KEY_F;
-        case('g'):
-            return KEY_G;
-        case('h'):
-            return KEY_H;
-        case('i'):
-            return KEY_I;
-        case('j'):
-            return KEY_J;
-        case('k'):
-            return KEY_K;
-        case('l'):
-            return KEY_L;
-        case('m'):
-            return KEY_M;
-        case('n'):
-            return KEY_N;
-        case('o'):
-            return KEY_O;
-        case('p'):
-            return KEY_P;
-        case('q'):
-            return KEY_Q;
-        case('r'):
-            return KEY_R;
-        case('s'):
-            return KEY_S;
-        case('t'):
-            return KEY_T;
-        case('u'):
-            return KEY_U;
-        case('v'):
-            return KEY_V;
-        case('w'):
-            return KEY_W;
-        case('x'):
-            return KEY_X;
-        case('y'):
-            return KEY_Y;
-        case('z'):
-            return KEY_Z;
-        case ('`'):
-            return KEY_TILDE;
-        case ('1'):
-            return KEY_1;
-        case ('2'):
-            return KEY_2;
-        case ('3'):
-            return KEY_3;
-        case ('4'):
-            return KEY_4;
-        case ('5'):
-            return KEY_5;
-        case ('6'):
-            return KEY_6;
-        case ('7'):
-            return KEY_7;
-        case ('8'):
-            return KEY_8;
-        case ('9'):
-            return KEY_9;
-        case ('0'):
-            return KEY_0;
-        case ('-'):
-            return KEY_DASH;
-        case ('='):
-            return KEY_EQUALS;
-        case (' '):
-            return KEY_SPACEBAR;
-        default:
-            return KEY_NONE;
-    }
-}
-
-InputType InputType_convertMouseButton(int glutKey) {
-    switch (glutKey) {
-        case (GLUT_LEFT_BUTTON):
+InputType InputType_convertMouseButton(int button) {
+    switch (button) {
+        case(GLFW_MOUSE_BUTTON_LEFT):
             return MOUSE_LEFT_BUTTON;
-        case (GLUT_RIGHT_BUTTON):
+        case(GLFW_MOUSE_BUTTON_RIGHT):
             return MOUSE_RIGHT_BUTTON;
         default:
             return KEY_NONE;
     }
+    assert(false);
+    //Function not implemented yet.
+    return KEY_NONE;
 }

@@ -10,6 +10,7 @@ typedef struct GameObject {
     unsigned int SoundID;
     char *Name;
     bool StaticObject;
+    bool DisableRendering;
 } GameObject;
 
 /**
@@ -30,6 +31,14 @@ void GameObject_free(GameObject *gameObject);
  */
 void GameObject_draw(GameObject *gameObject);
 
+/**
+ * Update game objects internal state.
+ * @param gameObject object to be updated.
+ */
 void GameObject_update(GameObject *gameObject);
 
+/**
+ * Register the game object to be able to play sound.
+ * @param gameObject object to register to the sound engine.
+ */
 void GameObject_registerSoundSource(GameObject *gameObject);

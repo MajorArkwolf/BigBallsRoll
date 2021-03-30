@@ -1,8 +1,4 @@
 #pragma once
-
-#ifdef __APPLE__
-#define GL_SILENCE_DEPRECATION
-#include <GLUT/glut.h>
-#else
-#include <GL/freeglut.h>
-#endif
+#define GL_SILENCE_DEPRECATION 1
+#define GLFW_INCLUDE_GLU
+#include <GLFW/glfw3.h>

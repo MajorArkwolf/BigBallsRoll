@@ -21,7 +21,6 @@ void Mesh_init(Mesh *mesh) {
 }
 
 void Model_draw(Model *model) {
-    float floatArray[4] = {0};
     int lastTexture = GL_NONE;
     glColor3f(1, 1, 1);
     for (size_t index = 0; index < model->NumOfMesh; ++index) {

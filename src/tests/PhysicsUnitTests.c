@@ -157,17 +157,7 @@ void testRotationZ(){
                       fTolerance(collisionBody->AABBz2, 3.f, 0.0001f));
 }
 
-void testRotation(){
-    testRotationX();
-    testRotationY();
-    testRotationZ();
-
-    // test collider rotation
-
-    // test collisionbody rotation
-
-    // test combined rotation
-
+void testRotationOverflow(){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -177,28 +167,189 @@ void testRotation(){
     collider->xLen = 1.f;
     collider->yLen = 2.f;
     collider->zLen = 3.f;
-    collider->xRot = 180.f;
+    collider->xRot = 360;
+    collider->yRot = 360;
+    collider->zRot = 360;
     CollisionBody_addBoxCollider(collisionBody, collider);
-    CollisionBody_setRot(collisionBody, 180.f, 0.f, 0.f);
-    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, 0.f, 0.0001f) &&
-                      fTolerance(collisionBody->AABBy1, 0.f, 0.0001f) &&
-                      fTolerance(collisionBody->AABBz1, 0.f, 0.0001f) &&
-                      fTolerance(collisionBody->AABBx2, 1.f, 0.0001f) &&
-                      fTolerance(collisionBody->AABBy2, 2.f, 0.0001f) &&
-                      fTolerance(collisionBody->AABBz2, 3.f, 0.0001f));
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->BoxColliders[0]->xRot == 0, 0, 0.0001) &&
+                     fTolerance(collisionBody->BoxColliders[0]->yRot == 0, 0, 0.0001) &&
+                     fTolerance(collisionBody->BoxColliders[0]->zRot == 0, 0, 0.0001));
+    CollisionBody_setRot(collisionBody, 360.f, 360.f, 360.f);
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->xRot, 0.f, 0.0001f) &&
+                     fTolerance(collisionBody->yRot, 0.f, 0.0001f) &&
+                     fTolerance(collisionBody->zRot, 0.f, 0.0001f));
+}
+
+void testColliderRotation(){
+    // create CollisionBody for object
+    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody);
+    // create collider
+    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider);
+    collider->xLen = 1.f;
+    collider->yLen = 2.f;
+    collider->zLen = 3.f;
+    collider->xRot = 45;
+    collider->yRot = 45;
+    collider->zRot = 45;
+    CollisionBody_addBoxCollider(collisionBody, collider);
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, -0.3f, 0.1f) &&
+                     fTolerance(collisionBody->AABBy1, -0.4f, 0.1f) &&
+                     fTolerance(collisionBody->AABBz1, -0.7f, 0.1f) &&
+                     fTolerance(collisionBody->AABBx2, 3.f, 0.1f) &&
+                     fTolerance(collisionBody->AABBy2, 2.2f, 0.1f) &&
+                     fTolerance(collisionBody->AABBz2, 2.5f, 0.1f));
+}
+
+void testCollisionBodyRotation(){
+    // create CollisionBody for object
+    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody);
+    // create collider
+    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider);
+    collider->xLen = 1.f;
+    collider->yLen = 2.f;
+    collider->zLen = 3.f;
+    CollisionBody_addBoxCollider(collisionBody, collider);
+    CollisionBody_rotate(collisionBody, 45, 45, 45);
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, -0.3f, 0.1f) &&
+                     fTolerance(collisionBody->AABBy1, -0.4f, 0.1f) &&
+                     fTolerance(collisionBody->AABBz1, -0.7f, 0.1f) &&
+                     fTolerance(collisionBody->AABBx2, 3.f, 0.1f) &&
+                     fTolerance(collisionBody->AABBy2, 2.2f, 0.1f) &&
+                     fTolerance(collisionBody->AABBz2, 2.5f, 0.1f));
+}
+
+void testCombinedRotation(){
+    // create CollisionBody for object
+    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody);
+    // create collider
+    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider);
+    collider->xLen = 10.f;
+    collider->yLen = 1.f;
+    collider->zOffset = -1;
+    collider->zLen = 1.f;
+    collider->xRot = 45;
+    collider->yRot = 45;
+    collider->zRot = 45;
+    CollisionBody_addBoxCollider(collisionBody, collider);
+    CollisionBody_rotate(collisionBody, -45, -45, -45);
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, 0.f, 1.f) &&
+                     fTolerance(collisionBody->AABBy1, -8.f, 1.f) &&
+                     fTolerance(collisionBody->AABBz1, -4.f, 1.f) &&
+                     fTolerance(collisionBody->AABBx2, 6.f, 1.f) &&
+                     fTolerance(collisionBody->AABBy2, 0.6f, 1.f) &&
+                     fTolerance(collisionBody->AABBz2, 0.f, 1.f));
+}
+
+void testRotation(){
+    RUN_TEST(testRotationX);
+    RUN_TEST(testRotationY);
+    RUN_TEST(testRotationZ);
+    RUN_TEST(testRotationOverflow);
+    RUN_TEST(testColliderRotation);
+    RUN_TEST(testCollisionBodyRotation);
+    RUN_TEST(testCombinedRotation);
+}
+
+void testColliderTranslation(){
+    // create CollisionBody for object
+    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody);
+    // create collider
+    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider);
+    collider->xLen = 1.f;
+    collider->yLen = 2.f;
+    collider->zLen = 3.f;
+    collider->xOffset = 5;
+    collider->yOffset = 5;
+    collider->zOffset = 5;
+    CollisionBody_addBoxCollider(collisionBody, collider);
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, 5.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBy1, 5.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBz1, 5.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBx2, 6.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBy2, 7.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBz2, 8.f, 0.0001f));
+}
+
+void testCollisionBodyTranslation(){
+    // create CollisionBody for object
+    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody);
+    // create collider
+    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider);
+    collider->xLen = 1.f;
+    collider->yLen = 2.f;
+    collider->zLen = 3.f;
+    CollisionBody_addBoxCollider(collisionBody, collider);
+    CollisionBody_translate(collisionBody, 5, 5, 5);
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, 5.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBy1, 5.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBz1, 5.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBx2, 6.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBy2, 7.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBz2, 8.f, 0.0001f));
+};
+
+void testStackedTranslation(){
+    // create CollisionBody for object
+    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody);
+    // create collider
+    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider);
+    collider->xLen = 1.f;
+    collider->yLen = 2.f;
+    collider->zLen = 3.f;
+    collider->xOffset = 5;
+    collider->yOffset = 5;
+    collider->zOffset = 5;
+    CollisionBody_addBoxCollider(collisionBody, collider);
+    CollisionBody_translate(collisionBody, 5, 5, 5);
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, 10.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBy1, 10.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBz1, 10.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBx2, 11.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBy2, 12.f, 0.0001f) &&
+                     fTolerance(collisionBody->AABBz2, 13.f, 0.0001f));
 }
 
 void testTranslation(){
-    // test collider translation
-
-    // test collisionbody translation
-
-    // test combined translation
+    RUN_TEST(testColliderTranslation);
+    RUN_TEST(testCollisionBodyTranslation);
+    RUN_TEST(testStackedTranslation);
 }
 
 // check that all transformations stack together correctly
-void testCombinedTranslation(){
-
+void testCombinedTransformation(){
+    // create CollisionBody for object
+    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody);
+    // create collider
+    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider);
+    collider->xLen = 1.f;
+    collider->yLen = 2.f;
+    collider->zLen = 3.f;
+    collider->xOffset = 5;
+    collider->yOffset = 5;
+    collider->zOffset = 5;
+    CollisionBody_addBoxCollider(collisionBody, collider);
+    CollisionBody_translate(collisionBody, 5, 5, 5);
+    CollisionBody_rotate(collisionBody, 45, 45, 45);
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, 10.7f, 0.1f) &&
+                     fTolerance(collisionBody->AABBy1, 10.6f, 0.1f) &&
+                     fTolerance(collisionBody->AABBz1, 5.7f, 0.1f) &&
+                     fTolerance(collisionBody->AABBx2, 14.1f, 0.1f) &&
+                     fTolerance(collisionBody->AABBy2, 13.2f, 0.1f) &&
+                     fTolerance(collisionBody->AABBz2, 8.9f, 0.1f));
 }
 
 void test_Physics(){
@@ -209,5 +360,5 @@ void test_Physics(){
     RUN_TEST(testNonCollision);
     RUN_TEST(testRotation);
     RUN_TEST(testTranslation);
-    RUN_TEST(testCombinedTranslation);
+    RUN_TEST(testCombinedTransformation);
 }

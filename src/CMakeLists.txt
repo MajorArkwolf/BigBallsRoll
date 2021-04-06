@@ -44,6 +44,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     #Unit Tests
     tests/tests.c
     tests/ModelUnitTests.c
+    tests/PhysicsUnitTests.c
 )
 
 # Include project header files.

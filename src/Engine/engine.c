@@ -8,6 +8,7 @@
 #include "Helper/stringPath.h"
 #include "Engine/luaHelper.h"
 #include "Scene/MainMenu/mainMenu.h"
+#include "Physics/physicsInterface.h"
 
 Engine engine;
 
@@ -57,7 +58,7 @@ void FixedUpdate(double deltaTime) {
     } else if (!engine.lockCamera && mouseMode != GLFW_CURSOR_NORMAL) {
         glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
-    StateManager_update(&engine.sM, (float)deltaTime);
+    StateManager_update(&engine.sM, (float) deltaTime);
 }
 
 void Update(double deltaTime) {
@@ -81,6 +82,7 @@ void Draw(void) {
     glLoadIdentity();
     Camera_lookAt(cam);
     StateManager_draw(&engine.sM, 0.0f);
+    PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
     glfwSwapBuffers(engine.window);
 }
 
@@ -146,6 +148,8 @@ int Engine_run(int argc, char *argv[]) {
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+    PhysicsEngine_init(&engine.physicsEngine);
+    PhysicsInterface_init();
 	
 	//Initialise LUA state
     engine.lua = luaL_newstate();
@@ -248,6 +252,7 @@ void Engine_stop() {
     AudioEngine_free(&engine.audioEngine);
     ModelManager_free(&engine.modelManager);
     TextureManager_free(&engine.textureManager);
+    PhysicsInterface_free();
     StateManager_free(&engine.sM);
     lua_close(engine.lua);
     free(engine.cwd);

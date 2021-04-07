@@ -1,9 +1,14 @@
 #include "guiManager.h"
 
+#define NK_INCLUDE_DEFAULT_ALLOCATOR
+
+
 void guiManager_init(GuiContainer *guiContainer) {
+    //init font first
+    if (nk_init_default(&guiContainer->ctx, &guiContainer->font)) {
 
+    }
 }
-
 void guiManager_free(GuiContainer *guiContainer) {
 
 }

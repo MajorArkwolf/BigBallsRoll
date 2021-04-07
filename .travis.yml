@@ -22,11 +22,6 @@ jobs:
     env:
       - CC=clang-9 CXX=clang++-9
 
-  - name: "Windows: Visual Studio 2017"
-    os: windows
-    env:
-      - MSBUILD_PATH="/c/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/15.0/Bin"
-
 before_install: 
     - chmod +x ./.travis/install.sh ./.travis/build.sh ./.travis/cppcheck.sh ./.travis/runtests.sh
     - ./.travis/install.sh

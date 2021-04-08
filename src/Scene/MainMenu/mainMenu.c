@@ -3,10 +3,16 @@
 #include <Engine/engine.h>
 #include "Scene/Game/game.h"
 #include "Engine/stateManager.h"
+#include "Engine/guiManager.h"
+
+bool gui = false;
 
 int MainMenu_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
+    }
+    if(gui) {
+        guiManager_mainMenu();
     }
     return 0;
 }
@@ -39,6 +45,11 @@ int MainMenu_keyDown(InputType inputType) {
         case KEY_RIGHT_ARROW:
         case KEY_D:
             cam->MoveRight = true;
+            break;
+        case KEY_M:
+            guiManager_init();
+            guiManager_mainMenu();
+            gui = !gui;
             break;
         default:
             break;

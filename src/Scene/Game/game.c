@@ -2,6 +2,7 @@
 #include <Engine/engine.h>
 #include "Engine/luaHelper.h"
 #include <assert.h>
+#include <BigBalls/physicsEngine.h>
 
 double mouse[2];
 
@@ -97,6 +98,11 @@ int Game_mouseKey(int button, int buttonState) {
     return 0;
 }
 
+int Game_destroy() {
+    PhysicsEngine_freePhysicsWorld(&engine.physicsEngine, StateManager_top(&engine.sM)->physicsWorld);
+    return 0;
+}
+
 void Game_init(State *state) {
     Engine_cameraLock(true);
     state->update = Game_update;
@@ -105,6 +111,8 @@ void Game_init(State *state) {
     state->keyUp = Game_keyUp;
     state->mouseMovement = Game_mouseMovement;
     state->mouseKeys = Game_mouseKey;
+    state->destroy = Game_destroy;
+    state->physicsWorld = PhysicsEngine_newPhysicsWorld(&engine.physicsEngine);
     char file[] = "game.lua";
     mouse[0] = 0.0;
     mouse[1] = 0.0;

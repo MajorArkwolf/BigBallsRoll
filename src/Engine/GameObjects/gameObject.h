@@ -7,6 +7,7 @@
 typedef struct GameObject {
     Transform Transform;
     size_t ModelID;
+    int physicsCollisionID;
     unsigned int SoundID;
     char *Name;
     bool StaticObject;

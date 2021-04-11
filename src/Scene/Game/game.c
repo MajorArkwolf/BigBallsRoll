@@ -18,6 +18,7 @@ int Game_draw(float deltaTime) {
 }
 
 int Game_update(float deltaTime) {
+    State *state = StateManager_top(&engine.sM);
     lua_pushnumber(engine.lua, deltaTime);
     lua_setglobal(engine.lua, "deltaTime");
     lua_getglobal(engine.lua, "Update");
@@ -28,9 +29,16 @@ int Game_update(float deltaTime) {
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
-    Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
+    Camera_update(&state->camera, deltaTime);
     mouse[0] = 0.0;
     mouse[1] = 0.0;
+    //Update gameobjects to the physics world
+    for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        GameObject *ob = &state->gameObjects[i];
+        if (ob->collisionBody != NULL) {
+            CollisionBody_setPos(ob->collisionBody, ob->Transform.Position.X, ob->Transform.Position.Y, ob->Transform.Position.Z);
+        }
+    }
     return 0;
 }
 
@@ -72,6 +80,9 @@ int Game_keyUp(InputType inputType) {
             break;
         case KEY_ESC:
             StateManager_pop(&engine.sM);
+            break;
+        case KEY_T:
+            PhysicsWorld_debugToggle(StateManager_top(&engine.sM)->physicsWorld);
             break;
         default:
             break;

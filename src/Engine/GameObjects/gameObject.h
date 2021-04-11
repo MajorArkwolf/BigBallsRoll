@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "Math/transform.h"
+#include <BigBalls/collisionBody.h>
 
 /// GameObject Structure
 typedef struct GameObject {
     Transform Transform;
     size_t ModelID;
-    int physicsCollisionID;
+    CollisionBody *collisionBody;
     unsigned int SoundID;
     char *Name;
     bool StaticObject;

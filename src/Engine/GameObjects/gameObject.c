@@ -9,7 +9,7 @@ void GameObject_init(GameObject *gameObject) {
     gameObject->Name = NULL;
     gameObject->ModelID = 0;
     gameObject->SoundID = 0;
-    gameObject->physicsCollisionID = -1;
+    gameObject->collisionBody = NULL;
     gameObject->Transform = Transformation_construct();
     gameObject->StaticObject = false;
     gameObject->DisableRendering = false;

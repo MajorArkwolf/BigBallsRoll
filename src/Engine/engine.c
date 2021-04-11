@@ -233,13 +233,16 @@ int Engine_run(int argc, char *argv[]) {
         while (accumulator >= deltaTime) {
             glfwPollEvents();
             FixedUpdate(deltaTime);
-            //Physics update goes here.
+            //Physics update goes here
+            // if statement, check if either physicsWorld is not null
+            //PhysicsEngine_updatePhysicsWorld(physicsEngine, Statemanager.top()->physicsWorld, deltaTime);
             accumulator -= deltaTime;
         }
         Update(frameTime);
         Draw();
     }
-
+    //State manager destroy here
+    //PhysicsEngine_destroy
     glfwDestroyWindow(engine.window);
     glfwTerminate();
     Engine_stop();

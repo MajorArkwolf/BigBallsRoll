@@ -31,7 +31,6 @@ void Model_draw(Model *model) {
                 model->Mesh[index].Materials[matIndex].DiffuseTexture != NULL) {
                 if (lastTexture != model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID) {
                     lastTexture = (int) model->Mesh[index].Materials[matIndex].DiffuseTexture->GLTextureID;
-                    //TODO: this is broken and hardcoded, this is for testing purposes only.
                 }
             }
             glBindTexture(GL_TEXTURE_2D, lastTexture);

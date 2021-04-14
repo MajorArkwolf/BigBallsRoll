@@ -48,7 +48,7 @@ int MainMenu_keyDown(InputType inputType) {
             break;
         case KEY_M:
             guiManager_init();
-            guiManager_mainMenu();
+            //guiManager_mainMenu();
             gui = !gui;
             break;
         default:

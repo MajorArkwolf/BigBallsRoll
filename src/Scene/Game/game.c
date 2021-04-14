@@ -2,6 +2,7 @@
 #include <Engine/engine.h>
 #include "Engine/luaHelper.h"
 #include <assert.h>
+#include "Engine/guiManager.h"
 
 double mouse[2];
 
@@ -71,6 +72,12 @@ int Game_keyUp(InputType inputType) {
             break;
         case KEY_ESC:
             StateManager_pop(&engine.sM);
+            break;
+        case KEY_M:
+            //guiManager_mainMenu();
+            break;
+        case KEY_N:
+            //guiManager_free();
             break;
         default:
             break;

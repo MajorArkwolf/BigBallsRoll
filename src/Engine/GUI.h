@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GUI_H
+#define GUI_H
 
 #define NK_IMPLEMENTATION
 
@@ -11,3 +12,5 @@
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT //for openGL
 
 #include "nuklear.h"
+
+#endif //GUI_H

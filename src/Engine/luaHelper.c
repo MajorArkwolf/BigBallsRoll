@@ -7,6 +7,7 @@
 #include "Scene/Game/game.h"
 #include "Engine/engine.h"
 #include "Math/vectorMath.h"
+#include "Engine/Physics/physicsLuaInterface.h"
 
 static void print_table(lua_State *L)
 {
@@ -365,7 +366,11 @@ int LuaHelper_LightPosition(lua_State *L) {
 }
 
 void LuaHelper_init() {
+
     // Register functions for lua.
+    //Register physics interface functions.
+    PhysicsLuaInterface_init();
+
     // Math
     lua_pushcfunction(engine.lua, LuaHelper_NormaliseVec3);
     lua_setglobal(engine.lua, "NormaliseVec");

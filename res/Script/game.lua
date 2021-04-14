@@ -42,6 +42,7 @@ function NextLevel()
         GenerateNextLevel()
     end
     generation_running = 0
+    PhysicsWorldReset()
     -- This next function is a C API call
     GameNextLevel()
     gen:RegisterGameObjects()

@@ -112,3 +112,10 @@ bool testAABBCollision(CollisionBody *a, CollisionBody *b);
  * @param z coordinate
  */
 void PhysicsWorld_updateGravityNormal(PhysicsWorld *physicsWorld, float x, float y, float z);
+
+/**
+ * Register an object with a collision body for the physics world given.
+ * @param physicsWorld physics world to add collision body too.
+ * @return a pointer to the collision body that is created. Owned by physics world.
+ */
+CollisionBody *PhysicsWorld_registerCollisionBody(PhysicsWorld *physicsWorld);

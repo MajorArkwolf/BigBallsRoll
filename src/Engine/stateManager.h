@@ -3,7 +3,7 @@
 #include "Engine/camera.h"
 #include "Engine/GameObjects/gameObject.h"
 #include "Engine/InputManager.h"
-#include "BigBalls/physicsEngine.h"
+#include <BigBalls/physicsEngine.h>
 
 #define MAX_GAME_OBJECTS 1000000
 

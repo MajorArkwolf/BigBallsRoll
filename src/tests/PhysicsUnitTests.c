@@ -2,7 +2,7 @@
 #include "PhysicsUnitTests.h"
 #include "BigBalls/physicsEngine.h"
 
-void testIdentity44(){
+void testIdentity44(void){
     Matrix44 sus = identity44();
     Matrix44 target = {.elem[0] = {1, 0, 0, 0},
         .elem[1] = {0, 1, 0, 0},
@@ -11,7 +11,7 @@ void testIdentity44(){
     TEST_ASSERT(compareMatrix44(sus, target) == 1);
 }
 
-void testMatrixMultiplication44_44(){
+void testMatrixMultiplication44_44(void){
     Matrix44 a = {.elem[0] = {5, 2, 6, 1},
         .elem[1] = {0, 6, 2, 0},
         .elem[2] = {3, 8, 1, 4},
@@ -28,7 +28,7 @@ void testMatrixMultiplication44_44(){
     TEST_ASSERT(compareMatrix44(sus, target) == 1);
 }
 
-void testMatrixMultiplication44_41(){
+void testMatrixMultiplication44_41(void){
     Matrix44 a = {.elem[0] = {5, 45, -3, 4},
         .elem[1] = {3, -2, 11, 9},
         .elem[2] = {2, 31, 6, 22},
@@ -39,7 +39,7 @@ void testMatrixMultiplication44_41(){
     TEST_ASSERT(compareMatrix41(sus, target) == 1);
 }
 
-void testIdenticalCollision(){
+void testIdenticalCollision(void){
     // create CollisionBody for object
     CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody1);
@@ -67,7 +67,7 @@ void testIdenticalCollision(){
     TEST_ASSERT(colliding == 1);
 }
 
-void testNonCollision(){
+void testNonCollision(void){
     // create CollisionBody for object
     CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody1);
@@ -97,7 +97,7 @@ void testNonCollision(){
     TEST_ASSERT_FALSE(testAABBCollision(collisionBody1, collisionBody2));
 }
 
-void testRotationX(){
+void testRotationX(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -117,7 +117,7 @@ void testRotationX(){
                       fTolerance(collisionBody->AABBz2, 2.f, 0.0001f));
 }
 
-void testRotationY(){
+void testRotationY(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -137,7 +137,7 @@ void testRotationY(){
                       fTolerance(collisionBody->AABBz2, 0.f, 0.0001f));
 }
 
-void testRotationZ(){
+void testRotationZ(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -157,7 +157,7 @@ void testRotationZ(){
                       fTolerance(collisionBody->AABBz2, 3.f, 0.0001f));
 }
 
-void testRotationOverflow(){
+void testRotationOverflow(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -180,7 +180,7 @@ void testRotationOverflow(){
                      fTolerance(collisionBody->zRot, 0.f, 0.0001f));
 }
 
-void testColliderRotation(){
+void testColliderRotation(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -202,7 +202,7 @@ void testColliderRotation(){
                      fTolerance(collisionBody->AABBz2, 2.5f, 0.1f));
 }
 
-void testCollisionBodyRotation(){
+void testCollisionBodyRotation(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -222,7 +222,7 @@ void testCollisionBodyRotation(){
                      fTolerance(collisionBody->AABBz2, 2.5f, 0.1f));
 }
 
-void testCombinedRotation(){
+void testCombinedRotation(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -246,7 +246,7 @@ void testCombinedRotation(){
                      fTolerance(collisionBody->AABBz2, 0.f, 1.f));
 }
 
-void testRotation(){
+void testRotation(void){
     RUN_TEST(testRotationX);
     RUN_TEST(testRotationY);
     RUN_TEST(testRotationZ);
@@ -256,7 +256,7 @@ void testRotation(){
     RUN_TEST(testCombinedRotation);
 }
 
-void testColliderTranslation(){
+void testColliderTranslation(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -278,7 +278,7 @@ void testColliderTranslation(){
                      fTolerance(collisionBody->AABBz2, 8.f, 0.0001f));
 }
 
-void testCollisionBodyTranslation(){
+void testCollisionBodyTranslation(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -298,7 +298,7 @@ void testCollisionBodyTranslation(){
                      fTolerance(collisionBody->AABBz2, 8.f, 0.0001f));
 };
 
-void testStackedTranslation(){
+void testStackedTranslation(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);
@@ -321,14 +321,14 @@ void testStackedTranslation(){
                      fTolerance(collisionBody->AABBz2, 13.f, 0.0001f));
 }
 
-void testTranslation(){
+void testTranslation(void){
     RUN_TEST(testColliderTranslation);
     RUN_TEST(testCollisionBodyTranslation);
     RUN_TEST(testStackedTranslation);
 }
 
 // check that all transformations stack together correctly
-void testCombinedTransformation(){
+void testCombinedTransformation(void){
     // create CollisionBody for object
     CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody);

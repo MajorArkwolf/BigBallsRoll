@@ -30,18 +30,23 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/luaHelper.c
     Engine/guiManager.c
     Engine/playerConfig.c
+
+    ## Physics
+    Engine/Physics/physicsInterface.c
+
     ## Audio
     Engine/Audio/sound.c
     Engine/Audio/audioEngine.c
     Engine/Audio/audioManager.c
 
-    #Scenes
+    # Scenes
     Scene/MainMenu/mainMenu.c
     Scene/Game/game.c
-    Scene/LevelOne/LevelOne.c
 
     #Unit Tests
-    UnitTest/unitTestEntry.c
+    tests/tests.c
+    tests/ModelUnitTests.c
+    tests/PhysicsUnitTests.c
 )
 
 # Include project header files.

@@ -5,11 +5,23 @@ project(${PROJECT_NAME} VERSION 0.1.0 LANGUAGES C)
 
 set(PHYSICS_HEADERS
     "src/include/BigBalls/physicsEngine.h"
-)
+    "src/include/BigBalls/collisionBody.h"
+    "src/include/BigBalls/physicsWorld.h"
+    "src/include/BigBalls/boxCollider.h"
+    "src/include/BigBalls/sphereCollider.h"
+    "src/include/BigBalls/dynamicArray.h"
+    "src/include/BigBalls/physicsDebug.h"
+    "src/include/BigBalls/mathsCommon.h")
 
 set(PHYSICS_SOURCES
     "src/physicsEngine.c"
-)
+    "src/collisionBody.c"
+    "src/physicsWorld.c"
+    "src/boxCollider.c"
+    "src/sphereCollider.c"
+    "src/dynamicArray.c"
+    "src/physicsDebug.c"
+    "src/mathsCommon.c")
 
 add_library(${PROJECT_NAME} ${PHYSICS_HEADERS} ${PHYSICS_SOURCES})
 add_library(BigBalls::Physics ALIAS ${PROJECT_NAME})

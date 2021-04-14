@@ -160,3 +160,25 @@ void CollisionBody_setRot(CollisionBody *collisionBody,
                             float x,
                             float y,
                             float z);
+
+/**
+ * Register a box collider from an external program
+ * @param cb A registered collision body in a physics world
+ * @param offsetPosition Offset position of size 3 (X, Y, Z) relative to the collision body origin.
+ * @param length extrusion of the box of size 3 (X, Y, Z)
+ * @param rotation rotation of the collision of size 3 (Yaw, Pitch, Roll)
+ */
+void CollisionBody_registerBoxCollider(CollisionBody *cb,
+                                       const float *offsetPosition,
+                                       const float *length,
+                                       const float *rotation);
+
+/**
+ * Register a box collider from an external program
+ * @param cb A registered collision body in a physics world
+ * @param offsetPosition Offset position of size 3 (X, Y, Z) relative to the collision body origin.
+ * @param radius the radius of the sphere to create.
+ */
+void CollisionBody_registerSphereCollider(CollisionBody *cb,
+                                          const float *offsetPosition,
+                                          float radius);

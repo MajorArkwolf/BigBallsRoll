@@ -2,9 +2,14 @@
 #include <assert.h>
 #include <stdio.h>
 
+CollisionBody *PhysicsWorld_registerCollisionBody(PhysicsWorld *physicsWorld) {
+    CollisionBody *cp = calloc(1, sizeof(CollisionBody));
+    PhysicsWorld_addCollisionBody(physicsWorld, cp);
+    return cp;
+}
+
 int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld) {
     assert(physicsWorld != NULL);
-    // increment internal ID count and return new ID
     return ++physicsWorld->collisionBodyIdCount;
 }
 

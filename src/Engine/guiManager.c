@@ -21,13 +21,20 @@ struct GuiContainer { //TODO: find out what else I need // Global for now
 } GuiContainer;
 
 void guiManager_init() {
+    //Font
+    struct nk_font *myFont = NULL;
+    float fontSize = 24;
+    struct nk_font_config cfg1 = nk_font_config(fontSize);
+
     /* GUI */
     GuiContainer.ctx = nk_glfw3_init(engine.window, NK_GLFW3_INSTALL_CALLBACKS);
     /* Load Fonts: if none of these are loaded a default font will be used  */
     /* Load Cursor: if you uncomment cursor loading please hide the cursor */
-
     nk_glfw3_font_stash_begin(&GuiContainer.atlas);
+    myFont = nk_font_atlas_add_default(GuiContainer.atlas, fontSize, &cfg1);
     nk_glfw3_font_stash_end();
+
+    nk_style_set_font(GuiContainer.ctx, &myFont->handle);
 }
 
 void guiManager_mainMenu() {
@@ -35,14 +42,14 @@ void guiManager_mainMenu() {
     nk_glfw3_new_frame();
 
     /* GUI */
-    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, engine.width/4, engine.height/2),
+    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, engine.width/2, engine.height/1.9),
                  NK_WINDOW_BORDER|NK_WINDOW_MOVABLE|NK_WINDOW_SCALABLE|NK_WINDOW_TITLE)) {
 
         //Menu title
         nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
         nk_label(GuiContainer.ctx, "Menu: ", NK_TEXT_LEFT);
 
-        nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 13, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 10, 1);
 
         //Level settings
         if (nk_group_begin(GuiContainer.ctx, "Level",  NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {

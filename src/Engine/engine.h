@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <lua.h>
 #include "Engine/OpenGL.h"
+#include "playerConfig.h"
 
 typedef struct Engine {
     int timeSinceStart;
@@ -16,6 +17,7 @@ typedef struct Engine {
     AudioEngine audioEngine;
     AudioPresets audioPresets;
     AudioManager audioManager;
+    PlayerConfig playerConfig;
     char *cwd;
     int width;
     int height;

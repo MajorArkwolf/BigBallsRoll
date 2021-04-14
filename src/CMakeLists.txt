@@ -29,6 +29,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/textureManager.c
     Engine/luaHelper.c
     Engine/guiManager.c
+    Engine/playerConfig.c
     ## Audio
     Engine/Audio/sound.c
     Engine/Audio/audioEngine.c

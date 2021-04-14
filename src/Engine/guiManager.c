@@ -43,11 +43,13 @@ void guiManager_mainMenu() {
         static int vertSens = 5;
         static int horSens = 5;
 
+        //Menu title
         nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
         nk_label(GuiContainer.ctx, "Menu: ", NK_TEXT_LEFT);
 
         nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 13, 1);
 
+        //Level settings
         if (nk_group_begin(GuiContainer.ctx, "Level",  NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
             nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 3);
             nk_property_int(GuiContainer.ctx, "Seed:", INT_MIN, &seed, INT_MAX, 10, 10);
@@ -57,6 +59,7 @@ void guiManager_mainMenu() {
 
         nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 8, 1);
 
+        //Audio settings
         if (nk_group_begin(GuiContainer.ctx, "Audio", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
             nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 3);
             nk_property_int(GuiContainer.ctx, "Volume:", 0, &volume, 100, 10, 10);
@@ -69,6 +72,7 @@ void guiManager_mainMenu() {
 
         nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 6, 1);
 
+        //Mouse settings
         if (nk_group_begin(GuiContainer.ctx, "Mouse", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
             nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 3);
             nk_label(GuiContainer.ctx, "Sensitivity: ", NK_TEXT_LEFT);
@@ -79,6 +83,7 @@ void guiManager_mainMenu() {
             nk_group_end(GuiContainer.ctx);
         }
 
+        //Confirm button
         nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
         if (nk_button_label(GuiContainer.ctx, "Confirm")) {
             //TODO:: pass the stuff

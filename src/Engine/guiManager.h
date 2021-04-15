@@ -6,14 +6,10 @@ void guiManager_mainMenu();
 
 void guiManager_free();
 
-/*
-void guiManager_free(GuiContainer *guiContainer);
+void menuOptions_reset();
 
-void guiManager_input(GuiContainer *guiContainer);
+void guiManager_settingsMenu();
 
-void guiManager_draw(GuiContainer *guiContainer);
+void guiManager_gameMenu();
 
-void guiManager_window(GuiContainer *guiContainer);
-
-void guiManager_layout(GuiContainer *guiContainer);
-*/
+void guiManager_draw();

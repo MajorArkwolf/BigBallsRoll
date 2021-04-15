@@ -12,7 +12,7 @@ int MainMenu_draw(float deltaTime) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
     }
     if(gui) {
-        guiManager_mainMenu();
+        guiManager_draw();
     }
     return 0;
 }

@@ -9,6 +9,7 @@
 #include "Engine/luaHelper.h"
 #include "Scene/MainMenu/mainMenu.h"
 #include "Physics/physicsInterface.h"
+#include "guiManager.h"
 
 Engine engine;
 
@@ -255,6 +256,7 @@ void Engine_stop() {
     TextureManager_free(&engine.textureManager);
     PhysicsInterface_free();
     StateManager_free(&engine.sM);
+    //guiManager_free(); TODO:: DEBUG
     lua_close(engine.lua);
     free(engine.cwd);
 }

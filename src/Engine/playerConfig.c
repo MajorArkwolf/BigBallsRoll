@@ -6,4 +6,10 @@ void PlayerConfig_init(PlayerConfig *playerConfig) {
     playerConfig->volume = 85;
     playerConfig->horizontalSens = 5;
     playerConfig->verticalSens = 5;
+    playerConfig->levels = 3;
+    playerConfig->width = 1920;
+    playerConfig->height = 1080;
+    playerConfig->horizontalLock = false;
+    playerConfig->windowedMode = true;
+    playerConfig->nameLength = 0;
 }

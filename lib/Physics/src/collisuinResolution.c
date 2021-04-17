@@ -33,9 +33,9 @@ void resolveCollision( Collision* collision )
     PVec3 impulse = PVec3MultiplyScalar(&collision->normal, j);
 
     //TODO: Static objects will most likely need to be accounted for here.
-    PVec3 aDiff = PVec3MultiplyScalar(&collision->normal, (1 / collision->body1->mass));
+    PVec3 aDiff = PVec3MultiplyScalar(&impulse, (1 / collision->body1->mass));
     collision->body1->velocity = subtractPVec3(&collision->body1->velocity , &aDiff);
-    PVec3 bDiff = PVec3MultiplyScalar(&collision->normal, (1 / collision->body2->mass));
+    PVec3 bDiff = PVec3MultiplyScalar(&impulse, (1 / collision->body2->mass));
     collision->body2->velocity = addPVec3(&collision->body2->velocity , &bDiff);
 }
 

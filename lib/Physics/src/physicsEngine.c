@@ -58,6 +58,7 @@ void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *
 void PhysicsEngine_updateWorld(PhysicsWorld *physicsWorld, double deltaTime) {
     if (physicsWorld != NULL) {
         CollisionArrayContainer cac = collisionArrayContainer_init();
+        PhysicsWorld_update(physicsWorld, (float)deltaTime);
         collisionsDetection(physicsWorld, &cac);
         collisionResolution(cac.collisionArray, cac.numOfCollisions);
         collisionArrayContainer_free(&cac);

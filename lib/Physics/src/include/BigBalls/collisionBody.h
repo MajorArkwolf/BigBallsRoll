@@ -21,9 +21,7 @@ typedef struct CollisionBody{
     float yRot;
     float zRot;
     PVec3 velocity;
-    float forceX; // force vector TODO: implement with Vec3 struct
-    float forceY;
-    float forceZ;
+    PVec3 acceleration;
     float mass; // physical mass of CollisionBody
     float AABBx1; // two coordinates required for AABB
     float AABBy1;

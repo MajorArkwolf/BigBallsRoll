@@ -233,7 +233,7 @@ int Engine_run(int argc, char *argv[]) {
         while (accumulator >= deltaTime) {
             glfwPollEvents();
             FixedUpdate(deltaTime);
-            PhysicsEngine_updateWorld(StateManager_top(&engine.sM)->physicsWorld, deltaTime);
+            PhysicsInterface_update(deltaTime);
             accumulator -= deltaTime;
         }
         Update(frameTime);

@@ -94,3 +94,11 @@ void PhysicsWorld_updateGravityNormal(PhysicsWorld *physicsWorld, float x, float
  * @return a pointer to the collision body that is created. Owned by physics world.
  */
 CollisionBody *PhysicsWorld_registerCollisionBody(PhysicsWorld *physicsWorld);
+
+/**
+ * Updates the position and rotation data of objects in the PhysicsWorld based on time passed since last update,
+ * current forces on objects and current velocities.
+ * @param physicsWorld the world to update
+ * @param deltaTime the time since last update
+ */
+void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime);

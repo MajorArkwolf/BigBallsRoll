@@ -1,5 +1,6 @@
 #include "include/BigBalls/physicsWorld.h"
 #include <assert.h>
+#include <math.h>
 
 CollisionBody *PhysicsWorld_registerCollisionBody(PhysicsWorld *physicsWorld) {
     CollisionBody *cp = calloc(1, sizeof(CollisionBody));
@@ -28,7 +29,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     physicsWorld->numCollisionBodies = 0;
     physicsWorld->collisionBodyIdCount = 0;
     physicsWorld->gravity = PVec3_init();
-    physicsWorld->gravity.data[2] = -9.8f;
+    physicsWorld->gravity.data[1] = -9.8f;
     physicsWorld->debug = false;
 }
 
@@ -96,4 +97,45 @@ void PhysicsWorld_updateGravityNormal(PhysicsWorld *physicsWorld, float x, float
     physicsWorld->gravity.data[0] = x;
     physicsWorld->gravity.data[1] = y;
     physicsWorld->gravity.data[2] = z;
+}
+
+int determineSign(float a) {
+    if ((a / fabsf(a)) > 0) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
+void FakeTerminalVelocity(PVec3 *velocity) {
+    // 52m/s is the assumed terminal velocity, while this doesnt work
+    // since every object has its own terminal velocity we will be using a guestimate.
+    if (fabsf(velocity->data[0]) > 52.0f) {
+        velocity->data[0] = 52.0f * (float)determineSign(velocity->data[0]);
+    }
+    if (fabsf(velocity->data[1]) > 52.0f) {
+        velocity->data[1] = 52.0f * (float)determineSign(velocity->data[1]);
+    }
+    if (fabsf(velocity->data[2]) > 52.0f) {
+        velocity->data[2] = 52.0f * (float)determineSign(velocity->data[2]);
+    }
+}
+
+void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
+    assert(physicsWorld != NULL);
+    for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
+        CollisionBody *cb = physicsWorld->collisionBodies[i];
+        if (cb->isStatic) {
+            continue;
+        }
+        //Calculate gravity downwards
+        PVec3 gravity = PVec3MultiplyScalar(&physicsWorld->gravity, deltaTime);
+        cb->velocity = addPVec3(&gravity, &cb->velocity);
+        // Fake terminal velocity
+        FakeTerminalVelocity(&cb->velocity);
+        PVec3 newVel = PVec3MultiplyScalar(&cb->velocity, deltaTime);
+        cb->xPos += newVel.data[0];
+        cb->yPos += newVel.data[1];
+        cb->zPos += newVel.data[2];
+    }
 }

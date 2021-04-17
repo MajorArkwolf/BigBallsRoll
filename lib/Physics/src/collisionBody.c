@@ -12,21 +12,24 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->SphereColliders = NULL;
     collisionBody->idCount = 0;
     collisionBody->id = -1;
-    collisionBody->xPos = 0;
-    collisionBody->yPos = 0;
-    collisionBody->zPos = 0;
-    collisionBody->xRot = 0;
-    collisionBody->yRot = 0;
-    collisionBody->zRot = 0;
-    collisionBody->velocity.data[0] = 0;
-    collisionBody->velocity.data[1] = 0;
-    collisionBody->velocity.data[2] = 0;
-    collisionBody->AABBx1 = 0;
-    collisionBody->AABBy1 = 0;
-    collisionBody->AABBz1 = 0;
-    collisionBody->AABBx2 = 0;
-    collisionBody->AABBy2 = 0;
-    collisionBody->AABBz2 = 0;
+    collisionBody->xPos = 0.0f;
+    collisionBody->yPos = 0.0f;
+    collisionBody->zPos = 0.0f;
+    collisionBody->xRot = 0.0f;
+    collisionBody->yRot = 0.0f;
+    collisionBody->zRot = 0.0f;
+    collisionBody->velocity.data[0] = 0.0f;
+    collisionBody->velocity.data[1] = 0.0f;
+    collisionBody->velocity.data[2] = 0.0f;
+    collisionBody->acceleration.data[0] = 1.0f;
+    collisionBody->acceleration.data[1] = 1.0f;
+    collisionBody->acceleration.data[2] = 1.0f;
+    collisionBody->AABBx1 = 0.0f;
+    collisionBody->AABBy1 = 0.0f;
+    collisionBody->AABBz1 = 0.0f;
+    collisionBody->AABBx2 = 0.0f;
+    collisionBody->AABBy2 = 0.0f;
+    collisionBody->AABBz2 = 0.0f;
     collisionBody->mass = 1;
     collisionBody->restitution = 1.0f;
     collisionBody->isStatic = false;
@@ -143,9 +146,6 @@ void CollisionBody_stop(CollisionBody *collisionBody){
     collisionBody->velocity.data[0] = 0;
     collisionBody->velocity.data[1] = 0;
     collisionBody->velocity.data[2] = 0;
-    collisionBody->forceX = 0;
-    collisionBody->forceY = 0;
-    collisionBody->forceZ = 0;
 }
 
 BoxColliderVerts getBoxColliderVerts(BoxCollider* boxCollider, Matrix41 transCollisionBodyPos){

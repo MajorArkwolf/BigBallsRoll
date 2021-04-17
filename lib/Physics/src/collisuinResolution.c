@@ -1,12 +1,13 @@
 #include "include/BigBalls/collisionResolution.h"
+#include "include/BigBalls/mathsCommon.h"
 
 void positionalCorrection( Collision* collision )
 {
-    const float percent = 0.2f // usually 20% to 80%
-    const float slop = 0.01f // usually 0.01 to 0.1
-    Vec2 correction = max( penetration - k_slop, 0.0f ) / (A.inv_mass + B.inv_mass)) * percent * n
-    A.position -= A.inv_mass * correction
-    B.position += B.inv_mass * correction
+//    const float percent = 0.2f // usually 20% to 80%
+//    const float slop = 0.01f // usually 0.01 to 0.1
+//    Vec2 correction = max( penetration - k_slop, 0.0f ) / (A.inv_mass + B.inv_mass)) * percent * n
+//    A.position -= A.inv_mass * correction
+//    B.position += B.inv_mass * correction
 }
 
 void resolveCollision( Collision* collision )
@@ -38,7 +39,7 @@ void resolveCollision( Collision* collision )
     collision->body2->velocity = addPVec3(&collision->body2->velocity , &bDiff);
 }
 
-void BeginCollisionResolution(Collision* collisionArray, size_t numOfCollisions) {
+void collisionResolution(Collision* collisionArray, size_t numOfCollisions) {
     if (collisionArray == NULL || numOfCollisions == 0) {
         return;
     }

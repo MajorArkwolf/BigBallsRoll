@@ -2,6 +2,9 @@
 #include <assert.h>
 #include <stdio.h>
 #include "include/BigBalls/physicsEngine.h"
+#include "include/BigBalls/physicsMathsCommon.h"
+#include "include/BigBalls/collisionDetection.h"
+#include "include/BigBalls/collisionResolution.h"
 
 void PhysicsEngine_init(PhysicsEngine *physicsEngine) {
     assert(physicsEngine != NULL && physicsEngine->physicsWorld == NULL); // would cause leaks if PhysicsWorld is not NULL
@@ -50,4 +53,11 @@ void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *
             break;
         }
     }
+}
+
+void PhysicsEngine_updateWorld(PhysicsWorld *physicsWorld, float deltaTime) {
+    CollisionArrayContainer cac = collisionArrayContainer_init();
+    collisionsDetection(physicsWorld, &cac);
+    collisionResolution(cac.collisionArray, cac.numOfCollisions);
+    collisionArrayContainer_free(&cac);
 }

@@ -8,18 +8,9 @@ typedef struct PhysicsWorld {
     CollisionBody **collisionBodies;
     size_t numCollisionBodies;
     int collisionBodyIdCount;
-    PVec3 gravityNormal;
+    PVec3 gravity;
     bool debug;
 } PhysicsWorld;
-
-/**
- * Searches for a CollisionBody by ID in a PhysicsWorld
- * Returns NULL if match is not found
- * @param physicsWorld The PhysicsWorld to search for the CollisionBody in
- * @param ID The ID of the CollisionBody to find
- * @return CollisionBody* CollisionBody pointer of found CollisionBody, or NULL if not found
- */
-CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, int ID);
 
 /**
  * Initialises a PhysicsWorld object. Gravity is set to a default value of -9.8 (earths gravity).
@@ -41,13 +32,6 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld);
  */
 int PhysicsWorld_newCollisionBodyID(PhysicsWorld *physicsWorld);
 
-/**
- * Updates the position and rotation data of objects in the PhysicsWorld based on time passed since last update,
- * current forces on objects and current velocities, detecting and resolving collisions where appropriate
- * @param physicsWorld
- * @param deltaTime
- */
-void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime);
 
 //TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
 /**
@@ -93,14 +77,6 @@ bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug);
  * @param physicsWorld the physics world to toggle debug
  */
 void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld);
-
-/**
- * Checks if the two axis-aligned bounding boxes of two CollisionBodies are colliding
- * @param a the first CollisionBody
- * @param b the second CollisionBody
- * @return bool determination of collision (true = colliding)
- */
-bool testAABBCollision(CollisionBody *a, CollisionBody *b);
 
 /**
  * Updates the gravity normal for the current physicsWorld. Game engine will calculate the vector and pass in 3

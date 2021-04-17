@@ -148,3 +148,11 @@ float DotProductPVec3(const PVec3* vec1, const PVec3* vec2);
  * @return the result
  */
 PVec3 CrossProductPVec3(const PVec3* vec1, const PVec3* vec2);
+
+/**
+ * Multiply a scalar with a vector
+ * @param vec vector to multiply
+ * @param scalar to multiply
+ * @return the result of the operation
+ */
+PVec3 PVec2MultiplyScalar(const PVec3* vec, float scalar);

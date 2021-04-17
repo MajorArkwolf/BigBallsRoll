@@ -182,3 +182,14 @@ PVec3 CrossProductPVec3(const PVec3* vec1, const PVec3* vec2) {
     result.data[2] = vec1->data[0] * vec2->data[1] - vec1->data[1] * vec2->data[0];
     return result;
 }
+
+PVec3 PVec3MultiplyScalar(const PVec3* vec, float scalar) {
+    PVec3 result = PVec3_init();
+    if (vec == NULL) {
+        return result;
+    }
+    result.data[0] = vec->data[0] * scalar;
+    result.data[1] = vec->data[1] * scalar;
+    result.data[2] = vec->data[2] * scalar;
+    return result;
+}

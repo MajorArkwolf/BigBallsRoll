@@ -1,6 +1,6 @@
 #include "include/BigBalls/collisionResolution.h"
 
-void PositionalCorrection( Collision* collision )
+void positionalCorrection( Collision* collision )
 {
     const float percent = 0.2f // usually 20% to 80%
     const float slop = 0.01f // usually 0.01 to 0.1
@@ -9,13 +9,13 @@ void PositionalCorrection( Collision* collision )
     B.position += B.inv_mass * correction
 }
 
-void ResolveCollision( Collision* collision )
+void resolveCollision( Collision* collision )
 {
     // Calculate relative velocity
     PVec3 rv = subtractPVec3(&collision->body1->velocity, &collision->body1->velocity);
 
     // Calculate relative velocity in terms of the normal direction
-    float velAlongNormal = DotProductPVec3(&rv, &collision->normal);
+    float velAlongNormal = dotProductPVec3(&rv, &collision->normal);
     // Do not resolve if velocities are separating
     if(velAlongNormal > 0) {
         return;
@@ -29,7 +29,20 @@ void ResolveCollision( Collision* collision )
     j /= 1 / collision->body1->mass + 1 / collision->body2->mass;
 
     // Apply impulse
-    PVec3 impulse = j * normal
-    A.velocity -= 1 / A.mass * impulse
-    B.velocity += 1 / B.mass * impulse
+    PVec3 impulse = PVec3MultiplyScalar(&collision->normal, j);
+
+    //TODO: Static objects will most likely need to be accounted for here.
+    PVec3 aDiff = PVec3MultiplyScalar(&collision->normal, (1 / collision->body1->mass));
+    collision->body1->velocity = subtractPVec3(&collision->body1->velocity , &aDiff);
+    PVec3 bDiff = PVec3MultiplyScalar(&collision->normal, (1 / collision->body2->mass));
+    collision->body2->velocity = addPVec3(&collision->body2->velocity , &bDiff);
+}
+
+void BeginCollisionResolution(Collision* collisionArray, size_t numOfCollisions) {
+    if (collisionArray == NULL || numOfCollisions == 0) {
+        return;
+    }
+    for (size_t i = 0; i < numOfCollisions; ++i) {
+        resolveCollision(&collisionArray[i]);
+    }
 }

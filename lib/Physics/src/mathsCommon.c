@@ -172,7 +172,7 @@ float dotProductPVec3(const PVec3* vec1, const PVec3* vec2) {
     return result;
 }
 
-PVec3 CrossProductPVec3(const PVec3* vec1, const PVec3* vec2) {
+PVec3 crossProductPVec3(const PVec3* vec1, const PVec3* vec2) {
     PVec3 result = PVec3_init();
     if (isPVecsNull(vec1, vec2)) {
         return result;

@@ -29,6 +29,7 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->AABBz2 = 0;
     collisionBody->mass = 1;
     collisionBody->restitution = 1.0f;
+    collisionBody->isStatic = false;
 }
 
 void CollisionBody_free(CollisionBody *collisionBody){
@@ -324,4 +325,8 @@ void CollisionBody_registerSphereCollider(CollisionBody *cb, const float *offset
     sphereCollider->zOffset = offsetPosition[2];
     sphereCollider->radius = radius;
     CollisionBody_addSphereCollider(cb, sphereCollider);
+}
+
+void CollisionBody_setCollisionBodyStatic(CollisionBody *cb, bool isStatic) {
+    cb->isStatic = isStatic;
 }

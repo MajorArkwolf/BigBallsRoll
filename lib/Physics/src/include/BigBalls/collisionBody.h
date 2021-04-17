@@ -3,6 +3,7 @@
 #include "boxCollider.h"
 #include "sphereCollider.h"
 #include "mathsCommon.h"
+#include "stdbool.h"
 
 typedef struct CollisionBody{
     // implementation of stack
@@ -31,6 +32,7 @@ typedef struct CollisionBody{
     float AABBy2;
     float AABBz2;
     float restitution; // << Bounciness, this possibly should be added to individual colliders.
+    bool isStatic;
 } CollisionBody;
 
 // struct to wrap array to make it easy to pass in and out of functions, and keep data on the stack for performance benefits
@@ -181,3 +183,11 @@ void CollisionBody_registerBoxCollider(CollisionBody *cb,
 void CollisionBody_registerSphereCollider(CollisionBody *cb,
                                           const float *offsetPosition,
                                           float radius);
+
+/**
+ * Set a collision body to become static, a static object will not move and if
+ * two static bodies are colliding they will be ignored.
+ * @param cb collision body to alter
+ * @param isStatic true if static, false if not
+ */
+void CollisionBody_setCollisionBodyStatic(CollisionBody *cb, bool isStatic);

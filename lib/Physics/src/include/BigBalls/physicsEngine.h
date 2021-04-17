@@ -39,4 +39,4 @@ void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *
  * @param physicsWorld the world that will be updated
  * @param the time since the last update
  */
-void PhysicsEngine_updateWorld(PhysicsWorld *physicsWorld, float deltaTime);
+void PhysicsEngine_updateWorld(PhysicsWorld *physicsWorld, double deltaTime);

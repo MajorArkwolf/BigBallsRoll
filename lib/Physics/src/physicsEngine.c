@@ -55,9 +55,11 @@ void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *
     }
 }
 
-void PhysicsEngine_updateWorld(PhysicsWorld *physicsWorld, float deltaTime) {
-    CollisionArrayContainer cac = collisionArrayContainer_init();
-    collisionsDetection(physicsWorld, &cac);
-    collisionResolution(cac.collisionArray, cac.numOfCollisions);
-    collisionArrayContainer_free(&cac);
+void PhysicsEngine_updateWorld(PhysicsWorld *physicsWorld, double deltaTime) {
+    if (physicsWorld != NULL) {
+        CollisionArrayContainer cac = collisionArrayContainer_init();
+        collisionsDetection(physicsWorld, &cac);
+        collisionResolution(cac.collisionArray, cac.numOfCollisions);
+        collisionArrayContainer_free(&cac);
+    }
 }

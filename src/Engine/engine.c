@@ -235,7 +235,7 @@ int Engine_run(int argc, char *argv[]) {
             FixedUpdate(deltaTime);
             //Physics update goes here
             // if statement, check if either physicsWorld is not null
-            //PhysicsEngine_updatePhysicsWorld(physicsEngine, Statemanager.top()->physicsWorld, deltaTime);
+            PhysicsEngine_updateWorld(StateManager_top(&engine.sM)->physicsWorld, deltaTime);
             accumulator -= deltaTime;
         }
         Update(frameTime);

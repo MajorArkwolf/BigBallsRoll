@@ -9,4 +9,13 @@ typedef struct Collision {
     PVec3 normal;
 } Collision;
 
+typedef struct CollisionArrayContainer {
+    Collision *collisionArray;
+    size_t numOfCollisions;
+}CollisionArrayContainer;
+
+CollisionArrayContainer collisionArrayContainer_init();
+
+void collisionArrayContainer_free(CollisionArrayContainer* cac);
+
 Collision collision_init();

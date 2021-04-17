@@ -161,7 +161,7 @@ PVec3 subtractPVec3(const PVec3* vec1, const PVec3* vec2) {
     return result;
 }
 
-float DotProductPVec3(const PVec3* vec1, const PVec3* vec2) {
+float dotProductPVec3(const PVec3* vec1, const PVec3* vec2) {
     float result = 0.0f;
     if (isPVecsNull(vec1, vec2)) {
         return result;

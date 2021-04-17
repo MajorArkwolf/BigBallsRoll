@@ -139,7 +139,7 @@ PVec3 subtractPVec3(const PVec3* vec1, const PVec3* vec2);
  * @param vec2 the second vector
  * @return the result which is a scalar
  */
-float DotProductPVec3(const PVec3* vec1, const PVec3* vec2);
+float dotProductPVec3(const PVec3* vec1, const PVec3* vec2);
 
 /**
  * Cross product of two vectors and returns the result.
@@ -147,7 +147,7 @@ float DotProductPVec3(const PVec3* vec1, const PVec3* vec2);
  * @param vec2 the second vector
  * @return the result
  */
-PVec3 CrossProductPVec3(const PVec3* vec1, const PVec3* vec2);
+PVec3 crossProductPVec3(const PVec3* vec1, const PVec3* vec2);
 
 /**
  * Multiply a scalar with a vector
@@ -155,4 +155,4 @@ PVec3 CrossProductPVec3(const PVec3* vec1, const PVec3* vec2);
  * @param scalar to multiply
  * @return the result of the operation
  */
-PVec3 PVec2MultiplyScalar(const PVec3* vec, float scalar);
+PVec3 PVec3MultiplyScalar(const PVec3* vec, float scalar);

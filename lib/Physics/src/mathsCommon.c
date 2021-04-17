@@ -4,12 +4,6 @@
 #include <assert.h>
 #include <stdlib.h>
 
-void tempVec3_init(tempVec3 *vec3) {
-    vec3->X = 0.0f;
-    vec3->Y = 0.0f;
-    vec3->Z = 0.0f;
-}
-
 bool fTolerance(float a, float b, float tolerance){
     assert(tolerance >= 0);
     if(fabsf(a-b) < tolerance){
@@ -131,4 +125,60 @@ Matrix44 createRotMat(float xDeg, float yDeg, float zDeg){
     Matrix44 z = rotateAboutVec(0, 0, 1, zDeg);
 
     return matrixMultiplication44_44(z , matrixMultiplication44_44(y, x));
+}
+
+PVec3 PVec3_init() {
+    PVec3 vec3;
+    vec3.data[0] = 0.0f;
+    vec3.data[1] = 0.0f;
+    vec3.data[2] = 0.0f;
+    return vec3;
+}
+
+bool isPVecsNull(const PVec3* vec1, const PVec3* vec2) {
+    return vec1 == NULL || vec2 == NULL;
+}
+
+PVec3 addPVec3(const PVec3* vec1, const PVec3* vec2) {
+    PVec3 result = PVec3_init();
+    if (isPVecsNull(vec1, vec2)) {
+        return result;
+    }
+    result.data[0] = vec1->data[0] + vec2->data[0];
+    result.data[1] = vec1->data[1] + vec2->data[1];
+    result.data[2] = vec1->data[2] + vec2->data[2];
+    return result;
+}
+
+PVec3 subtractPVec3(const PVec3* vec1, const PVec3* vec2) {
+    PVec3 result = PVec3_init();
+    if (isPVecsNull(vec1, vec2)) {
+        return result;
+    }
+    result.data[0] = vec1->data[0] - vec2->data[0];
+    result.data[1] = vec1->data[1] - vec2->data[1];
+    result.data[2] = vec1->data[2] - vec2->data[2];
+    return result;
+}
+
+float DotProductPVec3(const PVec3* vec1, const PVec3* vec2) {
+    float result = 0.0f;
+    if (isPVecsNull(vec1, vec2)) {
+        return result;
+    }
+    result += vec1->data[0] * vec2->data[0];
+    result += vec1->data[1] * vec2->data[1];
+    result += vec1->data[2] * vec2->data[2];
+    return result;
+}
+
+PVec3 CrossProductPVec3(const PVec3* vec1, const PVec3* vec2) {
+    PVec3 result = PVec3_init();
+    if (isPVecsNull(vec1, vec2)) {
+        return result;
+    }
+    result.data[0] = vec1->data[1] * vec2->data[2] - vec1->data[2] * vec2->data[1];
+    result.data[1] = vec1->data[2] * vec2->data[0] - vec1->data[0] * vec2->data[2];
+    result.data[2] = vec1->data[0] * vec2->data[1] - vec1->data[1] * vec2->data[0];
+    return result;
 }

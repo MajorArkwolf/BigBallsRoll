@@ -8,8 +8,7 @@ typedef struct PhysicsWorld {
     CollisionBody **collisionBodies;
     size_t numCollisionBodies;
     int collisionBodyIdCount;
-    float gravity;
-    tempVec3 gravityNormal;
+    PVec3 gravityNormal;
     bool debug;
 } PhysicsWorld;
 

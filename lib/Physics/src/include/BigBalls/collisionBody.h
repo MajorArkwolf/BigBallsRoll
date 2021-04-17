@@ -19,9 +19,7 @@ typedef struct CollisionBody{
     float xRot; // give rotation so collider rotations are relative to CollisionBody rotation
     float yRot;
     float zRot;
-    float xVel; // current velocity of CollisionBody (as a vector)
-    float yVel;
-    float zVel;
+    PVec3 velocity;
     float forceX; // force vector TODO: implement with Vec3 struct
     float forceY;
     float forceZ;

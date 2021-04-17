@@ -18,9 +18,9 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->xRot = 0;
     collisionBody->yRot = 0;
     collisionBody->zRot = 0;
-    collisionBody->xVel = 0;
-    collisionBody->yVel = 0;
-    collisionBody->zVel = 0;
+    collisionBody->velocity.data[0] = 0;
+    collisionBody->velocity.data[1] = 0;
+    collisionBody->velocity.data[2] = 0;
     collisionBody->AABBx1 = 0;
     collisionBody->AABBy1 = 0;
     collisionBody->AABBz1 = 0;
@@ -138,9 +138,9 @@ void CollisionBody_awake(CollisionBody *collisionBody){
 
 void CollisionBody_stop(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
-    collisionBody->xVel = 0;
-    collisionBody->yVel = 0;
-    collisionBody->zVel = 0;
+    collisionBody->velocity.data[0] = 0;
+    collisionBody->velocity.data[1] = 0;
+    collisionBody->velocity.data[2] = 0;
     collisionBody->forceX = 0;
     collisionBody->forceY = 0;
     collisionBody->forceZ = 0;

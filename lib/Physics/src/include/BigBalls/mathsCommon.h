@@ -1,20 +1,16 @@
 #pragma once
 #include <stdbool.h>
 
-// TODO: move to external math library
-
-//TODO: Temp until vec3 is apart of external library
-typedef struct tempVec3 {
-    float X;
-    float Y;
-    float Z;
-} tempVec3;
+typedef struct PVec3 {
+    //0 = X, 1 = Y, Z = 3
+    float data[3];
+} PVec3;
 
 /**
  * Initialise a vec3 object.
  * @param vec the vector to be initialised
  */
-void tempVec3_init(tempVec3 *vec3);
+PVec3 Vec3_init();
 
 typedef struct Matrix44 { // 4 by 4 matrix
     float elem[4][4];
@@ -114,3 +110,41 @@ Matrix44 rotateAboutVec(float xVec, float yVec, float zVec, float rotDeg);
  * @return Matrix44 transformation matrix
  */
 Matrix44 createRotMat(float xDeg, float yDeg, float zDeg);
+
+/**
+ * Constructs and initialises a PVec3 to 0.
+ * @return
+ */
+PVec3 PVec3_init();
+
+/**
+ * Adds two vectors and returns the result.
+ * @param vec1 the first vector
+ * @param vec2 the second vector
+ * @return the result
+ */
+PVec3 addPVec3(const PVec3* vec1, const PVec3* vec2);
+
+/**
+ * subtracts two vectors and returns the result.
+ * @param vec1 the first vector
+ * @param vec2 the second vector
+ * @return the result
+ */
+PVec3 subtractPVec3(const PVec3* vec1, const PVec3* vec2);
+
+/**
+ * Dot product of two vectors and returns the result.
+ * @param vec1 the first vector
+ * @param vec2 the second vector
+ * @return the result which is a scalar
+ */
+float DotProductPVec3(const PVec3* vec1, const PVec3* vec2);
+
+/**
+ * Cross product of two vectors and returns the result.
+ * @param vec1 the first vector
+ * @param vec2 the second vector
+ * @return the result
+ */
+PVec3 CrossProductPVec3(const PVec3* vec1, const PVec3* vec2);

@@ -30,6 +30,7 @@ typedef struct CollisionBody{
     float AABBx2;
     float AABBy2;
     float AABBz2;
+    float restitution; // << Bounciness, this possibly should be added to individual colliders.
 } CollisionBody;
 
 // struct to wrap array to make it easy to pass in and out of functions, and keep data on the stack for performance benefits

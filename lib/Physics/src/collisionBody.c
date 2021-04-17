@@ -27,7 +27,8 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->AABBx2 = 0;
     collisionBody->AABBy2 = 0;
     collisionBody->AABBz2 = 0;
-    collisionBody->mass = 0;
+    collisionBody->mass = 1;
+    collisionBody->restitution = 1.0f;
 }
 
 void CollisionBody_free(CollisionBody *collisionBody){

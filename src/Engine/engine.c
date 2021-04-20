@@ -9,7 +9,6 @@
 #include "Engine/luaHelper.h"
 #include "Scene/MainMenu/mainMenu.h"
 #include "Physics/physicsInterface.h"
-#include "guiManager.h"
 
 Engine engine;
 

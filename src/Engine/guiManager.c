@@ -165,7 +165,7 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
             nk_property_int(guiManager->ctx, "Width:", 1280, &engine.playerConfig.width, 3840, 100, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "guiManager->height:", 720, &engine.playerConfig.height, 2160, 100, 10);
+            nk_property_int(guiManager->ctx, "Height:", 720, &engine.playerConfig.height, 2160, 100, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
             nk_label(guiManager->ctx, "Windowed mode: ", NK_TEXT_LEFT);
             if (nk_option_label(guiManager->ctx, "Enabled", engine.playerConfig.windowedMode == true)) engine.playerConfig.windowedMode = true;

@@ -1,15 +1,19 @@
 #pragma once
 
-void guiManager_init();
+void GuiManager_init();
 
-void guiManager_mainMenu();
+void GuiManager_free();
 
-void guiManager_free();
+void GuiManager_draw();
 
-void menuOptions_reset();
+void GuiManager_optionsReset();
 
-void guiManager_settingsMenu();
+void GuiManager_settingsMenu();
 
-void guiManager_gameMenu();
+void GuiManager_gameMenu();
 
-void guiManager_draw();
+void GuiManager_developerMenu();
+
+void GuiManager_mainMenu();
+
+void GuiManager_levelMenu();

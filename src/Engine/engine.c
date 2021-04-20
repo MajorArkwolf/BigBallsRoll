@@ -84,7 +84,7 @@ void Draw(void) {
     Camera_lookAt(cam);
     StateManager_draw(&engine.sM, 0.0f);
     PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
-    if(engine.gui) { guiManager_draw(); }
+    if(engine.gui) { GuiManager_draw(); }
     glfwSwapBuffers(engine.window);
 }
 
@@ -207,7 +207,8 @@ int Engine_run(int argc, char *argv[]) {
     glfwSetMouseButtonCallback(engine.window, mouse_button_callback);
     glfwSetInputMode(engine.window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
 
-    guiManager_init();
+    // GUI init after window creation
+    GuiManager_init();
 
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
@@ -259,7 +260,7 @@ void Engine_stop() {
     ModelManager_free(&engine.modelManager);
     TextureManager_free(&engine.textureManager);
     PhysicsInterface_free();
-    guiManager_free();
+    GuiManager_free();
     StateManager_free(&engine.sM);
     lua_close(engine.lua);
     free(engine.cwd);

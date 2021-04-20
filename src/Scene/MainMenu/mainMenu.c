@@ -3,7 +3,6 @@
 #include <Engine/engine.h>
 #include "Scene/Game/game.h"
 #include "Engine/stateManager.h"
-#include "Engine/guiManager.h"
 
 int MainMenu_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {

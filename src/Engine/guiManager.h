@@ -12,26 +12,30 @@ typedef struct GuiManager {
     bool inGame;
     int height;
     int width;
+    bool guiDraw;
+    //TODO: TEMP ADD DEBUG CONFIG OR SOMETHING
     int gravity;
     bool debug;
 } GuiManager;
 
-void GuiManager_init(void);
+void GuiManager_init(GuiManager *guiManager);
 
-void GuiManager_free(void);
+void GuiManager_free(GuiManager *guiManager);
 
-void GuiManager_draw(void);
+void GuiManager_draw(GuiManager *guiManager);
 
-void GuiManager_optionsReset(void);
+void GuiManager_optionsReset(GuiManager *guiManager);
 
-void GuiManager_settingsMenu(void);
+void GuiManager_settingsMenu(GuiManager *guiManager);
 
-void GuiManager_gameMenu(void);
+void GuiManager_gameMenu(GuiManager *guiManager);
 
-void GuiManager_developerMenu(void);
+void GuiManager_developerMenu(GuiManager *guiManager);
 
-void GuiManager_mainMenu(void);
+void GuiManager_mainMenu(GuiManager *guiManager);
 
-void GuiManager_levelMenu(void);
+void GuiManager_levelMenu(GuiManager *guiManager);
 
-void GuiManager_update(void);
+void GuiManager_update(GuiManager *guiManager);
+
+void GuiManager_drawToggle(GuiManager *guiManager);

@@ -9,6 +9,7 @@
 #include <lua.h>
 #include "Engine/OpenGL.h"
 #include "playerConfig.h"
+#include "guiManager.h"
 
 typedef struct Engine {
     int timeSinceStart;
@@ -20,13 +21,13 @@ typedef struct Engine {
     AudioManager audioManager;
     PlayerConfig playerConfig;
     PhysicsEngine physicsEngine;
+    GuiManager guiManager;
     char *cwd;
     int width;
     int height;
     float fov;
     bool lockCamera;
     bool fullScreen;
-    bool gui;
     int seed;
     lua_State *lua;
     GLFWwindow* window;

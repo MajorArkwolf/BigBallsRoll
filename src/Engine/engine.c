@@ -84,7 +84,7 @@ void Draw(void) {
     Camera_lookAt(cam);
     StateManager_draw(&engine.sM, 0.0f);
     PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
-    if(engine.gui) { GuiManager_draw(); }
+    if(engine.guiManager.guiDraw) { GuiManager_draw(&engine.guiManager); }
     glfwSwapBuffers(engine.window);
 }
 
@@ -138,7 +138,6 @@ int Engine_run(int argc, char *argv[]) {
     engine.fov = 60.0f;
     engine.lockCamera = false;
     engine.fullScreen = false;
-    engine.gui = false;
 
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
@@ -208,7 +207,7 @@ int Engine_run(int argc, char *argv[]) {
     glfwSetInputMode(engine.window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
 
     // GUI init after window creation
-    GuiManager_init();
+    GuiManager_init(&engine.guiManager);
 
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
@@ -237,7 +236,7 @@ int Engine_run(int argc, char *argv[]) {
         currentTime = newTime;
         accumulator += frameTime;
 
-        if(!engine.gui) {
+        if(!engine.guiManager.guiDraw) {
             while (accumulator >= deltaTime) {
                 glfwPollEvents();
                 FixedUpdate(deltaTime);
@@ -262,7 +261,7 @@ void Engine_stop() {
     ModelManager_free(&engine.modelManager);
     TextureManager_free(&engine.textureManager);
     PhysicsInterface_free();
-    GuiManager_free();
+    GuiManager_free(&engine.guiManager);
     StateManager_free(&engine.sM);
     lua_close(engine.lua);
     free(engine.cwd);

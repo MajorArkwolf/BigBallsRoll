@@ -25,7 +25,7 @@ int MainMenu_keyDown(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     switch (inputType) {
         case KEY_ESC:
-            engine.gui = !engine.gui;
+            GuiManager_drawToggle(&engine.guiManager);
             break;
         case KEY_UP_ARROW:
         case KEY_W:

@@ -13,7 +13,7 @@ void positionalCorrection( Collision* collision )
 void resolveCollision( Collision* collision )
 {
     // Calculate relative velocity
-    PVec3 rv = subtractPVec3(&collision->body1->velocity, &collision->body1->velocity);
+    PVec3 rv = subtractPVec3(&collision->body1->velocity, &collision->body2->velocity);
 
     // Calculate relative velocity in terms of the normal direction
     float velAlongNormal = dotProductPVec3(&rv, &collision->normal);

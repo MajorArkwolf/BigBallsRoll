@@ -56,6 +56,16 @@ void GuiManager_update(GuiManager *guiManager) {
     glfwGetWindowSize(engine.window, &guiManager->glfwWidth, &guiManager->glfwHeight);
 }
 
+void GuiManager_free(GuiManager *guiManager) {
+    assert(guiManager != NULL);
+    nk_glfw3_shutdown();
+}
+
+void GuiManager_drawToggle(GuiManager *guiManager) {
+    assert(guiManager != NULL);
+    guiManager->guiDraw = !guiManager->guiDraw;
+}
+
 void GuiManager_levelMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
     glfwPollEvents();
@@ -368,15 +378,6 @@ void GuiManager_draw(GuiManager *guiManager) {
     }
 }
 
-void GuiManager_drawToggle(GuiManager *guiManager) {
-    assert(guiManager != NULL);
-    guiManager->guiDraw = !guiManager->guiDraw;
-}
-
-void GuiManager_free(GuiManager *guiManager) {
-    assert(guiManager != NULL);
-    nk_glfw3_shutdown();
-}
 
 void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH) {
     assert(guiManager != NULL);

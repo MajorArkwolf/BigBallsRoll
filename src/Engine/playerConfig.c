@@ -1,4 +1,5 @@
 #include "playerConfig.h"
+#include <string.h>
 
 void PlayerConfig_init(PlayerConfig *playerConfig) {
     playerConfig->seed = 0;
@@ -11,5 +12,6 @@ void PlayerConfig_init(PlayerConfig *playerConfig) {
     playerConfig->height = 1080;
     playerConfig->horizontalLock = false;
     playerConfig->windowedMode = true;
-    playerConfig->nameLength = 0;
+    strcpy_s(playerConfig->name, NAME_SIZE, "The Rookie");
+    playerConfig->nameLength = 10;
 }

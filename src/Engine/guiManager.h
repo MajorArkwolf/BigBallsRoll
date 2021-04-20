@@ -10,8 +10,10 @@ typedef struct GuiManager {
     struct nk_font_atlas *atlas;
     menuOption options;
     bool inGame;
-    int height;
-    int width;
+    int glfwHeight;
+    int glfwWidth;
+    float height;
+    float width;
     bool guiDraw;
     //TODO: TEMP ADD DEBUG CONFIG OR SOMETHING
     int gravity;
@@ -39,3 +41,5 @@ void GuiManager_levelMenu(GuiManager *guiManager);
 void GuiManager_update(GuiManager *guiManager);
 
 void GuiManager_drawToggle(GuiManager *guiManager);
+
+void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH);

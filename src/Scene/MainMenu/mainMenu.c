@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <Engine/engine.h>
 #include "Scene/Game/game.h"
-#include "Engine/stateManager.h"
 
 int MainMenu_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
@@ -69,12 +68,6 @@ int MainMenu_keyUp(InputType inputType) {
         case KEY_D:
             cam->MoveRight = false;
             break;
-        case KEY_SPACEBAR:
-            state = malloc(sizeof (State));
-            State_init(state);
-            StateManager_push(&engine.sM, state);
-            Game_init(state);
-            return 0;
         default:
             break;
     }

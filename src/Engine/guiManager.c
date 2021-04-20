@@ -1,6 +1,7 @@
 #include "guiManager.h"
 #include "OpenGL.h"
 #include "Physics/physicsInterface.h"
+#include "Scene/Game/game.h"
 #include <Engine/engine.h>
 
 #define NK_INCLUDE_FIXED_TYPES
@@ -34,13 +35,17 @@ void GuiManager_init(GuiManager *guiManager) {
     //Set font
     nk_style_set_font(guiManager->ctx, &myFont->handle);
 
+    //init height and width
     GuiManager_update(guiManager);
 
+    //init menu options
     GuiManager_optionsReset(guiManager);
+    //Set main menu to draw first
     guiManager->options.menu = true;
     guiManager->inGame = false;
     guiManager->guiDraw = false;
 
+    //TODO:: TEMP
     guiManager->gravity = -1;
     guiManager->debug = false;
 }
@@ -95,7 +100,17 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
         //Confirm button
         nk_layout_row_dynamic(guiManager->ctx, height / 10, 1);
         if (nk_button_label(guiManager->ctx, "LET EM' ROLL!")) {
+            State *state;
+            state = malloc(sizeof (State));
+            State_init(state);
+            StateManager_push(&engine.sM, state);
+            Game_init(state);
+
+            GuiManager_optionsReset(guiManager);
+            GuiManager_drawToggle(guiManager);
+            guiManager->options.menu = true;
             guiManager->inGame = true;
+
             //TODO:: pass the stuff
             printf("name: %s\n", engine.playerConfig.name);
             printf("Seed: %i\n", engine.playerConfig.seed);
@@ -315,6 +330,8 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
         //EXIT
         nk_layout_row_dynamic(guiManager->ctx, height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
+            StateManager_pop(&engine.sM);
+            GuiManager_drawToggle(&engine.guiManager);
             GuiManager_optionsReset(guiManager);
             guiManager->options.menu = true;
             guiManager->inGame = false;

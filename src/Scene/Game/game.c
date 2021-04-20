@@ -71,9 +71,6 @@ int Game_keyUp(InputType inputType) {
             Engine_toggleCameraLock();
             break;
         case KEY_ESC:
-            StateManager_pop(&engine.sM);
-            break;
-        case KEY_M: //TODO: TEMP KEY UNTIL MENU CHANGES STATES
             GuiManager_drawToggle(&engine.guiManager);
             break;
         default:

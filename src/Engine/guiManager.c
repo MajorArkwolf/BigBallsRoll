@@ -49,6 +49,8 @@ void GuiManager_init() {
     //Set font
     nk_style_set_font(GuiContainer.ctx, &myFont->handle);
 
+    GuiManager_update();
+
     GuiManager_optionsReset();
     GuiContainer.options.menu = true;
     GuiContainer.inGame = false;
@@ -64,42 +66,47 @@ void GuiManager_levelMenu() {
     glfwPollEvents();
     nk_glfw3_new_frame();
 
+    float width = (float) GuiContainer.width/2;
+    float height = (float) GuiContainer.height/2.3f;
+    if (GuiContainer.height < 1080) { height = (float) GuiContainer.height - 100; }
+    if (GuiContainer.width < 1920) { width = (float) GuiContainer.width - 100; }
+
     /* GUI */
-    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, (float) GuiContainer.width/3, (float) GuiContainer.height /2.5f),
+    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, width, height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 11, 1);
         nk_label(GuiContainer.ctx, "NEW GAME", NK_TEXT_CENTERED);
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 6);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 11, 4);
         if (nk_button_label(GuiContainer.ctx, "MAIN MENU")) {
             GuiManager_optionsReset();
             GuiContainer.options.menu = true;
         }
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 10, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 4.5f, 1);
 
         //Name
         if (nk_group_begin(GuiContainer.ctx, "Name",  NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 11, 3);
             nk_edit_string(GuiContainer.ctx, NK_EDIT_FIELD | NK_EDIT_GOTO_END_ON_ACTIVATE, engine.playerConfig.name, &engine.playerConfig.nameLength, 256, nk_filter_ascii);
 
             nk_group_end(GuiContainer.ctx);
         }
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 8, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 3.1f, 1);
         //Level
         if (nk_group_begin(GuiContainer.ctx, "Level",  NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 12, 3);
             nk_property_int(GuiContainer.ctx, "Seed:", INT_MIN, &engine.playerConfig.seed, INT_MAX, 10, 10);
 
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 12, 3);
             nk_property_int(GuiContainer.ctx, "Total levels:", 1, &engine.playerConfig.levels, 20, 1, 10);
 
             nk_group_end(GuiContainer.ctx);
         }
 
         //Confirm button
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 10, 1);
         if (nk_button_label(GuiContainer.ctx, "LET EM' ROLL!")) {
             GuiContainer.inGame = true;
             //TODO:: pass the stuff
@@ -118,19 +125,22 @@ void GuiManager_settingsMenu() {
     glfwPollEvents();
     nk_glfw3_new_frame();
 
+    float width = (float) GuiContainer.width/2;
+    float height = (float) GuiContainer.height/1.35f;
+    if (GuiContainer.height < 1080) { height = (float) GuiContainer.height - 100; }
+    if (GuiContainer.width < 1920) { width = (float) GuiContainer.width - 100; }
+
     /* GUI */
-    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, (float) GuiContainer.width/3, (float) GuiContainer.height/1.5f),
+    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, width, height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 20, 1);
         nk_label(GuiContainer.ctx, "SETTINGS", NK_TEXT_CENTERED);
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 6);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 20, 4);
         if (nk_button_label(GuiContainer.ctx, "MAIN MENU")) {
             GuiManager_optionsReset();
             GuiContainer.options.menu = true;
         }
-        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
-        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
         nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
         nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
         if (nk_button_label(GuiContainer.ctx, "DEVELOPER")) {
@@ -138,56 +148,56 @@ void GuiManager_settingsMenu() {
             GuiContainer.options.developer = true;
         }
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 7, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 4.3f, 1);
 
         //Window settings
         if (nk_group_begin(GuiContainer.ctx, "Window", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 21, 3);
             nk_property_int(GuiContainer.ctx, "Width:", 1280, &engine.playerConfig.width, 3840, 100, 10);
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 21, 3);
             nk_property_int(GuiContainer.ctx, "Height:", 720, &engine.playerConfig.height, 2160, 100, 10);
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 21, 3);
             nk_label(GuiContainer.ctx, "Windowed mode: ", NK_TEXT_LEFT);
             if (nk_option_label(GuiContainer.ctx, "Enabled", engine.playerConfig.windowedMode == true)) engine.playerConfig.windowedMode = true;
             if (nk_option_label(GuiContainer.ctx, "Disabled", engine.playerConfig.windowedMode == false)) engine.playerConfig.windowedMode = false;
             nk_group_end(GuiContainer.ctx);
         }
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) engine.height / 8, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 5.5f, 1);
 
         //Audio settings
         if (nk_group_begin(GuiContainer.ctx, "Audio", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 20, 3);
             nk_property_int(GuiContainer.ctx, "Volume:", 0, &engine.playerConfig.volume, 100, 10, 10);
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 20, 3);
             nk_label(GuiContainer.ctx, "Sound: ", NK_TEXT_LEFT);
             if (nk_option_label(GuiContainer.ctx, "Enabled", engine.playerConfig.sound == true)) engine.playerConfig.sound = true;
             if (nk_option_label(GuiContainer.ctx, "Disabled", engine.playerConfig.sound == false)) engine.playerConfig.sound = false;
             nk_group_end(GuiContainer.ctx);
         }
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 4.7f, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 3, 1);
 
         //Mouse settings
         if (nk_group_begin(GuiContainer.ctx, "Mouse", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 21, 3);
             nk_label(GuiContainer.ctx, "Sensitivity: ", NK_TEXT_LEFT);
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 21, 3);
             nk_property_int(GuiContainer.ctx, "Vertical:", 0, &engine.playerConfig.verticalSens, 100, 10, 10);
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 21, 3);
             nk_property_int(GuiContainer.ctx, "Horizontal:", 0, &engine.playerConfig.horizontalSens, 100, 10, 10);
 
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 21, 3);
             nk_label(GuiContainer.ctx, "Horizontal lock: ", NK_TEXT_LEFT);
             if (nk_option_label(GuiContainer.ctx, "Enabled", engine.playerConfig.horizontalLock == true)) engine.playerConfig.horizontalLock = true;
             if (nk_option_label(GuiContainer.ctx, "Disabled", engine.playerConfig.horizontalLock == false)) engine.playerConfig.horizontalLock = false;
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 21, 1);
             nk_label(GuiContainer.ctx, "When enabled you must right click to pan the camera.", NK_TEXT_LEFT);
             nk_group_end(GuiContainer.ctx);
         }
 
         //Confirm button
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) (float)GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 20, 1);
         if (nk_button_label(GuiContainer.ctx, "Confirm")) {
             //TODO:: pass the stuff
             printf("Volume: %i\n", engine.playerConfig.volume);
@@ -195,6 +205,7 @@ void GuiManager_settingsMenu() {
             printf("V sens: %i\n", engine.playerConfig.verticalSens);
             printf("H sens: %i\n", engine.playerConfig.horizontalSens);
             printf("H Lock: %i\n", engine.playerConfig.horizontalLock);
+            glfwSetWindowSize(engine.window, engine.playerConfig.width, engine.playerConfig.height);    //TODO: remove, just for testing ui scaling atm
         }
     }
     nk_end(GuiContainer.ctx);
@@ -206,19 +217,22 @@ void GuiManager_developerMenu() {
     glfwPollEvents();
     nk_glfw3_new_frame();
 
+    float width = (float) GuiContainer.width/2;
+    float height = (float) GuiContainer.height/3;
+    if (GuiContainer.height < 1080) { height = (float) GuiContainer.height - 100; }
+    if (GuiContainer.width < 1920) { width = (float) GuiContainer.width - 100; }
+
     /* GUI */
-    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, (float) GuiContainer.width/3, (float) GuiContainer.height/3),
+    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, width, height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 9, 1);
         nk_label(GuiContainer.ctx, "DEVELOPER SETTINGS", NK_TEXT_CENTERED);
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 6);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 9, 4);
         if (nk_button_label(GuiContainer.ctx, "MAIN MENU")) {
             GuiManager_optionsReset();
             GuiContainer.options.menu = true;
         }
-        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
-        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
         nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
         nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
         if (nk_button_label(GuiContainer.ctx, "SETTINGS")) {
@@ -226,13 +240,13 @@ void GuiManager_developerMenu() {
             GuiContainer.options.settings = true;
         }
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 7, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 2.5f, 1);
 
         //Physics settings
         if (nk_group_begin(GuiContainer.ctx, "Physics", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 9, 3);
             nk_property_int(GuiContainer.ctx, "Gravity:", -100, &GuiContainer.gravity, 100, 1, 10);
-            nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 3);
+            nk_layout_row_dynamic(GuiContainer.ctx, height / 9, 3);
             nk_label(GuiContainer.ctx, "Debug Render: ", NK_TEXT_LEFT);
             if (nk_option_label(GuiContainer.ctx, "Enabled", GuiContainer.debug == true)) GuiContainer.debug = true;
             if (nk_option_label(GuiContainer.ctx, "Disabled", GuiContainer.debug == false)) GuiContainer.debug = false;
@@ -240,7 +254,7 @@ void GuiManager_developerMenu() {
         }
 
         //Confirm button
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 9, 1);
         if (nk_button_label(GuiContainer.ctx, "Confirm")) {
             //TODO:: pass the stuff
             printf("Gravity: %i\n", GuiContainer.gravity);
@@ -256,28 +270,30 @@ void GuiManager_mainMenu() {
     glfwPollEvents();
     nk_glfw3_new_frame();
 
+    float width = (float) GuiContainer.width/2;
+    float height = (float) GuiContainer.height/3;
     /* GUI */
-    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, (float) GuiContainer.width/3, (float) GuiContainer.height/5),
+    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, width, height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 6, 1);
         nk_label(GuiContainer.ctx, "MAIN MENU", NK_TEXT_CENTERED);
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, (float) height / 6, 1);
         if (nk_button_label(GuiContainer.ctx, "NEW GAME")) {
             GuiManager_optionsReset();
             GuiContainer.options.level = true;
         }
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, (float) height / 6, 1);
         if (nk_button_label(GuiContainer.ctx, "SETTINGS")) {
             GuiManager_optionsReset();
             GuiContainer.options.settings = true;
         }
 
         //Quit
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, (float) height / 6, 1);
         if (nk_button_label(GuiContainer.ctx, "EXIT")) {
             GuiManager_optionsReset();
             GuiContainer.options.exit = true;
@@ -292,22 +308,25 @@ void GuiManager_gameMenu() {
     glfwPollEvents();
     nk_glfw3_new_frame();
 
+    float width = (float) GuiContainer.width/2;
+    float height = (float) GuiContainer.height/4;
+
     /* GUI */
-    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, (float) GuiContainer.width/3, (float) GuiContainer.height/5),
+    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, width, height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 5, 1);
         nk_label(GuiContainer.ctx, "GAME MENU", NK_TEXT_CENTERED);
 
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 5, 1);
         if (nk_button_label(GuiContainer.ctx, "SETTINGS")) {
             GuiManager_optionsReset();
             GuiContainer.options.settings = true;
         }
 
         //EXIT
-        nk_layout_row_dynamic(GuiContainer.ctx, (float) GuiContainer.height / 32, 1);
+        nk_layout_row_dynamic(GuiContainer.ctx, height / 5, 1);
         if (nk_button_label(GuiContainer.ctx, "QUIT")) {
             GuiManager_optionsReset();
             GuiContainer.options.menu = true;

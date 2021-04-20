@@ -83,7 +83,9 @@ void Draw(void) {
     Camera_lookAt(cam);
     StateManager_draw(&engine.sM, 0.0f);
     PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
-    if(engine.guiManager.guiDraw) { GuiManager_draw(&engine.guiManager); }
+    if(engine.guiManager.guiDraw) {
+        GuiManager_draw(&engine.guiManager);
+    }
     glfwSwapBuffers(engine.window);
 }
 

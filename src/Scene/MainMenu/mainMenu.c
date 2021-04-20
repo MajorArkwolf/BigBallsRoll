@@ -16,7 +16,6 @@ int MainMenu_update(float deltaTime) {
     for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
         GameObject_update(&gameObjects[i]);
     }
-    engine.lockCamera = false;
     return 0;
 }
 
@@ -50,7 +49,6 @@ int MainMenu_keyDown(InputType inputType) {
 
 int MainMenu_keyUp(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
-    State *state;
     switch (inputType) {
         case KEY_UP_ARROW:
         case KEY_W:
@@ -78,7 +76,7 @@ int MainMenu_mouseMovement(double x, double y) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {
-        Camera_mouseLook(cam, x, y);
+       // Camera_mouseLook(cam, x, y);
     }
     return 0;
 }
@@ -90,6 +88,8 @@ void MainMenu_init(State *state) {
     state->keyDown = MainMenu_keyDown;
     state->keyUp = MainMenu_keyUp;
     state->mouseMovement = MainMenu_mouseMovement;
+
+    engine.lockCamera = true;
 
     GameObject_init(&state->gameObjects[0]);
     GameObject_init(&state->gameObjects[1]);

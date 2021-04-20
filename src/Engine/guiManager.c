@@ -29,8 +29,6 @@ void GuiManager_init(GuiManager *guiManager) {
     nk_glfw3_font_stash_begin(&guiManager->atlas);
     //Load font
     myFont = nk_font_atlas_add_default(guiManager->atlas, fontSize, &cfg1);
-    //Load cursor
-    nk_style_load_all_cursors(guiManager->ctx, guiManager->atlas->cursors);
     nk_glfw3_font_stash_end();
 
     //Set font
@@ -64,6 +62,51 @@ void GuiManager_free(GuiManager *guiManager) {
 void GuiManager_drawToggle(GuiManager *guiManager) {
     assert(guiManager != NULL);
     guiManager->guiDraw = !guiManager->guiDraw;
+    engine.lockCamera = !guiManager->guiDraw;
+}
+
+void GuiManager_optionsReset(GuiManager *guiManager)  {
+    assert(guiManager != NULL);
+    guiManager->options.level = false;
+    guiManager->options.menu = false;
+    guiManager->options.exit = false;
+    guiManager->options.settings = false;
+    guiManager->options.developer = false;
+}
+
+void GuiManager_draw(GuiManager *guiManager) {
+    assert(guiManager != NULL);
+    GuiManager_update(guiManager);
+    if (guiManager->options.level) {
+        GuiManager_levelMenu(guiManager);
+    } else if (guiManager->options.settings) {
+        GuiManager_settingsMenu(guiManager);
+    } else if (guiManager->options.menu) {
+        if(guiManager->inGame) {
+            GuiManager_gameMenu(guiManager);
+        } else {
+            GuiManager_mainMenu(guiManager);
+        }
+    } else if (guiManager->options.developer) {
+        GuiManager_developerMenu(guiManager);
+    } else if (guiManager->options.exit) {
+        Engine_stop();//TODO:: add exit screen
+    }
+}
+
+void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH) {
+    assert(guiManager != NULL && divideW != 0 && divideH != 0);
+    if (guiManager->glfwWidth < 1600) {
+        guiManager->width = (float) guiManager->glfwWidth - 100;
+    } else {
+        guiManager->width = (float) guiManager->glfwWidth / divideW;
+    }
+
+    if (guiManager->glfwWidth < 900) {
+        guiManager->height = (float) guiManager->glfwHeight - 100;
+    } else {
+        guiManager->height = (float) guiManager->glfwHeight / divideH;
+    }
 }
 
 void GuiManager_levelMenu(GuiManager *guiManager) {
@@ -163,11 +206,12 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
         //Window settings
         if (nk_group_begin(guiManager->ctx, "Window", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Width:", 1280, &engine.playerConfig.width, 3840, 100, 10);
+            nk_property_int(guiManager->ctx, "Width:", 1280, &engine.playerConfig.width, 3840, 10, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Height:", 720, &engine.playerConfig.height, 2160, 100, 10);
+            nk_property_int(guiManager->ctx, "Height:", 720, &engine.playerConfig.height, 2160, 10, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
             nk_label(guiManager->ctx, "Windowed mode: ", NK_TEXT_LEFT);
+
             if (nk_option_label(guiManager->ctx, "Enabled", engine.playerConfig.windowedMode == true)) engine.playerConfig.windowedMode = true;
             if (nk_option_label(guiManager->ctx, "Disabled", engine.playerConfig.windowedMode == false)) engine.playerConfig.windowedMode = false;
             nk_group_end(guiManager->ctx);
@@ -347,49 +391,4 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
     nk_end(guiManager->ctx);
 
     nk_glfw3_render(NK_ANTI_ALIASING_ON);
-}
-
-void GuiManager_optionsReset(GuiManager *guiManager)  {
-    assert(guiManager != NULL);
-    guiManager->options.level = false;
-    guiManager->options.menu = false;
-    guiManager->options.exit = false;
-    guiManager->options.settings = false;
-    guiManager->options.developer = false;
-}
-
-void GuiManager_draw(GuiManager *guiManager) {
-    assert(guiManager != NULL);
-    GuiManager_update(guiManager);
-    if (guiManager->options.level) {
-        GuiManager_levelMenu(guiManager);
-    } else if (guiManager->options.settings) {
-        GuiManager_settingsMenu(guiManager);
-    } else if (guiManager->options.menu) {
-        if(guiManager->inGame) {
-            GuiManager_gameMenu(guiManager);
-        } else {
-            GuiManager_mainMenu(guiManager);
-        }
-    } else if (guiManager->options.developer) {
-        GuiManager_developerMenu(guiManager);
-    } else if (guiManager->options.exit) {
-        Engine_stop();//TODO:: add exit screen
-    }
-}
-
-
-void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH) {
-    assert(guiManager != NULL && divideW != 0 && divideH != 0);
-    if (guiManager->glfwWidth < 1600) {
-        guiManager->width = (float) guiManager->glfwWidth - 100;
-    } else {
-        guiManager->width = (float) guiManager->glfwWidth / divideW;
-    }
-
-    if (guiManager->glfwWidth < 900) {
-        guiManager->height = (float) guiManager->glfwHeight - 100;
-    } else {
-        guiManager->height = (float) guiManager->glfwHeight / divideH;
-    }
 }

@@ -1,4 +1,20 @@
 #pragma once
+#include <stdbool.h>
+
+typedef struct menuOption {
+    bool menu, level, settings, exit, developer;
+} menuOption;
+
+typedef struct GuiManager {
+    struct nk_context *ctx;
+    struct nk_font_atlas *atlas;
+    menuOption options;
+    bool inGame;
+    int height;
+    int width;
+    int gravity;
+    bool debug;
+} GuiManager;
 
 void GuiManager_init(void);
 

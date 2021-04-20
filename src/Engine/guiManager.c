@@ -16,20 +16,7 @@
 #include "Engine/nuklear.h"
 #include "Engine/nuklear_glfw_gl2.h"
 
-typedef struct menuOption {
-    bool menu, level, settings, exit, developer;
-} menuOption;
-
-struct GuiContainer {
-    struct nk_context *ctx;
-    struct nk_font_atlas *atlas;
-    menuOption options;
-    bool inGame;
-    int height;
-    int width;
-    int gravity;
-    bool debug;
-} GuiContainer;
+GuiManager GuiContainer;
 
 void GuiManager_init() {
     //Font
@@ -68,8 +55,8 @@ void GuiManager_levelMenu() {
 
     float width = (float) GuiContainer.width/2;
     float height = (float) GuiContainer.height/2.3f;
-    if (GuiContainer.height < 1080) { height = (float) GuiContainer.height - 100; }
-    if (GuiContainer.width < 1920) { width = (float) GuiContainer.width - 100; }
+    if (GuiContainer.height < 900) { height = (float) GuiContainer.height - 100; }
+    if (GuiContainer.width < 1600) { width = (float) GuiContainer.width - 100; }
 
     /* GUI */
     if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, width, height),
@@ -127,8 +114,8 @@ void GuiManager_settingsMenu() {
 
     float width = (float) GuiContainer.width/2;
     float height = (float) GuiContainer.height/1.35f;
-    if (GuiContainer.height < 1080) { height = (float) GuiContainer.height - 100; }
-    if (GuiContainer.width < 1920) { width = (float) GuiContainer.width - 100; }
+    if (GuiContainer.height < 900) { height = (float) GuiContainer.height - 100; }
+    if (GuiContainer.width < 1600) { width = (float) GuiContainer.width - 100; }
 
     /* GUI */
     if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, width, height),
@@ -219,8 +206,8 @@ void GuiManager_developerMenu() {
 
     float width = (float) GuiContainer.width/2;
     float height = (float) GuiContainer.height/3;
-    if (GuiContainer.height < 1080) { height = (float) GuiContainer.height - 100; }
-    if (GuiContainer.width < 1920) { width = (float) GuiContainer.width - 100; }
+    if (GuiContainer.height < 600) { height = (float) GuiContainer.height - 100; }
+    if (GuiContainer.width < 1600) { width = (float) GuiContainer.width - 100; }
 
     /* GUI */
     if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, width, height),

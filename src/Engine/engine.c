@@ -32,9 +32,6 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
 
     float ratio = (float) w / (float) h;
 
-    engine.height = h;
-    engine.width = w;
-
     // Use the Projection Matrix
     glMatrixMode(GL_PROJECTION);
 

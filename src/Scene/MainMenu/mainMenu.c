@@ -5,14 +5,9 @@
 #include "Engine/stateManager.h"
 #include "Engine/guiManager.h"
 
-bool gui = false;
-
 int MainMenu_draw(float deltaTime) {
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
-    }
-    if(gui) {
-        guiManager_draw();
     }
     return 0;
 }
@@ -30,6 +25,9 @@ int MainMenu_update(float deltaTime) {
 int MainMenu_keyDown(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     switch (inputType) {
+        case KEY_ESC:
+            engine.gui = !engine.gui;
+            break;
         case KEY_UP_ARROW:
         case KEY_W:
             cam->MoveForward = true;
@@ -46,11 +44,6 @@ int MainMenu_keyDown(InputType inputType) {
         case KEY_D:
             cam->MoveRight = true;
             break;
-        case KEY_M:
-            guiManager_init();
-            //guiManager_mainMenu();
-            gui = !gui;
-            break;
         default:
             break;
     }
@@ -61,9 +54,6 @@ int MainMenu_keyUp(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     State *state;
     switch (inputType) {
-        case KEY_ESC:
-            glfwSetWindowShouldClose(engine.window, GLFW_TRUE);
-            break;
         case KEY_UP_ARROW:
         case KEY_W:
             cam->MoveForward = false;

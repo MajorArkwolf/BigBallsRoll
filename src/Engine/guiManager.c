@@ -23,9 +23,12 @@ struct GuiContainer { //TODO: find out what else I need // Global for now
     struct nk_context *ctx;
     struct nk_font_atlas *atlas;
     menuOption options;
+    bool inGame;
+    int height;
+    int width;
 } GuiContainer;
 
-void guiManager_init() {
+void guiManager_init(int height, int width) {
     //Font
     struct nk_font *myFont = NULL;
     float fontSize = 24;
@@ -33,18 +36,24 @@ void guiManager_init() {
 
     /* GUI */
     GuiContainer.ctx = nk_glfw3_init(engine.window, NK_GLFW3_INSTALL_CALLBACKS);
-    /* Load Fonts: if none of these are loaded a default font will be used  */
-    /* Load Cursor: if you uncomment cursor loading please hide the cursor */
     nk_glfw3_font_stash_begin(&GuiContainer.atlas);
+    //Load font
     myFont = nk_font_atlas_add_default(GuiContainer.atlas, fontSize, &cfg1);
+    //Load cursor
+    nk_style_load_all_cursors(GuiContainer.ctx, GuiContainer.atlas->cursors);
     nk_glfw3_font_stash_end();
 
+    //Set font
     nk_style_set_font(GuiContainer.ctx, &myFont->handle);
+
     menuOptions_reset();
     GuiContainer.options.menu = true;
+    GuiContainer.inGame = false;
+    GuiContainer.height = height;
+    GuiContainer.width = width;
 }
 
-void guiManager_gameMenu() {
+void guiManager_levelMenu() {
     glfwPollEvents();
     nk_glfw3_new_frame();
 
@@ -84,6 +93,7 @@ void guiManager_gameMenu() {
         //Confirm button
         nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
         if (nk_button_label(GuiContainer.ctx, "LET EM' ROLL!")) {
+            GuiContainer.inGame = true;
             //TODO:: pass the stuff
             printf("name: %s\n", engine.playerConfig.name);
             printf("Seed: %i\n", engine.playerConfig.seed);
@@ -199,11 +209,42 @@ void guiManager_mainMenu() {
             GuiContainer.options.settings = true;
         }
 
-        //EXIT
+        //Quit
         nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
         if (nk_button_label(GuiContainer.ctx, "EXIT")) {
-            //TODO:: add exit screen
-            Engine_stop();
+            menuOptions_reset();
+            GuiContainer.options.exit = true;
+        }
+    }
+    nk_end(GuiContainer.ctx);
+
+    nk_glfw3_render(NK_ANTI_ALIASING_ON);
+}
+
+void guiManager_gameMenu() {
+    glfwPollEvents();
+    nk_glfw3_new_frame();
+
+    /* GUI */
+    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, engine.width/3, engine.height/5),
+                 NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
+
+        //Menu title
+        nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
+        nk_label(GuiContainer.ctx, "GAME MENU", NK_TEXT_CENTERED);
+
+        nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
+        if (nk_button_label(GuiContainer.ctx, "SETTINGS")) {
+            menuOptions_reset();
+            GuiContainer.options.settings = true;
+        }
+
+        //EXIT
+        nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
+        if (nk_button_label(GuiContainer.ctx, "QUIT")) {
+            menuOptions_reset();
+            GuiContainer.options.menu = true;
+            GuiContainer.inGame = false;
         }
     }
     nk_end(GuiContainer.ctx);
@@ -219,19 +260,23 @@ void menuOptions_reset() {
 }
 
 void guiManager_draw() {
-    if(GuiContainer.options.level) {
-        guiManager_gameMenu();
-    } else if (GuiContainer.options.settings) {
-        guiManager_settingsMenu();
-    } else if (GuiContainer.options.menu) {
-        guiManager_mainMenu();
-    } else if (GuiContainer.options.exit) {
-        //TODO:: ADD EXIT SCREEN
+    if(engine.gui) {
+        if (GuiContainer.options.level) {
+            guiManager_levelMenu();
+        } else if (GuiContainer.options.settings) {
+            guiManager_settingsMenu();
+        } else if (GuiContainer.options.menu) {
+            if(GuiContainer.inGame) {
+                guiManager_gameMenu();
+            } else {
+                guiManager_mainMenu();
+            }
+        } else if (GuiContainer.options.exit) {
+            Engine_stop();//TODO:: add exit screen
+        }
     }
 }
 
 void guiManager_free() {
-    menuOptions_reset();
-    guiManager_draw();
     nk_glfw3_shutdown();
 }

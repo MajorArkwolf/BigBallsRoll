@@ -1,5 +1,6 @@
 #include "guiManager.h"
 #include "OpenGL.h"
+#include "Physics/physicsInterface.h"
 #include <Engine/engine.h>
 
 #define NK_INCLUDE_FIXED_TYPES
@@ -16,7 +17,7 @@
 #include "Engine/nuklear_glfw_gl2.h"
 
 typedef struct menuOption {
-    bool menu, level, settings, exit;
+    bool menu, level, settings, exit, developer;
 } menuOption;
 
 struct GuiContainer { //TODO: find out what else I need // Global for now
@@ -24,8 +25,8 @@ struct GuiContainer { //TODO: find out what else I need // Global for now
     struct nk_font_atlas *atlas;
     menuOption options;
     bool inGame;
-    int height;
-    int width;
+    int gravity;
+    bool debug;
 } GuiContainer;
 
 void guiManager_init(int height, int width) {
@@ -49,8 +50,8 @@ void guiManager_init(int height, int width) {
     menuOptions_reset();
     GuiContainer.options.menu = true;
     GuiContainer.inGame = false;
-    GuiContainer.height = height;
-    GuiContainer.width = width;
+    GuiContainer.gravity = -1;
+    GuiContainer.debug = false;
 }
 
 void guiManager_levelMenu() {
@@ -120,6 +121,14 @@ void guiManager_settingsMenu() {
             menuOptions_reset();
             GuiContainer.options.menu = true;
         }
+        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
+        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
+        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
+        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
+        if (nk_button_label(GuiContainer.ctx, "DEVELOPER")) {
+            menuOptions_reset();
+            GuiContainer.options.developer = true;
+        }
 
         nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 7, 1);
 
@@ -178,6 +187,55 @@ void guiManager_settingsMenu() {
             printf("V sens: %i\n", engine.playerConfig.verticalSens);
             printf("H sens: %i\n", engine.playerConfig.horizontalSens);
             printf("H Lock: %i\n", engine.playerConfig.horizontalLock);
+        }
+    }
+    nk_end(GuiContainer.ctx);
+
+    nk_glfw3_render(NK_ANTI_ALIASING_ON);
+}
+
+void guiManager_developerMenu() {
+    glfwPollEvents();
+    nk_glfw3_new_frame();
+
+    if (nk_begin(GuiContainer.ctx, "Big Balls Roll!", nk_rect(50, 50, engine.width/3, engine.height/3),
+                 NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
+
+        nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
+        nk_label(GuiContainer.ctx, "DEV SETTINGS", NK_TEXT_CENTERED);
+        nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 6);
+        if (nk_button_label(GuiContainer.ctx, "MAIN MENU")) {
+            menuOptions_reset();
+            GuiContainer.options.menu = true;
+        }
+        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
+        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
+        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
+        nk_label(GuiContainer.ctx, "", NK_TEXT_CENTERED);
+        if (nk_button_label(GuiContainer.ctx, "SETTINGS")) {
+            menuOptions_reset();
+            GuiContainer.options.settings = true;
+        }
+
+        nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 7, 1);
+
+        //Physics settings
+        if (nk_group_begin(GuiContainer.ctx, "Physics", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
+            nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 3);
+            nk_property_int(GuiContainer.ctx, "Gravity:", -100, &GuiContainer.gravity, 100, 1, 10);  //TODO: FIX GRAVITY RANGE and variable
+            nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 3);
+            nk_label(GuiContainer.ctx, "Debug Render: ", NK_TEXT_LEFT);
+            if (nk_option_label(GuiContainer.ctx, "Enabled", GuiContainer.debug == true)) GuiContainer.debug = true;
+            if (nk_option_label(GuiContainer.ctx, "Disabled", GuiContainer.debug == false)) GuiContainer.debug = false;
+            nk_group_end(GuiContainer.ctx);
+        }
+
+        //Confirm button
+        nk_layout_row_dynamic(GuiContainer.ctx, engine.height / 32, 1);
+        if (nk_button_label(GuiContainer.ctx, "Confirm")) {
+            //TODO:: pass the stuff
+            printf("Gravity: %i\n", GuiContainer.gravity);
+            printf("Debug: %i\n", GuiContainer.debug);
         }
     }
     nk_end(GuiContainer.ctx);
@@ -257,6 +315,7 @@ void menuOptions_reset() {
     GuiContainer.options.menu = false;
     GuiContainer.options.exit = false;
     GuiContainer.options.settings = false;
+    GuiContainer.options.developer = false;
 }
 
 void guiManager_draw() {
@@ -271,6 +330,8 @@ void guiManager_draw() {
             } else {
                 guiManager_mainMenu();
             }
+        } else if (GuiContainer.options.developer) {
+            guiManager_developerMenu();
         } else if (GuiContainer.options.exit) {
             Engine_stop();//TODO:: add exit screen
         }

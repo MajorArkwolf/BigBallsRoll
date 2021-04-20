@@ -73,6 +73,9 @@ int Game_keyUp(InputType inputType) {
         case KEY_ESC:
             StateManager_pop(&engine.sM);
             break;
+        case KEY_M:
+            engine.gui = !engine.gui;
+            break;
         default:
             break;
     }

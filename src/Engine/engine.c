@@ -32,6 +32,9 @@ void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
 
     float ratio = (float) w / (float) h;
 
+    engine.height = h;
+    engine.width = w;
+
     // Use the Projection Matrix
     glMatrixMode(GL_PROJECTION);
 
@@ -237,13 +240,15 @@ int Engine_run(int argc, char *argv[]) {
         currentTime = newTime;
         accumulator += frameTime;
 
-        while (accumulator >= deltaTime) {
-            glfwPollEvents();
-            FixedUpdate(deltaTime);
-            //Physics update goes here.
-            accumulator -= deltaTime;
+        if(!engine.gui) {
+            while (accumulator >= deltaTime) {
+                glfwPollEvents();
+                FixedUpdate(deltaTime);
+                //Physics update goes here.
+                accumulator -= deltaTime;
+            }
+            Update(frameTime);
         }
-        Update(frameTime);
         Draw();
     }
 

@@ -380,7 +380,7 @@ void GuiManager_draw(GuiManager *guiManager) {
 
 
 void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH) {
-    assert(guiManager != NULL);
+    assert(guiManager != NULL && divideW != 0 && divideH != 0);
     if (guiManager->glfwWidth < 1600) {
         guiManager->width = (float) guiManager->glfwWidth - 100;
     } else {

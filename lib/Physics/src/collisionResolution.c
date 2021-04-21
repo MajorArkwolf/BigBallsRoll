@@ -24,7 +24,7 @@ void resolveCollision( Collision* collision )
     }
 
     // Calculate restitution
-    float e = fmin( collision->body1->restitution, collision->body2->restitution);
+    float e = fminf( collision->body1->restitution, collision->body2->restitution);
 
     // Calculate impulse scalar
     float j = (-1.0f *(1.0f + e)) * velAlongNormal;

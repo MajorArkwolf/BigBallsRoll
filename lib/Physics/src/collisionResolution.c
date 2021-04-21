@@ -1,5 +1,6 @@
 #include "include/BigBalls/collisionResolution.h"
 #include "include/BigBalls/mathsCommon.h"
+#include "math.h"
 
 void positionalCorrection( Collision* collision )
 {
@@ -23,7 +24,7 @@ void resolveCollision( Collision* collision )
     }
 
     // Calculate restitution
-    float e = min( collision->body1->restitution, collision->body2->restitution);
+    float e = fmin( collision->body1->restitution, collision->body2->restitution);
 
     // Calculate impulse scalar
     float j = (-1.0f *(1.0f + e)) * velAlongNormal;

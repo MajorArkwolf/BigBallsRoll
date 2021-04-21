@@ -34,6 +34,7 @@ void collisionsDetection(PhysicsWorld* physicsWorld, CollisionArrayContainer *ca
             if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
                 // broad phase collision detected
                 //printf("Objects %d and %d are colliding!\n", (int)i ,(int)j);
+                ++cac->numOfCollisions;
                 // TODO: narrow phase
                 // TODO: resolve collision
             }

@@ -113,7 +113,7 @@ Matrix44 createRotMat(float xDeg, float yDeg, float zDeg);
 
 /**
  * Constructs and initialises a PVec3 to 0.
- * @return
+ * @return a initialised contructed vector 3
  */
 PVec3 PVec3_init();
 

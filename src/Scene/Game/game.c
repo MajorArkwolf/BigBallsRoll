@@ -32,7 +32,6 @@ int Game_update(float deltaTime) {
     Camera_update(&state->camera, deltaTime);
     mouse[0] = 0.0;
     mouse[1] = 0.0;
-    //Update gameobjects to the physics world
     return 0;
 }
 

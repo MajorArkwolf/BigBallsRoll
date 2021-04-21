@@ -1,10 +1,37 @@
 #include "mainMenu.h"
 #include <stdlib.h>
 #include <Engine/engine.h>
+#include "Engine/luaHelper.h"
 #include "Scene/Game/game.h"
 #include "Engine/stateManager.h"
 
+bool paused = false;
+
+void PauseMenu(bool desiredState) {
+    if (desiredState != paused) {
+        if (paused) {
+            lua_getglobal(engine.lua, "MainMenuUnpause");
+            if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+                lua_pop(engine.lua, lua_gettop(engine.lua));
+            }
+            paused = false;
+        } else {
+            lua_getglobal(engine.lua, "MainMenuPause");
+            if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+                lua_pop(engine.lua, lua_gettop(engine.lua));
+            }
+            State_deregisterLights(StateManager_top(&engine.sM));
+            paused = true;
+        }
+    }
+}
+
 int MainMenu_draw(float deltaTime) {
+    PauseMenu(false);
+    lua_getglobal(engine.lua, "MainMenuDraw");
+    if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
         GameObject_draw(&StateManager_top(&engine.sM)->gameObjects[index]);
     }
@@ -12,11 +39,15 @@ int MainMenu_draw(float deltaTime) {
 }
 
 int MainMenu_update(float deltaTime) {
+    PauseMenu(false);
     Camera_update(&StateManager_top(&engine.sM)->camera, (float) deltaTime);
-    GameObject *gameObjects = StateManager_top(&engine.sM)->gameObjects;
-    for (size_t i = 0; i < StateManager_top(&engine.sM)->NumOfGameObjects; ++i) {
-        GameObject_update(&gameObjects[i]);
+    lua_pushnumber(engine.lua, deltaTime);
+    lua_setglobal(engine.lua, "deltaTime");
+    lua_getglobal(engine.lua, "MainMenuUpdate");
+    if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
     }
+    Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
     engine.lockCamera = false;
     return 0;
 }
@@ -47,29 +78,13 @@ int MainMenu_keyDown(InputType inputType) {
 }
 
 int MainMenu_keyUp(InputType inputType) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
     State *state;
     switch (inputType) {
         case KEY_ESC:
             glfwSetWindowShouldClose(engine.window, GLFW_TRUE);
             break;
-        case KEY_UP_ARROW:
-        case KEY_W:
-            cam->MoveForward = false;
-            break;
-        case KEY_DOWN_ARROW:
-        case KEY_S:
-            cam->MoveBackward = false;
-            break;
-        case KEY_LEFT_ARROW:
-        case KEY_A:
-            cam->MoveLeft = false;
-            break;
-        case KEY_RIGHT_ARROW:
-        case KEY_D:
-            cam->MoveRight = false;
-            break;
         case KEY_SPACEBAR:
+            PauseMenu(true);
             state = malloc(sizeof (State));
             State_init(state);
             StateManager_push(&engine.sM, state);
@@ -97,35 +112,9 @@ void MainMenu_init(State *state) {
     state->keyDown = MainMenu_keyDown;
     state->keyUp = MainMenu_keyUp;
     state->mouseMovement = MainMenu_mouseMovement;
-
-    GameObject_init(&state->gameObjects[0]);
-    GameObject_init(&state->gameObjects[1]);
-    GameObject_init(&state->gameObjects[2]);
-    GameObject_init(&state->gameObjects[3]);
-    state->gameObjects[0].ModelID = ModelManager_findModel(&engine.modelManager, "Terrain/Wall.obj");
-    state->gameObjects[1].ModelID = ModelManager_findModel(&engine.modelManager, "Terrain/Floor.obj");
-    state->gameObjects[2].ModelID = ModelManager_findModel(&engine.modelManager, "Obj/Title.obj");
-    state->gameObjects[3].ModelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
-    state->gameObjects[0].Transform.Position.X += 20.f;
-    state->gameObjects[0].Transform.Position.Z += 5.f;
-    state->gameObjects[0].Transform.Position.Y -= 3.f;
-    state->gameObjects[0].Transform.Rotation.Y += 90.f;
-    state->gameObjects[1].Transform.Position.X += 20.f;
-    state->gameObjects[1].Transform.Position.Y -= 4.f;
-    state->gameObjects[1].Transform.Position.Z -= 5.f;
-    state->gameObjects[1].Transform.Rotation.Y += 180.f;
-    state->gameObjects[2].Transform.Position.X += 15.f;
-    state->gameObjects[2].Transform.Position.Z += 0.25f;
-    state->gameObjects[2].Transform.Rotation.X = 90.f;
-    state->gameObjects[2].Transform.Rotation.Y -= 90.f;
-    state->gameObjects[3].Transform.Position.X += 15.0f;
-    state->gameObjects[3].Transform.Position.Y -= 2.5f;
-    state->NumOfGameObjects = 4;
-
-    state->camera.Position.Y += 2.0f;
-    state->camera.Pitch -= 15.0f;
-    Camera_updateCameraVectors(&state->camera);
-
-    GameObject_registerSoundSource(&state->gameObjects[2]);
-    AudioEngine_play(state->gameObjects[2].SoundID, &engine.audioManager.Sounds[0]);
+    char file[] = "mainMenu.lua";
+    LuaHelper_loadScript(file);
+    LuaHelper_init();
+//    GameObject_registerSoundSource(&state->gameObjects[2]);
+//    AudioEngine_play(state->gameObjects[2].SoundID, &engine.audioManager.Sounds[0]);
 }

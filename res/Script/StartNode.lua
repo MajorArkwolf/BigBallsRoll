@@ -20,7 +20,7 @@ function StartNode:FreshBoard(height, player, endNode)
     DisableBoard(self.board)
     -- Create a fake end block to make it seem like the player never moved.
     self.oldEndBlock = GameObjectRegister()
-    GameObjectSetModel(self.oldEndBlock, "Off/greencube.off")
+    GameObjectSetModel(self.oldEndBlock, "Obj/Terrain/greencube.obj")
     -- Set the end position above the start position
     local position = {}
     position.x = self.position.x

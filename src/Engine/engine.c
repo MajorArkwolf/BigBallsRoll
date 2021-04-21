@@ -162,17 +162,6 @@ int Engine_run(int argc, char *argv[]) {
     AudioManager_init(&engine.audioManager);
     AudioManager_loadSounds(&engine.audioManager, engine.cwd);
 
-    //Initialise our Game State.
-    StateManager_init(&engine.sM);
-    State *state = malloc(sizeof(State));
-    State_init(state);
-    MainMenu_init(state);
-    StateManager_push(&engine.sM, state);
-    if (engine.sM.stack[engine.sM.top] == NULL) {
-        printf("Game stack failed to start.");
-        return EXIT_FAILURE;
-    }
-
     glfwSetErrorCallback(error_callback);
     //Initialise our Window and OpenGL context.
     if (!glfwInit()){
@@ -207,6 +196,11 @@ int Engine_run(int argc, char *argv[]) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
+    glEnable (GL_NORMALIZE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_SMOOTH);
+    glCullFace(GL_FRONT);
+    glFrontFace(GL_CW);
 
     engine.textureManager.renderSetup = true;
     TextureManager_bindTexturesToRenderer(&engine.textureManager);
@@ -216,6 +210,17 @@ int Engine_run(int argc, char *argv[]) {
     int height = 0;
     glfwGetFramebufferSize(engine.window, &width, &height);
     framebuffer_size_callback(engine.window, width, height);
+
+    //Initialise our Game State.
+    StateManager_init(&engine.sM);
+    State *state = malloc(sizeof(State));
+    State_init(state);
+    StateManager_push(&engine.sM, state);
+    MainMenu_init(state);
+    if (engine.sM.stack[engine.sM.top] == NULL) {
+        printf("Game stack failed to start.");
+        return EXIT_FAILURE;
+    }
 
     /// This is a semi fixed time step implementation used to help break up our render and physics.
     double currentTime = glfwGetTime();

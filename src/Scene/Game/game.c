@@ -59,26 +59,14 @@ int Game_keyUp(InputType inputType) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     switch (inputType) {
-//        case KEY_UP_ARROW:
-//        case KEY_W:
-//            cam->MoveForward = false;
-//            break;
-//        case KEY_DOWN_ARROW:
-//        case KEY_S:
-//            cam->MoveBackward = false;
-//            break;
-//        case KEY_LEFT_ARROW:
-//        case KEY_A:
-//            cam->MoveLeft = false;
-//            break;
-//        case KEY_RIGHT_ARROW:
-//        case KEY_D:
-//            cam->MoveRight = false;
-//            break;
         case KEY_F1:
             Engine_toggleCameraLock();
             break;
         case KEY_ESC:
+            lua_getglobal(engine.lua, "DeInit");
+            if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+                lua_pop(engine.lua, lua_gettop(engine.lua));
+            }
             StateManager_pop(&engine.sM);
             break;
         case KEY_T:
@@ -109,7 +97,15 @@ int Game_mouseKey(int button, int buttonState) {
     return 0;
 }
 
+void Game_NextLevel(State *state) {
+    for (size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        GameObject_free(&state->gameObjects[i]);
+    }
+    state->NumOfGameObjects = 0;
+}
+
 int Game_destroy() {
+    State_deregisterLights(StateManager_top(&engine.sM));
     PhysicsEngine_freePhysicsWorld(&engine.physicsEngine, StateManager_top(&engine.sM)->physicsWorld);
     return 0;
 }
@@ -129,11 +125,4 @@ void Game_init(State *state) {
     mouse[1] = 0.0;
     LuaHelper_loadScript(file);
     LuaHelper_init();
-}
-
-void Game_NextLevel(State *state) {
-    for (size_t i = 0; i < state->NumOfGameObjects; ++i) {
-        GameObject_free(&state->gameObjects[i]);
-    }
-    state->NumOfGameObjects = 0;
 }

@@ -26,7 +26,7 @@ set(PHYSICS_SOURCES
     "src/physicsDebug.c"
     "src/physicsMathsCommon.c"
     "src/collisionDetection.c"
-    "src/collisuinResolution.c"
+    "src/collisionResolution.c"
     "src/mathsCommon.c")
 
 add_library(${PROJECT_NAME} ${PHYSICS_HEADERS} ${PHYSICS_SOURCES})

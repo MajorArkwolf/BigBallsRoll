@@ -30,6 +30,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/luaHelper.c
     Engine/guiManager.c
     Engine/playerConfig.c
+    Engine/Physics/physicsLuaInterface.c
 
     ## Physics
     Engine/Physics/physicsInterface.c

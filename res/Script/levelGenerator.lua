@@ -191,20 +191,37 @@ function Generator:RegisterGameObjects()
                 if (valuez == true) then
                     local object = GameObjectRegister()
                     GameObjectSetPosition(object, keyx, keyy, keyz)
+                    --Register Physics for gameobjects
+                    PhysicsRegisterCollisionBody(object)
+                    PhysicsCollisionBodySetStatic(object, true)
+                    PhysicsSetPosition(object, keyx, keyy, keyz)
+                    local position = {}
+                    position.x = 0
+                    position.y = 0
+                    position.z = 0
+                    local rotation = {}
+                    rotation.x = 0
+                    rotation.y = 0
+                    rotation.z = 0
+                    local length = {}
+                    length.x = 1
+                    length.y = 1
+                    length.z = 1
+                    PhysicsAddAABBCollider(object, position, length, rotation)
                     local total = keyx + keyy + keyz
                     if (keyx == self.startPoint[1] and keyy == self.startPoint[2] and keyz == self.startPoint[3]) then
-                        GameObjectSetModel(object, "Off/redcube.off")
+                        GameObjectSetModel(object, "Obj/Terrain/redcube.obj")
                         self.boardID[id] = object
                         id = id + 1
                     elseif (keyx == self.endPoint[1] and keyy == self.endPoint[2] and keyz == self.endPoint[3]) then
-                        GameObjectSetModel(object, "Off/greencube.off")
+                        GameObjectSetModel(object, "Obj/Terrain/greencube.obj")
                         self.boardID[1] = object
                     elseif (math.fmod(total, 2) == 0) then
-                        GameObjectSetModel(object, "Off/bluecube.off")
+                        GameObjectSetModel(object, "Obj/Terrain/lightbluecube.obj")
                         self.boardID[id] = object
                         id = id + 1
                     else
-                        GameObjectSetModel(object, "Off/darkbluecube.off")
+                        GameObjectSetModel(object, "Obj/Terrain/darkbluecube.obj")
                         self.boardID[id] = object
                         id = id + 1
                     end

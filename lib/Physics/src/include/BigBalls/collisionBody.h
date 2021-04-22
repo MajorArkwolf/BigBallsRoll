@@ -3,6 +3,7 @@
 #include "boxCollider.h"
 #include "sphereCollider.h"
 #include "mathsCommon.h"
+#include "stdbool.h"
 
 typedef struct CollisionBody{
     // implementation of stack
@@ -19,12 +20,8 @@ typedef struct CollisionBody{
     float xRot; // give rotation so collider rotations are relative to CollisionBody rotation
     float yRot;
     float zRot;
-    float xVel; // current velocity of CollisionBody (as a vector)
-    float yVel;
-    float zVel;
-    float forceX; // force vector TODO: implement with Vec3 struct
-    float forceY;
-    float forceZ;
+    PVec3 velocity;
+    PVec3 acceleration;
     float mass; // physical mass of CollisionBody
     float AABBx1; // two coordinates required for AABB
     float AABBy1;
@@ -32,6 +29,8 @@ typedef struct CollisionBody{
     float AABBx2;
     float AABBy2;
     float AABBz2;
+    float restitution; // << Bounciness, this possibly should be added to individual colliders.
+    bool isStatic;
 } CollisionBody;
 
 // struct to wrap array to make it easy to pass in and out of functions, and keep data on the stack for performance benefits
@@ -160,3 +159,33 @@ void CollisionBody_setRot(CollisionBody *collisionBody,
                             float x,
                             float y,
                             float z);
+
+/**
+ * Register a box collider from an external program
+ * @param cb A registered collision body in a physics world
+ * @param offsetPosition Offset position of size 3 (X, Y, Z) relative to the collision body origin.
+ * @param length extrusion of the box of size 3 (X, Y, Z)
+ * @param rotation rotation of the collision of size 3 (Yaw, Pitch, Roll)
+ */
+void CollisionBody_registerBoxCollider(CollisionBody *cb,
+                                       const float *offsetPosition,
+                                       const float *length,
+                                       const float *rotation);
+
+/**
+ * Register a box collider from an external program
+ * @param cb A registered collision body in a physics world
+ * @param offsetPosition Offset position of size 3 (X, Y, Z) relative to the collision body origin.
+ * @param radius the radius of the sphere to create.
+ */
+void CollisionBody_registerSphereCollider(CollisionBody *cb,
+                                          const float *offsetPosition,
+                                          float radius);
+
+/**
+ * Set a collision body to become static, a static object will not move and if
+ * two static bodies are colliding they will be ignored.
+ * @param cb collision body to alter
+ * @param isStatic true if static, false if not
+ */
+void CollisionBody_setCollisionBodyStatic(CollisionBody *cb, bool isStatic);

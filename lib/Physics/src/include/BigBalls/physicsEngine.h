@@ -35,61 +35,8 @@ PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine);
 void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *physicsWorld);
 
 /**
- * Checks if two objects are currently colliding with each other
- * TODO: Usage: move objects, check for collision, if collision then calculate new position, else proceed with movement of object
- * @param ID1
- * @param ID2
- * @return
+ * The main interface to progress the world into its new state
+ * @param physicsWorld the world that will be updated
+ * @param the time since the last update
  */
-bool PhysicsEngine_checkCollision(PhysicsEngine *physicsEngine,
-                    int id1,
-                    int id2);
-
-/**
- * TODO: idk if this would be useful or not
- * @param ID1
- * @param newXOffset1
- * @param newYOffset2
- * @param newZOffset3
- * @param ID2
- * @param ID2
- * @return
- */
-bool PhysicsEngine_willCollide(PhysicsEngine *physicsEngine,
-                 int bodyId1,
-                 float newXOffset1,
-                 float newYOffset1,
-                 float newZOffset1,
-                 int bodyId2,
-                 float newXOffset2,
-                 float newYOffset2,
-                 float newZOffset2);
-
-/**
- * TODO: idk if this is in the scope of physics engine, but I imagine the engine must be updated with new data when an object intends to move
- */
-bool PhysicsEngine_moveObj(PhysicsEngine *physicsEngine,
-             int id,
-             float newXOffset,
-             float newYOffset,
-             float newZOffset);
-
-//TODO: implement object weights so that force vectors applied to objects can be translated into acceleration
-bool PhysicsEngine_applyForce(PhysicsEngine *physicsEngine,
-                  float force,
-                  float xDir,
-                  float yDir,
-                  float zDir,
-                  int objID);
-
-/**
-* Add a game object to the physics engine
-* @return
-*/
-int PhysicsEngine_addObj(PhysicsEngine *physicsEngine);
-
-/**
-* Remove a game object from the physics engine
-* @return
-*/
-bool PhysicsEngine_removeObj(PhysicsEngine *physicsEngine);
+void PhysicsEngine_updateWorld(PhysicsWorld *physicsWorld, double deltaTime);

@@ -1,6 +1,7 @@
 #include <unity.h>
 #include "PhysicsUnitTests.h"
 #include "BigBalls/physicsEngine.h"
+#include "BigBalls/collisionDetection.h"
 
 void testIdentity44(void){
     Matrix44 sus = identity44();
@@ -40,6 +41,9 @@ void testMatrixMultiplication44_41(void){
 }
 
 void testIdenticalCollision(void){
+    PhysicsWorld pw;
+    PhysicsWorld_init(&pw);
+
     // create CollisionBody for object
     CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody1);
@@ -50,24 +54,30 @@ void testIdenticalCollision(void){
     collider1->yLen = 1.f;
     collider1->zLen = 1.f;
     CollisionBody_addBoxCollider(collisionBody1, collider1);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody1);
+
     // create CollisionBody for object
     CollisionBody* collisionBody2 = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody2);
     // create collider
     BoxCollider *collider2 = calloc(1, sizeof(BoxCollider));
     BoxCollider_init(collider2);
-    collider1->xLen = 10.f;
-    collider1->yLen = 1.f;
-    collider1->zLen = 1.f;
+    collider2->xLen = 10.f;
+    collider2->yLen = 1.f;
+    collider2->zLen = 1.f;
     CollisionBody_addBoxCollider(collisionBody2, collider2);
-    for(int i = 0; i <= 9; ++i){
-        CollisionBody_translate(collisionBody2, 1, 0, 0);
-    }
-    bool colliding = testAABBCollision(collisionBody1, collisionBody2);
-    TEST_ASSERT(colliding == 1);
+    //CollisionBody_translate(collisionBody2, 0, 0, 0);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody2);
+
+    CollisionArrayContainer cac = collisionArrayContainer_init();
+    collisionsDetection(&pw, &cac);
+    TEST_ASSERT_TRUE(cac.numOfCollisions == 1);
 }
 
 void testNonCollision(void){
+    PhysicsWorld pw;
+    PhysicsWorld_init(&pw);
+
     // create CollisionBody for object
     CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody1);
@@ -81,6 +91,8 @@ void testNonCollision(void){
     collider1->yLen = 1.f;
     collider1->zLen = 1.f;
     CollisionBody_addBoxCollider(collisionBody1, collider1);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody1);
+
     // create CollisionBody for object
     CollisionBody* collisionBody2 = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody2);
@@ -94,7 +106,12 @@ void testNonCollision(void){
     collider2->yLen = 1.f;
     collider2->zLen = 1.f;
     CollisionBody_addBoxCollider(collisionBody2, collider2);
-    TEST_ASSERT_FALSE(testAABBCollision(collisionBody1, collisionBody2));
+    PhysicsWorld_addCollisionBody(&pw, collisionBody2);
+
+    CollisionArrayContainer cac = collisionArrayContainer_init();
+    collisionsDetection(&pw, &cac);
+
+    TEST_ASSERT_TRUE(cac.numOfCollisions == 0);
 }
 
 void testRotationX(void){

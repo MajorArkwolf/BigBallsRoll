@@ -17,6 +17,18 @@ function Player:Init(position)
     self.mouseSensitivityX = 3
     self.mouseSensitivityY = 3
     self.camera:Update(0.0, self.gameObjectID, self.mouseSensitivityX)
+    self:AddPhysicsBody()
+end
+
+function Player:AddPhysicsBody()
+    --Register Physics
+    PhysicsRegisterCollisionBody(self.gameObjectID)
+    PhysicsSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+    local position = {}
+    position.x = 0
+    position.y = 0
+    position.z = 0
+    PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
 end
 
 function Player:ReInit()
@@ -24,6 +36,7 @@ function Player:ReInit()
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
     GameObjectSetModel(self.gameObjectID, "Ball.obj")
+    self:AddPhysicsBody()
     self:Update(0.0)
 end
 

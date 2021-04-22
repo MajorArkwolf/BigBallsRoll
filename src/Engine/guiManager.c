@@ -75,6 +75,7 @@ void GuiManager_optionsReset(GuiManager *guiManager)  {
 }
 
 void GuiManager_draw(GuiManager *guiManager) {
+    glDisable(GL_LIGHTING);
     assert(guiManager != NULL);
     GuiManager_update(guiManager);
     if (guiManager->options.level) {
@@ -92,6 +93,7 @@ void GuiManager_draw(GuiManager *guiManager) {
     } else if (guiManager->options.exit) {
         engine.running = false;
     }
+    glEnable(GL_LIGHTING);
 }
 
 void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH) {

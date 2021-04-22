@@ -37,11 +37,11 @@ typedef struct Face {
 
 typedef struct Material {
     //Ka
-    float Ambient[3];
+    float Ambient[4];
     //Kd
-    float Diffuse[3];
+    float Diffuse[4];
     //Ks
-    float Specular[3];
+    float Specular[4];
     //Ni (weight for spec)
     float OpticalWeight;
     // kd texture

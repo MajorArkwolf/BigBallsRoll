@@ -7,6 +7,7 @@
 #include "Scene/Game/game.h"
 #include "Engine/engine.h"
 #include "Math/vectorMath.h"
+#include "Engine/Physics/physicsLuaInterface.h"
 
 static void print_table(lua_State *L)
 {
@@ -273,8 +274,103 @@ int LuaHelper_CrossProductVec3(lua_State *L) {
 
 }
 
+int LuaHelper_RegisterLight(lua_State *L) {
+    State *state = StateManager_top(&engine.sM);
+    // Light ID always 1 higher then the OpenGL ID, this allows us to use a 0 value for global lighting.
+    // However if this function returns a 0, then it errored out.
+    size_t lightID = State_registerLight(state);
+    if (lightID == 0) {
+        lua_pushnumber(L, -1);
+    } else {
+        lua_pushnumber(L, lightID);
+    }
+    return 1;
+}
+
+int LuaHelper_DisableLight(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    if (id > 0) {
+        --id;
+        glDisable(GL_LIGHT0 + id);
+    }
+    return 0;
+}
+
+int LuaHelper_LightDiffuse(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    GLfloat light_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    light_diffuse[0] = lua_tonumber(L, 2);
+    light_diffuse[1] = lua_tonumber(L, 3);
+    light_diffuse[2] = lua_tonumber(L, 4);
+    if (id == 0) {
+        printf("Cant set the diffuse of a global light.\n");
+    }
+    if (id > 0) {
+        --id;
+        glLightfv(GL_LIGHT0 + id, GL_DIFFUSE, light_diffuse);
+    }
+    lua_pop(L, 4);
+    return 0;
+}
+
+int LuaHelper_LightAmbient(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    GLfloat light_ambient[] = {0.8f, 0.8f, 0.8f, 1.0f};
+    light_ambient[0] = lua_tonumber(L, 2);
+    light_ambient[1] = lua_tonumber(L, 3);
+    light_ambient[2] = lua_tonumber(L, 4);
+    if (id == 0) {
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light_ambient);
+        glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
+    }
+    if (id > 0) {
+        --id;
+        glLightfv(GL_LIGHT0 + id, GL_AMBIENT, light_ambient);
+    }
+    lua_pop(L, 4);
+    return 0;
+}
+
+int LuaHelper_LightSpecular(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    GLfloat light_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    light_specular[0] = lua_tonumber(L, 2);
+    light_specular[1] = lua_tonumber(L, 3);
+    light_specular[2] = lua_tonumber(L, 4);
+    if (id == 0) {
+        printf("Cant set the specular of a global light.\n");
+    }
+    if (id > 0) {
+        --id;
+        glLightfv(GL_LIGHT0 + id, GL_SPECULAR, light_specular);
+    }
+    lua_pop(L, 4);
+    return 0;
+}
+
+int LuaHelper_LightPosition(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    GLfloat light_position[] = {0.0f, 1.0f, 0.0f, 0.0f};
+    light_position[0] = lua_tonumber(L, 2);
+    light_position[1] = lua_tonumber(L, 3);
+    light_position[2] = lua_tonumber(L, 4);
+    if (id == 0) {
+        printf("Cant set the position of a global light.\n");
+    }
+    if (id > 0) {
+        --id;
+        glLightfv(GL_LIGHT0 + id, GL_POSITION, light_position);
+    }
+    lua_pop(L, 4);
+    return 0;
+}
+
 void LuaHelper_init() {
-    //Register functions for lua.
+
+    // Register functions for lua.
+    //Register physics interface functions.
+    PhysicsLuaInterface_init();
+
     // Math
     lua_pushcfunction(engine.lua, LuaHelper_NormaliseVec3);
     lua_setglobal(engine.lua, "NormaliseVec");
@@ -312,6 +408,20 @@ void LuaHelper_init() {
     // Scene
     lua_pushcfunction(engine.lua, LuaHelper_GameNextLevel);
     lua_setglobal(engine.lua, "GameNextLevel");
+
+    //Light
+    lua_pushcfunction(engine.lua, LuaHelper_RegisterLight);
+    lua_setglobal(engine.lua, "LightRegister");
+    lua_pushcfunction(engine.lua, LuaHelper_DisableLight);
+    lua_setglobal(engine.lua, "LightDisable");
+    lua_pushcfunction(engine.lua, LuaHelper_LightDiffuse);
+    lua_setglobal(engine.lua, "LightDiffuse");
+    lua_pushcfunction(engine.lua, LuaHelper_LightAmbient);
+    lua_setglobal(engine.lua, "LightAmbient");
+    lua_pushcfunction(engine.lua, LuaHelper_LightSpecular);
+    lua_setglobal(engine.lua, "LightSpecular");
+    lua_pushcfunction(engine.lua, LuaHelper_LightPosition);
+    lua_setglobal(engine.lua, "LightPosition");
 
     lua_pushnumber(engine.lua, engine.seed);
     lua_setglobal(engine.lua, "seed");

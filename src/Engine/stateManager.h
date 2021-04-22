@@ -3,7 +3,7 @@
 #include "Engine/camera.h"
 #include "Engine/GameObjects/gameObject.h"
 #include "Engine/InputManager.h"
-#include "BigBalls/physicsEngine.h"
+#include <BigBalls/physicsEngine.h>
 
 #define MAX_GAME_OBJECTS 1000000
 
@@ -23,6 +23,7 @@ typedef struct State {
     GameObject gameObjects[MAX_GAME_OBJECTS];
     Camera camera;
     size_t NumOfGameObjects;
+    size_t registeredLightIDs;
     PhysicsWorld* physicsWorld;
     fnPtr init;
     fnPtrFl update;
@@ -132,3 +133,16 @@ int StateManager_mouseKeys(StateManager *stateManager, int button, int buttonSta
  * @param state State to initialise, must be allocated prior to being passed in
  */
 void State_init(State *state);
+
+/**
+ * Register a new light
+ * @param state Current game state
+ * @return return an ID between 1 and the max opengl lights possible, 0 is an error.
+ */
+size_t State_registerLight(State *state);
+
+/**
+ * Deregister all lights in a given scene
+ * @param state the state to deregister lights from
+ */
+void State_deregisterLights(State *state);

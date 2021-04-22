@@ -29,6 +29,7 @@ typedef struct Engine {
     bool lockCamera;
     bool fullScreen;
     int seed;
+    bool running;
     lua_State *lua;
     GLFWwindow* window;
 } Engine;

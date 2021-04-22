@@ -139,6 +139,7 @@ int Engine_run(int argc, char *argv[]) {
     engine.fov = 60.0f;
     engine.lockCamera = false;
     engine.fullScreen = false;
+    engine.running = true;
 
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
@@ -228,7 +229,7 @@ int Engine_run(int argc, char *argv[]) {
     double currentTime = glfwGetTime();
     double accumulator = 0.0;
     double deltaTime = 0.01;
-    while(!glfwWindowShouldClose(engine.window)) {
+    while(!glfwWindowShouldClose(engine.window) && engine.running) {
         double newTime = glfwGetTime();
         double frameTime = newTime - currentTime;
         if (frameTime > 0.25) {

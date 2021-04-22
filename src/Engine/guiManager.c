@@ -90,7 +90,7 @@ void GuiManager_draw(GuiManager *guiManager) {
     } else if (guiManager->options.developer) {
         GuiManager_developerMenu(guiManager);
     } else if (guiManager->options.exit) {
-        Engine_stop();//TODO:: add exit screen
+        engine.running = false;
     }
 }
 

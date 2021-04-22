@@ -352,7 +352,7 @@ void testCombinedTransformation(void){
                      fTolerance(collisionBody->AABBz2, 8.9f, 0.1f));
 }
 
-void test_Physics(){
+void test_Physics(void){
     RUN_TEST(testIdentity44);
     RUN_TEST(testMatrixMultiplication44_44);
     RUN_TEST(testMatrixMultiplication44_41);

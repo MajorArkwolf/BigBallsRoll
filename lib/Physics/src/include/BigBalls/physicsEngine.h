@@ -33,3 +33,10 @@ PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine);
  * @param physicsWorld the physicsWorld to free
  */
 void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *physicsWorld);
+
+/**
+ * The main interface to progress the world into its new state
+ * @param physicsWorld the world that will be updated
+ * @param the time since the last update
+ */
+void PhysicsEngine_updateWorld(PhysicsWorld *physicsWorld, double deltaTime);

@@ -3,6 +3,7 @@
 #include "Engine/engine.h"
 #include <lualib.h>
 #include <lauxlib.h>
+#include <stdbool.h>
 
 int PhysicsLuaInterface_registerCollisionBody(lua_State *L) {
     size_t id = lua_tonumber(L, 1);
@@ -49,6 +50,18 @@ int PhysicsLuaInterface_setRotation(lua_State *L) {
 
 
 //make object static
+int PhysicsLuaInterface_setCollisionBodyStatic(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    if (gameObject->collisionBody != NULL) {
+        bool isStatic = lua_toboolean(L, 2);
+        CollisionBody_setCollisionBodyStatic(gameObject->collisionBody, isStatic);
+    }
+    return 0;
+}
 
 //sleep object
 
@@ -147,4 +160,6 @@ void PhysicsLuaInterface_init() {
     lua_setglobal(engine.lua, "PhysicsAddSphereCollider");
     lua_pushcfunction(engine.lua, PhysicsLuaInterface_resetPhysicsWorld);
     lua_setglobal(engine.lua, "PhysicsWorldReset");
+    lua_pushcfunction(engine.lua, PhysicsLuaInterface_setCollisionBodyStatic);
+    lua_setglobal(engine.lua, "PhysicsCollisionBodySetStatic");
 }

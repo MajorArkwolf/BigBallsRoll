@@ -6,7 +6,7 @@
  */
 void PhysicsInterface_init();
 
-void PhysicsInterface_update();
+void PhysicsInterface_update(double deltaTime);
 
 /**
  * Frees the dynamic memory in the global DebugData object in physicsInterface.

@@ -1,5 +1,7 @@
 #include "physicsInterface.h"
 #include "Engine/OpenGL.h"
+#include "Engine/engine.h"
+#include "Engine/stateManager.h"
 
 //Global Debug Data
 DebugData dd;
@@ -8,8 +10,23 @@ void PhysicsInterface_init() {
     PhysicsDebug_dataInit(&dd);
 }
 
-void PhysicsInterface_update() {
-
+void PhysicsInterface_update(double deltaTime) {
+    State *state = StateManager_top(&engine.sM);
+    for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        GameObject *ob = &state->gameObjects[i];
+        if (ob->collisionBody != NULL) {
+            CollisionBody_setPos(ob->collisionBody, ob->Transform.Position.X, ob->Transform.Position.Y, ob->Transform.Position.Z);
+        }
+    }
+    PhysicsEngine_updateWorld(StateManager_top(&engine.sM)->physicsWorld, deltaTime);
+    for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        GameObject *ob = &state->gameObjects[i];
+        if (ob->collisionBody != NULL && ob->collisionBody->isStatic != true) {
+            ob->Transform.Position.X = ob->collisionBody->xPos;
+            ob->Transform.Position.Y = ob->collisionBody->yPos;
+            ob->Transform.Position.Z = ob->collisionBody->zPos;
+        }
+    }
 }
 
 void PhysicsInterface_free() {

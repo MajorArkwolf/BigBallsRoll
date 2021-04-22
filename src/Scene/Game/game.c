@@ -32,13 +32,6 @@ int Game_update(float deltaTime) {
     Camera_update(&state->camera, deltaTime);
     mouse[0] = 0.0;
     mouse[1] = 0.0;
-    //Update gameobjects to the physics world
-    for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
-        GameObject *ob = &state->gameObjects[i];
-        if (ob->collisionBody != NULL) {
-            CollisionBody_setPos(ob->collisionBody, ob->Transform.Position.X, ob->Transform.Position.Y, ob->Transform.Position.Z);
-        }
-    }
     return 0;
 }
 

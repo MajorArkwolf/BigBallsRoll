@@ -12,22 +12,27 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->SphereColliders = NULL;
     collisionBody->idCount = 0;
     collisionBody->id = -1;
-    collisionBody->xPos = 0;
-    collisionBody->yPos = 0;
-    collisionBody->zPos = 0;
-    collisionBody->xRot = 0;
-    collisionBody->yRot = 0;
-    collisionBody->zRot = 0;
-    collisionBody->xVel = 0;
-    collisionBody->yVel = 0;
-    collisionBody->zVel = 0;
-    collisionBody->AABBx1 = 0;
-    collisionBody->AABBy1 = 0;
-    collisionBody->AABBz1 = 0;
-    collisionBody->AABBx2 = 0;
-    collisionBody->AABBy2 = 0;
-    collisionBody->AABBz2 = 0;
-    collisionBody->mass = 0;
+    collisionBody->xPos = 0.0f;
+    collisionBody->yPos = 0.0f;
+    collisionBody->zPos = 0.0f;
+    collisionBody->xRot = 0.0f;
+    collisionBody->yRot = 0.0f;
+    collisionBody->zRot = 0.0f;
+    collisionBody->velocity.data[0] = 0.0f;
+    collisionBody->velocity.data[1] = 0.0f;
+    collisionBody->velocity.data[2] = 0.0f;
+    collisionBody->acceleration.data[0] = 1.0f;
+    collisionBody->acceleration.data[1] = 1.0f;
+    collisionBody->acceleration.data[2] = 1.0f;
+    collisionBody->AABBx1 = 0.0f;
+    collisionBody->AABBy1 = 0.0f;
+    collisionBody->AABBz1 = 0.0f;
+    collisionBody->AABBx2 = 0.0f;
+    collisionBody->AABBy2 = 0.0f;
+    collisionBody->AABBz2 = 0.0f;
+    collisionBody->mass = 1;
+    collisionBody->restitution = 1.0f;
+    collisionBody->isStatic = false;
 }
 
 void CollisionBody_free(CollisionBody *collisionBody){
@@ -138,12 +143,9 @@ void CollisionBody_awake(CollisionBody *collisionBody){
 
 void CollisionBody_stop(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
-    collisionBody->xVel = 0;
-    collisionBody->yVel = 0;
-    collisionBody->zVel = 0;
-    collisionBody->forceX = 0;
-    collisionBody->forceY = 0;
-    collisionBody->forceZ = 0;
+    collisionBody->velocity.data[0] = 0;
+    collisionBody->velocity.data[1] = 0;
+    collisionBody->velocity.data[2] = 0;
 }
 
 BoxColliderVerts getBoxColliderVerts(BoxCollider* boxCollider, Matrix41 transCollisionBodyPos){
@@ -323,4 +325,8 @@ void CollisionBody_registerSphereCollider(CollisionBody *cb, const float *offset
     sphereCollider->zOffset = offsetPosition[2];
     sphereCollider->radius = radius;
     CollisionBody_addSphereCollider(cb, sphereCollider);
+}
+
+void CollisionBody_setCollisionBodyStatic(CollisionBody *cb, bool isStatic) {
+    cb->isStatic = isStatic;
 }

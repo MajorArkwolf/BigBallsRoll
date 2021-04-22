@@ -1,6 +1,6 @@
 #include "include/BigBalls/physicsWorld.h"
 #include <assert.h>
-#include <stdio.h>
+#include <math.h>
 
 CollisionBody *PhysicsWorld_registerCollisionBody(PhysicsWorld *physicsWorld) {
     CollisionBody *cp = calloc(1, sizeof(CollisionBody));
@@ -23,50 +23,13 @@ CollisionBody* PhysicsWorld_findCollisionBody(PhysicsWorld *physicsWorld, const 
     return NULL;
 }
 
-bool testAABBCollision(CollisionBody *a, CollisionBody *b){
-    assert(a != NULL && b != NULL);
-    // the min and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
-    float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
-
-    // determine which coordinate is larger than the other, for each coordinate pair of each CollisionBody
-    minMax(a->AABBx1, a->AABBx2, &x1min, &x1max);
-    minMax(a->AABBy1, a->AABBy2, &y1min, &y1max);
-    minMax(a->AABBz1, a->AABBz2, &z1min, &z1max);
-
-    minMax(b->AABBx1, b->AABBx2, &x2min, &x2max);
-    minMax(b->AABBy1, b->AABBy2, &y2min, &y2max);
-    minMax(b->AABBz1, b->AABBz2, &z2min, &z2max);
-
-    return (x1min <= x2max && x1max >= x2min) &&
-           (y1min <= y2max && y1max >= y2min) &&
-           (z1min <= z2max && z1max >= z2min);
-}
-
-void detectCollisions(PhysicsWorld* physicsWorld){
-    assert(physicsWorld != NULL);
-    // TODO: ideally shouldn't check every body against each other - spacial partitioning method ideal
-    // broad phase
-    for(size_t i = 0; i < physicsWorld->numCollisionBodies; ++i){
-        for(size_t j = i + 1; j < physicsWorld->numCollisionBodies; ++j){ // only checks collisions of different CollisionBodies, where j is always greater than i
-                                                                          // (avoids repeat inverse tests eg. checking 1-0 AND 0-1 would be redundant and inefficient)
-            if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
-                // broad phase collision detected
-                printf("Objects %d and %d are colliding!\n", (int)i ,(int)j);
-                // TODO: narrow phase
-                // TODO: resolve collision
-            }
-        }
-    }
-}
-
 void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     assert(physicsWorld != NULL);
     physicsWorld->collisionBodies = NULL;
     physicsWorld->numCollisionBodies = 0;
     physicsWorld->collisionBodyIdCount = 0;
-    physicsWorld->gravity = -9.8f;
-    tempVec3_init(&physicsWorld->gravityNormal);
-    physicsWorld->gravityNormal.Y = -1;
+    physicsWorld->gravity = PVec3_init();
+    physicsWorld->gravity.data[1] = -9.8f;
     physicsWorld->debug = false;
 }
 
@@ -76,12 +39,6 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
         CollisionBody_free(physicsWorld->collisionBodies[i]);
     }
     free(physicsWorld);
-}
-
-void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
-    assert(physicsWorld != NULL);
-    // TODO: implement deltaTime
-    detectCollisions(physicsWorld);
 }
 
 void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody) {
@@ -137,7 +94,48 @@ void PhysicsWorld_debugToggle(PhysicsWorld *physicsWorld) {
 }
 
 void PhysicsWorld_updateGravityNormal(PhysicsWorld *physicsWorld, float x, float y, float z) {
-    physicsWorld->gravityNormal.X = x;
-    physicsWorld->gravityNormal.Y = y;
-    physicsWorld->gravityNormal.Z = z;
+    physicsWorld->gravity.data[0] = x;
+    physicsWorld->gravity.data[1] = y;
+    physicsWorld->gravity.data[2] = z;
+}
+
+int determineSign(float a) {
+    if ((a / fabsf(a)) > 0) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
+void FakeTerminalVelocity(PVec3 *velocity) {
+    // 52m/s is the assumed terminal velocity, while this doesnt work
+    // since every object has its own terminal velocity we will be using a guestimate.
+    if (fabsf(velocity->data[0]) > 52.0f) {
+        velocity->data[0] = 52.0f * (float)determineSign(velocity->data[0]);
+    }
+    if (fabsf(velocity->data[1]) > 52.0f) {
+        velocity->data[1] = 52.0f * (float)determineSign(velocity->data[1]);
+    }
+    if (fabsf(velocity->data[2]) > 52.0f) {
+        velocity->data[2] = 52.0f * (float)determineSign(velocity->data[2]);
+    }
+}
+
+void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
+    assert(physicsWorld != NULL);
+    for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
+        CollisionBody *cb = physicsWorld->collisionBodies[i];
+        if (cb->isStatic) {
+            continue;
+        }
+        //Calculate gravity downwards
+        PVec3 gravity = PVec3MultiplyScalar(&physicsWorld->gravity, deltaTime);
+        cb->velocity = addPVec3(&gravity, &cb->velocity);
+        // Fake terminal velocity
+        FakeTerminalVelocity(&cb->velocity);
+        PVec3 newVel = PVec3MultiplyScalar(&cb->velocity, deltaTime);
+        cb->xPos += newVel.data[0];
+        cb->yPos += newVel.data[1];
+        cb->zPos += newVel.data[2];
+    }
 }

@@ -28,6 +28,8 @@ void TextureManager_bindTextureOpenGL(Texture *texture) {
                  GL_UNSIGNED_BYTE, texture->TextureData);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    STBI_FREE(texture->TextureData);
+    texture->TextureData = NULL;
 }
 
 void TextureManager_init(TextureManager *textureManager) {
@@ -48,7 +50,9 @@ void Texture_init(Texture *texture) {
 
 void Texture_free(Texture *texture) {
     assert(texture != NULL);
-    STBI_FREE(texture->TextureData);
+    if (texture->TextureData != NULL) {
+        STBI_FREE(texture->TextureData);
+    }
     texture->Width = 0;
     texture->Height = 0;
     texture->Channels = 0;
@@ -73,6 +77,9 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     strcpy(fulldir, cwd);
     strcat(fulldir, RESOURCE_LOADER_FILE_LOCATION);
     FILE *fptr = fopen(fulldir, "r");
+    if (fptr == NULL) {
+        return;
+    }
     char buff[MAX_BUFF_SIZE];
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);

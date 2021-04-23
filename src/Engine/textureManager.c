@@ -78,6 +78,8 @@ void TextureManager_preLoadTextures(TextureManager *textureManager, char *cwd) {
     strcat(fulldir, RESOURCE_LOADER_FILE_LOCATION);
     FILE *fptr = fopen(fulldir, "r");
     if (fptr == NULL) {
+        free(fulldir);
+        free(imgdir);
         return;
     }
     char buff[MAX_BUFF_SIZE];

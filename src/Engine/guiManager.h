@@ -1,5 +1,6 @@
 #pragma once
 #include <stdbool.h>
+typedef struct GLFWwindow GLFWwindow;
 
 typedef struct menuOption {
     bool menu, level, settings, exit, developer;
@@ -97,3 +98,12 @@ void GuiManager_drawToggle(GuiManager *guiManager);
  * @param divideH The height to divide by
  */
 void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH);
+
+/**
+ * Interface to pass events to Nuklear for the GUI
+ * @param window the current window activating the event.
+ * @param button the button id that caused the event to occure.
+ * @param action the action of the event such as button down.
+ * @param mods the modifiers
+ */
+void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods);

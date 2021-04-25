@@ -26,6 +26,7 @@ void GuiManager_init(GuiManager *guiManager) {
 
     /* GUI */
     guiManager->ctx = nk_glfw3_init(engine.window, NK_GLFW3_INSTALL_CALLBACKS);
+
     nk_glfw3_font_stash_begin(&guiManager->atlas);
     //Load font
     myFont = nk_font_atlas_add_default(guiManager->atlas, fontSize, &cfg1);
@@ -52,7 +53,7 @@ void GuiManager_init(GuiManager *guiManager) {
 void GuiManager_update(GuiManager *guiManager) {
     assert(guiManager != NULL);
     glfwGetWindowSize(engine.window, &guiManager->glfwWidth, &guiManager->glfwHeight);
-    GuiManager_setMenuPosition(guiManager);
+    GuiManager_setMenuPosition(guiManager,4 ,4);
 }
 
 void GuiManager_free(GuiManager *guiManager) {
@@ -64,6 +65,8 @@ void GuiManager_drawToggle(GuiManager *guiManager) {
     assert(guiManager != NULL);
     guiManager->guiDraw = !guiManager->guiDraw;
     engine.lockCamera = !guiManager->guiDraw;
+    GuiManager_optionsReset(guiManager);
+    guiManager->options.menu = true;
 }
 
 void GuiManager_optionsReset(GuiManager *guiManager)  {
@@ -79,20 +82,25 @@ void GuiManager_draw(GuiManager *guiManager) {
     glDisable(GL_LIGHTING);
     assert(guiManager != NULL);
     GuiManager_update(guiManager);
-    if (guiManager->options.level) {
-        GuiManager_levelMenu(guiManager);
-    } else if (guiManager->options.settings) {
-        GuiManager_settingsMenu(guiManager);
-    } else if (guiManager->options.menu) {
-        if(guiManager->inGame) {
-            GuiManager_gameMenu(guiManager);
-        } else {
-            GuiManager_mainMenu(guiManager);
-        }
-    } else if (guiManager->options.developer) {
-        GuiManager_developerMenu(guiManager);
-    } else if (guiManager->options.exit) {
-        engine.running = false;
+
+    if(guiManager->guiDraw) {
+       if (guiManager->options.level) {
+           GuiManager_levelMenu(guiManager);
+       } else if (guiManager->options.settings) {
+           GuiManager_settingsMenu(guiManager);
+       } else if (guiManager->options.menu && guiManager->inGame) {
+           GuiManager_gameMenu(guiManager);
+       } else if (guiManager->options.menu && !guiManager->inGame) {
+               GuiManager_mainMenu(guiManager);
+       } else if (guiManager->options.developer) {
+           GuiManager_developerMenu(guiManager);
+       } else if (guiManager->options.exit) {
+           engine.running = false;
+       }
+   }
+   //Must be drawn after menu
+    if(guiManager->inGame) {
+        GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);
     }
     glEnable(GL_LIGHTING);
 }
@@ -103,10 +111,10 @@ void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divi
     guiManager->height = (float) guiManager->glfwHeight / divideH;
 }
 
-void GuiManager_setMenuPosition(GuiManager *guiManager) {
-    assert(guiManager != NULL);
-    guiManager->xPos = (float) guiManager->glfwWidth / 4;
-    guiManager->yPos = (float) guiManager->glfwHeight / 4;
+void GuiManager_setMenuPosition(GuiManager *guiManager, float divideW, float divideH) {
+    assert(guiManager != NULL && divideW != 0 && divideH != 0);
+    guiManager->xPos = (float) guiManager->glfwWidth / divideW;
+    guiManager->yPos = (float) guiManager->glfwHeight / divideH;
 }
 
 void GuiManager_startGame(void) {
@@ -119,6 +127,38 @@ void GuiManager_startGame(void) {
 
 void GuiManager_stopGame(void) {
     StateManager_pop(&engine.sM);
+}
+
+void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int levelNumber) {
+    assert(guiManager != NULL);
+    nk_glfw3_new_frame();
+
+    GuiManager_setHeightWidth(guiManager, 2, 18);
+
+    strcpy(guiManager->hud.time, "Time: ");
+    sprintf(guiManager->hud.buffer, "%0.2f", seconds);
+    strcat(guiManager->hud.time, guiManager->hud.buffer);
+
+    strcpy(guiManager->hud.lives, "Lives: ");
+    sprintf(guiManager->hud.buffer, "%i", lives);
+    strcat(guiManager->hud.lives, guiManager->hud.buffer);
+
+    strcpy(guiManager->hud.levels, "Level: ");
+    sprintf(guiManager->hud.buffer, "%i", levelNumber);
+    strcat(guiManager->hud.levels, guiManager->hud.buffer);
+
+
+    if (nk_begin(guiManager->ctx, "", nk_rect(guiManager->glfwWidth/4, 0, guiManager->width, guiManager->height),
+                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
+
+        nk_layout_row_dynamic(guiManager->ctx, guiManager->height, 3);
+        nk_label(guiManager->ctx, guiManager->hud.time, NK_TEXT_CENTERED);
+        nk_label(guiManager->ctx, guiManager->hud.lives, NK_TEXT_CENTERED);
+        nk_label(guiManager->ctx, guiManager->hud.levels, NK_TEXT_CENTERED);
+
+    }
+    nk_end(guiManager->ctx);
+    nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
 void GuiManager_levelMenu(GuiManager *guiManager) {

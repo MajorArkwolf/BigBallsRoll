@@ -6,10 +6,18 @@ typedef struct menuOption {
     bool menu, level, settings, exit, developer;
 } menuOption;
 
+typedef struct Hud {
+    char buffer[256];
+    char time[256];
+    char lives[256];
+    char levels[256];
+} Hud;
+
 typedef struct GuiManager {
     struct nk_context *ctx;
     struct nk_font_atlas *atlas;
     menuOption options;
+    Hud hud;
     bool inGame;
     int glfwHeight;
     int glfwWidth;
@@ -114,7 +122,7 @@ void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action
  * Updates and sets the screen position for the menu. Currently set in the middle.
  * @param guiManager The guiManager to update.
  */
-void GuiManager_setMenuPosition(GuiManager *guiManager);
+void GuiManager_setMenuPosition(GuiManager *guiManager, float divideW, float divideH);
 
 /**
  * Sets the state and pushes it onto the stateManager stack.
@@ -125,3 +133,5 @@ void GuiManager_startGame(void);
  * Pops the state from the stateManager stack.
  */
 void GuiManager_stopGame(void);
+
+void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int levelNumber);

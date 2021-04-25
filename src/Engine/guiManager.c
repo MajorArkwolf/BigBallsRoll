@@ -117,7 +117,7 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 2.3f);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(50, 50, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 11, 1);
@@ -184,7 +184,7 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 1.35f);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(50, 50, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 20, 1);
@@ -275,7 +275,7 @@ void GuiManager_developerMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 3);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(50, 50, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 1);
@@ -326,7 +326,7 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 3);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(50, 50, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title
@@ -365,7 +365,7 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 4);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(50, 50, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title

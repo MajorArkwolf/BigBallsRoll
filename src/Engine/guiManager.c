@@ -52,6 +52,7 @@ void GuiManager_init(GuiManager *guiManager) {
 void GuiManager_update(GuiManager *guiManager) {
     assert(guiManager != NULL);
     glfwGetWindowSize(engine.window, &guiManager->glfwWidth, &guiManager->glfwHeight);
+    GuiManager_setMenuPosition(guiManager);
 }
 
 void GuiManager_free(GuiManager *guiManager) {
@@ -98,17 +99,14 @@ void GuiManager_draw(GuiManager *guiManager) {
 
 void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH) {
     assert(guiManager != NULL && divideW != 0 && divideH != 0);
-    if (guiManager->glfwWidth < 1600) {
-        guiManager->width = (float) guiManager->glfwWidth - 100;
-    } else {
-        guiManager->width = (float) guiManager->glfwWidth / divideW;
-    }
+    guiManager->width = (float) guiManager->glfwWidth / divideW;
+    guiManager->height = (float) guiManager->glfwHeight / divideH;
+}
 
-    if (guiManager->glfwWidth < 900) {
-        guiManager->height = (float) guiManager->glfwHeight - 100;
-    } else {
-        guiManager->height = (float) guiManager->glfwHeight / divideH;
-    }
+void GuiManager_setMenuPosition(GuiManager *guiManager) {
+    assert(guiManager != NULL);
+    guiManager->xPos = (float) guiManager->glfwWidth / 4;
+    guiManager->yPos = (float) guiManager->glfwHeight / 4;
 }
 
 void GuiManager_levelMenu(GuiManager *guiManager) {
@@ -119,7 +117,7 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 2.3f);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 11, 1);
@@ -186,7 +184,7 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 1.35f);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 20, 1);
@@ -277,7 +275,7 @@ void GuiManager_developerMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 3);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 1);
@@ -328,7 +326,7 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 3);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title
@@ -367,7 +365,7 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 4);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->glfwWidth/4, (float) guiManager->glfwHeight/4, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title

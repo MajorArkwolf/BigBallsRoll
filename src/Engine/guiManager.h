@@ -15,6 +15,8 @@ typedef struct GuiManager {
     int glfwWidth;
     float height;
     float width;
+    float xPos;
+    float yPos;
     bool guiDraw;
     //TODO: TEMP ADD DEBUG CONFIG OR SOMETHING
     int gravity;
@@ -102,8 +104,14 @@ void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divi
 /**
  * Interface to pass events to Nuklear for the GUI
  * @param window the current window activating the event.
- * @param button the button id that caused the event to occure.
+ * @param button the button id that caused the event to occur.
  * @param action the action of the event such as button down.
  * @param mods the modifiers
  */
 void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+
+/**
+ * Updates and sets the screen position for the menu. Currently set in the middle.
+ * @param guiManager The guiManager to update.
+ */
+void GuiManager_setMenuPosition(GuiManager *guiManager);

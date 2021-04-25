@@ -111,7 +111,6 @@ void GuiManager_setMenuPosition(GuiManager *guiManager) {
 
 void GuiManager_levelMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    glfwPollEvents();
     nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 2.3f);
@@ -178,7 +177,6 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
 
 void GuiManager_settingsMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    glfwPollEvents();
     nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 1.35f);
@@ -269,7 +267,6 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
 
 void GuiManager_developerMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    glfwPollEvents();
     nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 3);
@@ -320,7 +317,6 @@ void GuiManager_developerMenu(GuiManager *guiManager) {
 
 void GuiManager_mainMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    glfwPollEvents();
     nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 3);
@@ -359,7 +355,6 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
 
 void GuiManager_gameMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    glfwPollEvents();
     nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 4);

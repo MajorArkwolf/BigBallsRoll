@@ -153,7 +153,6 @@ int Engine_run(int argc, char *argv[]) {
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
     PlayerConfig_init(&engine.playerConfig);
-    PhysicsEngine_init(&engine.physicsEngine);
     PhysicsInterface_init();
 
 	//Initialise LUA state

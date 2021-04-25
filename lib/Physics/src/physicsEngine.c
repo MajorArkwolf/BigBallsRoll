@@ -45,10 +45,10 @@ void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *
         if (physicsEngine->physicsWorld[i] == physicsWorld) {
             PhysicsWorld_free(physicsEngine->physicsWorld[i]);
             //Consolidate array
-            for (size_t j = i; j < physicsEngine->numOfPhysicsWorlds; ++j) {
+            for (size_t j = i + 1; j < physicsEngine->numOfPhysicsWorlds; ++j) {
                 physicsEngine->physicsWorld[j - 1] = physicsEngine->physicsWorld[j];
             }
-            physicsEngine->physicsWorld[physicsEngine->numOfPhysicsWorlds] = NULL;
+            physicsEngine->physicsWorld[physicsEngine->numOfPhysicsWorlds-1] = NULL;
             --physicsEngine->numOfPhysicsWorlds;
             break;
         }

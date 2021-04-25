@@ -7,6 +7,7 @@
 DebugData dd;
 
 void PhysicsInterface_init() {
+    PhysicsEngine_init(&engine.physicsEngine);
     PhysicsDebug_dataInit(&dd);
 }
 

@@ -115,3 +115,13 @@ void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action
  * @param guiManager The guiManager to update.
  */
 void GuiManager_setMenuPosition(GuiManager *guiManager);
+
+/**
+ * Sets the state and pushes it onto the stateManager stack.
+ */
+void GuiManager_startGame(void);
+
+/**
+ * Pops the state from the stateManager stack.
+ */
+void GuiManager_stopGame(void);

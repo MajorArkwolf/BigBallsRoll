@@ -109,6 +109,18 @@ void GuiManager_setMenuPosition(GuiManager *guiManager) {
     guiManager->yPos = (float) guiManager->glfwHeight / 4;
 }
 
+void GuiManager_startGame(void) {
+    State *state;
+    state = malloc(sizeof (State));
+    State_init(state);
+    StateManager_push(&engine.sM, state);
+    Game_init(state);
+}
+
+void GuiManager_stopGame(void) {
+    StateManager_pop(&engine.sM);
+}
+
 void GuiManager_levelMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
     nk_glfw3_new_frame();
@@ -152,11 +164,7 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
         //Confirm button
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 10, 1);
         if (nk_button_label(guiManager->ctx, "LET EM' ROLL!")) {
-            State *state;
-            state = malloc(sizeof (State));
-            State_init(state);
-            StateManager_push(&engine.sM, state);
-            Game_init(state);
+            GuiManager_startGame();
 
             GuiManager_optionsReset(guiManager);
             GuiManager_drawToggle(guiManager);
@@ -376,7 +384,7 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
         //EXIT
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
-            StateManager_pop(&engine.sM);
+            GuiManager_stopGame();
             GuiManager_drawToggle(&engine.guiManager);
             GuiManager_optionsReset(guiManager);
             guiManager->options.menu = true;
@@ -388,7 +396,6 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
     nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
-void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
+void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
     nk_glfw3_mouse_button_callback(window, button, action, mods);
 }

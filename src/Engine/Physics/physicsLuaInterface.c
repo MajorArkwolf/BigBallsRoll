@@ -140,7 +140,7 @@ int PhysicsLuaInterface_AddSphereCollider(lua_State *L) {
     return 0;
 }
 
-int PhysicsLuaInterface_resetPhysicsWorld() {
+int PhysicsLuaInterface_resetPhysicsWorld(lua_State *L) {
     PhysicsEngine *pe = &engine.physicsEngine;
     PhysicsWorld *pw = StateManager_top(&engine.sM)->physicsWorld;
     PhysicsEngine_freePhysicsWorld(pe, pw);

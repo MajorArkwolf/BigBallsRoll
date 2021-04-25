@@ -365,6 +365,12 @@ int LuaHelper_LightPosition(lua_State *L) {
     return 0;
 }
 
+int LuaHelper_ExitGame(lua_State *L) {
+    State *state = StateManager_top(&engine.sM);
+    state->endStateSafely = true;
+    return 0;
+}
+
 void LuaHelper_init() {
 
     // Register functions for lua.
@@ -408,6 +414,8 @@ void LuaHelper_init() {
     // Scene
     lua_pushcfunction(engine.lua, LuaHelper_GameNextLevel);
     lua_setglobal(engine.lua, "GameNextLevel");
+    lua_pushcfunction(engine.lua, LuaHelper_ExitGame);
+    lua_setglobal(engine.lua, "ExitGame");
 
     //Light
     lua_pushcfunction(engine.lua, LuaHelper_RegisterLight);

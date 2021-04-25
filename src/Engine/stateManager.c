@@ -119,6 +119,8 @@ void State_init(State *state) {
     state->camera = Camera_construct();
     state->physicsWorld = NULL;
     state->registeredLightIDs = 0;
+    state->endStateSafely = false;
+    state->isStatePaused = false;
 }
 
 size_t State_registerLight(State *state) {
@@ -135,4 +137,11 @@ void State_deregisterLights(State *state) {
         glDisable(GL_LIGHT0 + i);
     }
     state->registeredLightIDs = 0;
+}
+
+void StateManager_safeStateRemoval(StateManager *stateManager) {
+    State* state = StateManager_top(stateManager);
+    if (state->endStateSafely) {
+        StateManager_pop(stateManager);
+    }
 }

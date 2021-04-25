@@ -125,6 +125,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     InputType input = InputType_convertMouseButton(button);
     int buttonState = action == GLFW_PRESS;
     StateManager_mouseKeys(&engine.sM, input, buttonState);
+    GuiManager_mouse_button_callback(window, button, action, mods);
 }
 
 void error_callback(int error, const char* description)
@@ -193,11 +194,12 @@ int Engine_run(int argc, char *argv[]) {
     glfwSetKeyCallback(engine.window, key_callback);
     glfwSetCursorPosCallback(engine.window, cursor_position_callback);
     glfwSetFramebufferSizeCallback(engine.window, framebuffer_size_callback);
-    glfwSetMouseButtonCallback(engine.window, mouse_button_callback);
     glfwSetInputMode(engine.window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
 
     // GUI init after window creation
     GuiManager_init(&engine.guiManager);
+    //Overwrite Nuklears function pointer so it doesnt steal our function call.
+    glfwSetMouseButtonCallback(engine.window, mouse_button_callback);
 
     // OpenGL init
     glEnable(GL_DEPTH_TEST);

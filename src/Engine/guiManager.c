@@ -394,3 +394,8 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
 
     nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
+
+void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    nk_glfw3_mouse_button_callback(window, button, action, mods);
+}

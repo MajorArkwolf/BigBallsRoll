@@ -66,8 +66,8 @@ int StateManager_push(StateManager *stateManager, State *state);
 
 /**
  * Pop the top state off the stack
- * @param stateManager
- * @return
+ * @param stateManager State Manager to pop off, the state is freed and see to NULL
+ * @return  0 on success and 1 on failure
  */
 int StateManager_pop(StateManager *stateManager);
 

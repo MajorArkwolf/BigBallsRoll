@@ -44,6 +44,8 @@ void GuiManager_init(GuiManager *guiManager) {
     guiManager->options.menu = true;
     guiManager->inGame = false;
     guiManager->guiDraw = false;
+    guiManager->hud.prevLevel = 0;
+    guiManager->hud.prevLives = 0;
 
     //TODO:: TEMP
     guiManager->gravity = -1;
@@ -79,8 +81,8 @@ void GuiManager_optionsReset(GuiManager *guiManager)  {
 }
 
 void GuiManager_draw(GuiManager *guiManager) {
-    glDisable(GL_LIGHTING);
     assert(guiManager != NULL);
+    glDisable(GL_LIGHTING);
     GuiManager_update(guiManager);
 
     if(guiManager->guiDraw) {
@@ -102,7 +104,7 @@ void GuiManager_draw(GuiManager *guiManager) {
     if(guiManager->inGame) {
         GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);
     }
-    glEnable(GL_LIGHTING);
+   glEnable(GL_LIGHTING);
 }
 
 void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH) {
@@ -129,7 +131,7 @@ void GuiManager_stopGame(void) {
     StateManager_pop(&engine.sM);
 }
 
-void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int levelNumber) {
+void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level) {
     assert(guiManager != NULL);
     nk_glfw3_new_frame();
 
@@ -139,14 +141,19 @@ void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int levelN
     sprintf(guiManager->hud.buffer, "%0.2f", seconds);
     strcat(guiManager->hud.time, guiManager->hud.buffer);
 
-    strcpy(guiManager->hud.lives, "Lives: ");
-    sprintf(guiManager->hud.buffer, "%i", lives);
-    strcat(guiManager->hud.lives, guiManager->hud.buffer);
+    if(guiManager->hud.prevLives != lives) {
+        strcpy(guiManager->hud.lives, "Lives: ");
+        sprintf(guiManager->hud.buffer, "%i", lives);
+        strcat(guiManager->hud.lives, guiManager->hud.buffer);
+        guiManager->hud.prevLives = lives;
+    }
 
-    strcpy(guiManager->hud.levels, "Level: ");
-    sprintf(guiManager->hud.buffer, "%i", levelNumber);
-    strcat(guiManager->hud.levels, guiManager->hud.buffer);
-
+    if (guiManager->hud.prevLevel != level) {
+        strcpy(guiManager->hud.levels, "Level: ");
+        sprintf(guiManager->hud.buffer, "%i", level);
+        strcat(guiManager->hud.levels, guiManager->hud.buffer);
+        guiManager->hud.prevLevel = level;
+    }
 
     if (nk_begin(guiManager->ctx, "", nk_rect(guiManager->glfwWidth/4, 0, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {

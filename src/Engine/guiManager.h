@@ -11,6 +11,8 @@ typedef struct Hud {
     char time[256];
     char lives[256];
     char levels[256];
+    int prevLives;
+    int prevLevel;
 } Hud;
 
 typedef struct GuiManager {

@@ -242,6 +242,7 @@ int Engine_run(int argc, char *argv[]) {
         }
         Update(frameTime);
         Draw();
+        StateManager_safeStateRemoval(&engine.sM);
     }
 
     PhysicsEngine_free(&engine.physicsEngine);

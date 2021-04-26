@@ -1,3 +1,4 @@
+smileyFace.png
 skybox_back.jpg
 skybox_bottom.jpg
 skybox_front.jpg

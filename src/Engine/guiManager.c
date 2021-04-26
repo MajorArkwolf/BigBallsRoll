@@ -95,15 +95,15 @@ void GuiManager_draw(GuiManager *guiManager) {
            GuiManager_gameMenu(guiManager);
        } else if (guiManager->options.menu && !guiManager->inGame) {
                GuiManager_mainMenu(guiManager);
-       } else if (guiManager->options.developer) {
-           GuiManager_developerMenu(guiManager);
+       /*} else if (guiManager->options.developer) {
+           GuiManager_developerMenu(guiManager);*/
        } else if (guiManager->options.exit) {
            engine.running = false;
        }
    }
    //Must be drawn after menu
     if(guiManager->inGame) {
-        GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);
+        GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);    //TODO PETER: this is where the hud is being drawn from
     }
    glEnable(GL_LIGHTING);
 }
@@ -120,7 +120,7 @@ void GuiManager_setMenuPosition(GuiManager *guiManager, float divideW, float div
     guiManager->yPos = (float) guiManager->glfwHeight / divideH;
 }
 
-void GuiManager_startGame(void) {
+void GuiManager_startGame(void) {   //TODO: Peter dunno if you need this but its where the game starts
     State *state;
     state = malloc(sizeof (State));
     State_init(state);
@@ -128,7 +128,7 @@ void GuiManager_startGame(void) {
     Game_init(state);
 }
 
-void GuiManager_stopGame(void) {
+void GuiManager_stopGame(void) {    //TODO: Peter, and this is where it ends
     StateManager_pop(&engine.sM);
 }
 
@@ -219,10 +219,7 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
             guiManager->options.menu = true;
             guiManager->inGame = true;
 
-            //TODO:: pass the stuff
-            printf("name: %s\n", engine.playerConfig.name);
-            printf("Seed: %i\n", engine.playerConfig.seed);
-            printf("Levels: %i\n", engine.playerConfig.levels);
+            //TODO:: Peter, this updates name, seed, levels
         }
 
     }
@@ -248,12 +245,12 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
             GuiManager_optionsReset(guiManager);
             guiManager->options.menu = true;
         }
-        nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
+       /* nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
         nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
         if (nk_button_label(guiManager->ctx, "DEVELOPER")) {
             GuiManager_optionsReset(guiManager);
             guiManager->options.developer = true;
-        }
+        }*/
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 4.3f, 1);
 
@@ -307,13 +304,7 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
         //Confirm button
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 20, 1);
         if (nk_button_label(guiManager->ctx, "Confirm")) {
-            //TODO:: pass the stuff
-            printf("Volume: %i\n", engine.playerConfig.volume);
-            printf("sound: %i\n", engine.playerConfig.sound);
-            printf("V sens: %i\n", engine.playerConfig.verticalSens);
-            printf("H sens: %i\n", engine.playerConfig.horizontalSens);
-            printf("H Lock: %i\n", engine.playerConfig.horizontalLock);
-            glfwSetWindowSize(engine.window, engine.playerConfig.width, engine.playerConfig.height);    //TODO: remove, just for testing ui scaling atm
+            //TODO:: Peter, this updates volume, sound toggle, V sens, H sens, H Lock toggle and window size
         }
     }
     nk_end(guiManager->ctx);
@@ -321,13 +312,13 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
     nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
-void GuiManager_developerMenu(GuiManager *guiManager) {
+/*void GuiManager_developerMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
     nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 3);
 
-    /* GUI */
+
     if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
@@ -369,7 +360,7 @@ void GuiManager_developerMenu(GuiManager *guiManager) {
     nk_end(guiManager->ctx);
 
     nk_glfw3_render(NK_ANTI_ALIASING_ON);
-}
+}*/
 
 void GuiManager_mainMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);

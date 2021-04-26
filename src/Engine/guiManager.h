@@ -137,4 +137,4 @@ void GuiManager_startGame(void);
  */
 void GuiManager_stopGame(void);
 
-void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int levelNumber);
+void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level);

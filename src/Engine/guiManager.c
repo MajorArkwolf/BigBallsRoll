@@ -46,6 +46,7 @@ void GuiManager_init(GuiManager *guiManager) {
     guiManager->guiDraw = false;
     guiManager->hud.prevLevel = 0;
     guiManager->hud.prevLives = 0;
+    guiManager->hud.prevSeconds = 0.0f;
 
     //TODO:: TEMP
     guiManager->gravity = -1;
@@ -134,12 +135,14 @@ void GuiManager_stopGame(void) {
 void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level) {
     assert(guiManager != NULL);
     nk_glfw3_new_frame();
-
     GuiManager_setHeightWidth(guiManager, 2, 18);
 
-    strcpy(guiManager->hud.time, "Time: ");
-    sprintf(guiManager->hud.buffer, "%0.2f", seconds);
-    strcat(guiManager->hud.time, guiManager->hud.buffer);
+    if (fabs((double) guiManager->hud.prevSeconds - seconds) > 0.05) {     // Useful when pausing or rendering too fast
+        strcpy(guiManager->hud.time, "Time: ");
+        sprintf(guiManager->hud.buffer, "%0.2f", seconds);
+        strcat(guiManager->hud.time, guiManager->hud.buffer);
+        guiManager->hud.prevSeconds = seconds;
+    }
 
     if(guiManager->hud.prevLives != lives) {
         strcpy(guiManager->hud.lives, "Lives: ");
@@ -157,12 +160,10 @@ void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level)
 
     if (nk_begin(guiManager->ctx, "", nk_rect(guiManager->glfwWidth/4, 0, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
-
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height, 3);
         nk_label(guiManager->ctx, guiManager->hud.time, NK_TEXT_CENTERED);
         nk_label(guiManager->ctx, guiManager->hud.lives, NK_TEXT_CENTERED);
         nk_label(guiManager->ctx, guiManager->hud.levels, NK_TEXT_CENTERED);
-
     }
     nk_end(guiManager->ctx);
     nk_glfw3_render(NK_ANTI_ALIASING_ON);

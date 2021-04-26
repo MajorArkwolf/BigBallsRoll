@@ -13,6 +13,7 @@ typedef struct Hud {
     char levels[256];
     int prevLives;
     int prevLevel;
+    float prevSeconds;
 } Hud;
 
 typedef struct GuiManager {

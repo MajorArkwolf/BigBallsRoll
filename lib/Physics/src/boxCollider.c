@@ -14,3 +14,19 @@ void BoxCollider_init(BoxCollider *boxCollider){
     boxCollider->yRot = 0;
     boxCollider->zRot = 0;
 }
+
+void BoxCollider_updateAABB(BoxCollider *boxCollider,
+                            float x1,
+                            float y1,
+                            float z1,
+                            float x2,
+                            float y2,
+                            float z2){
+    assert(boxCollider != NULL); // ensure that one collider exists before processing
+    boxCollider->AABBx1 = x1;
+    boxCollider->AABBy1 = y1;
+    boxCollider->AABBz1 = z1;
+    boxCollider->AABBx2 = x2;
+    boxCollider->AABBy2 = y2;
+    boxCollider->AABBz2 = z2;
+}

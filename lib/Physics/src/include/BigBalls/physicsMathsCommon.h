@@ -31,3 +31,5 @@ void collisionArrayContainer_free(CollisionArrayContainer* cac);
  * @return collision object that contains the information needed for resolution
  */
 Collision collision_init();
+
+PVec3* getAllBoxColliderNorms(BoxCollider box);

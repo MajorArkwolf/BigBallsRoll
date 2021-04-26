@@ -93,9 +93,8 @@ function Update()
             timer = timer + deltaTime
         end
     end
-    GUIUpdateHUD(level, player.lives)
+    GUIUpdateHUD(level, player.playerLives, timer)
 end
-
 
 function Draw()
 

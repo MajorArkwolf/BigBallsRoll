@@ -5,9 +5,9 @@ int ClosingScreen_draw(float deltaTime) {
     glBindTexture(GL_TEXTURE_2D, closingImage->GLTextureID);
     glBegin(GL_QUADS);
         glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
         glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
+        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
     glEnd();
 
     return 0;
@@ -23,27 +23,22 @@ int ClosingScreen_keyDown(InputType inputType) {
 }
 
 int ClosingScreen_keyUp(InputType inputType) {
-
     return 0;
 }
 
 int ClosingScreen_destroy() {
-
     return 0;
 }
 
 int ClosingScreen_update(float deltaTime) {
-
     return 0;
 }
 
 int ClosingScreen_mouseMovement(double x, double y) {
-
     return 0;
 }
 
 int ClosingScreen_mouseKeys(int button, int buttonState) {
-
     return 0;
 }
 
@@ -61,16 +56,7 @@ void ClosingScreen_init(State *state) {
 
     closingImage = TextureManager_getTexture(&engine.textureManager, engine.cwd, "smileyFace.png");
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    int height, width;
-    glfwGetWindowSize(engine.window, &width, &height);
-    glOrtho(-0.5f, 0.5, -0.5, 0.5,0.1,100);
-
-    glMatrixMode(GL_MODELVIEW);
-    gluLookAt(0,0,0,
-              0,0,-1,
-              0,1,0);
-
-    glDisable(GL_CULL_FACE);
+    Camera *cam = &StateManager_top(&engine.sM)->camera;
+    cam->Position.X = -0.4f;
+    engine.lockCamera = false;
 }

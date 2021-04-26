@@ -3,6 +3,7 @@
 #include "Physics/physicsInterface.h"
 #include "Scene/Game/game.h"
 #include <Engine/engine.h>
+#include "Scene/ClosingScreen/closingScreen.h"
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
@@ -98,7 +99,7 @@ void GuiManager_draw(GuiManager *guiManager) {
        } else if (guiManager->options.developer) {
            GuiManager_developerMenu(guiManager);
        } else if (guiManager->options.exit) {
-           engine.running = false;
+
        }
    }
    //Must be drawn after menu
@@ -401,7 +402,11 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "EXIT")) {
             GuiManager_optionsReset(guiManager);
-            guiManager->options.exit = true;
+            State *state;
+            state = malloc(sizeof (State));
+            State_init(state);
+            StateManager_push(&engine.sM, state);
+            ClosingScreen_init(state);
         }
     }
     nk_end(guiManager->ctx);

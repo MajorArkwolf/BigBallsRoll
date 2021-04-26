@@ -1,0 +1,76 @@
+#include "closingScreen.h"
+#include <Engine/engine.h>
+
+int ClosingScreen_draw(float deltaTime) {
+    glBindTexture(GL_TEXTURE_2D, closingImage->GLTextureID);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
+        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
+        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
+    glEnd();
+
+    return 0;
+}
+
+int ClosingScreen_keyDown(InputType inputType) {
+    if (inputType == KEY_ESC) {
+        StateManager_pop(&engine.sM);
+    } else {
+        engine.running = false;
+    }
+    return 0;
+}
+
+int ClosingScreen_keyUp(InputType inputType) {
+
+    return 0;
+}
+
+int ClosingScreen_destroy() {
+
+    return 0;
+}
+
+int ClosingScreen_update(float deltaTime) {
+
+    return 0;
+}
+
+int ClosingScreen_mouseMovement(double x, double y) {
+
+    return 0;
+}
+
+int ClosingScreen_mouseKeys(int button, int buttonState) {
+
+    return 0;
+}
+
+
+void ClosingScreen_init(State *state) {
+    Engine_cameraLock(true);
+    state->update = ClosingScreen_update;
+    state->draw = ClosingScreen_draw;
+    state->keyDown = ClosingScreen_keyDown;
+    state->keyUp = ClosingScreen_keyUp;
+    state->mouseMovement = ClosingScreen_mouseMovement;
+    state->mouseKeys = ClosingScreen_mouseKeys;
+    state->destroy = ClosingScreen_destroy;
+    state->physicsWorld = NULL;
+
+    closingImage = TextureManager_getTexture(&engine.textureManager, engine.cwd, "smileyFace.png");
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    int height, width;
+    glfwGetWindowSize(engine.window, &width, &height);
+    glOrtho(-0.5f, 0.5, -0.5, 0.5,0.1,100);
+
+    glMatrixMode(GL_MODELVIEW);
+    gluLookAt(0,0,0,
+              0,0,-1,
+              0,1,0);
+
+    glDisable(GL_CULL_FACE);
+}

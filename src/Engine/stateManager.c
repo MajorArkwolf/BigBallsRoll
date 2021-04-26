@@ -48,7 +48,8 @@ int StateManager_push(StateManager *stateManager, State *state) {
 int StateManager_pop(StateManager *stateManager) {
     if (stateManager->top == -1) return 0;
     State *top = StateManager_top(stateManager);
-    if (top->destroy != NULL) top->destroy();
+    if (top->destroy != NULL) { top->destroy(); }
+    free(stateManager->stack[stateManager->top]);
     stateManager->stack[stateManager->top] = NULL;
     stateManager->top--;
     return stateManager->top;

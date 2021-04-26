@@ -3,6 +3,11 @@
 #include "Engine/engine.h"
 #include "Engine/textureManager.h"
 
+//Work around for windows
+#ifndef GL_CLAMP_TO_EDGE
+#define GL_CLAMP_TO_EDGE 0x812F
+#endif
+
 //Skybox
 Texture *skybox[6];
 
@@ -53,12 +58,12 @@ int cubeIndex[6][4] = {
 
 void Skybox_draw(void) {
     glPushMatrix();
-
+    Camera *cam = &StateManager_top(&engine.sM)->camera;
     // Reset and transform the matrix.
     glLoadIdentity();
     gluLookAt(
         0,0,0,
-        StateManager_top(&engine.sM)->camera.Front.X, StateManager_top(&engine.sM)->camera.Front.Y, StateManager_top(&engine.sM)->camera.Front.Z,
+        cam->Front.X, cam->Front.Y, cam->Front.Z,
         0,1,0);
 
     glPushAttrib(GL_ENABLE_BIT);

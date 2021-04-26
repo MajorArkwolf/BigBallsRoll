@@ -1,10 +1,5 @@
 #pragma  once
 
-//TODO: Temp work around for windows
-#ifndef GL_CLAMP_TO_EDGE
-#define GL_CLAMP_TO_EDGE 0x812F
-#endif
-
 /**
  * Loads the 6 skybox textures into the skybox global.
  * If the skybox cant be found the default texture will be used.

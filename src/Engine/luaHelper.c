@@ -445,8 +445,12 @@ void LuaHelper_init() {
     lua_pushcfunction(engine.lua, LuaHelper_GUIHUDUpdate);
     lua_setglobal(engine.lua, "GUIUpdateHUD");
 
-    lua_pushnumber(engine.lua, engine.seed);
-    lua_setglobal(engine.lua, "seed");
+    lua_pushnumber(engine.lua, engine.playerConfig.seed);
+    lua_setglobal(engine.lua, "PlayerConfig_seed");
+    lua_pushnumber(engine.lua, engine.playerConfig.levels);
+    lua_setglobal(engine.lua, "PlayerConfig_levels");
+    lua_pushstring(engine.lua, engine.playerConfig.name);
+    lua_setglobal(engine.lua, "PlayerConfig_name");
     lua_getglobal(engine.lua, "Init");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));

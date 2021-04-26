@@ -299,7 +299,7 @@ void Engine_loadConfig() {
     //Get Configured Seed.
     lua_getglobal(engine.lua, "seed");
     if (lua_isnumber(engine.lua, 0) == 0) {
-        engine.seed = lua_tonumber(engine.lua, -1);
+        engine.playerConfig.seed = lua_tonumber(engine.lua, -1);
     }
     //Get master volume
     lua_getglobal(engine.lua, "master_volume");

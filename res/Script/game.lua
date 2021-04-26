@@ -9,7 +9,7 @@ function Init()
     -- 0 = not running, 1 = running, 2 = done
     generation_running = 0
     level = 1
-    gen:Init(seed)
+    gen:Init(PlayerConfig_seed)
     gen:Setup(50, 1, 50, 10)
     gen:RegisterGameObjects()
     local position = {}
@@ -81,8 +81,11 @@ function Update()
     player:Update(deltaTime)
     -- Check to see if the player is in the end zone
     if endNode:CheckEndTrigger(player) then
+        if level > PlayerConfig_levels then
+            print("Game Finished")
+            print(timer)
         -- Begin destroying the world every tick, returns true when there is no more blocks to destroy
-        if endNode:DestroyRandomBlock() then
+        elseif endNode:DestroyRandomBlock() then
             -- Progress to next level
             NextLevel()
         end

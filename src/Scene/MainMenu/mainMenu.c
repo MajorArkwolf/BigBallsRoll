@@ -45,6 +45,15 @@ void ActivateKonami(InputType inputType) {
         size_t modelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
         Model *model = ModelManager_getModel(&engine.modelManager, modelID);
         model->Mesh->Materials->DiffuseTexture = TextureManager_getTextureUsingID(&engine.textureManager, konami);
+        ALuint unlock = 0;
+        if (AudioManager_findSound(&engine.audioManager, "unlock.ogg", &unlock)) {
+            Sound *sound = AudioManager_getSound(&engine.audioManager, unlock);
+            if (sound != NULL) {
+                State *state = StateManager_top(&engine.sM);
+                GameObject_registerSoundSource(&state->gameObjects[0]);
+                AudioEngine_play(state->gameObjects[0].SoundID, sound);
+            }
+        }
     }
 }
 

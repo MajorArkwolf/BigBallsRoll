@@ -266,14 +266,13 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
         //Window settings
         if (nk_group_begin(guiManager->ctx, "Window", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Width:", 1280, &engine.playerConfig.width, 3840, 10, 10);
+            nk_property_int(guiManager->ctx, "Width:", 1280, &engine.playerConfig.width, 7680, 10, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Height:", 720, &engine.playerConfig.height, 2160, 10, 10);
+            nk_property_int(guiManager->ctx, "Height:", 720, &engine.playerConfig.height, 4320, 10, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
             nk_label(guiManager->ctx, "Windowed mode: ", NK_TEXT_LEFT);
-
-            if (nk_option_label(guiManager->ctx, "Enabled", engine.playerConfig.windowedMode == true)) engine.playerConfig.windowedMode = true;
-            if (nk_option_label(guiManager->ctx, "Disabled", engine.playerConfig.windowedMode == false)) engine.playerConfig.windowedMode = false;
+            if (nk_option_label(guiManager->ctx, "Enabled", engine.playerConfig.windowedMode == true)) {engine.playerConfig.windowedMode = true;}
+            if (nk_option_label(guiManager->ctx, "Disabled", engine.playerConfig.windowedMode == false)) {engine.playerConfig.windowedMode = false;}
             nk_group_end(guiManager->ctx);
         }
 
@@ -297,9 +296,9 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
             nk_label(guiManager->ctx, "Sensitivity: ", NK_TEXT_LEFT);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Vertical:", 0, &engine.playerConfig.verticalSens, 100, 10, 10);
+            nk_property_int(guiManager->ctx, "Vertical:", 0, &engine.playerConfig.verticalSens, 100, 1, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Horizontal:", 0, &engine.playerConfig.horizontalSens, 100, 10, 10);
+            nk_property_int(guiManager->ctx, "Horizontal:", 0, &engine.playerConfig.horizontalSens, 100, 1, 10);
 
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
             nk_label(guiManager->ctx, "Horizontal lock: ", NK_TEXT_LEFT);
@@ -313,7 +312,7 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
         //Confirm button
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 20, 1);
         if (nk_button_label(guiManager->ctx, "Confirm")) {
-            //TODO:: Peter, this updates volume, sound toggle, V sens, H sens, H Lock toggle and window size
+            Engine_updateConfig();
         }
     }
     nk_end(guiManager->ctx);

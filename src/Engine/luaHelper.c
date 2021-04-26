@@ -381,6 +381,15 @@ int LuaHelper_GUIHUDUpdate(lua_State *L) {
     return 0;
 }
 
+void LuaHelper_PlayerConfig() {
+    lua_pushnumber(engine.lua, engine.playerConfig.horizontalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXSensitivity");
+    lua_pushnumber(engine.lua, engine.playerConfig.verticalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseYSensitivity");
+    lua_pushboolean(engine.lua, engine.playerConfig.horizontalLock);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXLock");
+}
+
 void LuaHelper_init() {
 
     // Register functions for lua.
@@ -451,6 +460,12 @@ void LuaHelper_init() {
     lua_setglobal(engine.lua, "PlayerConfig_levels");
     lua_pushstring(engine.lua, engine.playerConfig.name);
     lua_setglobal(engine.lua, "PlayerConfig_name");
+    lua_pushnumber(engine.lua, engine.playerConfig.horizontalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXSensitivity");
+    lua_pushnumber(engine.lua, engine.playerConfig.verticalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseYSensitivity");
+    lua_pushboolean(engine.lua, engine.playerConfig.horizontalLock);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXLock");
     lua_getglobal(engine.lua, "Init");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));

@@ -11,3 +11,8 @@ void LuaHelper_init();
  * @param scriptName the name of the script to load.
  */
 void LuaHelper_loadScript(const char* scriptName);
+
+/**
+ * Updates the lua player config values.
+ */
+void LuaHelper_PlayerConfig();

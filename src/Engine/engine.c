@@ -315,3 +315,32 @@ void Engine_toggleCameraLock() {
 void Engine_cameraLock(bool lockCamera) {
     engine.lockCamera = lockCamera;
 }
+
+void UpdateWindow() {
+    int xpos = 0;
+    int ypos = 0;
+    glfwGetWindowPos(engine.window, &xpos, &ypos);
+    if (engine.playerConfig.windowedMode) {
+        glfwSetWindowMonitor(engine.window,
+                             NULL,
+                             xpos,
+                             ypos,
+                             engine.playerConfig.width,
+                             engine.playerConfig.height,
+                             60);
+    } else {
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwSetWindowMonitor(engine.window,
+                                glfwGetPrimaryMonitor(),
+                                0,
+                                0,
+                                mode->width,
+                                mode->height,
+                                mode->refreshRate);
+    }
+}
+
+void Engine_updateConfig() {
+    UpdateWindow();
+    LuaHelper_PlayerConfig();
+}

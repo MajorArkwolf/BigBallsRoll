@@ -91,9 +91,9 @@ function Update()
         if startNode:CheckStartTrigger(player, deltaTime) then
             -- If game has started then let the timer continue
             timer = timer + deltaTime
+            GUIUpdateHUD(level, player.playerLives, timer)
         end
     end
-    GUIUpdateHUD(level, player.playerLives, timer)
 end
 
 function Draw()

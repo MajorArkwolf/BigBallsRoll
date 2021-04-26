@@ -141,6 +141,17 @@ void GuiManager_startGame(void);
  */
 void GuiManager_stopGame(void);
 
+/**
+ * Draws the in game hud menu
+ * @param guiManager the gui manager to draw from
+ */
 void GuiManager_drawHUD(GuiManager *guiManager);
 
+/**
+ * Function to update the hud values and to let the GUI manager know when to update the hud next.
+ * @param guiManager the gui manager to draw from
+ * @param seconds how many seconds to put on the board
+ * @param lives remaining lives
+ * @param level the current level on
+ */
 void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int level);

@@ -31,6 +31,8 @@ function Player:AddPhysicsBody()
     position.y = 0
     position.z = 0
     PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
+    -- Temp added to disable gravity
+    PhysicsCollisionBodySetStatic(self.gameObjectID, true)
 end
 
 function Player:ReInit()

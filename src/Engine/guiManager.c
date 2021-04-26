@@ -47,6 +47,7 @@ void GuiManager_init(GuiManager *guiManager) {
     guiManager->hud.prevLevel = 0;
     guiManager->hud.prevLives = 0;
     guiManager->hud.prevSeconds = 0.0f;
+    guiManager->hud.updateHUD = false;
 
     //TODO:: TEMP
     guiManager->gravity = -1;
@@ -103,7 +104,7 @@ void GuiManager_draw(GuiManager *guiManager) {
    }
    //Must be drawn after menu
     if(guiManager->inGame) {
-        GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);    //TODO PETER: this is where the hud is being drawn from
+        GuiManager_drawHUD(guiManager);
     }
    glEnable(GL_LIGHTING);
 }
@@ -128,36 +129,44 @@ void GuiManager_startGame(void) {   //TODO: Peter dunno if you need this but its
     Game_init(state);
 }
 
-void GuiManager_stopGame(void) {    //TODO: Peter, and this is where it ends
-    StateManager_pop(&engine.sM);
+void GuiManager_stopGame(void) {
+    StateManager_top(&engine.sM)->endStateSafely = true;
 }
 
-void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level) {
+void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int level) {
+    guiManager->hud.updateHUD = true;
+    guiManager->hud.nextLives = lives;
+    guiManager->hud.nextLevel = level;
+    guiManager->hud.nextSeconds = seconds;
+}
+
+void GuiManager_drawHUD(GuiManager *guiManager) {
     assert(guiManager != NULL);
     nk_glfw3_new_frame();
     GuiManager_setHeightWidth(guiManager, 2, 18);
+    if (guiManager->hud.updateHUD) {
+        if (fabs((double) guiManager->hud.prevSeconds - guiManager->hud.nextSeconds) > 0.05) {// Useful when pausing or rendering too fast
+            strcpy(guiManager->hud.time, "Time: ");
+            sprintf(guiManager->hud.buffer, "%0.2f", guiManager->hud.nextSeconds);
+            strcat(guiManager->hud.time, guiManager->hud.buffer);
+            guiManager->hud.prevSeconds = guiManager->hud.nextSeconds;
+        }
 
-    if (fabs((double) guiManager->hud.prevSeconds - seconds) > 0.05) {     // Useful when pausing or rendering too fast
-        strcpy(guiManager->hud.time, "Time: ");
-        sprintf(guiManager->hud.buffer, "%0.2f", seconds);
-        strcat(guiManager->hud.time, guiManager->hud.buffer);
-        guiManager->hud.prevSeconds = seconds;
+        if (guiManager->hud.prevLives != guiManager->hud.nextLives) {
+            strcpy(guiManager->hud.lives, "Lives: ");
+            sprintf(guiManager->hud.buffer, "%i", guiManager->hud.nextLives);
+            strcat(guiManager->hud.lives, guiManager->hud.buffer);
+            guiManager->hud.prevLives = guiManager->hud.nextLives;
+        }
+
+        if (guiManager->hud.prevLevel != guiManager->hud.nextLevel ) {
+            strcpy(guiManager->hud.levels, "Level: ");
+            sprintf(guiManager->hud.buffer, "%i", guiManager->hud.nextLevel );
+            strcat(guiManager->hud.levels, guiManager->hud.buffer);
+            guiManager->hud.prevLevel = guiManager->hud.nextLevel ;
+        }
+        guiManager->hud.updateHUD = false;
     }
-
-    if(guiManager->hud.prevLives != lives) {
-        strcpy(guiManager->hud.lives, "Lives: ");
-        sprintf(guiManager->hud.buffer, "%i", lives);
-        strcat(guiManager->hud.lives, guiManager->hud.buffer);
-        guiManager->hud.prevLives = lives;
-    }
-
-    if (guiManager->hud.prevLevel != level) {
-        strcpy(guiManager->hud.levels, "Level: ");
-        sprintf(guiManager->hud.buffer, "%i", level);
-        strcat(guiManager->hud.levels, guiManager->hud.buffer);
-        guiManager->hud.prevLevel = level;
-    }
-
     if (nk_begin(guiManager->ctx, "", nk_rect(guiManager->glfwWidth/4, 0, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height, 3);
@@ -388,7 +397,7 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
             guiManager->options.settings = true;
         }
 
-        //Quit
+        //Exit
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "EXIT")) {
             GuiManager_optionsReset(guiManager);
@@ -420,7 +429,7 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
             guiManager->options.settings = true;
         }
 
-        //EXIT
+        //QUIT
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
             GuiManager_stopGame();

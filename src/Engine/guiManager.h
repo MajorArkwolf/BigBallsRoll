@@ -11,9 +11,13 @@ typedef struct Hud {
     char time[256];
     char lives[256];
     char levels[256];
+    int nextLives;
+    int nextLevel;
+    float nextSeconds;
     int prevLives;
     int prevLevel;
     float prevSeconds;
+    bool updateHUD;
 } Hud;
 
 typedef struct GuiManager {
@@ -137,4 +141,6 @@ void GuiManager_startGame(void);
  */
 void GuiManager_stopGame(void);
 
-void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level);
+void GuiManager_drawHUD(GuiManager *guiManager);
+
+void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int level);

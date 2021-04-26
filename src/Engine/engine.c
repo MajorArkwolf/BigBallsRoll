@@ -251,6 +251,7 @@ int Engine_run(int argc, char *argv[]) {
         }
         Update(frameTime);
         Draw();
+        StateManager_safeStateRemoval(&engine.sM);
     }
     glfwDestroyWindow(engine.window);
     glfwTerminate();

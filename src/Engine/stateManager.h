@@ -59,7 +59,7 @@ int StateManager_free(StateManager *stateManager);
 /**
  * Push a new state onto the stack
  * @param stateManager State Manager to push onto
- * @param state State to be added, the lifetime of the state must exceed that of the State Manager for memory safety.
+ * @param state State to be added, Ownership is transferred to the state manager and the lifetime of the state must exceed that of the State Manager for memory safety.
  * @return 0 on success and 1 on failure
  */
 int StateManager_push(StateManager *stateManager, State *state);

@@ -2,8 +2,6 @@
 #include <Engine/engine.h>
 #include "Engine/luaHelper.h"
 #include <assert.h>
-#include "Engine/guiManager.h"
-#include <BigBalls/physicsEngine.h>
 
 double mouse[2];
 

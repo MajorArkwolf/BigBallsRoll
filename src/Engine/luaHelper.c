@@ -365,6 +365,16 @@ int LuaHelper_LightPosition(lua_State *L) {
     return 0;
 }
 
+int LuaHelper_GUIHUDUpdate(lua_State *L) {
+    // Level, Lives, Time
+    int level = lua_tonumber(L, 1);
+    int lives = lua_tonumber(L, 2);
+    float time = lua_tonumber(L, 3);
+    GuiManager_hud(&engine.guiManager, time, lives, level);
+    lua_pop(L, 3);
+    return 0;
+}
+
 void LuaHelper_init() {
 
     // Register functions for lua.
@@ -422,6 +432,10 @@ void LuaHelper_init() {
     lua_setglobal(engine.lua, "LightSpecular");
     lua_pushcfunction(engine.lua, LuaHelper_LightPosition);
     lua_setglobal(engine.lua, "LightPosition");
+
+    //GUI
+    lua_pushcfunction(engine.lua, LuaHelper_GUIHUDUpdate);
+    lua_setglobal(engine.lua, "GUIUpdateHUD");
 
     lua_pushnumber(engine.lua, engine.seed);
     lua_setglobal(engine.lua, "seed");

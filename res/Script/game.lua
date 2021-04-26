@@ -79,16 +79,21 @@ end
 function Update()
     GenerateNextLevel()
     player:Update(deltaTime)
+    -- Check to see if the player is in the end zone
     if endNode:CheckEndTrigger(player) then
+        -- Begin destroying the world every tick, returns true when there is no more blocks to destroy
         if endNode:DestroyRandomBlock() then
+            -- Progress to next level
             NextLevel()
         end
     else
+        -- Check if the player has landed on the start node, if so we begin
         if startNode:CheckStartTrigger(player, deltaTime) then
             -- If game has started then let the timer continue
             timer = timer + deltaTime
         end
     end
+    GUIUpdateHUD(level, player.lives)
 end
 
 

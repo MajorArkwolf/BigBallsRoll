@@ -376,7 +376,7 @@ int LuaHelper_GUIHUDUpdate(lua_State *L) {
     int level = lua_tonumber(L, 1);
     int lives = lua_tonumber(L, 2);
     float time = lua_tonumber(L, 3);
-    GuiManager_hud(&engine.guiManager, time, lives, level);
+    GuiManager_updateHUD(&engine.guiManager, time, lives, level);
     lua_pop(L, 3);
     return 0;
 }

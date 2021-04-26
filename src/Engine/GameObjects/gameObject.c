@@ -4,7 +4,6 @@
 #include "Engine/modelManager.h"
 #include "Engine/engine.h"
 
-
 void GameObject_init(GameObject *gameObject) {
     gameObject->Name = NULL;
     gameObject->ModelID = 0;

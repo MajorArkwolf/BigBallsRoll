@@ -268,11 +268,6 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
     }
 }
 
-void PhysicsWorld_updateOOBB(CollisionBody *collisionBody){
-    assert(collisionBody != NULL);
-    // TODO: stub
-}
-
 void CollisionBody_setPos(CollisionBody *collisionBody,
                           float x,
                           float y,

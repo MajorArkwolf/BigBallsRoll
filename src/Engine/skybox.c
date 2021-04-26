@@ -11,6 +11,42 @@ void Skybox_loadTexture(void) {
     skybox[5] = TextureManager_getTexture(&engine.textureManager, engine.cwd, "skybox_bottom.jpg");
 }
 
+static float cube[8][3] = {
+    {-0.5f, -0.5f, -0.5f},  // 0
+    {-0.5f, -0.5f, 0.5f},   // 1
+    {-0.5f, 0.5f, -0.5f},   // 2
+    {-0.5f, 0.5f, 0.5f},    // 3
+    {0.5f, 0.5f, 0.5f},     // 4
+    {0.5f, 0.5f, -0.5f},    // 5
+    {0.5f, -0.5f, 0.5f},    // 6
+    {0.5f, -0.5f, -0.5f}    // 7
+};
+
+static float texCoords[4][2] = {
+    {0,0},
+    {0,1},
+    {1,0},
+    {1,1}
+};
+
+static int texIndex[6][4] = {
+    {0, 2, 3, 1},       // Front
+    {0, 2, 3, 1},       // Left
+    {0, 2, 3, 1},       // Back
+    {0, 2, 3, 1},       // Right
+    {1, 0, 2, 3},       // Top
+    {3, 2, 0, 1}        // Bottom
+};
+
+static int cubeIndex[6][4] = {
+    {7, 0, 2, 5},       // Front
+    {6, 7, 5, 4},       // Left
+    {1, 6, 4, 3},       // Back
+    {0, 1, 3, 2},       // Right
+    {2, 3, 4, 5},       // Top
+    {0, 1, 6, 7}        // Bottom
+};
+
 void Skybox_draw(void) {
     glPushMatrix();
 
@@ -28,77 +64,18 @@ void Skybox_draw(void) {
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    for(size_t i = 0; i < 6; ++i) {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glBindTexture(GL_TEXTURE_2D, skybox[i]->GLTextureID);
 
-    // Render the front quad
-    glBindTexture(GL_TEXTURE_2D, skybox[0]->GLTextureID);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-    glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
-    glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
-    glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-    glEnd();
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    // Render the left quad
-    glBindTexture(GL_TEXTURE_2D, skybox[1]->GLTextureID);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-    glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-    glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-    glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
-    glEnd();
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    // Render the back quad
-    glBindTexture(GL_TEXTURE_2D, skybox[2]->GLTextureID);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
-    glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-    glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
-    glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
-    glEnd();
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    // Render the right quad
-    glBindTexture(GL_TEXTURE_2D, skybox[3]->GLTextureID);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
-    glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
-    glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
-    glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
-    glEnd();
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    // Render the top quad
-    glBindTexture(GL_TEXTURE_2D, skybox[4]->GLTextureID);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
-    glTexCoord2f(0, 0); glVertex3f( -0.5f,  0.5f,  0.5f );
-    glTexCoord2f(1, 0); glVertex3f(  0.5f,  0.5f,  0.5f );
-    glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-    glEnd();
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    // Render the bottom quad
-    glBindTexture(GL_TEXTURE_2D, skybox[5]->GLTextureID);
-    glBegin(GL_QUADS);
-    glTexCoord2f(1, 1); glVertex3f( -0.5f, -0.5f, -0.5f );
-    glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
-    glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-    glTexCoord2f(0, 1); glVertex3f(  0.5f, -0.5f, -0.5f );
-    glEnd();
+        glBegin(GL_QUADS);
+            for(size_t j = 0; j < 4; ++j) {
+                glTexCoord2f(texCoords[texIndex[i][j]][0], texCoords[texIndex[i][j]][1]);
+                glVertex3f(cube[cubeIndex[i][j]][0], cube[cubeIndex[i][j]][1], cube[cubeIndex[i][j]][2]);
+            }
+        glEnd();
+    }
 
     // Restore enable bits and matrix
     glPopAttrib();

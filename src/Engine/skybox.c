@@ -11,7 +11,7 @@ void Skybox_loadTexture(void) {
     skybox[5] = TextureManager_getTexture(&engine.textureManager, engine.cwd, "skybox_bottom.jpg");
 }
 
-static float cube[8][3] = {
+float cube[8][3] = {
     {-0.5f, -0.5f, -0.5f},  // 0
     {-0.5f, -0.5f, 0.5f},   // 1
     {-0.5f, 0.5f, -0.5f},   // 2
@@ -22,14 +22,14 @@ static float cube[8][3] = {
     {0.5f, -0.5f, -0.5f}    // 7
 };
 
-static float texCoords[4][2] = {
+float texCoords[4][2] = {
     {0,0},
     {0,1},
     {1,0},
     {1,1}
 };
 
-static int texIndex[6][4] = {
+int texIndex[6][4] = {
     {0, 2, 3, 1},       // Front
     {0, 2, 3, 1},       // Left
     {0, 2, 3, 1},       // Back
@@ -38,7 +38,7 @@ static int texIndex[6][4] = {
     {3, 2, 0, 1}        // Bottom
 };
 
-static int cubeIndex[6][4] = {
+int cubeIndex[6][4] = {
     {7, 0, 2, 5},       // Front
     {6, 7, 5, 4},       // Left
     {1, 6, 4, 3},       // Back

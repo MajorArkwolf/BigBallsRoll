@@ -1,6 +1,10 @@
 #include "skybox.h"
 #include "OpenGL.h"
 #include "Engine/engine.h"
+#include "Engine/textureManager.h"
+
+//Skybox
+Texture *skybox[6];
 
 void Skybox_loadTexture(void) {
     skybox[0] = TextureManager_getTexture(&engine.textureManager, engine.cwd, "skybox_front.jpg");

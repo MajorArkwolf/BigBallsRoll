@@ -59,7 +59,7 @@ int MainMenu_keyDown(InputType inputType) {
 
 int MainMenu_keyUp(InputType inputType) {
     switch (inputType) {
-        case KEY_F1:
+        case KEY_ESC:
             GuiManager_drawToggle(&engine.guiManager);
             break;
         default:

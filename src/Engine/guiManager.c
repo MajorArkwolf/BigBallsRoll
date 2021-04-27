@@ -72,12 +72,12 @@ void GuiManager_drawToggle(GuiManager *guiManager) {
 
     GuiManager_optionsReset(guiManager);
     guiManager->options.menu = true;
-   if (!guiManager->guiDraw) {
+    if (!guiManager->guiDraw) {
         nk_window_close(guiManager->ctx, "Big Balls Roll! - Main Menu");
         nk_window_close(guiManager->ctx,"Big Balls Roll! - Game Menu");
         nk_window_close(guiManager->ctx,"Big Balls Roll! - Settings Menu");
         nk_window_close(guiManager->ctx,"Big Balls Roll! - Level Menu");
-   }
+    }
 
     if(!guiManager->inGame) {
         nk_window_close(guiManager->ctx, ""); //gui

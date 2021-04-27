@@ -2,8 +2,6 @@
 #include <Engine/engine.h>
 #include "Engine/luaHelper.h"
 #include <assert.h>
-#include "Engine/guiManager.h"
-#include <BigBalls/physicsEngine.h>
 
 double mouse[2];
 
@@ -95,6 +93,10 @@ void Game_NextLevel(State *state) {
 }
 
 int Game_destroy() {
+    lua_getglobal(engine.lua, "DeInit");
+    if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
     State_deregisterLights(StateManager_top(&engine.sM));
     PhysicsEngine_freePhysicsWorld(&engine.physicsEngine, StateManager_top(&engine.sM)->physicsWorld);
     return 0;

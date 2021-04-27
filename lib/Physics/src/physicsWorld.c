@@ -38,18 +38,21 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
     if (physicsWorld->collisionBodies != NULL) {
         for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
             CollisionBody_free(physicsWorld->collisionBodies[i]);
+            physicsWorld->collisionBodies[i] = NULL;
         }
-		free(physicsWorld);
+        free(physicsWorld->collisionBodies);
+        physicsWorld->collisionBodies = NULL;
     }
+    free(physicsWorld);
 }
 
 void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody) {
     assert(physicsWorld != NULL && collisionBody != NULL);
     // Allocate new, larger array
     if (physicsWorld->collisionBodies == NULL) {
-        physicsWorld->collisionBodies = calloc(1, sizeof(CollisionBody));
+        physicsWorld->collisionBodies = calloc(1, sizeof(CollisionBody *));
     } else {
-        physicsWorld->collisionBodies = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * (physicsWorld->numCollisionBodies + 1));
+        physicsWorld->collisionBodies = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody *) * (physicsWorld->numCollisionBodies + 1));
     }
     // Copy BoxCollider object into array
     physicsWorld->collisionBodies[physicsWorld->numCollisionBodies] = collisionBody;

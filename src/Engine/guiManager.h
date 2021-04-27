@@ -18,7 +18,6 @@ typedef struct Hud {
 
 typedef struct GuiManager {
     struct nk_context *ctx;
-    struct nk_context *hudCtx;
     struct nk_font_atlas *atlas;
     menuOption options;
     Hud hud;
@@ -30,10 +29,6 @@ typedef struct GuiManager {
     float xPos;
     float yPos;
     bool guiDraw;
-    bool processInput;
-    //TODO: TEMP ADD DEBUG CONFIG OR SOMETHING
-    int gravity;
-    bool debug;
 } GuiManager;
 
 /**

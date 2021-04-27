@@ -44,14 +44,9 @@ void GuiManager_init(GuiManager *guiManager) {
     guiManager->options.menu = true;
     guiManager->inGame = false;
     guiManager->guiDraw = false;
-    guiManager->processInput = false;
     guiManager->hud.prevLevel = 0;
     guiManager->hud.prevLives = 0;
     guiManager->hud.prevSeconds = 0.0f;
-
-    //TODO:: TEMP
-    guiManager->gravity = -1;
-    guiManager->debug = false;
 }
 
 void GuiManager_update(GuiManager *guiManager) {
@@ -68,9 +63,17 @@ void GuiManager_free(GuiManager *guiManager) {
 void GuiManager_drawToggle(GuiManager *guiManager) {
     assert(guiManager != NULL);
     guiManager->guiDraw = !guiManager->guiDraw;
-    engine.lockCamera = !guiManager->guiDraw;
+    engine.lockCamera = guiManager->inGame;
+
+    if(guiManager->inGame && guiManager->guiDraw) {
+        engine.lockCamera = false;
+    }
+
     GuiManager_optionsReset(guiManager);
     guiManager->options.menu = true;
+   /* if (!guiManager->guiDraw) {
+        nk_window_close(guiManager->ctx, "Big Balls Roll!");
+    }*/
 }
 
 void GuiManager_optionsReset(GuiManager *guiManager)  {
@@ -178,7 +181,7 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 2.3f);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll! - Level Menu", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 11, 1);
@@ -220,6 +223,8 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
             GuiManager_drawToggle(guiManager);
             guiManager->options.menu = true;
             guiManager->inGame = true;
+            guiManager->guiDraw = true;
+            GuiManager_drawToggle(guiManager);
 
             //TODO:: Peter, this updates name, seed, levels
         }
@@ -234,7 +239,7 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 1.35f);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll! - Settings Menu", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 20, 1);
@@ -365,19 +370,21 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 3);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll! - Main Menu", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         nk_label(guiManager->ctx, "MAIN MENU", NK_TEXT_CENTERED);
 
+        //New Game
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "NEW GAME")) {
             GuiManager_optionsReset(guiManager);
             guiManager->options.level = true;
         }
 
+        //SETTINGS
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "SETTINGS")) {
             GuiManager_optionsReset(guiManager);
@@ -400,7 +407,7 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
     GuiManager_setHeightWidth(guiManager, 2, 4);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll! - Game Menu", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title

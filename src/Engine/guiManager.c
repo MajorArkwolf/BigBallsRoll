@@ -84,10 +84,10 @@ void GuiManager_optionsReset(GuiManager *guiManager)  {
 
 void GuiManager_draw(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    glDisable(GL_LIGHTING);
-    GuiManager_update(guiManager);
 
     if(guiManager->guiDraw || guiManager->inGame) {
+        glDisable(GL_LIGHTING);
+        GuiManager_update(guiManager);
         nk_glfw3_new_frame();
         if(guiManager->inGame) {
             GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);    //TODO PETER: this is where the hud is being drawn from
@@ -109,8 +109,8 @@ void GuiManager_draw(GuiManager *guiManager) {
             }
         }
         nk_glfw3_render(NK_ANTI_ALIASING_ON);
+        glEnable(GL_LIGHTING);
    }
-   glEnable(GL_LIGHTING);
 }
 
 void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH) {

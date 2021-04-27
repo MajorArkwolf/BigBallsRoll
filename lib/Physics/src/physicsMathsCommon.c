@@ -1,4 +1,5 @@
 #include "include/BigBalls/physicsMathsCommon.h"
+#include <math.h>
 
 CollisionArrayContainer collisionArrayContainer_init() {
     CollisionArrayContainer cac;
@@ -80,4 +81,53 @@ PVec3* getAllBoxColliderNorms(BoxCollider box){
     res[5] = crossProductPVec3(&vecA, &vecB);
 
     return res;
+}
+
+BoxColliderVerts getBoxColliderVerts(BoxCollider* boxCollider){
+    BoxColliderVerts res;
+    Matrix41 vert1 = {boxCollider->xOffset,
+                      boxCollider->yOffset,
+                      boxCollider->zOffset,
+                      0}; // point to be transformed
+    Matrix41 vert2 = {boxCollider->xOffset + boxCollider->xLen,
+                      boxCollider->yOffset,
+                      boxCollider->zOffset,
+                      0}; // point to be transformed
+    Matrix41 vert3 = {boxCollider->xOffset,
+                      boxCollider->yOffset + boxCollider->yLen,
+                      boxCollider->zOffset,
+                      0}; // point to be transformed
+    Matrix41 vert4 = {boxCollider->xOffset,
+                      boxCollider->yOffset,
+                      boxCollider->zOffset + boxCollider->zLen,
+                      0}; // point to be transformed
+    Matrix41 vert5 = {boxCollider->xOffset + boxCollider->xLen,
+                      boxCollider->yOffset + boxCollider->yLen,
+                      boxCollider->zOffset,
+                      0}; // point to be transformed
+    Matrix41 vert6 = {boxCollider->xOffset + boxCollider->xLen,
+                      boxCollider->yOffset,
+                      boxCollider->zOffset + boxCollider->zLen,
+                      0}; // point to be transformed
+    Matrix41 vert7 = {boxCollider->xOffset,
+                      boxCollider->yOffset + boxCollider->yLen,
+                      boxCollider->zOffset + boxCollider->zLen,
+                      0}; // point to be transformed
+    Matrix41 vert8 = {boxCollider->xOffset + boxCollider->xLen,
+                      boxCollider->yOffset + boxCollider->yLen,
+                      boxCollider->zOffset + boxCollider->zLen,
+                      0}; // point to be transformed
+    res.verts[0] = vert1;
+    res.verts[1] = vert2;
+    res.verts[2] = vert3;
+    res.verts[3] = vert4;
+    res.verts[4] = vert5;
+    res.verts[5] = vert6;
+    res.verts[6] = vert7;
+    res.verts[7] = vert8;
+    return res;
+}
+
+float distance(Matrix41 a, Matrix41 b){
+    return sqrtf(powf((b.elem[0] - a.elem[0]), 2) + powf((b.elem[1] - a.elem[1]), 2) + powf(b.elem[2] - a.elem[2], 2));
 }

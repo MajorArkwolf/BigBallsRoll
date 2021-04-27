@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include "include/BigBalls/collisionBody.h"
+#include "include/BigBalls/physicsMathsCommon.h"
 
 void CollisionBody_init(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
@@ -148,51 +149,6 @@ void CollisionBody_stop(CollisionBody *collisionBody){
     collisionBody->velocity.data[2] = 0;
 }
 
-BoxColliderVerts getBoxColliderVerts(BoxCollider* boxCollider, Matrix41 transCollisionBodyPos){
-    BoxColliderVerts res;
-    Matrix41 vert1 = {boxCollider->xOffset,
-                      boxCollider->yOffset,
-                      boxCollider->zOffset,
-                      0}; // point to be transformed
-    Matrix41 vert2 = {boxCollider->xOffset + boxCollider->xLen,
-                      boxCollider->yOffset,
-                      boxCollider->zOffset,
-                      0}; // point to be transformed
-    Matrix41 vert3 = {boxCollider->xOffset,
-                      boxCollider->yOffset + boxCollider->yLen,
-                      boxCollider->zOffset,
-                      0}; // point to be transformed
-    Matrix41 vert4 = {boxCollider->xOffset,
-                      boxCollider->yOffset,
-                      boxCollider->zOffset + boxCollider->zLen,
-                      0}; // point to be transformed
-    Matrix41 vert5 = {boxCollider->xOffset + boxCollider->xLen,
-                      boxCollider->yOffset + boxCollider->yLen,
-                      boxCollider->zOffset,
-                      0}; // point to be transformed
-    Matrix41 vert6 = {boxCollider->xOffset + boxCollider->xLen,
-                      boxCollider->yOffset,
-                      boxCollider->zOffset + boxCollider->zLen,
-                      0}; // point to be transformed
-    Matrix41 vert7 = {boxCollider->xOffset,
-                      boxCollider->yOffset + boxCollider->yLen,
-                      boxCollider->zOffset + boxCollider->zLen,
-                      0}; // point to be transformed
-    Matrix41 vert8 = {boxCollider->xOffset + boxCollider->xLen,
-                      boxCollider->yOffset + boxCollider->yLen,
-                      boxCollider->zOffset + boxCollider->zLen,
-                      0}; // point to be transformed
-    res.verts[0] = vert1;
-    res.verts[1] = vert2;
-    res.verts[2] = vert3;
-    res.verts[3] = vert4;
-    res.verts[4] = vert5;
-    res.verts[5] = vert6;
-    res.verts[6] = vert7;
-    res.verts[7] = vert8;
-    return res;
-}
-
 void CollisionBody_updateAABB(CollisionBody *collisionBody){
     assert(collisionBody != NULL); // ensure that one collider exists before processing
     if (collisionBody->numOfBoxColliders != 0 || collisionBody->numOfSphereColliders != 0) {
@@ -215,10 +171,9 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
             Matrix44 T2 = createRotMat(collisionBody->BoxColliders[i]->xRot,
                                        collisionBody->BoxColliders[i]->yRot,
                                        collisionBody->BoxColliders[i]->zRot);
-            BoxColliderVerts verts = getBoxColliderVerts(collisionBody->BoxColliders[i], transCollisionBodyPos);
-
             Matrix44 T3 = matrixMultiplication44_44(T1, T2);
 
+            BoxColliderVerts verts = getBoxColliderVerts(collisionBody->BoxColliders[i]);
             float bGreatestX, bLowestX, bGreatestY, bLowestY, bGreatestZ, bLowestZ; // must be initialised to a point on a collider post-rotation
             bool bVarInit = false;
 

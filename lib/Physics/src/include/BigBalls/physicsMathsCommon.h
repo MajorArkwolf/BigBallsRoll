@@ -33,3 +33,7 @@ void collisionArrayContainer_free(CollisionArrayContainer* cac);
 Collision collision_init();
 
 PVec3* getAllBoxColliderNorms(BoxCollider box);
+
+BoxColliderVerts getBoxColliderVerts(BoxCollider* boxCollider);
+
+float distance(Matrix41 a, Matrix41 b);

@@ -84,6 +84,12 @@ void minMax(float val1, float val2, float* min, float* max){
     }
 }
 
+void min(float val, float* min){
+    if(val < *min){
+        *min = val;
+    }
+}
+
 void testPointMinMax(const float pos, const float len, float* min, float* max){
     if(len > 0){ // positive length
         if(pos + len > *max){

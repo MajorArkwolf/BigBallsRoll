@@ -97,7 +97,7 @@ void minMax(float val1, float val2, float* min, float* max){
     }
 }
 
-void min(float val, float* min){
+void checkMin(float val, float* min){
     if(val < *min){
         *min = val;
     }

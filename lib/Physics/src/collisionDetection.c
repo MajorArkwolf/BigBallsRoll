@@ -7,9 +7,6 @@
 BoxColliderVerts getBoxVerts(CollisionBody* c, BoxCollider* b){
     // apply all transforms to boxcollider
     Matrix44 T1 = createRotMat(c->xRot, c->yRot,c-> zRot);
-    Matrix41 cPos = {c->xPos, c->yPos, c->zPos};
-    Matrix41 newCPos = matrixMultiplication44_41(T1, cPos);
-
     Matrix44 T2 = createRotMat(b->xRot, b->yRot, b->zRot);
     Matrix44 T3 = matrixMultiplication44_44(T1, T2);
 
@@ -45,13 +42,12 @@ void determineCollisionDetails_BB(CollisionBody* ca, BoxCollider* ba, CollisionB
 
     // find closest two verts
     float cD = FLT_MAX;
-    Matrix41 ca1, ca2, cb1, cb2;
+    Matrix41 ca1, ca2, cb1;
     for(size_t i = 0; i < 8; ++i){
         for(size_t j = 0; j < 8; ++j){
             float d = distance(bcv1.verts[i], bcv2.verts[j]);
             if(d < cD){ // TODO: wont work if first is closest
                 ca2 = ca1; // shuffle the last closest down
-                cb2 = cb1;
                 ca1 = bcv1.verts[i];
                 cb1 = bcv2.verts[j];
                 cD = d;
@@ -84,19 +80,14 @@ void determineCollisionDetails_BS(CollisionBody* ca, BoxCollider* ba, CollisionB
 
     // find closest two verts
     float cD = FLT_MAX;
-    Matrix41 ca1, ca2;
+    Matrix41 ca1;
     ca1.elem[0] = 0;
     ca1.elem[1] = 0;
     ca1.elem[2] = 0;
     ca1.elem[3] = 0;
-    ca2.elem[0] = 0;
-    ca2.elem[1] = 0;
-    ca2.elem[2] = 0;
-    ca2.elem[3] = 0;
     for(size_t i = 0; i < 8; ++i){
         float d = distance(bcv1.verts[i], mcenb);
         if(d < cD){// TODO: wont work if first is closest
-            ca2 = ca1; // shuffle the last closest down
             ca1 = bcv1.verts[i];
             cD = d;
         }

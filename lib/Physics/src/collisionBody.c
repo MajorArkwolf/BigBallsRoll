@@ -159,10 +159,6 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
         Matrix44 T1 = createRotMat(collisionBody->xRot,
                                    collisionBody->yRot,
                                    collisionBody->zRot);
-        Matrix41 collisionBodyPos = {collisionBody->xPos,
-                                     collisionBody->yPos,
-                                     collisionBody->zPos,
-                                     0};
 
         // get all BoxCollider checkMin/max vertices
         for (size_t i = 0; i < collisionBody->numOfBoxColliders; ++i) { // for each collider

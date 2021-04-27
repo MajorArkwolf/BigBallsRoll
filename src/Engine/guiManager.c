@@ -44,6 +44,7 @@ void GuiManager_init(GuiManager *guiManager) {
     guiManager->options.menu = true;
     guiManager->inGame = false;
     guiManager->guiDraw = false;
+    guiManager->processInput = false;
     guiManager->hud.prevLevel = 0;
     guiManager->hud.prevLives = 0;
     guiManager->hud.prevSeconds = 0.0f;
@@ -86,25 +87,29 @@ void GuiManager_draw(GuiManager *guiManager) {
     glDisable(GL_LIGHTING);
     GuiManager_update(guiManager);
 
-    if(guiManager->guiDraw) {
-       if (guiManager->options.level) {
-           GuiManager_levelMenu(guiManager);
-       } else if (guiManager->options.settings) {
-           GuiManager_settingsMenu(guiManager);
-       } else if (guiManager->options.menu && guiManager->inGame) {
-           GuiManager_gameMenu(guiManager);
-       } else if (guiManager->options.menu && !guiManager->inGame) {
-               GuiManager_mainMenu(guiManager);
-       /*} else if (guiManager->options.developer) {
+    if(guiManager->guiDraw || guiManager->inGame) {
+        nk_glfw3_new_frame();
+        if(guiManager->inGame) {
+            GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);    //TODO PETER: this is where the hud is being drawn from
+        }
+
+        if(guiManager->guiDraw) {
+            if (guiManager->options.level) {
+                GuiManager_levelMenu(guiManager);
+            } else if (guiManager->options.settings) {
+                GuiManager_settingsMenu(guiManager);
+            } else if (guiManager->options.menu && guiManager->inGame) {
+                GuiManager_gameMenu(guiManager);
+            } else if (guiManager->options.menu && !guiManager->inGame) {
+                GuiManager_mainMenu(guiManager);
+                /*} else if (guiManager->options.developer) {
            GuiManager_developerMenu(guiManager);*/
-       } else if (guiManager->options.exit) {
-           engine.running = false;
-       }
+            } else if (guiManager->options.exit) {
+                engine.running = false;
+            }
+        }
+        nk_glfw3_render(NK_ANTI_ALIASING_ON);
    }
-   //Must be drawn after menu
-    if(guiManager->inGame) {
-        GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);    //TODO PETER: this is where the hud is being drawn from
-    }
    glEnable(GL_LIGHTING);
 }
 
@@ -134,7 +139,6 @@ void GuiManager_stopGame(void) {    //TODO: Peter, and this is where it ends
 
 void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
     GuiManager_setHeightWidth(guiManager, 2, 18);
 
     if (fabs((double) guiManager->hud.prevSeconds - seconds) > 0.05) {     // Useful when pausing or rendering too fast
@@ -159,19 +163,17 @@ void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level)
     }
 
     if (nk_begin(guiManager->ctx, "", nk_rect(guiManager->glfwWidth/4, 0, guiManager->width, guiManager->height),
-                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
+                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR|NK_WINDOW_NOT_INTERACTIVE)) {
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height, 3);
         nk_label(guiManager->ctx, guiManager->hud.time, NK_TEXT_CENTERED);
         nk_label(guiManager->ctx, guiManager->hud.lives, NK_TEXT_CENTERED);
         nk_label(guiManager->ctx, guiManager->hud.levels, NK_TEXT_CENTERED);
     }
     nk_end(guiManager->ctx);
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
 void GuiManager_levelMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 2.3f);
 
@@ -224,13 +226,10 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
 
     }
     nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
 void GuiManager_settingsMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 1.35f);
 
@@ -308,8 +307,6 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
         }
     }
     nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
 /*void GuiManager_developerMenu(GuiManager *guiManager) {
@@ -364,7 +361,6 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
 
 void GuiManager_mainMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 3);
 
@@ -388,7 +384,7 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
             guiManager->options.settings = true;
         }
 
-        //Quit
+        //EXIT
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "EXIT")) {
             GuiManager_optionsReset(guiManager);
@@ -396,13 +392,10 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
         }
     }
     nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
 void GuiManager_gameMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 4);
 
@@ -420,7 +413,7 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
             guiManager->options.settings = true;
         }
 
-        //EXIT
+        //QUIT
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
             GuiManager_stopGame();
@@ -431,8 +424,6 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
         }
     }
     nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
 void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {

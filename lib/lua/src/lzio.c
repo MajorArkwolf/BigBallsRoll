@@ -56,7 +56,7 @@ size_t luaZ_read (ZIO *z, void *b, size_t n) {
         z->p--;
       }
     }
-    m = (n <= z->n) ? n : z->n;  /* min. between n and z->n */
+    m = (n <= z->n) ? n : z->n;  /* checkMin. between n and z->n */
     memcpy(b, z->p, m);
     z->n -= m;
     z->p += m;

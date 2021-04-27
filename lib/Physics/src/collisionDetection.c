@@ -31,7 +31,10 @@ PVec3 getSphereCentre(CollisionBody* c, SphereCollider* s){
     Matrix41 cPos = {c->xPos, c->yPos, c->zPos};
     Matrix41 newCPos = matrixMultiplication44_41(T1, cPos);
 
-    PVec3 newSPos = {.data[0] = newCPos.elem[0] + s->xOffset, .data[1] = newCPos.elem[0] + s->yOffset, .data[2] = newCPos.elem[2] + s->zOffset};
+    PVec3 newSPos;
+    newSPos.data[0] = newCPos.elem[0] + s->xOffset;
+    newSPos.data[1] = newCPos.elem[0] + s->yOffset;
+    newSPos.data[2] = newCPos.elem[2] + s->zOffset;
 
     return newSPos;
 }
@@ -63,9 +66,9 @@ void determineCollisionDetails_BB(CollisionBody* ca, BoxCollider* ba, CollisionB
 
     // determine penetration
     float minV = FLT_MAX;
-    min(ca1.elem[0] - cb1.elem[0], &minV);
-    min(ca1.elem[1] - cb1.elem[1], &minV);
-    min(ca1.elem[2] - cb1.elem[2], &minV);
+    checkMin(ca1.elem[0] - cb1.elem[0], &minV);
+    checkMin(ca1.elem[1] - cb1.elem[1], &minV);
+    checkMin(ca1.elem[2] - cb1.elem[2], &minV);
     *pen = minV;
 }
 
@@ -74,7 +77,10 @@ void determineCollisionDetails_BS(CollisionBody* ca, BoxCollider* ba, CollisionB
     BoxColliderVerts bcv1 = getBoxVerts(ca, ba);
     PVec3 cenb = getSphereCentre(cb, sb);
 
-    Matrix41 mcenb = {.elem[0] = cenb.data[0], .elem[1] = cenb.data[1], .elem[2] = cenb.data[2]};
+    Matrix41 mcenb;
+    mcenb.elem[0] = cenb.data[0];
+    mcenb.elem[1] = cenb.data[1];
+    mcenb.elem[2] = cenb.data[2];
 
     // find closest two verts
     float cD = FLT_MAX;
@@ -95,9 +101,9 @@ void determineCollisionDetails_BS(CollisionBody* ca, BoxCollider* ba, CollisionB
 
     // pen
     float minV = FLT_MAX;
-    min(ca1.elem[0] - mcenb.elem[0], &minV);
-    min(ca1.elem[1] - mcenb.elem[1], &minV);
-    min(ca1.elem[2] - mcenb.elem[2], &minV);
+    checkMin(ca1.elem[0] - mcenb.elem[0], &minV);
+    checkMin(ca1.elem[1] - mcenb.elem[1], &minV);
+    checkMin(ca1.elem[2] - mcenb.elem[2], &minV);
     *pen = minV;
 }
 
@@ -105,8 +111,14 @@ void determineCollisionDetails_SS(CollisionBody* ca, SphereCollider* sa, Collisi
     PVec3 cena = getSphereCentre(ca, sa);
     PVec3 cenb = getSphereCentre(cb, sb);
 
-    Matrix41 mcena = {.elem[0] = cena.data[0], .elem[1] = cena.data[1], .elem[2] = cena.data[2]};
-    Matrix41 mcenb = {.elem[0] = cenb.data[0], .elem[1] = cenb.data[1], .elem[2] = cenb.data[2]};
+    Matrix41 mcena;
+    mcena.elem[0] = cena.data[0];
+    mcena.elem[1] = cena.data[1];
+    mcena.elem[2] = cena.data[2];
+    Matrix41 mcenb;
+    mcenb.elem[0] = cenb.data[0];
+    mcenb.elem[1] = cenb.data[1];
+    mcenb.elem[2] = cenb.data[2];
 
     *pen = sa->radius + sb->radius - distance(mcena, mcenb);
 
@@ -117,7 +129,7 @@ void determineCollisionDetails_SS(CollisionBody* ca, SphereCollider* sa, Collisi
 
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
     assert(a != NULL && b != NULL);
-    // the min and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
+    // the checkMin and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
     float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
 
     // determine which coordinate is larger than the other, for each coordinate pair of each CollisionBody
@@ -137,7 +149,7 @@ bool testAABBCollision(CollisionBody *a, CollisionBody *b){
 bool testBoxColliderCollision(BoxCollider *a, BoxCollider *b, PVec3* fn, float* pen){
     assert(a != NULL && b != NULL);
 
-    // the min and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
+    // the checkMin and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
     float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
 
     // determine which coordinate is larger than the other, for each coordinate pair of each CollisionBody

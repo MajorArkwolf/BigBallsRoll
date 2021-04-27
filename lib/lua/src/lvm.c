@@ -185,7 +185,7 @@ static int forlimit (lua_State *L, lua_Integer init, const TValue *lim,
       if (step < 0) return 1;  /* initial value must be less than it */
       *p = LUA_MAXINTEGER;  /* truncate */
     }
-    else {  /* it is less than min integer */
+    else {  /* it is less than checkMin integer */
       if (step > 0) return 1;  /* initial value must be greater than it */
       *p = LUA_MININTEGER;  /* truncate */
     }

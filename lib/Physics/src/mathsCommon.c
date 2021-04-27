@@ -19,10 +19,23 @@ float toRad(float deg){
 }
 
 Matrix44 identity44() {
-    Matrix44 res = {.elem[0] = {1, 0, 0, 0},
-                    .elem[1] = {0, 1, 0, 0},
-                    .elem[2] = {0, 0, 1, 0},
-                    .elem[3] = {0, 0, 0, 1}};
+    Matrix44 res;
+    res.elem[0][0] = 1;
+    res.elem[0][1] = 0;
+    res.elem[0][2] = 0;
+    res.elem[0][3] = 0;
+    res.elem[1][0] = 0;
+    res.elem[1][1] = 1;
+    res.elem[1][2] = 0;
+    res.elem[1][3] = 0;
+    res.elem[2][0] = 0;
+    res.elem[2][1] = 0;
+    res.elem[2][2] = 1;
+    res.elem[2][3] = 0;
+    res.elem[3][0] = 0;
+    res.elem[3][1] = 0;
+    res.elem[3][2] = 0;
+    res.elem[3][3] = 1;
     return res;
 }
 
@@ -110,7 +123,11 @@ void testPointMinMax(const float pos, const float len, float* min, float* max){
 }
 
 Matrix44 rotateAboutVec(float xVec, float yVec, float zVec, float rotDeg){
-    Matrix44 res = {.elem[0][3] = 0, .elem[1][3] = 0, .elem[2][3] = 0, .elem[3] = {0, 0, 0, 1}};
+    Matrix44 res;
+    res.elem[0][3] = 0;
+    res.elem[1][3] = 0;
+    res.elem[2][3] = 0;
+    res.elem[3][3] = 1;
     float rot = rotDeg * M_PI/180;
     // rotation implementation taken from OpenGL documentation https://docs.gl/gl2/glRotate
     res.elem[0][0] = (powf(xVec, 2) * (1 - cosf(rot))) + cosf(rot);

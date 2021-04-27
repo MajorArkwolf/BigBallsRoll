@@ -163,9 +163,8 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
                                      collisionBody->yPos,
                                      collisionBody->zPos,
                                      0};
-        Matrix41 transCollisionBodyPos = matrixMultiplication44_41(T1, collisionBodyPos);
 
-        // get all BoxCollider min/max vertices
+        // get all BoxCollider checkMin/max vertices
         for (size_t i = 0; i < collisionBody->numOfBoxColliders; ++i) { // for each collider
             // BoxCollider rotation matrix
             Matrix44 T2 = createRotMat(collisionBody->BoxColliders[i]->xRot,
@@ -192,7 +191,7 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
                 testPointMinMax(transformedVert.elem[0] + collisionBody->zPos, 0, &bLowestZ, &bGreatestZ);
 
                 // update collision body proposed AABB
-                if (!varInit) { // init min/max values
+                if (!varInit) { // init checkMin/max values
                     greatestX = lowestX = transformedVert.elem[0] + collisionBody->xPos;
                     greatestY = lowestY = transformedVert.elem[1] + collisionBody->yPos;
                     greatestZ = lowestZ = transformedVert.elem[2] + collisionBody->zPos;
@@ -206,7 +205,7 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
             BoxCollider_updateAABB(collisionBody->BoxColliders[i], bLowestX, bLowestY, bLowestZ, bGreatestX, bGreatestY, bGreatestZ);
         }
 
-        // get all SphereCollider min/max vertices
+        // get all SphereCollider checkMin/max vertices
         for (size_t i = 0; i < collisionBody->numOfSphereColliders; ++i) {
             // allocate position vector of SphereCollider
             Matrix41 pos = {collisionBody->xPos + collisionBody->SphereColliders[i]->xOffset,
@@ -223,7 +222,7 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
                 greatestZ = lowestZ = finalPos.elem[2] + collisionBody->SphereColliders[i]->radius;
                 varInit = true;
             }
-            // check for new min/max points, "len" extends in both directions from position
+            // check for new checkMin/max points, "len" extends in both directions from position
             testPointMinMax(finalPos.elem[0], collisionBody->SphereColliders[i]->radius, &lowestX, &greatestX);
             testPointMinMax(finalPos.elem[0], -1.f * collisionBody->SphereColliders[i]->radius, &lowestX, &greatestX);
             testPointMinMax(finalPos.elem[1], collisionBody->SphereColliders[i]->radius, &lowestY, &greatestY);

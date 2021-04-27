@@ -81,10 +81,10 @@ void Draw(void) {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    Skybox_draw();
     Camera_lookAt(cam);
     StateManager_draw(&engine.sM, 0.0f);
     PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
-    Skybox_draw();
     glfwSwapBuffers(engine.window);
 }
 

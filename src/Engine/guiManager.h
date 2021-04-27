@@ -33,9 +33,6 @@ typedef struct GuiManager {
     float xPos;
     float yPos;
     bool guiDraw;
-    //TODO: TEMP ADD DEBUG CONFIG OR SOMETHING
-    int gravity;
-    bool debug;
 } GuiManager;
 
 /**

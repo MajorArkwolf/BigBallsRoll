@@ -71,9 +71,16 @@ void GuiManager_drawToggle(GuiManager *guiManager) {
 
     GuiManager_optionsReset(guiManager);
     guiManager->options.menu = true;
-   /* if (!guiManager->guiDraw) {
-        nk_window_close(guiManager->ctx, "Big Balls Roll!");
-    }*/
+   if (!guiManager->guiDraw) {
+        nk_window_close(guiManager->ctx, "Big Balls Roll! - Main Menu");
+        nk_window_close(guiManager->ctx,"Big Balls Roll! - Game Menu");
+        nk_window_close(guiManager->ctx,"Big Balls Roll! - Settings Menu");
+        nk_window_close(guiManager->ctx,"Big Balls Roll! - Level Menu");
+   }
+
+    if(!guiManager->inGame) {
+        nk_window_close(guiManager->ctx, ""); //gui
+    }
 }
 
 void GuiManager_optionsReset(GuiManager *guiManager)  {
@@ -220,17 +227,18 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
             GuiManager_startGame();
 
             GuiManager_optionsReset(guiManager);
-            GuiManager_drawToggle(guiManager);
             guiManager->options.menu = true;
             guiManager->inGame = true;
             guiManager->guiDraw = true;
-            GuiManager_drawToggle(guiManager);
 
             //TODO:: Peter, this updates name, seed, levels
         }
 
     }
     nk_end(guiManager->ctx);
+    if(guiManager->inGame) {
+        GuiManager_drawToggle(guiManager);
+    }
 }
 
 void GuiManager_settingsMenu(GuiManager *guiManager) {
@@ -424,13 +432,15 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
             GuiManager_stopGame();
-            GuiManager_drawToggle(&engine.guiManager);
             GuiManager_optionsReset(guiManager);
             guiManager->options.menu = true;
             guiManager->inGame = false;
         }
     }
     nk_end(guiManager->ctx);
+    if(!guiManager->inGame) {
+        GuiManager_drawToggle(&engine.guiManager);
+    }
 }
 
 void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {

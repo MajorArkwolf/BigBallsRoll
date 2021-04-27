@@ -101,7 +101,7 @@ void GuiManager_draw(GuiManager *guiManager) {
         GuiManager_update(guiManager);
         nk_glfw3_new_frame();
         if(guiManager->inGame) {
-            GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);    //TODO PETER: this is where the hud is being drawn from
+            GuiManager_drawHUD(guiManager);    //TODO PETER: this is where the hud is being drawn from
         }
 
         if(guiManager->guiDraw) {

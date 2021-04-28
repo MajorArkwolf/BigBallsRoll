@@ -101,7 +101,7 @@ void GuiManager_draw(GuiManager *guiManager) {
         GuiManager_update(guiManager);
         nk_glfw3_new_frame();
         if(guiManager->inGame) {
-            GuiManager_drawHUD(guiManager);    //TODO PETER: this is where the hud is being drawn from
+            GuiManager_drawHUD(guiManager);
         }
 
         if(guiManager->guiDraw) {
@@ -113,8 +113,6 @@ void GuiManager_draw(GuiManager *guiManager) {
                 GuiManager_gameMenu(guiManager);
             } else if (guiManager->options.menu && !guiManager->inGame) {
                 GuiManager_mainMenu(guiManager);
-                /*} else if (guiManager->options.developer) {
-           GuiManager_developerMenu(guiManager);*/
             } else if (guiManager->options.exit) {
                 engine.running = false;
             }
@@ -136,7 +134,7 @@ void GuiManager_setMenuPosition(GuiManager *guiManager, float divideW, float div
     guiManager->yPos = (float) guiManager->glfwHeight / divideH;
 }
 
-void GuiManager_startGame(void) {   //TODO: Peter dunno if you need this but its where the game starts
+void GuiManager_startGame(void) {
     State *state;
     state = malloc(sizeof (State));
     State_init(state);
@@ -239,8 +237,6 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
             guiManager->options.menu = true;
             guiManager->inGame = true;
             guiManager->guiDraw = true;
-
-            //TODO:: Peter, this updates name, seed, levels
         }
 
     }
@@ -266,12 +262,6 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
             GuiManager_optionsReset(guiManager);
             guiManager->options.menu = true;
         }
-       /* nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
-        nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
-        if (nk_button_label(guiManager->ctx, "DEVELOPER")) {
-            GuiManager_optionsReset(guiManager);
-            guiManager->options.developer = true;
-        }*/
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 4.3f, 1);
 
@@ -329,56 +319,6 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
     }
     nk_end(guiManager->ctx);
 }
-
-/*void GuiManager_developerMenu(GuiManager *guiManager) {
-    assert(guiManager != NULL);
-    nk_glfw3_new_frame();
-
-    GuiManager_setHeightWidth(guiManager, 2, 3);
-
-
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
-                 NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
-
-        nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 1);
-        nk_label(guiManager->ctx, "DEVELOPER SETTINGS", NK_TEXT_CENTERED);
-        nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 4);
-        if (nk_button_label(guiManager->ctx, "MAIN MENU")) {
-            GuiManager_optionsReset(guiManager);
-            guiManager->options.menu = true;
-        }
-        nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
-        nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
-        if (nk_button_label(guiManager->ctx, "SETTINGS")) {
-            GuiManager_optionsReset(guiManager);
-            guiManager->options.settings = true;
-        }
-
-        nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 2.5f, 1);
-
-        //Physics settings
-        if (nk_group_begin(guiManager->ctx, "Physics", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
-            nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 3);
-            nk_property_int(guiManager->ctx, "Gravity:", -100, &guiManager->gravity, 100, 1, 10);
-            nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 3);
-            nk_label(guiManager->ctx, "Debug Render: ", NK_TEXT_LEFT);
-            if (nk_option_label(guiManager->ctx, "Enabled", guiManager->debug == true)) guiManager->debug = true;
-            if (nk_option_label(guiManager->ctx, "Disabled", guiManager->debug == false)) guiManager->debug = false;
-            nk_group_end(guiManager->ctx);
-        }
-
-        //Confirm button
-        nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 1);
-        if (nk_button_label(guiManager->ctx, "Confirm")) {
-            //TODO:: pass the stuff
-            printf("Gravity: %i\n", guiManager->gravity);
-            printf("Debug: %i\n", guiManager->debug);
-        }
-    }
-    nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
-}*/
 
 void GuiManager_mainMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);

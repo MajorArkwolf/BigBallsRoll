@@ -48,7 +48,6 @@ int MainMenu_update(float deltaTime) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
-    engine.lockCamera = false;
     return 0;
 }
 
@@ -71,6 +70,8 @@ int MainMenu_keyDown(InputType inputType) {
         case KEY_D:
             cam->MoveRight = true;
             break;
+        case KEY_F1:
+            Engine_toggleCameraLock();
         default:
             break;
     }
@@ -112,6 +113,7 @@ void MainMenu_init(State *state) {
     state->keyDown = MainMenu_keyDown;
     state->keyUp = MainMenu_keyUp;
     state->mouseMovement = MainMenu_mouseMovement;
+    engine.lockCamera = false;
     char file[] = "mainMenu.lua";
     LuaHelper_loadScript(file);
     LuaHelper_init();

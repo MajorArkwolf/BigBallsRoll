@@ -1,7 +1,6 @@
 #include "skybox.h"
 #include "OpenGL.h"
 #include "Engine/engine.h"
-#include "Engine/textureManager.h"
 
 //Work around for windows
 #ifndef GL_CLAMP_TO_EDGE

@@ -1,24 +1,20 @@
 #include "closingScreen.h"
 #include <Engine/engine.h>
 
+
 int ClosingScreen_draw(float deltaTime) {
     glBindTexture(GL_TEXTURE_2D, closingImage->GLTextureID);
     glBegin(GL_QUADS);
-        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
-        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
+        glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
+        glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
+        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
     glEnd();
 
     return 0;
 }
 
 int ClosingScreen_keyDown(InputType inputType) {
-    if (inputType == KEY_ESC) {
-        StateManager_pop(&engine.sM);
-    } else {
-        engine.running = false;
-    }
     return 0;
 }
 
@@ -54,9 +50,11 @@ void ClosingScreen_init(State *state) {
     state->destroy = ClosingScreen_destroy;
     state->physicsWorld = NULL;
 
-    closingImage = TextureManager_getTexture(&engine.textureManager, engine.cwd, "smileyFace.png");
+    closingImage = TextureManager_getTexture(&engine.textureManager, engine.cwd, "endScreen.png");
 
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     cam->Position.X = -0.4f;
     engine.lockCamera = false;
+
+    engine.guiManager.guiDraw = true;
 }

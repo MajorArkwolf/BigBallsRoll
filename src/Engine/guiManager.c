@@ -95,11 +95,11 @@ void GuiManager_draw(GuiManager *guiManager) {
        } else if (guiManager->options.menu && guiManager->inGame) {
            GuiManager_gameMenu(guiManager);
        } else if (guiManager->options.menu && !guiManager->inGame) {
-               GuiManager_mainMenu(guiManager);
+           GuiManager_mainMenu(guiManager);
        } else if (guiManager->options.developer) {
            GuiManager_developerMenu(guiManager);
        } else if (guiManager->options.exit) {
-
+           GuiManager_exitMenu(guiManager);
        }
    }
    //Must be drawn after menu
@@ -402,6 +402,7 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "EXIT")) {
             GuiManager_optionsReset(guiManager);
+            guiManager->options.exit = true;
             State *state;
             state = malloc(sizeof (State));
             State_init(state);
@@ -447,6 +448,34 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
     nk_end(guiManager->ctx);
 
     nk_glfw3_render(NK_ANTI_ALIASING_ON);
+}
+
+void GuiManager_exitMenu(GuiManager *guiManager) {
+    assert(guiManager != NULL);
+    nk_glfw3_new_frame();
+    GuiManager_setHeightWidth(guiManager, 8, 20);
+
+    if (nk_begin(guiManager->ctx, "QuitScreen Menu", nk_rect(100, guiManager->glfwHeight - 150, 240, 66),
+                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
+        nk_layout_row_static(guiManager->ctx, 54, 240, 1);
+        if (nk_button_label(guiManager->ctx, "MENU")) {
+            GuiManager_optionsReset(guiManager);
+            guiManager->options.menu = true;
+            StateManager_pop(&engine.sM);  //TODO: Change to safe pop from other branch after merge.
+        }
+    }
+    nk_end(guiManager->ctx);
+
+    if (nk_begin(guiManager->ctx, "QuitScreen Exit", nk_rect(guiManager->glfwWidth - 350, guiManager->glfwHeight - 150, 240, 66),
+                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
+        nk_layout_row_static(guiManager->ctx, 54, 240, 1);
+        if (nk_button_label(guiManager->ctx, "EXIT")) {
+            engine.running = false;
+        }
+    }
+    nk_end(guiManager->ctx);
+    nk_glfw3_render(NK_ANTI_ALIASING_ON);
+
 }
 
 void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {

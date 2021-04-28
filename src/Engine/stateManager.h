@@ -33,6 +33,8 @@ typedef struct State {
     fnPtrInput keyUp;
     fnPtrDblDbl mouseMovement;
     fnPtrIntInt mouseKeys;
+    bool endStateSafely;
+    bool isStatePaused;
 } State;
 
 /// A Stack implementation that holds a stack of states
@@ -127,6 +129,13 @@ int StateManager_mouseMove(StateManager *stateManager, double x, double y);
  * @return
  */
 int StateManager_mouseKeys(StateManager *stateManager, int button, int buttonState);
+
+/**
+ * Checks to see if the state has requested it to end and will safely remove itself
+ * at the end of the loop to ensure nothing is referencing it before it terminates.
+ * @param stateManager the current active state manager.
+ */
+void StateManager_safeStateRemoval(StateManager *stateManager);
 
 /**
  * Initialises a base state for use

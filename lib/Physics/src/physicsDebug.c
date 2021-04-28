@@ -1,11 +1,10 @@
 #include "include/BigBalls/physicsDebug.h"
 #include <assert.h>
-#include <stdio.h>
 
 //AABB face order
 const size_t AABBFaceOrder[36] = {2,1,0,0,3,2,5,4,1,1,2,5,7,6,4,4,5,7,3,0,6,6,7,3,4,6,0,0,1,4,5,2,3,3,7,5};
 //Face colours
-const size_t BroadPhaseDebugColour[3] = {255,255,0}; // Yellow
+const size_t BroadPhaseDebugColour[3] = {234,234,47}; // GOLDEN FIZZ
 
 void PhysicsDebug_dataInit(DebugData *debug) {
     assert(debug != NULL);
@@ -80,14 +79,16 @@ void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd) {
     DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
     DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
 
-    const size_t numFaceIndices = 36;
+    const size_t numFaces = 12;
 
-    for (size_t i = 0; i < numFaceIndices; ++i) {
-        //Push back index
-        DynamicArray_pushBackSizeT(dd->faceIndexes, beforeMaxLengthVert + AABBFaceOrder[i] * 3);
+    for (size_t i = 0; i < numFaces; ++i) {
         //Push back RGB
         DynamicArray_pushBackSizeT(dd->faceIndexes, BroadPhaseDebugColour[0]);
         DynamicArray_pushBackSizeT(dd->faceIndexes, BroadPhaseDebugColour[1]);
         DynamicArray_pushBackSizeT(dd->faceIndexes, BroadPhaseDebugColour[2]);
+        for (size_t j = i * 3; j < i * 3 + 3; ++j) {
+            //Push back 3 index to make one face
+            DynamicArray_pushBackSizeT(dd->faceIndexes, beforeMaxLengthVert + AABBFaceOrder[j] * 3);
+        }
     }
 }

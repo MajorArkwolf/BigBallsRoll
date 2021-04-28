@@ -139,4 +139,8 @@ void GuiManager_stopGame(void);
 
 void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level);
 
+/**
+ * Displays two buttons at the exit screen of the game, an exit confirmation.
+ * @param guiManager The guiManager to update.
+ */
 void GuiManager_exitMenu(GuiManager *guiManager);

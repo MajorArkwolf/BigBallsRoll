@@ -12,6 +12,6 @@ void PlayerConfig_init(PlayerConfig *playerConfig) {
     playerConfig->height = 1080;
     playerConfig->horizontalLock = false;
     playerConfig->windowedMode = true;
-    strcpy(playerConfig->name, "The Rookie");
-    playerConfig->nameLength = 10;
+    strcpy(playerConfig->name, "BallMaster27");
+    playerConfig->nameLength = 12;
 }

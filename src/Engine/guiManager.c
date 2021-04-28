@@ -211,7 +211,7 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
         //Name
         if (nk_group_begin(guiManager->ctx, "Name",  NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 11, 3);
-            nk_edit_string(guiManager->ctx, NK_EDIT_FIELD | NK_EDIT_GOTO_END_ON_ACTIVATE, engine.playerConfig.name, &engine.playerConfig.nameLength, 256, nk_filter_ascii);
+            nk_edit_string(guiManager->ctx, NK_EDIT_FIELD | NK_EDIT_AUTO_SELECT, engine.playerConfig.name, &engine.playerConfig.nameLength, 256, nk_filter_ascii);
 
             nk_group_end(guiManager->ctx);
         }

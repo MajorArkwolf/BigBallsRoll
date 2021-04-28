@@ -7,6 +7,12 @@
 
 bool paused = false;
 
+InputType konamiCode[] = {KEY_UP_ARROW, KEY_UP_ARROW, KEY_DOWN_ARROW,
+                        KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW,
+                        KEY_LEFT_ARROW, KEY_RIGHT_ARROW, KEY_A, KEY_B};
+size_t konamiCodeTracker = 0;
+bool konamiCodeEntered = false;
+
 void PauseMenu(bool desiredState) {
     if (desiredState != paused) {
         if (paused) {
@@ -22,6 +28,31 @@ void PauseMenu(bool desiredState) {
             }
             State_deregisterLights(StateManager_top(&engine.sM));
             paused = true;
+        }
+    }
+}
+
+void ActivateKonami(InputType inputType) {
+    if (konamiCodeEntered == false && inputType == konamiCode[konamiCodeTracker]) {
+        ++konamiCodeTracker;
+    } else {
+        konamiCodeTracker = 0;
+    }
+    if (konamiCodeTracker == 10) {
+        konamiCodeTracker = 0;
+        konamiCodeEntered = true;
+        size_t konami = TextureManager_findTextureID(&engine.textureManager, "Konami.png");
+        size_t modelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
+        Model *model = ModelManager_getModel(&engine.modelManager, modelID);
+        model->Mesh->Materials->DiffuseTexture = TextureManager_getTextureUsingID(&engine.textureManager, konami);
+        ALuint unlock = 0;
+        if (AudioManager_findSound(&engine.audioManager, "unlock.ogg", &unlock)) {
+            Sound *sound = AudioManager_getSound(&engine.audioManager, unlock);
+            if (sound != NULL) {
+                State *state = StateManager_top(&engine.sM);
+                GameObject_registerSoundSource(&state->gameObjects[0]);
+                AudioEngine_play(state->gameObjects[0].SoundID, sound);
+            }
         }
     }
 }
@@ -55,22 +86,6 @@ int MainMenu_update(float deltaTime) {
 int MainMenu_keyDown(InputType inputType) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     switch (inputType) {
-        case KEY_UP_ARROW:
-        case KEY_W:
-            cam->MoveForward = true;
-            break;
-        case KEY_DOWN_ARROW:
-        case KEY_S:
-            cam->MoveBackward = true;
-            break;
-        case KEY_LEFT_ARROW:
-        case KEY_A:
-            cam->MoveLeft = true;
-            break;
-        case KEY_RIGHT_ARROW:
-        case KEY_D:
-            cam->MoveRight = true;
-            break;
         default:
             break;
     }
@@ -93,6 +108,7 @@ int MainMenu_keyUp(InputType inputType) {
         default:
             break;
     }
+    ActivateKonami(inputType);
     return 0;
 }
 

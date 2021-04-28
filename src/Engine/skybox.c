@@ -73,6 +73,8 @@ void Skybox_draw(void) {
     glDisable(GL_CULL_FACE);
     glDisable(GL_BLEND);
 
+    glColor4f(1,1,1,1);
+
     for(size_t i = 0; i < 6; ++i) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

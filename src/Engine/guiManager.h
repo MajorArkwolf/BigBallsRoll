@@ -3,7 +3,7 @@
 typedef struct GLFWwindow GLFWwindow;
 
 typedef struct menuOption {
-    bool menu, level, settings, exit, developer;
+    bool menu, level, settings, exit;
 } menuOption;
 
 typedef struct Hud {
@@ -158,3 +158,9 @@ void GuiManager_drawHUD(GuiManager *guiManager);
  * @param level the current level on
  */
 void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int level);
+
+/**
+ * Closes all any inactive windows, although there is an issue since Nuklear sets the pointer to the last open window, meaning sometimes a menu is active.
+ * @param guiManager the guiManager with the windows to close.
+ */
+void GuiManager_closeInactiveWindows(GuiManager *guiManager);

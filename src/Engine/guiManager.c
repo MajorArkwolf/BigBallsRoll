@@ -48,10 +48,7 @@ void GuiManager_init(GuiManager *guiManager) {
     guiManager->hud.prevLevel = 0;
     guiManager->hud.prevLives = 0;
     guiManager->hud.prevSeconds = 0.0f;
-
-    //TODO:: TEMP
-    guiManager->gravity = -1;
-    guiManager->debug = false;
+    guiManager->hud.updateHUD = false;
 }
 
 void GuiManager_update(GuiManager *guiManager) {
@@ -68,9 +65,24 @@ void GuiManager_free(GuiManager *guiManager) {
 void GuiManager_drawToggle(GuiManager *guiManager) {
     assert(guiManager != NULL);
     guiManager->guiDraw = !guiManager->guiDraw;
-    engine.lockCamera = !guiManager->guiDraw;
+    engine.lockCamera = guiManager->inGame;
+
+    if(guiManager->inGame && guiManager->guiDraw) {
+        engine.lockCamera = false;
+    }
+
     GuiManager_optionsReset(guiManager);
     guiManager->options.menu = true;
+    if (!guiManager->guiDraw) {
+        nk_window_close(guiManager->ctx, "Big Balls Roll! - Main Menu");
+        nk_window_close(guiManager->ctx,"Big Balls Roll! - Game Menu");
+        nk_window_close(guiManager->ctx,"Big Balls Roll! - Settings Menu");
+        nk_window_close(guiManager->ctx,"Big Balls Roll! - Level Menu");
+    }
+
+    if(!guiManager->inGame) {
+        nk_window_close(guiManager->ctx, ""); //gui
+    }
 }
 
 void GuiManager_optionsReset(GuiManager *guiManager)  {
@@ -84,29 +96,31 @@ void GuiManager_optionsReset(GuiManager *guiManager)  {
 
 void GuiManager_draw(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    glDisable(GL_LIGHTING);
-    GuiManager_update(guiManager);
 
-    if(guiManager->guiDraw) {
-       if (guiManager->options.level) {
-           GuiManager_levelMenu(guiManager);
-       } else if (guiManager->options.settings) {
-           GuiManager_settingsMenu(guiManager);
-       } else if (guiManager->options.menu && guiManager->inGame) {
-           GuiManager_gameMenu(guiManager);
-       } else if (guiManager->options.menu && !guiManager->inGame) {
-           GuiManager_mainMenu(guiManager);
-       } else if (guiManager->options.developer) {
-           GuiManager_developerMenu(guiManager);
-       } else if (guiManager->options.exit) {
-           GuiManager_exitMenu(guiManager);
-       }
+    if(guiManager->guiDraw || guiManager->inGame) {
+        glDisable(GL_LIGHTING);
+        GuiManager_update(guiManager);
+        nk_glfw3_new_frame();
+        if(guiManager->inGame) {
+            GuiManager_drawHUD(guiManager);
+        }
+
+        if(guiManager->guiDraw) {
+            if (guiManager->options.level) {
+                GuiManager_levelMenu(guiManager);
+            } else if (guiManager->options.settings) {
+                GuiManager_settingsMenu(guiManager);
+            } else if (guiManager->options.menu && guiManager->inGame) {
+                GuiManager_gameMenu(guiManager);
+            } else if (guiManager->options.menu && !guiManager->inGame) {
+                GuiManager_mainMenu(guiManager);
+            } else if (guiManager->options.exit) {
+                GuiManager_exitMenu(guiManager);
+            }
+        }
+        nk_glfw3_render(NK_ANTI_ALIASING_ON);
+        glEnable(GL_LIGHTING);
    }
-   //Must be drawn after menu
-    if(guiManager->inGame) {
-        GuiManager_hud(guiManager, (float) glfwGetTime(), 3, 1);
-    }
-   glEnable(GL_LIGHTING);
 }
 
 void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divideH) {
@@ -130,54 +144,59 @@ void GuiManager_startGame(void) {
 }
 
 void GuiManager_stopGame(void) {
-    StateManager_pop(&engine.sM);
+    StateManager_top(&engine.sM)->endStateSafely = true;
 }
 
-void GuiManager_hud(GuiManager *guiManager, float seconds, int lives, int level) {
+void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int level) {
+    guiManager->hud.updateHUD = true;
+    guiManager->hud.nextLives = lives;
+    guiManager->hud.nextLevel = level;
+    guiManager->hud.nextSeconds = seconds;
+}
+
+void GuiManager_drawHUD(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
     GuiManager_setHeightWidth(guiManager, 2, 18);
+    if (guiManager->hud.updateHUD) {
+        if (fabs((double) guiManager->hud.prevSeconds - guiManager->hud.nextSeconds) > 0.05) {// Useful when pausing or rendering too fast
+            strcpy(guiManager->hud.time, "Time: ");
+            sprintf(guiManager->hud.buffer, "%0.2f", guiManager->hud.nextSeconds);
+            strcat(guiManager->hud.time, guiManager->hud.buffer);
+            guiManager->hud.prevSeconds = guiManager->hud.nextSeconds;
+        }
 
-    if (fabs((double) guiManager->hud.prevSeconds - seconds) > 0.05) {     // Useful when pausing or rendering too fast
-        strcpy(guiManager->hud.time, "Time: ");
-        sprintf(guiManager->hud.buffer, "%0.2f", seconds);
-        strcat(guiManager->hud.time, guiManager->hud.buffer);
-        guiManager->hud.prevSeconds = seconds;
+        if (guiManager->hud.prevLives != guiManager->hud.nextLives) {
+            strcpy(guiManager->hud.lives, "Lives: ");
+            sprintf(guiManager->hud.buffer, "%i", guiManager->hud.nextLives);
+            strcat(guiManager->hud.lives, guiManager->hud.buffer);
+            guiManager->hud.prevLives = guiManager->hud.nextLives;
+        }
+
+        if (guiManager->hud.prevLevel != guiManager->hud.nextLevel ) {
+            strcpy(guiManager->hud.levels, "Level: ");
+            sprintf(guiManager->hud.buffer, "%i", guiManager->hud.nextLevel );
+            strcat(guiManager->hud.levels, guiManager->hud.buffer);
+            guiManager->hud.prevLevel = guiManager->hud.nextLevel ;
+        }
+        guiManager->hud.updateHUD = false;
     }
-
-    if(guiManager->hud.prevLives != lives) {
-        strcpy(guiManager->hud.lives, "Lives: ");
-        sprintf(guiManager->hud.buffer, "%i", lives);
-        strcat(guiManager->hud.lives, guiManager->hud.buffer);
-        guiManager->hud.prevLives = lives;
-    }
-
-    if (guiManager->hud.prevLevel != level) {
-        strcpy(guiManager->hud.levels, "Level: ");
-        sprintf(guiManager->hud.buffer, "%i", level);
-        strcat(guiManager->hud.levels, guiManager->hud.buffer);
-        guiManager->hud.prevLevel = level;
-    }
-
     if (nk_begin(guiManager->ctx, "", nk_rect(guiManager->glfwWidth/4, 0, guiManager->width, guiManager->height),
-                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
+                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR|NK_WINDOW_NOT_INTERACTIVE)) {
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height, 3);
         nk_label(guiManager->ctx, guiManager->hud.time, NK_TEXT_CENTERED);
         nk_label(guiManager->ctx, guiManager->hud.lives, NK_TEXT_CENTERED);
         nk_label(guiManager->ctx, guiManager->hud.levels, NK_TEXT_CENTERED);
     }
     nk_end(guiManager->ctx);
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
 void GuiManager_levelMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 2.3f);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll! - Level Menu", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 11, 1);
@@ -193,7 +212,7 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
         //Name
         if (nk_group_begin(guiManager->ctx, "Name",  NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 11, 3);
-            nk_edit_string(guiManager->ctx, NK_EDIT_FIELD | NK_EDIT_GOTO_END_ON_ACTIVATE, engine.playerConfig.name, &engine.playerConfig.nameLength, 256, nk_filter_ascii);
+            nk_edit_string(guiManager->ctx, NK_EDIT_FIELD | NK_EDIT_AUTO_SELECT, engine.playerConfig.name, &engine.playerConfig.nameLength, 256, nk_filter_ascii);
 
             nk_group_end(guiManager->ctx);
         }
@@ -216,30 +235,25 @@ void GuiManager_levelMenu(GuiManager *guiManager) {
             GuiManager_startGame();
 
             GuiManager_optionsReset(guiManager);
-            GuiManager_drawToggle(guiManager);
             guiManager->options.menu = true;
             guiManager->inGame = true;
-
-            //TODO:: pass the stuff
-            printf("name: %s\n", engine.playerConfig.name);
-            printf("Seed: %i\n", engine.playerConfig.seed);
-            printf("Levels: %i\n", engine.playerConfig.levels);
+            guiManager->guiDraw = true;
         }
 
     }
     nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
+    if(guiManager->inGame) {
+        GuiManager_drawToggle(guiManager);
+    }
 }
 
 void GuiManager_settingsMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 1.35f);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll! - Settings Menu", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 20, 1);
@@ -249,26 +263,19 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
             GuiManager_optionsReset(guiManager);
             guiManager->options.menu = true;
         }
-        nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
-        nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
-        if (nk_button_label(guiManager->ctx, "DEVELOPER")) {
-            GuiManager_optionsReset(guiManager);
-            guiManager->options.developer = true;
-        }
 
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 4.3f, 1);
 
         //Window settings
         if (nk_group_begin(guiManager->ctx, "Window", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Width:", 1280, &engine.playerConfig.width, 3840, 10, 10);
+            nk_property_int(guiManager->ctx, "Width:", 1280, &engine.playerConfig.width, 7680, 10, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Height:", 720, &engine.playerConfig.height, 2160, 10, 10);
+            nk_property_int(guiManager->ctx, "Height:", 720, &engine.playerConfig.height, 4320, 10, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
             nk_label(guiManager->ctx, "Windowed mode: ", NK_TEXT_LEFT);
-
-            if (nk_option_label(guiManager->ctx, "Enabled", engine.playerConfig.windowedMode == true)) engine.playerConfig.windowedMode = true;
-            if (nk_option_label(guiManager->ctx, "Disabled", engine.playerConfig.windowedMode == false)) engine.playerConfig.windowedMode = false;
+            if (nk_option_label(guiManager->ctx, "Enabled", engine.playerConfig.windowedMode == true)) {engine.playerConfig.windowedMode = true;}
+            if (nk_option_label(guiManager->ctx, "Disabled", engine.playerConfig.windowedMode == false)) {engine.playerConfig.windowedMode = false;}
             nk_group_end(guiManager->ctx);
         }
 
@@ -292,9 +299,9 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
             nk_label(guiManager->ctx, "Sensitivity: ", NK_TEXT_LEFT);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Vertical:", 0, &engine.playerConfig.verticalSens, 100, 10, 10);
+            nk_property_int(guiManager->ctx, "Vertical:", 0, &engine.playerConfig.verticalSens, 100, 1, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
-            nk_property_int(guiManager->ctx, "Horizontal:", 0, &engine.playerConfig.horizontalSens, 100, 10, 10);
+            nk_property_int(guiManager->ctx, "Horizontal:", 0, &engine.playerConfig.horizontalSens, 100, 1, 10);
 
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 21, 3);
             nk_label(guiManager->ctx, "Horizontal lock: ", NK_TEXT_LEFT);
@@ -308,97 +315,40 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
         //Confirm button
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 20, 1);
         if (nk_button_label(guiManager->ctx, "Confirm")) {
-            //TODO:: pass the stuff
-            printf("Volume: %i\n", engine.playerConfig.volume);
-            printf("sound: %i\n", engine.playerConfig.sound);
-            printf("V sens: %i\n", engine.playerConfig.verticalSens);
-            printf("H sens: %i\n", engine.playerConfig.horizontalSens);
-            printf("H Lock: %i\n", engine.playerConfig.horizontalLock);
-            glfwSetWindowSize(engine.window, engine.playerConfig.width, engine.playerConfig.height);    //TODO: remove, just for testing ui scaling atm
+            Engine_updateConfig();
         }
     }
     nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
-}
-
-void GuiManager_developerMenu(GuiManager *guiManager) {
-    assert(guiManager != NULL);
-    nk_glfw3_new_frame();
-
-    GuiManager_setHeightWidth(guiManager, 2, 3);
-
-    /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
-                 NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
-
-        nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 1);
-        nk_label(guiManager->ctx, "DEVELOPER SETTINGS", NK_TEXT_CENTERED);
-        nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 4);
-        if (nk_button_label(guiManager->ctx, "MAIN MENU")) {
-            GuiManager_optionsReset(guiManager);
-            guiManager->options.menu = true;
-        }
-        nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
-        nk_label(guiManager->ctx, "", NK_TEXT_CENTERED);
-        if (nk_button_label(guiManager->ctx, "SETTINGS")) {
-            GuiManager_optionsReset(guiManager);
-            guiManager->options.settings = true;
-        }
-
-        nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 2.5f, 1);
-
-        //Physics settings
-        if (nk_group_begin(guiManager->ctx, "Physics", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
-            nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 3);
-            nk_property_int(guiManager->ctx, "Gravity:", -100, &guiManager->gravity, 100, 1, 10);
-            nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 3);
-            nk_label(guiManager->ctx, "Debug Render: ", NK_TEXT_LEFT);
-            if (nk_option_label(guiManager->ctx, "Enabled", guiManager->debug == true)) guiManager->debug = true;
-            if (nk_option_label(guiManager->ctx, "Disabled", guiManager->debug == false)) guiManager->debug = false;
-            nk_group_end(guiManager->ctx);
-        }
-
-        //Confirm button
-        nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 9, 1);
-        if (nk_button_label(guiManager->ctx, "Confirm")) {
-            //TODO:: pass the stuff
-            printf("Gravity: %i\n", guiManager->gravity);
-            printf("Debug: %i\n", guiManager->debug);
-        }
-    }
-    nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
 void GuiManager_mainMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 3);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll! - Main Menu", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         nk_label(guiManager->ctx, "MAIN MENU", NK_TEXT_CENTERED);
 
+        //New Game
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "NEW GAME")) {
             GuiManager_optionsReset(guiManager);
             guiManager->options.level = true;
         }
 
+        //SETTINGS
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "SETTINGS")) {
             GuiManager_optionsReset(guiManager);
             guiManager->options.settings = true;
         }
 
-        //Quit
+        //Exit
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "EXIT")) {
             GuiManager_optionsReset(guiManager);
@@ -411,18 +361,15 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
         }
     }
     nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
 }
 
 void GuiManager_gameMenu(GuiManager *guiManager) {
     assert(guiManager != NULL);
-    nk_glfw3_new_frame();
 
     GuiManager_setHeightWidth(guiManager, 2, 4);
 
     /* GUI */
-    if (nk_begin(guiManager->ctx, "Big Balls Roll!", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "Big Balls Roll! - Game Menu", nk_rect(guiManager->xPos, guiManager->yPos, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_TITLE)) {
 
         //Menu title
@@ -435,19 +382,19 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
             guiManager->options.settings = true;
         }
 
-        //EXIT
+        //QUIT
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
             GuiManager_stopGame();
-            GuiManager_drawToggle(&engine.guiManager);
             GuiManager_optionsReset(guiManager);
             guiManager->options.menu = true;
             guiManager->inGame = false;
         }
     }
     nk_end(guiManager->ctx);
-
-    nk_glfw3_render(NK_ANTI_ALIASING_ON);
+    if(!guiManager->inGame) {
+        GuiManager_drawToggle(&engine.guiManager);
+    }
 }
 
 void GuiManager_exitMenu(GuiManager *guiManager) {

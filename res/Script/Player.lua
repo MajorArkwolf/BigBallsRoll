@@ -3,6 +3,7 @@ local Player = {}
 function Player:Init(position)
     self.gameObjectID = GameObjectRegister()
     self.position = position
+    self.startPosition = position
     GameObjectSetPosition(self.gameObjectID, position.x, position.y, position.z)
     GameObjectSetModel(self.gameObjectID, "Ball.obj")
     self.camera = dofile("res/Script/ArcBallCamera.lua")
@@ -14,6 +15,7 @@ function Player:Init(position)
     self.playerMoveOn = false
     self.rotatePlayerOn = false
     self.velocity = 4
+    self.playerLives = 3
     self.mouseSensitivityX = 3
     self.mouseSensitivityY = 3
     self.camera:Update(0.0, self.gameObjectID, self.mouseSensitivityX)
@@ -29,6 +31,8 @@ function Player:AddPhysicsBody()
     position.y = 0
     position.z = 0
     PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
+    -- Temp added to disable gravity
+    PhysicsCollisionBodySetStatic(self.gameObjectID, true)
 end
 
 function Player:ReInit()
@@ -49,6 +53,17 @@ function Player:Fall(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
     self.position.y = self.position.y - (7 * deltaTime)
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+end
+
+function Player:IsPlayerDead()
+    if (self.position.y < -20) then
+        self.playerLives = self.playerLives - 1
+        if (self.playerLives == 0) then
+             -- ExitGame()
+        else
+            self.position = self.startPosition
+        end
+    end
 end
 
 function Player:Move(deltaTime)
@@ -78,15 +93,16 @@ end
 function Player:Update(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
     self.rotation = GameObjectGetRotation(self.gameObjectID)
-    if self.rotatePlayerOn then
-        self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime * self.mouseSensitivityX)
+    if self.rotatePlayerOn or not PlayerConfig_mouseXLock then
+        self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime * PlayerConfig_mouseXSensitivity)
     end
     if self.playerMoveOn then
         self:Move(deltaTime)
     end
+    self:IsPlayerDead()
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
-    self.camera:Update(deltaTime, self.gameObjectID, self.mouseSensitivityY)
+    self.camera:Update(deltaTime, self.gameObjectID, PlayerConfig_mouseYSensitivity)
 end
 
 return Player

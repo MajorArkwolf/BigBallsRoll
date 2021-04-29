@@ -33,6 +33,8 @@ typedef struct State {
     fnPtrInput keyUp;
     fnPtrDblDbl mouseMovement;
     fnPtrIntInt mouseKeys;
+    bool endStateSafely;
+    bool isStatePaused;
 } State;
 
 /// A Stack implementation that holds a stack of states
@@ -59,15 +61,15 @@ int StateManager_free(StateManager *stateManager);
 /**
  * Push a new state onto the stack
  * @param stateManager State Manager to push onto
- * @param state State to be added, the lifetime of the state must exceed that of the State Manager for memory safety.
+ * @param state State to be added, Ownership is transferred to the state manager and the lifetime of the state must exceed that of the State Manager for memory safety.
  * @return 0 on success and 1 on failure
  */
 int StateManager_push(StateManager *stateManager, State *state);
 
 /**
  * Pop the top state off the stack
- * @param stateManager
- * @return
+ * @param stateManager State Manager to pop off, the state is freed and set to NULL
+ * @return  0 on success and 1 on failure
  */
 int StateManager_pop(StateManager *stateManager);
 
@@ -127,6 +129,13 @@ int StateManager_mouseMove(StateManager *stateManager, double x, double y);
  * @return
  */
 int StateManager_mouseKeys(StateManager *stateManager, int button, int buttonState);
+
+/**
+ * Checks to see if the state has requested it to end and will safely remove itself
+ * at the end of the loop to ensure nothing is referencing it before it terminates.
+ * @param stateManager the current active state manager.
+ */
+void StateManager_safeStateRemoval(StateManager *stateManager);
 
 /**
  * Initialises a base state for use

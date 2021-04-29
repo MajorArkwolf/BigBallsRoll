@@ -251,6 +251,7 @@ int Engine_run(int argc, char *argv[]) {
         }
         Update(frameTime);
         Draw();
+        StateManager_safeStateRemoval(&engine.sM);
     }
     glfwDestroyWindow(engine.window);
     glfwTerminate();
@@ -298,7 +299,7 @@ void Engine_loadConfig() {
     //Get Configured Seed.
     lua_getglobal(engine.lua, "seed");
     if (lua_isnumber(engine.lua, 0) == 0) {
-        engine.seed = lua_tonumber(engine.lua, -1);
+        engine.playerConfig.seed = lua_tonumber(engine.lua, -1);
     }
     //Get master volume
     lua_getglobal(engine.lua, "master_volume");
@@ -313,4 +314,33 @@ void Engine_toggleCameraLock() {
 
 void Engine_cameraLock(bool lockCamera) {
     engine.lockCamera = lockCamera;
+}
+
+void UpdateWindow() {
+    int xpos = 0;
+    int ypos = 0;
+    glfwGetWindowPos(engine.window, &xpos, &ypos);
+    if (engine.playerConfig.windowedMode) {
+        glfwSetWindowMonitor(engine.window,
+                             NULL,
+                             xpos,
+                             ypos,
+                             engine.playerConfig.width,
+                             engine.playerConfig.height,
+                             60);
+    } else {
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwSetWindowMonitor(engine.window,
+                                glfwGetPrimaryMonitor(),
+                                0,
+                                0,
+                                mode->width,
+                                mode->height,
+                                mode->refreshRate);
+    }
+}
+
+void Engine_updateConfig() {
+    UpdateWindow();
+    LuaHelper_PlayerConfig();
 }

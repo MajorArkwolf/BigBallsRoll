@@ -50,27 +50,7 @@ int MainMenu_update(float deltaTime) {
 }
 
 int MainMenu_keyDown(InputType inputType) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
     switch (inputType) {
-        case KEY_ESC:
-            GuiManager_drawToggle(&engine.guiManager);
-            break;
-        case KEY_UP_ARROW:
-        case KEY_W:
-            cam->MoveForward = true;
-            break;
-        case KEY_DOWN_ARROW:
-        case KEY_S:
-            cam->MoveBackward = true;
-            break;
-        case KEY_LEFT_ARROW:
-        case KEY_A:
-            cam->MoveLeft = true;
-            break;
-        case KEY_RIGHT_ARROW:
-        case KEY_D:
-            cam->MoveRight = true;
-            break;
         default:
             break;
     }
@@ -78,23 +58,9 @@ int MainMenu_keyDown(InputType inputType) {
 }
 
 int MainMenu_keyUp(InputType inputType) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
     switch (inputType) {
-        case KEY_UP_ARROW:
-        case KEY_W:
-            cam->MoveForward = false;
-            break;
-        case KEY_DOWN_ARROW:
-        case KEY_S:
-            cam->MoveBackward = false;
-            break;
-        case KEY_LEFT_ARROW:
-        case KEY_A:
-            cam->MoveLeft = false;
-            break;
-        case KEY_RIGHT_ARROW:
-        case KEY_D:
-            cam->MoveRight = false;
+        case KEY_ESC:
+            GuiManager_drawToggle(&engine.guiManager);
             break;
         default:
             break;

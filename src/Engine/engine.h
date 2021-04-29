@@ -28,7 +28,6 @@ typedef struct Engine {
     float fov;
     bool lockCamera;
     bool fullScreen;
-    int seed;
     bool running;
     lua_State *lua;
     GLFWwindow* window;
@@ -64,3 +63,8 @@ void Engine_stop();
  * Load the config lua to set the default values.
  */
 void Engine_loadConfig();
+
+/**
+ * Updates the config settings and pushes them to their appropriate spots
+ */
+void Engine_updateConfig();

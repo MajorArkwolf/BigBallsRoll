@@ -64,6 +64,7 @@ void GuiManager_free(GuiManager *guiManager) {
 
 void GuiManager_drawToggle(GuiManager *guiManager) {
     assert(guiManager != NULL);
+    nk_glfw3_new_frame();
     guiManager->guiDraw = !guiManager->guiDraw;
     engine.lockCamera = guiManager->inGame;
 

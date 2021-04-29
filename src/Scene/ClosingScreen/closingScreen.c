@@ -50,7 +50,7 @@ void ClosingScreen_init(State *state) {
     state->destroy = ClosingScreen_destroy;
     state->physicsWorld = NULL;
 
-    closingImage = TextureManager_getTexture(&engine.textureManager, engine.cwd, "endScreen.png");
+    closingImage = TextureManager_getTexture(&engine.textureManager, engine.cwd, "EndScreen.png");
 
     Camera *cam = &StateManager_top(&engine.sM)->camera;
     cam->Position.X = -0.4f;

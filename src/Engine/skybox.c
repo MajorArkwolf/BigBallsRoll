@@ -56,38 +56,40 @@ int cubeIndex[6][4] = {
 };
 
 void Skybox_draw(void) {
-    glPushMatrix();
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
-    // Reset and transform the matrix.
-    glLoadIdentity();
-    gluLookAt(
-        0,0,0,
-        cam->Front.X, cam->Front.Y, cam->Front.Z,
-        0,1,0);
+    if(StateManager_top(&engine.sM)->skyboxDraw) {
+        glPushMatrix();
+        Camera *cam = &StateManager_top(&engine.sM)->camera;
+        // Reset and transform the matrix.
+        glLoadIdentity();
+        gluLookAt(
+            0, 0, 0,
+            cam->Front.X, cam->Front.Y, cam->Front.Z,
+            0, 1, 0);
 
-    glPushAttrib(GL_ENABLE_BIT);
-    glEnable(GL_TEXTURE_2D);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_BLEND);
+        glPushAttrib(GL_ENABLE_BIT);
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_BLEND);
 
-    glColor4f(1,1,1,1);
+        glColor4f(1, 1, 1, 1);
 
-    for(size_t i = 0; i < 6; ++i) {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glBindTexture(GL_TEXTURE_2D, skybox[i]->GLTextureID);
+        for (size_t i = 0; i < 6; ++i) {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glBindTexture(GL_TEXTURE_2D, skybox[i]->GLTextureID);
 
-        glBegin(GL_QUADS);
-            for(size_t j = 0; j < 4; ++j) {
+            glBegin(GL_QUADS);
+            for (size_t j = 0; j < 4; ++j) {
                 glTexCoord2f(texCoords[texIndex[i][j]][0], texCoords[texIndex[i][j]][1]);
                 glVertex3f(cube[cubeIndex[i][j]][0], cube[cubeIndex[i][j]][1], cube[cubeIndex[i][j]][2]);
             }
-        glEnd();
-    }
+            glEnd();
+        }
 
-    // Restore enable bits and matrix
-    glPopAttrib();
-    glPopMatrix();
+        // Restore enable bits and matrix
+        glPopAttrib();
+        glPopMatrix();
+    }
 }

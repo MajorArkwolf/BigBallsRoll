@@ -1,4 +1,5 @@
 #pragma  once
+#include "stdbool.h"
 
 /**
  * Loads the 6 skybox textures into the skybox global.

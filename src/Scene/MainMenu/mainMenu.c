@@ -127,6 +127,7 @@ void MainMenu_init(State *state) {
     state->keyDown = MainMenu_keyDown;
     state->keyUp = MainMenu_keyUp;
     state->mouseMovement = MainMenu_mouseMovement;
+    state->skyboxDraw = true;
     engine.lockCamera = false;
     char file[] = "mainMenu.lua";
     LuaHelper_loadScript(file);

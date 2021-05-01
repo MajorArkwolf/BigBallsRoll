@@ -137,6 +137,8 @@ void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
         PVec3 gravity = PVec3MultiplyScalar(&physicsWorld->gravity, deltaTime);
         //cb->velocity = addPVec3(&gravity, &cb->velocity); TODO: Reenable once collision detection is working.
         // Fake terminal velocity
+
+        //All calculations should be before terminal velocity.
         FakeTerminalVelocity(&cb->velocity);
         PVec3 newVel = PVec3MultiplyScalar(&cb->velocity, deltaTime);
         cb->xPos += newVel.data[0];

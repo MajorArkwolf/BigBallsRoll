@@ -49,6 +49,7 @@ void ClosingScreen_init(State *state) {
     state->mouseKeys = ClosingScreen_mouseKeys;
     state->destroy = ClosingScreen_destroy;
     state->physicsWorld = NULL;
+    state->skyboxDraw = false;
 
     closingImage = TextureManager_getTexture(&engine.textureManager, engine.cwd, "EndScreen.png");
 

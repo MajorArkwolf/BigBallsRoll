@@ -2,6 +2,7 @@
 #include "Engine/OpenGL.h"
 #include "Engine/engine.h"
 #include "Engine/stateManager.h"
+#include <BigBalls/collisionBody.h>
 
 //Global Debug Data
 DebugData dd;
@@ -55,4 +56,8 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
         }
         glPopAttrib();
     }
+}
+
+void PhysicsInterface_addForce(CollisionBody *cb, float xForce, float yForce, float zForce) {
+    CollisionBody_addForce(cb, xForce, yForce, zForce);
 }

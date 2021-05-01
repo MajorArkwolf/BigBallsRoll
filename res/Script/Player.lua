@@ -32,7 +32,7 @@ function Player:AddPhysicsBody()
     position.z = 0
     PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
     -- Temp added to disable gravity
-    PhysicsCollisionBodySetStatic(self.gameObjectID, true)
+    --PhysicsCollisionBodySetStatic(self.gameObjectID, true)
 end
 
 function Player:ReInit()
@@ -72,21 +72,28 @@ function Player:Move(deltaTime)
     front.y = 0.0
     front.z = math.cos(math.rad(self.rotation.y))
     local rightNormal = CalculateRightVector(front)
+    local force = {}
+    force.x = 0.0
+    force.y = 0.0
+    force.z = 0.0
     if self.forward == true then
-        self.position.x = self.position.x + (front.x * self.velocity * deltaTime)
-        self.position.z = self.position.z + (front.z * self.velocity * deltaTime)
+        force.x = (front.x * self.velocity)
+        force.z = (front.z * self.velocity)
     end
     if self.backward == true then
-        self.position.x = self.position.x + (front.x * self.velocity * deltaTime * -1)
-        self.position.z = self.position.z + (front.z * self.velocity * deltaTime * -1)
+        force.x = (front.x * self.velocity * -1)
+        force.z = (front.z * self.velocity * -1)
     end
     if self.right == true then
-        self.position.x = self.position.x + (rightNormal.x * self.velocity * deltaTime * -1)
-        self.position.z = self.position.z + (rightNormal.z * self.velocity * deltaTime * -1)
+        force.x = (rightNormal.x * self.velocity * -1)
+        force.z = (rightNormal.z * self.velocity * -1)
     end
     if self.left == true then
-        self.position.x = self.position.x + (rightNormal.x * self.velocity * deltaTime)
-        self.position.z = self.position.z + (rightNormal.z * self.velocity * deltaTime)
+        force.x = (rightNormal.x * self.velocity)
+        force.z = (rightNormal.z * self.velocity)
+    end
+    if force.x ~= 0 or force.y ~= 0 or force.z ~= 0 then
+        PhysicsAddForce(self.gameObjectID, force)
     end
 end
 
@@ -100,7 +107,7 @@ function Player:Update(deltaTime)
         self:Move(deltaTime)
     end
     self:IsPlayerDead()
-    GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+    --GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
     self.camera:Update(deltaTime, self.gameObjectID, PlayerConfig_mouseYSensitivity)
 end

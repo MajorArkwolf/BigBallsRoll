@@ -21,9 +21,9 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->velocity.data[0] = 0.0f;
     collisionBody->velocity.data[1] = 0.0f;
     collisionBody->velocity.data[2] = 0.0f;
-    collisionBody->acceleration.data[0] = 1.0f;
-    collisionBody->acceleration.data[1] = 1.0f;
-    collisionBody->acceleration.data[2] = 1.0f;
+    collisionBody->force.data[0] = 1.0f;
+    collisionBody->force.data[1] = 1.0f;
+    collisionBody->force.data[2] = 1.0f;
     collisionBody->AABBx1 = 0.0f;
     collisionBody->AABBy1 = 0.0f;
     collisionBody->AABBz1 = 0.0f;
@@ -345,4 +345,10 @@ void CollisionBody_registerSphereCollider(CollisionBody *cb, const float *offset
 
 void CollisionBody_setCollisionBodyStatic(CollisionBody *cb, bool isStatic) {
     cb->isStatic = isStatic;
+}
+
+void CollisionBody_addForce(CollisionBody *cb, float xForce, float yForce, float zForce) {
+    cb->force.data[0] += xForce;
+    cb->force.data[1] += yForce;
+    cb->force.data[2] += zForce;
 }

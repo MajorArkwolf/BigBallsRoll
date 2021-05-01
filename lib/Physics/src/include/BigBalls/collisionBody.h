@@ -21,7 +21,7 @@ typedef struct CollisionBody{
     float yRot;
     float zRot;
     PVec3 velocity;
-    PVec3 acceleration;
+    PVec3 force;
     float mass; // physical mass of CollisionBody
     float AABBx1; // two coordinates required for AABB
     float AABBy1;
@@ -189,3 +189,12 @@ void CollisionBody_registerSphereCollider(CollisionBody *cb,
  * @param isStatic true if static, false if not
  */
 void CollisionBody_setCollisionBodyStatic(CollisionBody *cb, bool isStatic);
+
+/**
+ * Add force onto an existing body, this will sum all existing forces and will reset after resolution.
+ * @param cb collision body to update
+ * @param xForce force in the x direction
+ * @param yForce force in the y direction
+ * @param zForce force in the z direction
+ */
+void CollisionBody_addForce(CollisionBody *cb, float xForce, float yForce, float zForce);

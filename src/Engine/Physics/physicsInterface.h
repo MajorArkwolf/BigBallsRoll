@@ -18,3 +18,12 @@ void PhysicsInterface_free();
  * @param physicsWorld the physics world whose collision bodies we want to draw.
  */
 void PhysicsInterface_draw(PhysicsWorld *physicsWorld);
+
+/**
+ * Add force onto an existing body, this will sum all existing forces and will reset after resolution.
+ * @param cb collision body to update
+ * @param xForce force in the x direction
+ * @param yForce force in the y direction
+ * @param zForce force in the z direction
+ */
+void PhysicsInterface_addForce(CollisionBody *cb, float xForce, float yForce, float zForce);

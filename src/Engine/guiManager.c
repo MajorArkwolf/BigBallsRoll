@@ -3,6 +3,7 @@
 #include "Physics/physicsInterface.h"
 #include "Scene/Game/game.h"
 #include <Engine/engine.h>
+#include "Scene/ClosingScreen/closingScreen.h"
 
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
@@ -63,6 +64,7 @@ void GuiManager_free(GuiManager *guiManager) {
 
 void GuiManager_drawToggle(GuiManager *guiManager) {
     assert(guiManager != NULL);
+    nk_glfw3_new_frame();
     guiManager->guiDraw = !guiManager->guiDraw;
     engine.lockCamera = guiManager->inGame;
 
@@ -71,16 +73,27 @@ void GuiManager_drawToggle(GuiManager *guiManager) {
     }
 
     GuiManager_optionsReset(guiManager);
+    GuiManager_closeInactiveWindows(guiManager);
     guiManager->options.menu = true;
-    if (!guiManager->guiDraw) {
-        nk_window_close(guiManager->ctx, "Big Balls Roll! - Main Menu");
-        nk_window_close(guiManager->ctx,"Big Balls Roll! - Game Menu");
-        nk_window_close(guiManager->ctx,"Big Balls Roll! - Settings Menu");
+}
+
+void GuiManager_closeInactiveWindows(GuiManager *guiManager) {
+    if(!guiManager->options.level) {
         nk_window_close(guiManager->ctx,"Big Balls Roll! - Level Menu");
     }
-
+    if(!guiManager->options.menu) {
+        nk_window_close(guiManager->ctx, "Big Balls Roll! - Main Menu");
+        nk_window_close(guiManager->ctx,"Big Balls Roll! - Game Menu");
+    }
+    if(!guiManager->options.exit) {
+        nk_window_close(guiManager->ctx,"QuitScreen Menu");
+        nk_window_close(guiManager->ctx,"QuitScreen Exit");
+    }
+    if(!guiManager->options.settings) {
+        nk_window_close(guiManager->ctx,"Big Balls Roll! - Settings Menu");
+    }
     if(!guiManager->inGame) {
-        nk_window_close(guiManager->ctx, ""); //gui
+        nk_window_close(guiManager->ctx, "GUI");
     }
 }
 
@@ -90,7 +103,6 @@ void GuiManager_optionsReset(GuiManager *guiManager)  {
     guiManager->options.menu = false;
     guiManager->options.exit = false;
     guiManager->options.settings = false;
-    guiManager->options.developer = false;
 }
 
 void GuiManager_draw(GuiManager *guiManager) {
@@ -114,7 +126,7 @@ void GuiManager_draw(GuiManager *guiManager) {
             } else if (guiManager->options.menu && !guiManager->inGame) {
                 GuiManager_mainMenu(guiManager);
             } else if (guiManager->options.exit) {
-                engine.running = false;
+                GuiManager_exitMenu(guiManager);
             }
         }
         nk_glfw3_render(NK_ANTI_ALIASING_ON);
@@ -179,7 +191,7 @@ void GuiManager_drawHUD(GuiManager *guiManager) {
         }
         guiManager->hud.updateHUD = false;
     }
-    if (nk_begin(guiManager->ctx, "", nk_rect(guiManager->glfwWidth/4, 0, guiManager->width, guiManager->height),
+    if (nk_begin(guiManager->ctx, "GUI", nk_rect(guiManager->glfwWidth/4, 0, guiManager->width, guiManager->height),
                  NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR|NK_WINDOW_NOT_INTERACTIVE)) {
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height, 3);
         nk_label(guiManager->ctx, guiManager->hud.time, NK_TEXT_CENTERED);
@@ -340,7 +352,7 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
             guiManager->options.level = true;
         }
 
-        //SETTINGS
+        //Settings
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 6, 1);
         if (nk_button_label(guiManager->ctx, "SETTINGS")) {
             GuiManager_optionsReset(guiManager);
@@ -352,6 +364,11 @@ void GuiManager_mainMenu(GuiManager *guiManager) {
         if (nk_button_label(guiManager->ctx, "EXIT")) {
             GuiManager_optionsReset(guiManager);
             guiManager->options.exit = true;
+            State *state;
+            state = malloc(sizeof (State));
+            State_init(state);
+            StateManager_push(&engine.sM, state);
+            ClosingScreen_init(state);
         }
     }
     nk_end(guiManager->ctx);
@@ -376,7 +393,7 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
             guiManager->options.settings = true;
         }
 
-        //QUIT
+        //Quit
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
             GuiManager_stopGame();
@@ -389,6 +406,31 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
     if(!guiManager->inGame) {
         GuiManager_drawToggle(&engine.guiManager);
     }
+}
+
+void GuiManager_exitMenu(GuiManager *guiManager) {
+    assert(guiManager != NULL);
+    GuiManager_setHeightWidth(guiManager, 8, 20);
+
+    if (nk_begin(guiManager->ctx, "QuitScreen Menu", nk_rect(100, guiManager->glfwHeight - 150, 240, 66),
+                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
+        nk_layout_row_static(guiManager->ctx, 54, 240, 1);
+        if (nk_button_label(guiManager->ctx, "MENU")) {
+            GuiManager_optionsReset(guiManager);
+            guiManager->options.menu = true;
+            StateManager_top(&engine.sM)->endStateSafely = true;
+        }
+    }
+    nk_end(guiManager->ctx);
+
+    if (nk_begin(guiManager->ctx, "QuitScreen Exit", nk_rect(guiManager->glfwWidth - 350, guiManager->glfwHeight - 150, 240, 66),
+                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
+        nk_layout_row_static(guiManager->ctx, 54, 240, 1);
+        if (nk_button_label(guiManager->ctx, "EXIT")) {
+            engine.running = false;
+        }
+    }
+    nk_end(guiManager->ctx);
 }
 
 void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {

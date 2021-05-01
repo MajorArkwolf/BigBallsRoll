@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <stdbool.h>
 #include "Helper/stringHelper.h"
 
 #define MAX_BUFF_SIZE 100
@@ -44,4 +45,24 @@ void AudioManager_loadSounds(AudioManager *audioManager, char *cwd) {
     audioManager->cwd = cwd;
     fclose(fptr);
     free(fulldir);
+}
+
+bool AudioManager_findSound(AudioManager *audioManager, char *filename, ALuint *value) {
+    if (value == NULL) {
+        return false;
+    }
+    for (size_t i = 0; i < audioManager->NumOfSounds; ++i) {
+        if (strcmp(audioManager->Sounds[i].Name, filename) == 0) {
+            *value = i;
+            return true;
+        }
+    }
+    return false;
+}
+
+Sound* AudioManager_getSound(AudioManager *audioManager, ALuint soundID) {
+    if (soundID >= 0 && soundID < audioManager->NumOfSounds) {
+        return &audioManager->Sounds[soundID];
+    }
+    return NULL;
 }

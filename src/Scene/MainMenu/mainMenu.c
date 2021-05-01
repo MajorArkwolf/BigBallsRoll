@@ -6,6 +6,12 @@
 
 bool paused = false;
 
+InputType konamiCode[] = {KEY_UP_ARROW, KEY_UP_ARROW, KEY_DOWN_ARROW,
+                        KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW,
+                        KEY_LEFT_ARROW, KEY_RIGHT_ARROW, KEY_A, KEY_B};
+size_t konamiCodeTracker = 0;
+bool konamiCodeEntered = false;
+
 void PauseMenu(bool desiredState) {
     if (desiredState != paused) {
         if (paused) {
@@ -21,6 +27,31 @@ void PauseMenu(bool desiredState) {
             }
             State_deregisterLights(StateManager_top(&engine.sM));
             paused = true;
+        }
+    }
+}
+
+void ActivateKonami(InputType inputType) {
+    if (konamiCodeEntered == false && inputType == konamiCode[konamiCodeTracker]) {
+        ++konamiCodeTracker;
+    } else {
+        konamiCodeTracker = 0;
+    }
+    if (konamiCodeTracker == 10) {
+        konamiCodeTracker = 0;
+        konamiCodeEntered = true;
+        size_t konami = TextureManager_findTextureID(&engine.textureManager, "Konami.png");
+        size_t modelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
+        Model *model = ModelManager_getModel(&engine.modelManager, modelID);
+        model->Mesh->Materials->DiffuseTexture = TextureManager_getTextureUsingID(&engine.textureManager, konami);
+        ALuint unlock = 0;
+        if (AudioManager_findSound(&engine.audioManager, "unlock.ogg", &unlock)) {
+            Sound *sound = AudioManager_getSound(&engine.audioManager, unlock);
+            if (sound != NULL) {
+                State *state = StateManager_top(&engine.sM);
+                GameObject_registerSoundSource(&state->gameObjects[0]);
+                AudioEngine_play(state->gameObjects[0].SoundID, sound);
+            }
         }
     }
 }
@@ -46,6 +77,7 @@ int MainMenu_update(float deltaTime) {
     if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
+    Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
     return 0;
 }
 
@@ -65,6 +97,7 @@ int MainMenu_keyUp(InputType inputType) {
         default:
             break;
     }
+    ActivateKonami(inputType);
     return 0;
 }
 
@@ -84,6 +117,8 @@ void MainMenu_init(State *state) {
     state->keyDown = MainMenu_keyDown;
     state->keyUp = MainMenu_keyUp;
     state->mouseMovement = MainMenu_mouseMovement;
+    state->skyboxDraw = true;
+    engine.lockCamera = false;
     char file[] = "mainMenu.lua";
     LuaHelper_loadScript(file);
     LuaHelper_init();

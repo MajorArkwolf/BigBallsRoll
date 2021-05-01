@@ -120,10 +120,6 @@ void GuiManager_draw(GuiManager *guiManager) {
             GuiManager_drawHUD(guiManager);
         }
 
-        if(guiManager->gameOver) {
-            GuiManager_gameOver(guiManager);
-        }
-
         if(guiManager->guiDraw) {
             if (guiManager->options.level) {
                 GuiManager_levelMenu(guiManager);
@@ -136,6 +132,10 @@ void GuiManager_draw(GuiManager *guiManager) {
             } else if (guiManager->options.exit) {
                 GuiManager_exitMenu(guiManager);
             }
+        }
+
+        if(guiManager->gameOver) {
+            GuiManager_gameOver(guiManager);
         }
         nk_glfw3_render(NK_ANTI_ALIASING_ON);
         glEnable(GL_LIGHTING);

@@ -29,6 +29,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/textureManager.c
     Engine/luaHelper.c
     Engine/Physics/physicsLuaInterface.c
+    Engine/skybox.c
 
     ## Physics
     Engine/Physics/physicsInterface.c

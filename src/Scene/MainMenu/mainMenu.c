@@ -79,7 +79,6 @@ int MainMenu_update(float deltaTime) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
-    engine.lockCamera = false;
     return 0;
 }
 
@@ -128,6 +127,8 @@ void MainMenu_init(State *state) {
     state->keyDown = MainMenu_keyDown;
     state->keyUp = MainMenu_keyUp;
     state->mouseMovement = MainMenu_mouseMovement;
+    state->skyboxDraw = true;
+    engine.lockCamera = false;
     char file[] = "mainMenu.lua";
     LuaHelper_loadScript(file);
     LuaHelper_init();

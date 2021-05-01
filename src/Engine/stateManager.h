@@ -35,6 +35,7 @@ typedef struct State {
     fnPtrIntInt mouseKeys;
     bool endStateSafely;
     bool isStatePaused;
+    bool skyboxDraw;
 } State;
 
 /// A Stack implementation that holds a stack of states

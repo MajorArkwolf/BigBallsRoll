@@ -78,13 +78,15 @@ void Update(double deltaTime) {
 void Draw(void) {
     Camera *cam = &StateManager_top(&engine.sM)->camera;
 
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     Skybox_draw();
     Camera_lookAt(cam);
     StateManager_draw(&engine.sM, 0.0f);
     PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
+    GuiManager_draw(&engine.guiManager);
+
     glfwSwapBuffers(engine.window);
 }
 
@@ -124,6 +126,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     InputType input = InputType_convertMouseButton(button);
     int buttonState = action == GLFW_PRESS;
     StateManager_mouseKeys(&engine.sM, input, buttonState);
+    GuiManager_mouse_button_callback(window, button, action, mods);
 }
 
 void error_callback(int error, const char* description)
@@ -138,6 +141,7 @@ int Engine_run(int argc, char *argv[]) {
     engine.fov = 60.0f;
     engine.lockCamera = false;
     engine.fullScreen = false;
+    engine.running = true;
 
     //Get the current working directory
     engine.cwd = getCurrentWorkingDirectory(argv[0]);
@@ -151,8 +155,9 @@ int Engine_run(int argc, char *argv[]) {
     Skybox_loadTexture();
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
+    PlayerConfig_init(&engine.playerConfig);
     PhysicsInterface_init();
-	
+
 	//Initialise LUA state
     engine.lua = luaL_newstate();
     luaL_openlibs(engine.lua);
@@ -191,8 +196,12 @@ int Engine_run(int argc, char *argv[]) {
     glfwSetKeyCallback(engine.window, key_callback);
     glfwSetCursorPosCallback(engine.window, cursor_position_callback);
     glfwSetFramebufferSizeCallback(engine.window, framebuffer_size_callback);
-    glfwSetMouseButtonCallback(engine.window, mouse_button_callback);
     glfwSetInputMode(engine.window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
+
+    // GUI init after window creation
+    GuiManager_init(&engine.guiManager);
+    //Overwrite Nuklears function pointer so it doesnt steal our function call.
+    glfwSetMouseButtonCallback(engine.window, mouse_button_callback);
 
     // OpenGL init
     glEnable(GL_DEPTH_TEST);
@@ -228,7 +237,7 @@ int Engine_run(int argc, char *argv[]) {
     double currentTime = glfwGetTime();
     double accumulator = 0.0;
     double deltaTime = 0.01;
-    while(!glfwWindowShouldClose(engine.window)) {
+    while(!glfwWindowShouldClose(engine.window) && engine.running) {
         double newTime = glfwGetTime();
         double frameTime = newTime - currentTime;
         if (frameTime > 0.25) {
@@ -247,8 +256,6 @@ int Engine_run(int argc, char *argv[]) {
         Draw();
         StateManager_safeStateRemoval(&engine.sM);
     }
-
-    PhysicsEngine_free(&engine.physicsEngine);
     glfwDestroyWindow(engine.window);
     glfwTerminate();
     Engine_stop();
@@ -262,6 +269,7 @@ void Engine_stop() {
     ModelManager_free(&engine.modelManager);
     TextureManager_free(&engine.textureManager);
     PhysicsInterface_free();
+    GuiManager_free(&engine.guiManager);
     StateManager_free(&engine.sM);
     lua_close(engine.lua);
     free(engine.cwd);
@@ -294,7 +302,7 @@ void Engine_loadConfig() {
     //Get Configured Seed.
     lua_getglobal(engine.lua, "seed");
     if (lua_isnumber(engine.lua, 0) == 0) {
-        engine.seed = lua_tonumber(engine.lua, -1);
+        engine.playerConfig.seed = lua_tonumber(engine.lua, -1);
     }
     //Get master volume
     lua_getglobal(engine.lua, "master_volume");
@@ -309,4 +317,33 @@ void Engine_toggleCameraLock() {
 
 void Engine_cameraLock(bool lockCamera) {
     engine.lockCamera = lockCamera;
+}
+
+void UpdateWindow() {
+    int xpos = 0;
+    int ypos = 0;
+    glfwGetWindowPos(engine.window, &xpos, &ypos);
+    if (engine.playerConfig.windowedMode) {
+        glfwSetWindowMonitor(engine.window,
+                             NULL,
+                             xpos,
+                             ypos,
+                             engine.playerConfig.width,
+                             engine.playerConfig.height,
+                             60);
+    } else {
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwSetWindowMonitor(engine.window,
+                                glfwGetPrimaryMonitor(),
+                                0,
+                                0,
+                                mode->width,
+                                mode->height,
+                                mode->refreshRate);
+    }
+}
+
+void Engine_updateConfig() {
+    UpdateWindow();
+    LuaHelper_PlayerConfig();
 }

@@ -28,6 +28,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/InputManager.c
     Engine/textureManager.c
     Engine/luaHelper.c
+    Engine/guiManager.c
+    Engine/playerConfig.c
     Engine/Physics/physicsLuaInterface.c
     Engine/skybox.c
 
@@ -42,6 +44,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     # Scenes
     Scene/MainMenu/mainMenu.c
     Scene/Game/game.c
+    Scene/ClosingScreen/closingScreen.c
 
     #Unit Tests
     tests/tests.c

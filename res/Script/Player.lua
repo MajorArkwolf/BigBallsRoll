@@ -31,6 +31,8 @@ function Player:AddPhysicsBody()
     position.y = 0
     position.z = 0
     PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
+    -- Temp added to disable gravity
+    PhysicsCollisionBodySetStatic(self.gameObjectID, true)
 end
 
 function Player:ReInit()
@@ -57,7 +59,7 @@ function Player:IsPlayerDead()
     if (self.position.y < -20) then
         self.playerLives = self.playerLives - 1
         if (self.playerLives == 0) then
-            ExitGame()
+             -- ExitGame()
         else
             self.position = self.startPosition
         end
@@ -91,8 +93,8 @@ end
 function Player:Update(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
     self.rotation = GameObjectGetRotation(self.gameObjectID)
-    if self.rotatePlayerOn then
-        self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime * self.mouseSensitivityX)
+    if self.rotatePlayerOn or not PlayerConfig_mouseXLock then
+        self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime * PlayerConfig_mouseXSensitivity)
     end
     if self.playerMoveOn then
         self:Move(deltaTime)
@@ -100,7 +102,7 @@ function Player:Update(deltaTime)
     self:IsPlayerDead()
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
-    self.camera:Update(deltaTime, self.gameObjectID, self.mouseSensitivityY)
+    self.camera:Update(deltaTime, self.gameObjectID, PlayerConfig_mouseYSensitivity)
 end
 
 return Player

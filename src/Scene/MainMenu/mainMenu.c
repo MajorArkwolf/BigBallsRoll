@@ -3,7 +3,6 @@
 #include <Engine/engine.h>
 #include "Engine/luaHelper.h"
 #include "Scene/Game/game.h"
-#include "Engine/stateManager.h"
 
 bool paused = false;
 
@@ -83,7 +82,6 @@ int MainMenu_update(float deltaTime) {
 }
 
 int MainMenu_keyDown(InputType inputType) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
     switch (inputType) {
         default:
             break;
@@ -92,18 +90,10 @@ int MainMenu_keyDown(InputType inputType) {
 }
 
 int MainMenu_keyUp(InputType inputType) {
-    State *state;
     switch (inputType) {
         case KEY_ESC:
-            glfwSetWindowShouldClose(engine.window, GLFW_TRUE);
+            GuiManager_drawToggle(&engine.guiManager);
             break;
-        case KEY_SPACEBAR:
-            PauseMenu(true);
-            state = malloc(sizeof (State));
-            State_init(state);
-            StateManager_push(&engine.sM, state);
-            Game_init(state);
-            return 0;
         default:
             break;
     }
@@ -112,10 +102,10 @@ int MainMenu_keyUp(InputType inputType) {
 }
 
 int MainMenu_mouseMovement(double x, double y) {
-    Camera *cam = &StateManager_top(&engine.sM)->camera;
+    //Camera *cam = &StateManager_top(&engine.sM)->camera;
     // If cursor is locked, let the camera move, else ignore movement
     if (engine.lockCamera) {
-        Camera_mouseLook(cam, x, y);
+       // Camera_mouseLook(cam, x, y);
     }
     return 0;
 }
@@ -132,6 +122,6 @@ void MainMenu_init(State *state) {
     char file[] = "mainMenu.lua";
     LuaHelper_loadScript(file);
     LuaHelper_init();
-//    GameObject_registerSoundSource(&state->gameObjects[2]);
-//    AudioEngine_play(state->gameObjects[2].SoundID, &engine.audioManager.Sounds[0]);
+    GameObject_registerSoundSource(&state->gameObjects[2]);
+    AudioEngine_play(state->gameObjects[2].SoundID, &engine.audioManager.Sounds[0]);
 }

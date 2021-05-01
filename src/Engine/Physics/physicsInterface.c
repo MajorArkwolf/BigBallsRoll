@@ -31,6 +31,7 @@ void PhysicsInterface_update(double deltaTime) {
 }
 
 void PhysicsInterface_free() {
+    PhysicsEngine_free(&engine.physicsEngine);
     PhysicsDebug_dataFree(&dd);
 }
 

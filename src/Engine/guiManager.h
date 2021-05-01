@@ -2,15 +2,24 @@
 #include <stdbool.h>
 typedef struct GLFWwindow GLFWwindow;
 
+#define GUI_BUFFER_SIZE 256
+
 typedef struct menuOption {
     bool menu, level, settings, exit;
 } menuOption;
 
+typedef  struct GameOverData {
+    char buffer[GUI_BUFFER_SIZE];
+    char seed[GUI_BUFFER_SIZE];
+    char message[GUI_BUFFER_SIZE];
+    char name[GUI_BUFFER_SIZE];
+} GameOverData;
+
 typedef struct Hud {
-    char buffer[256];
-    char time[256];
-    char lives[256];
-    char levels[256];
+    char buffer[GUI_BUFFER_SIZE];
+    char time[GUI_BUFFER_SIZE];
+    char lives[GUI_BUFFER_SIZE];
+    char levels[GUI_BUFFER_SIZE];
     int nextLives;
     int nextLevel;
     float nextSeconds;
@@ -25,7 +34,9 @@ typedef struct GuiManager {
     struct nk_font_atlas *atlas;
     menuOption options;
     Hud hud;
+    GameOverData gameOverData;
     bool inGame;
+    bool gameOver;
     int glfwHeight;
     int glfwWidth;
     float height;
@@ -160,7 +171,11 @@ void GuiManager_drawHUD(GuiManager *guiManager);
 void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int level);
 
 /**
- * Closes all any inactive windows, although there is an issue since Nuklear sets the pointer to the last open window, meaning sometimes a menu is active.
+ * Closes all inactive windows.
  * @param guiManager the guiManager with the windows to close.
  */
 void GuiManager_closeInactiveWindows(GuiManager *guiManager);
+
+void GuiManager_initGameOver(GuiManager *guiManager, const char *message);
+
+void GuiManager_gameOver(GuiManager *guiManager);

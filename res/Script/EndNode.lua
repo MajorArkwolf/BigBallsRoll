@@ -10,6 +10,8 @@ function EndNode:Init(x, y, z, board)
     self.width = 0
     self.board = board
     self.finishedLevel = false
+    self.endLevelSound = "levelcomplete.ogg"
+    AudioRegisterSource(self.gameObjectID)
 end
 
 function EndNode:DestroyRandomBlock()
@@ -30,6 +32,10 @@ end
 function EndNode:CheckEndTrigger(player)
     if (self.position.x < player.position.x + self.width and self.position.x + 1 > player.position.x) then
         if (self.position.z < player.position.z + self.width and self.position.z + 1 > player.position.z) then
+            if (self.finishedLevel == false) then
+                AudioPlaySound(self.gameObjectID, self.endLevelSound, false)
+                AudioSetSourceVolume(self.gameObjectID, 100)
+            end
             self.finishedLevel = true
             player.playerMoveOn = false
             return true

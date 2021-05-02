@@ -80,7 +80,7 @@ void AudioEngine_listenerOrientation(Vec3 *front, Vec3 *up);
  * @param velocity velocity of the audio source, can be null.
  * @return the buffer id, 0 if an error occurred.
  */
-ALuint AudioEngine_newSource(AudioEngine *audioEngine, AudioPresets *ap, Vec3 *position, Vec3 *velocity);
+ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *velocity);
 
 /**
  * Updates the audio source location.
@@ -91,10 +91,17 @@ ALuint AudioEngine_newSource(AudioEngine *audioEngine, AudioPresets *ap, Vec3 *p
 void AudioEngine_updateSource(ALuint id, Vec3 *position, Vec3 *velocity);
 
 /**
- * Update the listens volume allowing for you to adjust the sound level in game.
+ * Update the master volume allowing for you to adjust the sound level in game.
  * @param ap the audio presets to apply.
  */
-void AudioEngine_ChangeVolume(AudioPresets *ap);
+void AudioEngine_changeMasterVolume(AudioPresets *ap);
+
+/**
+ * Sets the volume of a sound emitter.
+ * @param id of the emitter to update
+ * @param newVolume the volume in a range from 0 - 100
+ */
+void AudioEngine_setVolume(ALuint id, float newVolume);
 
 /**
  * Shuts the audio engine down.
@@ -107,3 +114,10 @@ void AudioEngine_free(AudioEngine *audioEngine);
  * @param ap structure to initialise
  */
 void AudioEngine_AudioPresets_init(AudioPresets *ap);
+
+/**
+ *
+ * @param id the id to enable/disable repeating
+ * @param shouldRepeat
+ */
+void AudioEngine_setRepeat(ALuint id, bool shouldRepeat);

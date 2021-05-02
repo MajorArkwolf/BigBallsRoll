@@ -102,7 +102,7 @@ void AudioEngine_listenerOrientation(Vec3 *front, Vec3 *up) {
     alListenerfv(AL_ORIENTATION, listenerOri);
 }
 
-ALuint AudioEngine_newSource(AudioEngine *audioEngine, AudioPresets *ap, Vec3 *position, Vec3 *velocity) {
+ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *velocity) {
     if (audioEngine->MaxNumSources == MAX_SOURCES) {
         return 0;
     }
@@ -158,17 +158,32 @@ void AudioEngine_AudioPresets_init(AudioPresets *ap) {
     ap->MasterVolume = 100.0f;
 }
 
-void AudioEngine_ChangeVolume(AudioPresets *ap) {
-    if (ap->MasterVolume < 0.0f) {
-        ap->MasterVolume = 0.0f;
-    } else if (ap->MasterVolume > 100.0f){
-        ap->MasterVolume = 100.0f;
+float ConvertToPercentage(float value) {
+    if (value < 0.0f) {
+        return 0.0f;
+    } else if (value > 100.0f){
+        return 1.0f;
+    } else {
+        return value / 100.0f;
     }
-    float volume = ap->MasterVolume / 100.0f;
+}
+
+void AudioEngine_changeMasterVolume(AudioPresets *ap) {
+    float volume = ConvertToPercentage(ap->MasterVolume);
     alListenerf(AL_GAIN, volume);
     ALenum error;
     if ((error = alGetError()) != AL_NO_ERROR)
     {
         getErrorString(error);
     }
+}
+
+void AudioEngine_setVolume(ALuint id, float newVolume) {
+    float volume = ConvertToPercentage(newVolume);
+    alSourcef(id, AL_GAIN, volume);
+}
+
+void AudioEngine_setRepeat(ALuint id, bool shouldRepeat) {
+    ALint value = (ALint)shouldRepeat;
+    alSourcef(id, AL_LOOPING, value);
 }

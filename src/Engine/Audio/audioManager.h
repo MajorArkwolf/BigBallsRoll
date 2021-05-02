@@ -22,7 +22,7 @@ void AudioManager_init(AudioManager *audioManager);
  * @param audioManager AudioManager to store all the Sounds into.
  * @param cwd current working directory relative to the executable.
  */
-void AudioManager_loadSounds(AudioManager *audioManager, char *cwd);
+void AudioManager_loadSounds(AudioManager *audioManager, const char *cwd);
 
 /**
  * Search the AudioManager and return the buffer ID where the Sound file is loaded into.
@@ -31,7 +31,7 @@ void AudioManager_loadSounds(AudioManager *audioManager, char *cwd);
  * @param value this value is updated on successful search
  * @return true if sound is found or false if not.
  */
-bool AudioManager_findSound(AudioManager *audioManager, char *filename, ALuint *value);
+bool AudioManager_findSound(AudioManager *audioManager, const char *filename, ALuint *value);
 
 /**
  * Search the AudioManager and return the Sound pointer.

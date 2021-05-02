@@ -168,6 +168,7 @@ int Engine_run(int argc, char *argv[]) {
     AudioEngine_init(&engine.audioEngine);
     AudioManager_init(&engine.audioManager);
     AudioManager_loadSounds(&engine.audioManager, engine.cwd);
+    AudioEngine_changeMasterVolume(&engine.audioPresets);
 
     glfwSetErrorCallback(error_callback);
     //Initialise our Window and OpenGL context.
@@ -344,7 +345,7 @@ void UpdateWindow() {
 }
 
 void UpdateAudio() {
-    AudioEngine_ChangeVolume(&engine.audioPresets);
+    AudioEngine_changeMasterVolume(&engine.audioPresets);
 }
 
 void Engine_updateConfig() {

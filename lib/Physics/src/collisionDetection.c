@@ -30,7 +30,7 @@ PVec3 getSphereCentre(CollisionBody* c, SphereCollider* s){
 
     PVec3 newSPos;
     newSPos.data[0] = newCPos.elem[0] + s->xOffset;
-    newSPos.data[1] = newCPos.elem[0] + s->yOffset;
+    newSPos.data[1] = newCPos.elem[1] + s->yOffset;
     newSPos.data[2] = newCPos.elem[2] + s->zOffset;
 
     return newSPos;

@@ -156,6 +156,7 @@ void AudioEngine_free(AudioEngine *audioEngine) {
 
 void AudioEngine_AudioPresets_init(AudioPresets *ap) {
     ap->MasterVolume = 100.0f;
+    ap->soundEnabled = true;
 }
 
 float ConvertToPercentage(float value) {
@@ -169,7 +170,10 @@ float ConvertToPercentage(float value) {
 }
 
 void AudioEngine_changeMasterVolume(AudioPresets *ap) {
-    float volume = ConvertToPercentage(ap->MasterVolume);
+    float volume = 0.0f;
+    if (ap->soundEnabled == true) {
+        volume = ConvertToPercentage(ap->MasterVolume);
+    }
     alListenerf(AL_GAIN, volume);
     ALenum error;
     if ((error = alGetError()) != AL_NO_ERROR)

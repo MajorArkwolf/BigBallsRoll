@@ -369,6 +369,47 @@ void testCombinedTransformation(void){
                      fTolerance(collisionBody->AABBz2, 8.9f, 0.1f));
 }
 
+void testOOBB_BB(){
+    PhysicsWorld pw;
+    PhysicsWorld_init(&pw);
+
+    // create CollisionBody for object
+    CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody1);
+    // create collider
+    BoxCollider *collider1 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider1);
+    collider1->xOffset = 0;
+    collider1->yOffset = 0;
+    collider1->zOffset = 0;
+    collider1->xLen = 1.f;
+    collider1->yLen = 0.f;
+    collider1->zLen = 0.f;
+    collider1->zRot = 45.f;
+    CollisionBody_addBoxCollider(collisionBody1, collider1);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody1);
+
+    // create CollisionBody for object
+    CollisionBody* collisionBody2 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody2);
+    // create collider
+    BoxCollider *collider2 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider2);
+    collider2->xOffset = 0.5f;
+    collider2->yOffset = 0.0f;
+    collider2->zOffset = 0.0f;
+    collider2->xLen = 0.f;
+    collider2->yLen = 0.f;
+    collider2->zLen = 0.f;
+    CollisionBody_addBoxCollider(collisionBody2, collider2);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody2);
+
+    CollisionArrayContainer cac = collisionArrayContainer_init();
+    collisionsDetection(&pw, &cac);
+
+    TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
+}
+
 void test_Physics(){
     RUN_TEST(testIdentity44);
     RUN_TEST(testMatrixMultiplication44_44);
@@ -378,4 +419,5 @@ void test_Physics(){
     RUN_TEST(testRotation);
     RUN_TEST(testTranslation);
     RUN_TEST(testCombinedTransformation);
+    RUN_TEST(testOOBB_BB);
 }

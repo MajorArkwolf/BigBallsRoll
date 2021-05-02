@@ -9,7 +9,8 @@
 #define MAX_SOURCES 10000
 
 typedef struct AudioPresets {
-    double MasterVolume;
+    float MasterVolume;
+    bool soundEnabled;
 } AudioPresets;
 
 typedef struct AudioEngine {
@@ -79,7 +80,7 @@ void AudioEngine_listenerOrientation(Vec3 *front, Vec3 *up);
  * @param velocity velocity of the audio source, can be null.
  * @return the buffer id, 0 if an error occurred.
  */
-ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *velocity);
+ALuint AudioEngine_newSource(AudioEngine *audioEngine, AudioPresets *ap, Vec3 *position, Vec3 *velocity);
 
 /**
  * Updates the audio source location.
@@ -88,6 +89,12 @@ ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *vel
  * @param velocity updates the velocity of the source, can be null.
  */
 void AudioEngine_updateSource(ALuint id, Vec3 *position, Vec3 *velocity);
+
+/**
+ * Update the listens volume allowing for you to adjust the sound level in game.
+ * @param ap the audio presets to apply.
+ */
+void AudioEngine_ChangeVolume(AudioPresets *ap);
 
 /**
  * Shuts the audio engine down.

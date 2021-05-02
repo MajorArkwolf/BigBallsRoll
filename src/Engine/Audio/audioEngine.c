@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
-#include "Engine/engine.h"
+//#include "Engine/engine.h"
 
 /**
  * 1) Identify the error code.
@@ -46,7 +46,7 @@ void AudioEngine_init(AudioEngine *audioEngine) {
         assert(false);
     }
 
-    ALfloat listenerOri[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
+    ALfloat listenerOri[] = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
     alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
     alListener3f(AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alListenerfv(AL_ORIENTATION, listenerOri);
@@ -92,26 +92,25 @@ void AudioEngine_listenerLocation(Vec3 *position, Vec3 *velocity) {
 }
 
 void AudioEngine_listenerOrientation(Vec3 *front, Vec3 *up) {
-    ALfloat listenerOri[] = { 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f };
+    ALfloat listenerOri[] = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
     listenerOri[0] = front->X;
     listenerOri[1] = front->Y;
     listenerOri[2] = front->Z;
-    listenerOri[0] = up->X;
-    listenerOri[1] = up->Y;
-    listenerOri[2] = up->Z;
+    listenerOri[3] = up->X;
+    listenerOri[4] = up->Y;
+    listenerOri[5] = up->Z;
     alListenerfv(AL_ORIENTATION, listenerOri);
 }
 
-ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *velocity) {
+ALuint AudioEngine_newSource(AudioEngine *audioEngine, AudioPresets *ap, Vec3 *position, Vec3 *velocity) {
     if (audioEngine->MaxNumSources == MAX_SOURCES) {
         return 0;
     }
-    AudioPresets *ap = &engine.audioPresets;
     alGenSources((ALuint)1, &audioEngine->Sources[audioEngine->MaxNumSources]);// check for errors
     getErrorString(alGetError());
-    alSourcef(audioEngine->Sources[audioEngine->MaxNumSources], AL_PITCH, 1);
+    alSourcef(audioEngine->Sources[audioEngine->MaxNumSources], AL_PITCH, 1.0f);
     getErrorString(alGetError());
-    alSourcef(audioEngine->Sources[audioEngine->MaxNumSources], AL_GAIN, ap->MasterVolume);
+    alSourcef(audioEngine->Sources[audioEngine->MaxNumSources], AL_GAIN, 1.0f);
     getErrorString(alGetError());
     if (position != NULL) {
         alSource3f(audioEngine->Sources[audioEngine->MaxNumSources],
@@ -156,5 +155,20 @@ void AudioEngine_free(AudioEngine *audioEngine) {
 }
 
 void AudioEngine_AudioPresets_init(AudioPresets *ap) {
-    ap->MasterVolume = 100.0;
+    ap->MasterVolume = 100.0f;
+}
+
+void AudioEngine_ChangeVolume(AudioPresets *ap) {
+    if (ap->MasterVolume < 0.0f) {
+        ap->MasterVolume = 0.0f;
+    } else if (ap->MasterVolume > 100.0f){
+        ap->MasterVolume = 100.0f;
+    }
+    float volume = ap->MasterVolume / 100.0f;
+    alListenerf(AL_GAIN, volume);
+    ALenum error;
+    if ((error = alGetError()) != AL_NO_ERROR)
+    {
+        getErrorString(error);
+    }
 }

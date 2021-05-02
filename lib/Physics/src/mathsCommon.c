@@ -128,6 +128,9 @@ Matrix44 rotateAboutVec(float xVec, float yVec, float zVec, float rotDeg){
     res.elem[1][3] = 0;
     res.elem[2][3] = 0;
     res.elem[3][3] = 1;
+    res.elem[3][0] = 0;
+    res.elem[3][1] = 0;
+    res.elem[3][2] = 0;
     float rot = rotDeg * M_PI/180;
     // rotation implementation taken from OpenGL documentation https://docs.gl/gl2/glRotate
     res.elem[0][0] = (powf(xVec, 2) * (1 - cosf(rot))) + cosf(rot);

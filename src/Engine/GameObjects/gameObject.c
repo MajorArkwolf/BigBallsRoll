@@ -40,5 +40,5 @@ void GameObject_update(GameObject *gameObject) {
 }
 
 void GameObject_registerSoundSource(GameObject *gameObject) {
-    gameObject->SoundID = AudioEngine_newSource(&engine.audioEngine, &engine.audioPresets, &gameObject->Transform.Position, NULL);
+    gameObject->SoundID = AudioEngine_newSource(&engine.audioEngine, &gameObject->Transform.Position, NULL);
 }

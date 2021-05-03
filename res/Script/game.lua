@@ -123,6 +123,8 @@ function InputKeyboardUp(input)
         player.left = false
     elseif input == 3 then
         player.right = false
+    elseif input == 46 then
+        player.space = true
     end
 end
 

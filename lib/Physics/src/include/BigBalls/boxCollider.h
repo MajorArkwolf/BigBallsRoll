@@ -8,9 +8,6 @@ typedef struct BoxCollider{
     float xLen;
     float yLen;
     float zLen;
-    float xRot;
-    float yRot;
-    float zRot;
     float AABBx1;
     float AABBy1;
     float AABBz1;

@@ -7,16 +7,14 @@
 BoxColliderVerts getBoxVerts(CollisionBody* c, BoxCollider* b){
     // apply all transforms to boxcollider
     Matrix44 T1 = createRotMat(c->xRot, c->yRot,c-> zRot);
-    Matrix44 T2 = createRotMat(b->xRot, b->yRot, b->zRot);
-    Matrix44 T3 = matrixMultiplication44_44(T1, T2);
 
     BoxColliderVerts bcv = getBoxColliderVerts(b);
     BoxColliderVerts tbcv;
 
     // get all verts of transformed boxcollider
     for(size_t i = 0; i < 8; ++i){
-        matrixMultiplication44_41(T3, bcv.verts[i]);
-        tbcv.verts[i] = matrixMultiplication44_41(T3, bcv.verts[i]);
+        matrixMultiplication44_41(T1, bcv.verts[i]);
+        tbcv.verts[i] = matrixMultiplication44_41(T1, bcv.verts[i]);
     }
 
     return tbcv;

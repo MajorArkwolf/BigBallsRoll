@@ -10,9 +10,6 @@ void BoxCollider_init(BoxCollider *boxCollider){
     boxCollider->xLen = 0;
     boxCollider->yLen = 0;
     boxCollider->zLen = 0;
-    boxCollider->xRot = 0;
-    boxCollider->yRot = 0;
-    boxCollider->zRot = 0;
 }
 
 void BoxCollider_updateAABB(BoxCollider *boxCollider,

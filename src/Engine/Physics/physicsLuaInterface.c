@@ -76,17 +76,6 @@ int PhysicsLuaInterface_AddAABBCollider(lua_State *L) {
     if (gameObject->collisionBody != NULL) {
         float pos[3];
         float len[3];
-        float rot[3];
-        lua_getfield(L, -1, "x");
-        rot[0] = lua_tonumber(L, -1);
-        lua_pop(L, 1);
-        lua_getfield(L, -1, "y");
-        rot[1] = lua_tonumber(L, -1);
-        lua_pop(L, 1);
-        lua_getfield(L, -1, "z");
-        rot[2] = lua_tonumber(L, -1);
-        lua_pop(L, 1);
-        lua_pop(L, 1);
 
         lua_getfield(L, -1, "x");
         len[0] = lua_tonumber(L, -1);
@@ -110,7 +99,7 @@ int PhysicsLuaInterface_AddAABBCollider(lua_State *L) {
         lua_pop(L, 1);
         lua_pop(L, 2);
 
-        CollisionBody_registerBoxCollider(gameObject->collisionBody, pos, len, rot);
+        CollisionBody_registerBoxCollider(gameObject->collisionBody, pos, len);
     }
     return 0;
 }

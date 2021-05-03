@@ -162,18 +162,12 @@ void CollisionBody_updateAABB(CollisionBody *collisionBody){
 
         // get all BoxCollider checkMin/max vertices
         for (size_t i = 0; i < collisionBody->numOfBoxColliders; ++i) { // for each collider
-            // BoxCollider rotation matrix
-            Matrix44 T2 = createRotMat(collisionBody->BoxColliders[i]->xRot,
-                                       collisionBody->BoxColliders[i]->yRot,
-                                       collisionBody->BoxColliders[i]->zRot);
-            Matrix44 T3 = matrixMultiplication44_44(T1, T2);
-
             BoxColliderVerts verts = getBoxColliderVerts(collisionBody->BoxColliders[i]);
             float bGreatestX, bLowestX, bGreatestY, bLowestY, bGreatestZ, bLowestZ; // must be initialised to a point on a collider post-rotation
             bool bVarInit = false;
 
             for (size_t j = 0; j < 8; ++j) { // for each vertex of BoxCollider
-                Matrix41 transformedVert = matrixMultiplication44_41(T3, verts.verts[j]); // TODO: may be more efficient transforming a single point and determining extents from it, see previous commits
+                Matrix41 transformedVert = matrixMultiplication44_41(T1, verts.verts[j]); // TODO: may be more efficient transforming a single point and determining extents from it, see previous commits
 
                 // update box collider proposed AABB
                 if(!bVarInit){
@@ -268,7 +262,7 @@ void CollisionBody_setRot(CollisionBody *collisionBody,
     CollisionBody_updateAABB(collisionBody);
 }
 
-void CollisionBody_registerBoxCollider(CollisionBody *cb, const float *offsetPosition, const float *length, const float *rotation) {
+void CollisionBody_registerBoxCollider(CollisionBody *cb, const float *offsetPosition, const float *length) {
     BoxCollider *boxCollider = malloc(1 * sizeof (BoxCollider));
     boxCollider->xOffset = offsetPosition[0];
     boxCollider->yOffset = offsetPosition[1];
@@ -276,9 +270,6 @@ void CollisionBody_registerBoxCollider(CollisionBody *cb, const float *offsetPos
     boxCollider->xLen = length[0];
     boxCollider->yLen = length[1];
     boxCollider->zLen = length[2];
-    boxCollider->xRot = rotation[0];
-    boxCollider->yRot = rotation[1];
-    boxCollider->zRot = rotation[2];
     CollisionBody_addBoxCollider(cb, boxCollider);
 }
 

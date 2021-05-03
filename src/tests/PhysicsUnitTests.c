@@ -184,39 +184,13 @@ void testRotationOverflow(void){
     collider->xLen = 1.f;
     collider->yLen = 2.f;
     collider->zLen = 3.f;
-    collider->xRot = 360;
-    collider->yRot = 360;
-    collider->zRot = 360;
     CollisionBody_addBoxCollider(collisionBody, collider);
-    TEST_ASSERT_TRUE(fTolerance(collisionBody->BoxColliders[0]->xRot == 0, 0, 0.0001) &&
-                     fTolerance(collisionBody->BoxColliders[0]->yRot == 0, 0, 0.0001) &&
-                     fTolerance(collisionBody->BoxColliders[0]->zRot == 0, 0, 0.0001));
-    CollisionBody_setRot(collisionBody, 360.f, 360.f, 360.f);
-    TEST_ASSERT_TRUE(fTolerance(collisionBody->xRot, 0.f, 0.0001f) &&
-                     fTolerance(collisionBody->yRot, 0.f, 0.0001f) &&
-                     fTolerance(collisionBody->zRot, 0.f, 0.0001f));
-}
 
-void testColliderRotation(void){
-    // create CollisionBody for object
-    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
-    CollisionBody_init(collisionBody);
-    // create collider
-    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
-    BoxCollider_init(collider);
-    collider->xLen = 1.f;
-    collider->yLen = 2.f;
-    collider->zLen = 3.f;
-    collider->xRot = 45;
-    collider->yRot = 45;
-    collider->zRot = 45;
-    CollisionBody_addBoxCollider(collisionBody, collider);
-    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, -0.3f, 0.1f) &&
-                     fTolerance(collisionBody->AABBy1, -0.4f, 0.1f) &&
-                     fTolerance(collisionBody->AABBz1, -0.7f, 0.1f) &&
-                     fTolerance(collisionBody->AABBx2, 3.f, 0.1f) &&
-                     fTolerance(collisionBody->AABBy2, 2.2f, 0.1f) &&
-                     fTolerance(collisionBody->AABBz2, 2.5f, 0.1f));
+    CollisionBody_rotate(collisionBody, 361, 361, 361);
+
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->xRot, 1.f, 0.0001f) &&
+                     fTolerance(collisionBody->yRot, 1.f, 0.0001f) &&
+                     fTolerance(collisionBody->zRot, 1.f, 0.0001f));
 }
 
 void testCollisionBodyRotation(void){
@@ -239,38 +213,12 @@ void testCollisionBodyRotation(void){
                      fTolerance(collisionBody->AABBz2, 2.5f, 0.1f));
 }
 
-void testCombinedRotation(void){
-    // create CollisionBody for object
-    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
-    CollisionBody_init(collisionBody);
-    // create collider
-    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
-    BoxCollider_init(collider);
-    collider->xLen = 10.f;
-    collider->yLen = 1.f;
-    collider->zOffset = -1;
-    collider->zLen = 1.f;
-    collider->xRot = 45;
-    collider->yRot = 45;
-    collider->zRot = 45;
-    CollisionBody_addBoxCollider(collisionBody, collider);
-    CollisionBody_rotate(collisionBody, -45, -45, -45);
-    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, 0.f, 1.f) &&
-                     fTolerance(collisionBody->AABBy1, -8.f, 1.f) &&
-                     fTolerance(collisionBody->AABBz1, -4.f, 1.f) &&
-                     fTolerance(collisionBody->AABBx2, 6.f, 1.f) &&
-                     fTolerance(collisionBody->AABBy2, 0.6f, 1.f) &&
-                     fTolerance(collisionBody->AABBz2, 0.f, 1.f));
-}
-
 void testRotation(void){
     RUN_TEST(testRotationX);
     RUN_TEST(testRotationY);
     RUN_TEST(testRotationZ);
     RUN_TEST(testRotationOverflow);
-    RUN_TEST(testColliderRotation);
     RUN_TEST(testCollisionBodyRotation);
-    RUN_TEST(testCombinedRotation);
 }
 
 void testColliderTranslation(void){
@@ -369,7 +317,7 @@ void testCombinedTransformation(void){
                      fTolerance(collisionBody->AABBz2, 8.9f, 0.1f));
 }
 
-void testOOBB_BB(){
+void testNarrowPhase_BB(){
     PhysicsWorld pw;
     PhysicsWorld_init(&pw);
 
@@ -385,7 +333,6 @@ void testOOBB_BB(){
     collider1->xLen = 1.f;
     collider1->yLen = 0.f;
     collider1->zLen = 0.f;
-    collider1->zRot = 45.f;
     CollisionBody_addBoxCollider(collisionBody1, collider1);
     PhysicsWorld_addCollisionBody(&pw, collisionBody1);
 
@@ -410,6 +357,15 @@ void testOOBB_BB(){
     TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
 }
 
+// sphere
+// square
+
+// two sphere colliders, test that a collider can go in between and not be detected
+
+// two square colliders that leave gap, test noncollision
+
+// remove rotation from boxCollider
+
 void test_Physics(){
     RUN_TEST(testIdentity44);
     RUN_TEST(testMatrixMultiplication44_44);
@@ -419,5 +375,5 @@ void test_Physics(){
     RUN_TEST(testRotation);
     RUN_TEST(testTranslation);
     RUN_TEST(testCombinedTransformation);
-    RUN_TEST(testOOBB_BB);
+    RUN_TEST(testNarrowPhase_BB);
 }

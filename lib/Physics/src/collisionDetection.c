@@ -171,19 +171,26 @@ bool testBoxColliderCollision(BoxCollider *a, BoxCollider *b, PVec3* fn, float* 
 bool testSphereColliderCollision(SphereCollider *a, SphereCollider *b, PVec3* fn, float* pen){
     assert(a != NULL && b != NULL);
 
-    if(((a->xPostRot + a->radius >= b->xPostRot - b->radius && // a within b
-         a->xPostRot - a->radius <= b->xPostRot + b->radius) &&
-        (a->yPostRot + a->radius >= b->yPostRot - b->radius &&
-         a->yPostRot - a->radius <= b->yPostRot + b->radius) &&
-        a->zPostRot + a->radius >= b->zPostRot - b->radius &&
-        a->zPostRot - a->radius <= b->zPostRot + b->radius) ||
-       ((b->xPostRot + b->radius >= a->xPostRot - a->radius && // b within a
-         b->xPostRot - b->radius <= a->xPostRot + a->radius) &&
-        (b->yPostRot + b->radius >= a->yPostRot - a->radius &&
-         b->yPostRot - b->radius <= a->yPostRot + a->radius) &&
-        b->zPostRot + b->radius >= a->zPostRot - a->radius &&
-        b->zPostRot - b->radius <= a->zPostRot + a->radius)){
-        return true;
+    // separated for clarity
+    if(a->xPostRot + a->radius >= b->xPostRot - b->radius && // a within b
+         a->xPostRot - a->radius <= b->xPostRot + b->radius) {
+        if(a->yPostRot + a->radius >= b->yPostRot - b->radius &&
+            a->yPostRot - a->radius <= b->yPostRot + b->radius){
+            if(a->zPostRot + a->radius >= b->zPostRot - b->radius &&
+               a->zPostRot - a->radius <= b->zPostRot + b->radius){
+                return true;
+            }
+        }
+    }
+    else if(b->xPostRot + b->radius >= a->xPostRot - a->radius && // b within a
+              b->xPostRot - b->radius <= a->xPostRot + a->radius){
+        if(b->yPostRot + b->radius >= a->yPostRot - a->radius &&
+           b->yPostRot - b->radius <= a->yPostRot + a->radius){
+            if(b->zPostRot + b->radius >= a->zPostRot - a->radius &&
+               b->zPostRot - b->radius <= a->zPostRot + a->radius){
+                return true;
+            }
+        }
     }
     else{
         return false;
@@ -191,9 +198,6 @@ bool testSphereColliderCollision(SphereCollider *a, SphereCollider *b, PVec3* fn
 }
 
 bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float* pen){
-    PVec3* norms = getAllBoxColliderNorms(*a);
-    double sqRadius = pow(b->radius, 2);
-
     // alg from https://stackoverflow.com/questions/27517250/sphere-cube-collision-detection-in-opengl
 
     // distances from centre of box collider

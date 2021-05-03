@@ -143,6 +143,9 @@ void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
         PhysicsWorld_forceImpulse(cb, deltaTime);
         CollisionBody_resetForce(cb);
 
+        //Apply air resistance
+        PhysicsWorld_forceDrag(cb);
+
         //All calculations should be before terminal velocity.
         // Fake terminal velocity
         FakeTerminalVelocity(&cb->velocity);
@@ -157,4 +160,11 @@ void PhysicsWorld_forceImpulse(CollisionBody *cb, float deltaTime) {
     cb->velocity.data[0] += cb->force.data[0] * deltaTime;
     cb->velocity.data[1] += cb->force.data[1] * deltaTime;
     cb->velocity.data[2] += cb->force.data[2] * deltaTime;
+}
+
+void PhysicsWorld_forceDrag(CollisionBody *cb) {
+    static const float airResistance = 0.995f;
+    cb->velocity.data[0] *= airResistance;
+    cb->velocity.data[1] *= airResistance;
+    cb->velocity.data[2] *= airResistance;
 }

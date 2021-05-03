@@ -182,19 +182,7 @@ bool testSphereColliderCollision(SphereCollider *a, SphereCollider *b, PVec3* fn
             }
         }
     }
-    else if(b->xPostRot + b->radius >= a->xPostRot - a->radius && // b within a
-              b->xPostRot - b->radius <= a->xPostRot + a->radius){
-        if(b->yPostRot + b->radius >= a->yPostRot - a->radius &&
-           b->yPostRot - b->radius <= a->yPostRot + a->radius){
-            if(b->zPostRot + b->radius >= a->zPostRot - a->radius &&
-               b->zPostRot - b->radius <= a->zPostRot + a->radius){
-                return true;
-            }
-        }
-    }
-    else{
-        return false;
-    }
+    return false;
 }
 
 bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float* pen){

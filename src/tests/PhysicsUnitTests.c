@@ -327,28 +327,33 @@ void testNarrowPhase_BB(){
     // create collider
     BoxCollider *collider1 = calloc(1, sizeof(BoxCollider));
     BoxCollider_init(collider1);
-    collider1->xOffset = 0;
+    collider1->xOffset = -5;
     collider1->yOffset = 0;
     collider1->zOffset = 0;
     collider1->xLen = 1.f;
-    collider1->yLen = 0.f;
-    collider1->zLen = 0.f;
+    collider1->yLen = 1.f;
+    collider1->zLen = 1.f;
     CollisionBody_addBoxCollider(collisionBody1, collider1);
+
+    BoxCollider *collider2 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider2);
+    collider2->xOffset = 5;
+    collider2->xLen = 1.f;
+    collider2->yLen = 1.f;
+    collider2->zLen = 1.f;
+    CollisionBody_addBoxCollider(collisionBody1, collider2);
+
     PhysicsWorld_addCollisionBody(&pw, collisionBody1);
 
-    // create CollisionBody for object
     CollisionBody* collisionBody2 = calloc(1, sizeof(CollisionBody));
     CollisionBody_init(collisionBody2);
     // create collider
-    BoxCollider *collider2 = calloc(1, sizeof(BoxCollider));
-    BoxCollider_init(collider2);
-    collider2->xOffset = 0.5f;
-    collider2->yOffset = 0.0f;
-    collider2->zOffset = 0.0f;
-    collider2->xLen = 0.f;
-    collider2->yLen = 0.f;
-    collider2->zLen = 0.f;
-    CollisionBody_addBoxCollider(collisionBody2, collider2);
+    BoxCollider *oCollider1 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(oCollider1);
+    oCollider1->xLen = 1.f;
+    oCollider1->yLen = 1.f;
+    oCollider1->zLen = 1.f;
+    CollisionBody_addBoxCollider(collisionBody2, oCollider1);
     PhysicsWorld_addCollisionBody(&pw, collisionBody2);
 
     CollisionArrayContainer cac = collisionArrayContainer_init();
@@ -357,14 +362,81 @@ void testNarrowPhase_BB(){
     TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
 }
 
-// sphere
-// square
+void testNarrowPhase_BS(){
+    PhysicsWorld pw;
+    PhysicsWorld_init(&pw);
 
-// two sphere colliders, test that a collider can go in between and not be detected
+    // create CollisionBody for object
+    CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody1);
+    // create collider
+    SphereCollider *collider1 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(collider1);
+    collider1->xOffset = -5;
+    collider1->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody1, collider1);
 
-// two square colliders that leave gap, test noncollision
+    SphereCollider *collider2 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(collider2);
+    collider2->xOffset = 5;
+    collider2->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody1, collider2);
 
-// remove rotation from boxCollider
+    PhysicsWorld_addCollisionBody(&pw, collisionBody1);
+
+    CollisionBody* collisionBody2 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody2);
+    // create collider
+    BoxCollider *oCollider1 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(oCollider1);
+    oCollider1->xLen = 1.f;
+    oCollider1->yLen = 1.f;
+    oCollider1->zLen = 1.f;
+    CollisionBody_addBoxCollider(collisionBody2, oCollider1);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody2);
+
+    CollisionArrayContainer cac = collisionArrayContainer_init();
+    collisionsDetection(&pw, &cac);
+
+    TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
+}
+
+void testNarrowPhase_SS(){
+    PhysicsWorld pw;
+    PhysicsWorld_init(&pw);
+
+    // create CollisionBody for object
+    CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody1);
+    // create collider
+    SphereCollider *collider1 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(collider1);
+    collider1->xOffset = -5;
+    collider1->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody1, collider1);
+
+    SphereCollider *collider2 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(collider2);
+    collider2->xOffset = 5;
+    collider2->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody1, collider2);
+
+    PhysicsWorld_addCollisionBody(&pw, collisionBody1);
+
+    CollisionBody* collisionBody2 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody2);
+    // create collider
+    SphereCollider *oCollider1 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(oCollider1);
+    oCollider1->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody2, oCollider1);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody2);
+
+    CollisionArrayContainer cac = collisionArrayContainer_init();
+    collisionsDetection(&pw, &cac);
+
+    TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
+}
 
 void test_Physics(){
     RUN_TEST(testIdentity44);
@@ -376,4 +448,6 @@ void test_Physics(){
     RUN_TEST(testTranslation);
     RUN_TEST(testCombinedTransformation);
     RUN_TEST(testNarrowPhase_BB);
+    RUN_TEST(testNarrowPhase_BS);
+    RUN_TEST(testNarrowPhase_SS);
 }

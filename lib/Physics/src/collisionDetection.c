@@ -194,14 +194,39 @@ bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float*
     PVec3* norms = getAllBoxColliderNorms(*a);
     double sqRadius = pow(b->radius, 2);
 
-    for(size_t i = 0; i < 6; ++i){ // for every face of box
-        if(sqRadius - (norms[i].data[0] - b->xPostRot) >= 0 &&
-           sqRadius - (norms[i].data[1] - b->yPostRot) >= 0 &&
-           sqRadius - (norms[i].data[2] - b->zPostRot) >= 0){
-            return true;
-        }
+    // alg from https://stackoverflow.com/questions/27517250/sphere-cube-collision-detection-in-opengl
+
+    // distances from centre of box collider
+    float sphereXDistance = fabsf(b->xPostRot - a->AABBx1 + a->xLen/2);
+    float sphereYDistance = fabsf(b->yPostRot - a->AABBy1 + a->yLen/2);
+    float sphereZDistance = fabsf(b->zPostRot - a->AABBz1 + a->zLen/2);
+
+    // easier-to-detect checks
+    if(sphereXDistance >= fabsf(a->xLen + b->radius)){
+        return false;
     }
-    return false;
+    if(sphereYDistance >= fabsf(a->yLen + b->radius)){
+        return false;
+    }
+    if(sphereZDistance >= fabsf(a->zLen + b->radius)){
+        return false;
+    }
+
+    if(sphereXDistance < a->xLen){
+        return true;
+    }
+    if(sphereYDistance < a->yLen){
+        return true;
+    }
+    if(sphereZDistance < a->zLen){
+        return true;
+    }
+
+    // more comprehensive check
+    float sqCornerDistance = powf(sphereXDistance - a->xLen, 2) +
+        powf(sphereZDistance - a->yLen, 2) +
+        powf(sphereZDistance - a->zLen, 2);
+    return (sqCornerDistance < powf(b->radius, 2));
 }
 
 bool testNarrowPhaseCollision(CollisionBody* a, CollisionBody* b, PVec3* fn, float* pen){

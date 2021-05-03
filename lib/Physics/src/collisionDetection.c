@@ -77,15 +77,12 @@ void determineCollisionDetails_BS(CollisionBody* ca, BoxCollider* ba, CollisionB
     mcenb.elem[2] = cenb.data[2];
 
     // find closest two verts
-    float cD = FLT_MAX;
-    Matrix41 ca1;
-    ca1.elem[0] = 0;
-    ca1.elem[1] = 0;
-    ca1.elem[2] = 0;
-    ca1.elem[3] = 0;
-    for(size_t i = 0; i < 8; ++i){
-        float d = distance(bcv1.verts[i], mcenb);
-        if(d < cD){// TODO: wont work if first is closest
+    float d = distance(bcv1.verts[0], mcenb);
+    float cD = d;
+    Matrix41 ca1 = bcv1.verts[0];
+    for(size_t i = 1; i < 8; ++i){
+        d = distance(bcv1.verts[i], mcenb);
+        if(d < cD){
             ca1 = bcv1.verts[i];
             cD = d;
         }

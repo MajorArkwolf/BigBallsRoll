@@ -8,12 +8,15 @@ typedef struct menuOption {
     bool menu, level, settings, exit;
 } menuOption;
 
-typedef  struct GameOverData {
+typedef  struct GameOver {
     char buffer[GUI_BUFFER_SIZE];
     char seed[GUI_BUFFER_SIZE];
     char message[GUI_BUFFER_SIZE];
     char name[GUI_BUFFER_SIZE];
-} GameOverData;
+    char time[GUI_BUFFER_SIZE];
+    char lives[GUI_BUFFER_SIZE];
+    char levels[GUI_BUFFER_SIZE];
+} GameOver;
 
 typedef struct Hud {
     char buffer[GUI_BUFFER_SIZE];
@@ -34,9 +37,9 @@ typedef struct GuiManager {
     struct nk_font_atlas *atlas;
     menuOption options;
     Hud hud;
-    GameOverData gameOverData;
+    GameOver gameOver;
     bool inGame;
-    bool gameOver;
+    bool isGameOver;
     int glfwHeight;
     int glfwWidth;
     float height;

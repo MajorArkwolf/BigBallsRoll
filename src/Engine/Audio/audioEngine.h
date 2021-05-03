@@ -9,7 +9,8 @@
 #define MAX_SOURCES 10000
 
 typedef struct AudioPresets {
-    double MasterVolume;
+    float MasterVolume;
+    bool soundEnabled;
 } AudioPresets;
 
 typedef struct AudioEngine {
@@ -90,6 +91,19 @@ ALuint AudioEngine_newSource(AudioEngine *audioEngine, Vec3 *position, Vec3 *vel
 void AudioEngine_updateSource(ALuint id, Vec3 *position, Vec3 *velocity);
 
 /**
+ * Update the master volume allowing for you to adjust the sound level in game.
+ * @param ap the audio presets to apply.
+ */
+void AudioEngine_changeMasterVolume(AudioPresets *ap);
+
+/**
+ * Sets the volume of a sound emitter.
+ * @param id of the emitter to update
+ * @param newVolume the volume in a range from 0 - 100
+ */
+void AudioEngine_setVolume(ALuint id, float newVolume);
+
+/**
  * Shuts the audio engine down.
  * @param audioEngine AudioEngine to shutdown.
  */
@@ -100,3 +114,10 @@ void AudioEngine_free(AudioEngine *audioEngine);
  * @param ap structure to initialise
  */
 void AudioEngine_AudioPresets_init(AudioPresets *ap);
+
+/**
+ *
+ * @param id the id to enable/disable repeating
+ * @param shouldRepeat
+ */
+void AudioEngine_setRepeat(ALuint id, bool shouldRepeat);

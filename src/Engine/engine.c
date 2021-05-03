@@ -168,6 +168,7 @@ int Engine_run(int argc, char *argv[]) {
     AudioEngine_init(&engine.audioEngine);
     AudioManager_init(&engine.audioManager);
     AudioManager_loadSounds(&engine.audioManager, engine.cwd);
+    AudioEngine_changeMasterVolume(&engine.audioPresets);
 
     glfwSetErrorCallback(error_callback);
     //Initialise our Window and OpenGL context.
@@ -320,14 +321,14 @@ void Engine_cameraLock(bool lockCamera) {
 }
 
 void UpdateWindow() {
-    int xpos = 0;
-    int ypos = 0;
-    glfwGetWindowPos(engine.window, &xpos, &ypos);
+    int xPos = 0;
+    int yPos = 0;
+    glfwGetWindowPos(engine.window, &xPos, &yPos);
     if (engine.playerConfig.windowedMode) {
         glfwSetWindowMonitor(engine.window,
                              NULL,
-                             xpos,
-                             ypos,
+                             xPos,
+                             yPos,
                              engine.playerConfig.width,
                              engine.playerConfig.height,
                              60);
@@ -343,7 +344,12 @@ void UpdateWindow() {
     }
 }
 
+void UpdateAudio() {
+    AudioEngine_changeMasterVolume(&engine.audioPresets);
+}
+
 void Engine_updateConfig() {
     UpdateWindow();
+    UpdateAudio();
     LuaHelper_PlayerConfig();
 }

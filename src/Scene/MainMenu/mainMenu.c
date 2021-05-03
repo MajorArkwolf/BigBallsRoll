@@ -49,8 +49,12 @@ void ActivateKonami(InputType inputType) {
             Sound *sound = AudioManager_getSound(&engine.audioManager, unlock);
             if (sound != NULL) {
                 State *state = StateManager_top(&engine.sM);
-                GameObject_registerSoundSource(&state->gameObjects[0]);
-                AudioEngine_play(state->gameObjects[0].SoundID, sound);
+                size_t id = state->NumOfGameObjects;
+                GameObject_init(&state->gameObjects[id]);
+                GameObject_registerSoundSource(&state->gameObjects[id]);
+                AudioEngine_play(state->gameObjects[id].SoundID, sound);
+                AudioEngine_setVolume(state->gameObjects[id].SoundID, 100.0f);
+                ++state->NumOfGameObjects;
             }
         }
     }
@@ -122,6 +126,4 @@ void MainMenu_init(State *state) {
     char file[] = "mainMenu.lua";
     LuaHelper_loadScript(file);
     LuaHelper_init();
-    GameObject_registerSoundSource(&state->gameObjects[2]);
-    AudioEngine_play(state->gameObjects[2].SoundID, &engine.audioManager.Sounds[0]);
 }

@@ -5,8 +5,6 @@
 
 typedef struct PlayerConfig {
     int seed;
-    int volume;
-    bool sound;
     int verticalSens;
     int horizontalSens;
     char name[NAME_SIZE];

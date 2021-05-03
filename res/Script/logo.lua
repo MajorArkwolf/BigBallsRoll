@@ -15,6 +15,9 @@ function Logo:Init(boardPosition)
     self.movingIn = true
     self.rotatingLeft = true
     GameObjectSetModel(self.gameObjectID, "Obj/Title.obj")
+    AudioRegisterSource(self.gameObjectID)
+    AudioPlaySound(self.gameObjectID, "trance.ogg", true)
+    AudioSetSourceVolume(self.gameObjectID, 10)
 end
 
 function Logo:PivotLeftAndRight(deltaTime)

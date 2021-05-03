@@ -352,3 +352,9 @@ void CollisionBody_addForce(CollisionBody *cb, float xForce, float yForce, float
     cb->force.data[1] += yForce;
     cb->force.data[2] += zForce;
 }
+
+void CollisionBody_resetForce(CollisionBody *cb) {
+    cb->force.data[0] = 0;
+    cb->force.data[1] = 0;
+    cb->force.data[2] = 0;
+}

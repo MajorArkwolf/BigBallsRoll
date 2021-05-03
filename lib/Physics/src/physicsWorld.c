@@ -133,16 +133,28 @@ void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
         if (cb->isStatic) {
             continue;
         }
-        //Calculate gravity downwards
-        PVec3 gravity = PVec3MultiplyScalar(&physicsWorld->gravity, deltaTime);
-        //cb->velocity = addPVec3(&gravity, &cb->velocity); TODO: Reenable once collision detection is working.
-        // Fake terminal velocity
+
+        //Gravity
+//        CollisionBody_addForce(physicsWorld->collisionBodies[i], physicsWorld->gravity.data[0],
+//                                                                 physicsWorld->gravity.data[1],
+//                                                                 physicsWorld->gravity.data[2]); TODO: Re-enable once collision detection is working.
+
+        //Apply impulse
+        PhysicsWorld_forceImpulse(cb, deltaTime);
+        CollisionBody_resetForce(cb);
 
         //All calculations should be before terminal velocity.
+        // Fake terminal velocity
         FakeTerminalVelocity(&cb->velocity);
         PVec3 newVel = PVec3MultiplyScalar(&cb->velocity, deltaTime);
         cb->xPos += newVel.data[0];
         cb->yPos += newVel.data[1];
         cb->zPos += newVel.data[2];
     }
+}
+
+void PhysicsWorld_forceImpulse(CollisionBody *cb, float deltaTime) {
+    cb->velocity.data[0] += cb->force.data[0] * deltaTime;
+    cb->velocity.data[1] += cb->force.data[1] * deltaTime;
+    cb->velocity.data[2] += cb->force.data[2] * deltaTime;
 }

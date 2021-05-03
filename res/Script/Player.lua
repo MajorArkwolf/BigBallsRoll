@@ -14,7 +14,7 @@ function Player:Init(position)
     self.right = false
     self.playerMoveOn = false
     self.rotatePlayerOn = false
-    self.velocity = 4
+    self.velocity = 2.5
     self.playerLives = 3
     self.mouseSensitivityX = 3
     self.mouseSensitivityY = 3

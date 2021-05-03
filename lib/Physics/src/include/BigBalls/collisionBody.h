@@ -198,3 +198,9 @@ void CollisionBody_setCollisionBodyStatic(CollisionBody *cb, bool isStatic);
  * @param zForce force in the z direction
  */
 void CollisionBody_addForce(CollisionBody *cb, float xForce, float yForce, float zForce);
+
+/**
+ * Reset the force of a collision body to zero.
+ * @param cb collision body whose force to reset
+ */
+void CollisionBody_resetForce(CollisionBody *cb);

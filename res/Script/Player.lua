@@ -12,7 +12,6 @@ function Player:Init(position)
     self.backward = false
     self.left = false
     self.right = false
-    self.space = false
     self.playerMoveOn = false
     self.rotatePlayerOn = false
     self.velocity = 2.5
@@ -92,9 +91,6 @@ function Player:Move(deltaTime)
     if self.left == true then
         force.x = (rightNormal.x * self.velocity)
         force.z = (rightNormal.z * self.velocity)
-    end
-    if self.space == true then
-        --TODO: add jump function
     end
     if force.x ~= 0 or force.y ~= 0 or force.z ~= 0 then
         PhysicsAddForce(self.gameObjectID, force)

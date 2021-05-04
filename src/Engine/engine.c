@@ -189,6 +189,7 @@ int Engine_run(int argc, char *argv[]) {
     }
 
     glfwMakeContextCurrent(engine.window);
+    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     glfwSwapInterval(1);
     glfwSetInputMode(engine.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     if (glfwRawMouseMotionSupported()) {

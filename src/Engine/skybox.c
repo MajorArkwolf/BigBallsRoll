@@ -2,11 +2,6 @@
 #include "OpenGL.h"
 #include "Engine/engine.h"
 
-//Work around for windows
-#ifndef GL_CLAMP_TO_EDGE
-#define GL_CLAMP_TO_EDGE 0x812F
-#endif
-
 //Skybox
 Texture *skybox[6];
 

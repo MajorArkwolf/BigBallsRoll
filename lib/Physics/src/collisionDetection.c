@@ -60,9 +60,9 @@ void determineCollisionDetails_BB(CollisionBody* ca, BoxCollider* ba, CollisionB
 
     // determine penetration
     float minV = FLT_MAX;
-    min(ca1.elem[0] - cb1.elem[0], &minV);
-    min(ca1.elem[1] - cb1.elem[1], &minV);
-    min(ca1.elem[2] - cb1.elem[2], &minV);
+    checkMin(ca1.elem[0] - cb1.elem[0], &minV);
+    checkMin(ca1.elem[1] - cb1.elem[1], &minV);
+    checkMin(ca1.elem[2] - cb1.elem[2], &minV);
     *pen = minV;
 }
 
@@ -95,9 +95,9 @@ void determineCollisionDetails_BS(CollisionBody* ca, BoxCollider* ba, CollisionB
 
     // pen
     float minV = FLT_MAX;
-    min(ca1.elem[0] - mcenb.elem[0], &minV);
-    min(ca1.elem[1] - mcenb.elem[1], &minV);
-    min(ca1.elem[2] - mcenb.elem[2], &minV);
+    checkMin(ca1.elem[0] - mcenb.elem[0], &minV);
+    checkMin(ca1.elem[1] - mcenb.elem[1], &minV);
+    checkMin(ca1.elem[2] - mcenb.elem[2], &minV);
     *pen = minV;
 }
 

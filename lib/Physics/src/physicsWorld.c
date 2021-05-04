@@ -135,9 +135,8 @@ void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime){
         }
 
         //Gravity
-        //CollisionBody_addForce(physicsWorld->collisionBodies[i], physicsWorld->gravity.data[0],
-        //                                                         physicsWorld->gravity.data[1],
-        //                                                         physicsWorld->gravity.data[2]); //TODO: Re-enable once collision detection is working.
+        //CollisionBody_addForce(physicsWorld->collisionBodies[i],
+        // physicsWorld->gravity.data[0], physicsWorld->gravity.data[1], physicsWorld->gravity.data[2]); //TODO: Re-enable once collision detection is working.
 
 
         //Apply impulse

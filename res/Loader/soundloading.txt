@@ -1,1 +1,5 @@
 trance.ogg
+unlock.ogg
+win.ogg
+levelcomplete.ogg
+collision.ogg

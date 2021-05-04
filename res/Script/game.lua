@@ -9,7 +9,7 @@ function Init()
     -- 0 = not running, 1 = running, 2 = done
     generation_running = 0
     level = 1
-    gen:Init(seed)
+    gen:Init(PlayerConfig_seed)
     gen:Setup(50, 1, 50, 10)
     gen:RegisterGameObjects()
     local position = {}
@@ -49,6 +49,9 @@ function NextLevel()
     startNode:Init(gen.startPoint[1], gen.startPoint[2], gen.startPoint[3], gen.boardID)
     startNode:FreshBoard(5, player, endNode)
     endNode:Init(gen.endPoint[1], gen.endPoint[2], gen.endPoint[3], gen.boardID)
+    if level == PlayerConfig_levels then
+        endNode.endLevelSound = "win.ogg"
+    end
     player:ReInit()
     level = level + 1
 end
@@ -79,18 +82,25 @@ end
 function Update()
     GenerateNextLevel()
     player:Update(deltaTime)
+    -- Check to see if the player is in the end zone
     if endNode:CheckEndTrigger(player) then
-        if endNode:DestroyRandomBlock() then
+        if level > PlayerConfig_levels then
+            print("Game Finished")
+            print(timer)
+        -- Begin destroying the world every tick, returns true when there is no more blocks to destroy
+        elseif endNode:DestroyRandomBlock() then
+            -- Progress to next level
             NextLevel()
         end
     else
+        -- Check if the player has landed on the start node, if so we begin
         if startNode:CheckStartTrigger(player, deltaTime) then
             -- If game has started then let the timer continue
             timer = timer + deltaTime
+            GUIUpdateHUD(level, player.playerLives, timer)
         end
     end
 end
-
 
 function Draw()
 

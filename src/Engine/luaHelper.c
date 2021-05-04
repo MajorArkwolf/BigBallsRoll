@@ -365,6 +365,76 @@ int LuaHelper_LightPosition(lua_State *L) {
     return 0;
 }
 
+int LuaHelper_ExitGame(lua_State *L) {
+    State *state = StateManager_top(&engine.sM);
+    state->endStateSafely = true;
+    return 0;
+}
+
+int LuaHelper_GUIHUDUpdate(lua_State *L) {
+    // Level, Lives, Time
+    int level = lua_tonumber(L, 1);
+    int lives = lua_tonumber(L, 2);
+    float time = lua_tonumber(L, 3);
+    GuiManager_updateHUD(&engine.guiManager, time, lives, level);
+    lua_pop(L, 3);
+    return 0;
+}
+
+int LuaHelper_RegisterAudioSource(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    GameObject_registerSoundSource(gameObject);
+    lua_pop(L, 1);
+    return 0;
+}
+
+int LuaHelper_PlaySound(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    size_t length = 0;
+    const char* soundName = luaL_checklstring(L, 2,  &length);
+    bool repeatSound = lua_toboolean(L, 3);
+    ALuint unlock = 0;
+    if (AudioManager_findSound(&engine.audioManager, soundName, &unlock)) {
+        Sound *sound = AudioManager_getSound(&engine.audioManager, unlock);
+        if (sound != NULL) {
+            GameObject_registerSoundSource(gameObject);
+            AudioEngine_play(gameObject->SoundID, sound);
+            AudioEngine_setRepeat(gameObject->SoundID, repeatSound);
+        }
+    }
+    lua_pop(L, 3);
+    return 0;
+}
+
+int LuaHelper_SetSourceVolume(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    float volume = lua_tonumber(L, 2);
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    AudioEngine_setVolume(gameObject->SoundID, volume);
+    lua_pop(L, 2);
+    return 0;
+}
+
+void LuaHelper_PlayerConfig() {
+    lua_pushnumber(engine.lua, engine.playerConfig.horizontalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXSensitivity");
+    lua_pushnumber(engine.lua, engine.playerConfig.verticalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseYSensitivity");
+    lua_pushboolean(engine.lua, engine.playerConfig.horizontalLock);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXLock");
+}
+
 void LuaHelper_init() {
 
     // Register functions for lua.
@@ -408,6 +478,8 @@ void LuaHelper_init() {
     // Scene
     lua_pushcfunction(engine.lua, LuaHelper_GameNextLevel);
     lua_setglobal(engine.lua, "GameNextLevel");
+    lua_pushcfunction(engine.lua, LuaHelper_ExitGame);
+    lua_setglobal(engine.lua, "ExitGame");
 
     //Light
     lua_pushcfunction(engine.lua, LuaHelper_RegisterLight);
@@ -423,8 +495,31 @@ void LuaHelper_init() {
     lua_pushcfunction(engine.lua, LuaHelper_LightPosition);
     lua_setglobal(engine.lua, "LightPosition");
 
-    lua_pushnumber(engine.lua, engine.seed);
-    lua_setglobal(engine.lua, "seed");
+    //GUI
+    lua_pushcfunction(engine.lua, LuaHelper_GUIHUDUpdate);
+    lua_setglobal(engine.lua, "GUIUpdateHUD");
+
+    //Audio
+    lua_pushcfunction(engine.lua, LuaHelper_RegisterAudioSource);
+    lua_setglobal(engine.lua, "AudioRegisterSource");
+    lua_pushcfunction(engine.lua, LuaHelper_PlaySound);
+    lua_setglobal(engine.lua, "AudioPlaySound");
+    lua_pushcfunction(engine.lua, LuaHelper_SetSourceVolume);
+    lua_setglobal(engine.lua, "AudioSetSourceVolume");
+
+    //Global variables
+    lua_pushnumber(engine.lua, engine.playerConfig.seed);
+    lua_setglobal(engine.lua, "PlayerConfig_seed");
+    lua_pushnumber(engine.lua, engine.playerConfig.levels);
+    lua_setglobal(engine.lua, "PlayerConfig_levels");
+    lua_pushstring(engine.lua, engine.playerConfig.name);
+    lua_setglobal(engine.lua, "PlayerConfig_name");
+    lua_pushnumber(engine.lua, engine.playerConfig.horizontalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXSensitivity");
+    lua_pushnumber(engine.lua, engine.playerConfig.verticalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseYSensitivity");
+    lua_pushboolean(engine.lua, engine.playerConfig.horizontalLock);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXLock");
     lua_getglobal(engine.lua, "Init");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));

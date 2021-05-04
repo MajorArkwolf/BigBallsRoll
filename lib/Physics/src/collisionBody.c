@@ -38,8 +38,24 @@ void CollisionBody_init(CollisionBody *collisionBody){
 
 void CollisionBody_free(CollisionBody *collisionBody){
     assert(collisionBody != NULL);
-    free(collisionBody->BoxColliders);
-    free(collisionBody->SphereColliders);
+    if (collisionBody->BoxColliders != NULL) {
+        for (size_t i = 0; i < collisionBody->numOfBoxColliders; ++i) {
+            free(collisionBody->BoxColliders[i]);
+            collisionBody->BoxColliders[i] = NULL;
+        }
+        free(collisionBody->BoxColliders);
+        collisionBody->BoxColliders = NULL;
+    }
+
+    if (collisionBody->SphereColliders != NULL) {
+        for (size_t i = 0; i < collisionBody->numOfSphereColliders; ++i) {
+            free(collisionBody->SphereColliders[i]);
+            collisionBody->SphereColliders[i] = NULL;
+        }
+        free(collisionBody->SphereColliders);
+        collisionBody->SphereColliders = NULL;
+    }
+
     // Reset colliderManager values
     collisionBody->numOfBoxColliders = 0;
     collisionBody->numOfSphereColliders = 0;
@@ -51,10 +67,10 @@ void CollisionBody_addBoxCollider(CollisionBody *collisionBody,
     assert(collisionBody != NULL);
     // Allocate new, larger array
     if(collisionBody->BoxColliders == NULL){
-        collisionBody->BoxColliders = calloc(1, sizeof(BoxCollider));
+        collisionBody->BoxColliders = calloc(1, sizeof(BoxCollider *));
     }
     else{
-        collisionBody->BoxColliders = realloc(collisionBody->BoxColliders, sizeof(BoxCollider) * collisionBody->numOfBoxColliders + 1);
+        collisionBody->BoxColliders = realloc(collisionBody->BoxColliders, (sizeof(BoxCollider *)) * (collisionBody->numOfBoxColliders + 1));
     }
     // Copy BoxCollider object into array
     collisionBody->BoxColliders[collisionBody->numOfBoxColliders] = boxCollider;
@@ -69,10 +85,10 @@ void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
     assert(collisionBody != NULL);
     // Allocate new, larger array
     if(collisionBody->SphereColliders == NULL){
-        collisionBody->SphereColliders = calloc(1, sizeof(SphereCollider));
+        collisionBody->SphereColliders = calloc(1, sizeof(SphereCollider *));
     }
     else{
-        collisionBody->SphereColliders = realloc(collisionBody->SphereColliders, sizeof(SphereCollider) * collisionBody->numOfSphereColliders + 1);
+        collisionBody->SphereColliders = realloc(collisionBody->SphereColliders, sizeof(SphereCollider *) * (collisionBody->numOfSphereColliders + 1));
     }
     // Copy SphereCollider object into array
     collisionBody->SphereColliders[collisionBody->numOfSphereColliders] = sphereCollider;

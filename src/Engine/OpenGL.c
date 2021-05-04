@@ -29,7 +29,6 @@ void gluLookAt(GLfloat eyeX, GLfloat eyeY, GLfloat eyeZ, GLfloat centerX, GLfloa
     Vec3 side = VectorMath_crossProductVec3ByVec3(&forward, &up);
     side = VectorMath_normaliseVec3(&side);
     up = VectorMath_crossProductVec3ByVec3(&side, &forward);
-    //Up = Cross(side, forward);//y direction
     Mat[0] = side.X;
     Mat[4] = side.Y;
     Mat[8] = side.Z;

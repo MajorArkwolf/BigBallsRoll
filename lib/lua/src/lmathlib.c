@@ -716,7 +716,7 @@ static const luaL_Reg mathlib[] = {
   {"ult",   math_ult},
   {"log",   math_log},
   {"max",   math_max},
-  {"checkMin",   math_min},
+  {"min",   math_min},
   {"modf",   math_modf},
   {"rad",   math_rad},
   {"sin",   math_sin},

@@ -75,7 +75,7 @@ bool compareMatrix44(Matrix44 a, Matrix44 b);
 bool compareMatrix41(Matrix41 a, Matrix41 b);
 
 /**
- * Determines if either of the two floats are new checkMin/max values, and returns them if they are
+ * Determines if either of the two floats are new min/max values, and returns them if they are
  * @param val1 the first float
  * @param val2 the second float
  * @param min updates passed in value with the smallest value from val1 or val2
@@ -83,10 +83,10 @@ bool compareMatrix41(Matrix41 a, Matrix41 b);
  */
 void minMax(float val1, float val2, float* min, float* max);
 
-void checkMin(float val, float* min);
+void min(float val, float* min);
 
 /**
- * Determines if a point and its extension produces a new checkMin or max value
+ * Determines if a point and its extension produces a new min or max value
  * @param pos the position of the point on one axis
  * @param len the extension of the point to another point on one axis
  * @param min the address of the current minimum value

@@ -192,7 +192,7 @@ static int os_clock (lua_State *L) {
 /*
 ** {======================================================
 ** Time/Date operations
-** { year=%Y, month=%m, day=%d, hour=%H, checkMin=%M, sec=%S,
+** { year=%Y, month=%m, day=%d, hour=%H, min=%M, sec=%S,
 **   wday=%w+1, yday=%j, isdst=? }
 ** =======================================================
 */
@@ -232,7 +232,7 @@ static void setallfields (lua_State *L, struct tm *stm) {
   setfield(L, "month", stm->tm_mon, 1);
   setfield(L, "day", stm->tm_mday, 0);
   setfield(L, "hour", stm->tm_hour, 0);
-  setfield(L, "checkMin", stm->tm_min, 0);
+  setfield(L, "min", stm->tm_min, 0);
   setfield(L, "sec", stm->tm_sec, 0);
   setfield(L, "yday", stm->tm_yday, 1);
   setfield(L, "wday", stm->tm_wday, 1);
@@ -355,7 +355,7 @@ static int os_time (lua_State *L) {
     ts.tm_mon = getfield(L, "month", -1, 1);
     ts.tm_mday = getfield(L, "day", -1, 0);
     ts.tm_hour = getfield(L, "hour", 12, 0);
-    ts.tm_min = getfield(L, "checkMin", 0, 0);
+    ts.tm_min = getfield(L, "min", 0, 0);
     ts.tm_sec = getfield(L, "sec", 0, 0);
     ts.tm_isdst = getboolfield(L, "isdst");
     t = mktime(&ts);

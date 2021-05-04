@@ -1,5 +1,4 @@
 #include "include/BigBalls/mathsCommon.h"
-#define _USE_MATH_DEFINES
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -97,7 +96,7 @@ void minMax(float val1, float val2, float* min, float* max){
     }
 }
 
-void checkMin(float val, float* min){
+void min(float val, float* min){
     if(val < *min){
         *min = val;
     }

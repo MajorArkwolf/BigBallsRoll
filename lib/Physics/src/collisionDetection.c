@@ -60,9 +60,9 @@ void determineCollisionDetails_BB(CollisionBody* ca, BoxCollider* ba, CollisionB
 
     // determine penetration
     float minV = FLT_MAX;
-    checkMin(ca1.elem[0] - cb1.elem[0], &minV);
-    checkMin(ca1.elem[1] - cb1.elem[1], &minV);
-    checkMin(ca1.elem[2] - cb1.elem[2], &minV);
+    min(ca1.elem[0] - cb1.elem[0], &minV);
+    min(ca1.elem[1] - cb1.elem[1], &minV);
+    min(ca1.elem[2] - cb1.elem[2], &minV);
     *pen = minV;
 }
 
@@ -95,9 +95,9 @@ void determineCollisionDetails_BS(CollisionBody* ca, BoxCollider* ba, CollisionB
 
     // pen
     float minV = FLT_MAX;
-    checkMin(ca1.elem[0] - mcenb.elem[0], &minV);
-    checkMin(ca1.elem[1] - mcenb.elem[1], &minV);
-    checkMin(ca1.elem[2] - mcenb.elem[2], &minV);
+    min(ca1.elem[0] - mcenb.elem[0], &minV);
+    min(ca1.elem[1] - mcenb.elem[1], &minV);
+    min(ca1.elem[2] - mcenb.elem[2], &minV);
     *pen = minV;
 }
 
@@ -123,7 +123,7 @@ void determineCollisionDetails_SS(CollisionBody* ca, SphereCollider* sa, Collisi
 
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
     assert(a != NULL && b != NULL);
-    // the checkMin and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
+    // the min and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
     float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
 
     // determine which coordinate is larger than the other, for each coordinate pair of each CollisionBody
@@ -143,7 +143,7 @@ bool testAABBCollision(CollisionBody *a, CollisionBody *b){
 bool testBoxColliderCollision(BoxCollider *a, BoxCollider *b, PVec3* fn, float* pen){
     assert(a != NULL && b != NULL);
 
-    // the checkMin and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
+    // the min and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
     float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
 
     // determine which coordinate is larger than the other, for each coordinate pair of each CollisionBody

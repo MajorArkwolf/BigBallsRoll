@@ -135,7 +135,7 @@ void luaK_nil (FuncState *fs, int from, int n) {
     int pl = pfrom + GETARG_B(*previous);
     if ((pfrom <= from && from <= pl + 1) ||
         (from <= pfrom && pfrom <= l + 1)) {  /* can connect both? */
-      if (pfrom < from) from = pfrom;  /* from = checkMin(from, pfrom) */
+      if (pfrom < from) from = pfrom;  /* from = min(from, pfrom) */
       if (pl > l) l = pl;  /* l = max(l, pl) */
       SETARG_A(*previous, from);
       SETARG_B(*previous, l - from);

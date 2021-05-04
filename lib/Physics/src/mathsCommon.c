@@ -3,6 +3,10 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif
+
 bool fTolerance(float a, float b, float tolerance){
     assert(tolerance >= 0);
     if(fabsf(a-b) < tolerance){

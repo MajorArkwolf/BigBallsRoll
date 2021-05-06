@@ -46,8 +46,8 @@ void GuiManager_init(GuiManager *guiManager) {
     guiManager->inGame = false;
     guiManager->isGameOver = false;
     guiManager->guiDraw = false;
-    guiManager->hud.prevLevel = 0;
-    guiManager->hud.prevLives = 0;
+    guiManager->hud.prevLevel = -1;
+    guiManager->hud.prevLives = -1;
     guiManager->hud.prevSeconds = 0.0f;
     guiManager->hud.updateHUD = false;
 }
@@ -404,12 +404,7 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
         //Quit
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
-            /*GuiManager_stopGame();
-            GuiManager_optionsReset(guiManager);
-            guiManager->options.menu = true;
-            guiManager->inGame = false;*/
-            guiManager->isGameOver = true;
-            GuiManager_initGameOver(guiManager, "Better luck next time!");
+            GuiManager_initGameOver(guiManager, "Woah, why would you quit :(" , guiManager->hud.nextLevel - 1);
         }
     }
     nk_end(guiManager->ctx);
@@ -443,7 +438,7 @@ void GuiManager_exitMenu(GuiManager *guiManager) {
     nk_end(guiManager->ctx);
 }
 
-void GuiManager_initGameOver(GuiManager *guiManager, const char *message) {
+void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int level) {
     assert(guiManager != NULL && message != NULL);
     //Seed
     strcpy(guiManager->gameOver.seed, "Seed: ");
@@ -457,21 +452,6 @@ void GuiManager_initGameOver(GuiManager *guiManager, const char *message) {
     strcpy(guiManager->gameOver.name, "Good game ");
     strcat(guiManager->gameOver.name, engine.playerConfig.name);
     strcat(guiManager->gameOver.name, "!");
-
-
-    if (guiManager->hud.prevLives != guiManager->hud.nextLives) {
-        strcpy(guiManager->hud.lives, "Lives: ");
-        sprintf(guiManager->hud.buffer, "%i", guiManager->hud.nextLives);
-        strcat(guiManager->hud.lives, guiManager->hud.buffer);
-        guiManager->hud.prevLives = guiManager->hud.nextLives;
-    }
-
-    if (guiManager->hud.prevLevel != guiManager->hud.nextLevel) {
-        strcpy(guiManager->hud.levels, "Level: ");
-        sprintf(guiManager->hud.buffer, "%i", guiManager->hud.nextLevel);
-        strcat(guiManager->hud.levels, guiManager->hud.buffer);
-        guiManager->hud.prevLevel = guiManager->hud.nextLevel ;
-    }
 
     //Time
     strcpy(guiManager->gameOver.time, guiManager->hud.time);
@@ -488,8 +468,11 @@ void GuiManager_initGameOver(GuiManager *guiManager, const char *message) {
 
     //Levels
     strcpy(guiManager->gameOver.levels, "Levels complete: ");
-    sprintf(guiManager->gameOver.buffer, "%i", guiManager->hud.nextLevel - 1);
+    sprintf(guiManager->gameOver.buffer, "%i", level);
     strcat(guiManager->gameOver.levels, guiManager->gameOver.buffer);
+
+    guiManager->isGameOver = true;
+    engine.lockCamera = false;
 }
 
 void GuiManager_gameOver(GuiManager *guiManager) {
@@ -535,7 +518,7 @@ void GuiManager_gameOver(GuiManager *guiManager) {
             guiManager->isGameOver = false;
             guiManager->inGame = false;
             guiManager->options.menu = true;
-            StateManager_top(&engine.sM)->endStateSafely = true;
+            GuiManager_stopGame();
         }
     }
     nk_end(guiManager->ctx);

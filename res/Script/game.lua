@@ -73,7 +73,6 @@ function DeInit()
     player = nil
     gen = nil
     gg_lights = nil
-
 end
 
 function Update()
@@ -81,9 +80,8 @@ function Update()
     player:Update(deltaTime)
     -- Check to see if the player is in the end zone
     if endNode:CheckEndTrigger(player) then
-        if level > PlayerConfig_levels then
-            print("Game Finished")
-            print(timer)
+        if level == PlayerConfig_levels then
+            GUIGameOver("Congratulations gamer! You won!", level);
         -- Begin destroying the world every tick, returns true when there is no more blocks to destroy
         elseif endNode:DestroyRandomBlock() then
             -- Progress to next level

@@ -56,7 +56,7 @@ function Player:Fall(deltaTime)
 end
 
 function Player:IsPlayerDead()
-    if (self.position.y < -20) then
+    if self.position.y < -20 then
         self.playerLives = self.playerLives - 1
         self.position = self.startPosition
     end

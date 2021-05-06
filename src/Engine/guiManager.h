@@ -179,6 +179,18 @@ void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int 
  */
 void GuiManager_closeInactiveWindows(GuiManager *guiManager);
 
+/**
+ * initialises the game over data and sets isGameOver to false which triggers the draw call.
+ * A message can be passed and displayed at the top of the screen, i.e. you won, or you lost, etc.
+ * @param guiManager with the data to init
+ * @param message to display to the player
+ * @param level the levels the player completed
+ */
 void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int level);
 
+/**
+ * Menu that displays the game over screen. GuiManager_initGameOver prepares the data that is displayed
+ * on this screen.
+ * @param guiManager with the ctx to draw to
+ */
 void GuiManager_gameOver(GuiManager *guiManager);

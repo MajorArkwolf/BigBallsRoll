@@ -1,2 +1,9 @@
 smileyFace.png
+Konami.png
 EndScreen.png
+skybox_back.jpg
+skybox_bottom.jpg
+skybox_front.jpg
+skybox_left.jpg
+skybox_right.jpg
+skybox_top.jpg

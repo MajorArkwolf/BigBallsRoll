@@ -9,6 +9,7 @@
 #include "Engine/luaHelper.h"
 #include "Scene/MainMenu/mainMenu.h"
 #include "Physics/physicsInterface.h"
+#include "skybox.h"
 
 Engine engine;
 
@@ -80,6 +81,7 @@ void Draw(void) {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+    Skybox_draw();
     Camera_lookAt(cam);
     StateManager_draw(&engine.sM, 0.0f);
     PhysicsInterface_draw(StateManager_top(&engine.sM)->physicsWorld);
@@ -150,6 +152,7 @@ int Engine_run(int argc, char *argv[]) {
     //Initialise our Services
     TextureManager_init(&engine.textureManager);
     TextureManager_preLoadTextures(&engine.textureManager, engine.cwd);
+    Skybox_loadTexture();
     ModelManager_init(&engine.modelManager);
     ModelManager_loadModels(&engine.modelManager, engine.cwd);
     PlayerConfig_init(&engine.playerConfig);
@@ -165,6 +168,7 @@ int Engine_run(int argc, char *argv[]) {
     AudioEngine_init(&engine.audioEngine);
     AudioManager_init(&engine.audioManager);
     AudioManager_loadSounds(&engine.audioManager, engine.cwd);
+    AudioEngine_changeMasterVolume(&engine.audioPresets);
 
     glfwSetErrorCallback(error_callback);
     //Initialise our Window and OpenGL context.
@@ -317,14 +321,14 @@ void Engine_cameraLock(bool lockCamera) {
 }
 
 void UpdateWindow() {
-    int xpos = 0;
-    int ypos = 0;
-    glfwGetWindowPos(engine.window, &xpos, &ypos);
+    int xPos = 0;
+    int yPos = 0;
+    glfwGetWindowPos(engine.window, &xPos, &yPos);
     if (engine.playerConfig.windowedMode) {
         glfwSetWindowMonitor(engine.window,
                              NULL,
-                             xpos,
-                             ypos,
+                             xPos,
+                             yPos,
                              engine.playerConfig.width,
                              engine.playerConfig.height,
                              60);
@@ -340,7 +344,12 @@ void UpdateWindow() {
     }
 }
 
+void UpdateAudio() {
+    AudioEngine_changeMasterVolume(&engine.audioPresets);
+}
+
 void Engine_updateConfig() {
     UpdateWindow();
+    UpdateAudio();
     LuaHelper_PlayerConfig();
 }

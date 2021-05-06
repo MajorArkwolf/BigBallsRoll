@@ -303,11 +303,11 @@ void GuiManager_settingsMenu(GuiManager *guiManager) {
         //Audio settings
         if (nk_group_begin(guiManager->ctx, "Audio", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 20, 3);
-            nk_property_int(guiManager->ctx, "Volume:", 0, &engine.playerConfig.volume, 100, 10, 10);
+            nk_property_float(guiManager->ctx, "Volume:", 0, &engine.audioPresets.MasterVolume, 100, 10, 10);
             nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 20, 3);
             nk_label(guiManager->ctx, "Sound: ", NK_TEXT_LEFT);
-            if (nk_option_label(guiManager->ctx, "Enabled", engine.playerConfig.sound == true)) engine.playerConfig.sound = true;
-            if (nk_option_label(guiManager->ctx, "Disabled", engine.playerConfig.sound == false)) engine.playerConfig.sound = false;
+            if (nk_option_label(guiManager->ctx, "Enabled", engine.audioPresets.soundEnabled == true)) engine.audioPresets.soundEnabled = true;
+            if (nk_option_label(guiManager->ctx, "Disabled", engine.audioPresets.soundEnabled == false)) engine.audioPresets.soundEnabled = false;
             nk_group_end(guiManager->ctx);
         }
 

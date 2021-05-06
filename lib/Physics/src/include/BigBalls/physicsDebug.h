@@ -6,9 +6,9 @@
  * DebugData object.
  *
  * FaceIndexes contains the index to the first of its three vertices which are stored in *vertices, as well as the colour of that face.
- * The first value in FaceIndexes will be the index to the first face.
- * The 3 values following this represent the R,G,B values of that face.
- * Format is as follows: FACE_INDEX,R,G,B,FACE_INDEX,R,G,B....
+ * The first 3 values represent the R,G,B values of that face.
+ * The 4th value in FaceIndexes will be the index to the first face.
+ * Format is as follows: R,G,B,FACE_INDEX,R,G,B,FACE_INDEX...
  */
 typedef struct DebugData {
     size_t numFaces;

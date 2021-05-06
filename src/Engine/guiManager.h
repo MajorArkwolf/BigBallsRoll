@@ -64,7 +64,7 @@ void GuiManager_free(GuiManager *guiManager);
 
 /**
  * Draws one menu to the screen. Will check which menu should be drawn currently.
- * Does not check guiDraw itself as this should be checked externally to reduce stack setup/teardown.
+ * Draws hud if in game, regardless of menu state.
  * @param guiManager The guiManager to draw
  */
 void GuiManager_draw(GuiManager *guiManager);
@@ -114,6 +114,8 @@ void GuiManager_update(GuiManager *guiManager);
 
 /**
  * Toggles guiDraw on or off.
+ * Sets the camera lock to equal inGame or
+ * locks the camera if in game and gui is being drawn.
  * @param guiManager The guiManager to toggle
  */
 void GuiManager_drawToggle(GuiManager *guiManager);
@@ -137,18 +139,18 @@ void GuiManager_setHeightWidth(GuiManager *guiManager, float divideW, float divi
 void GuiManager_mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 /**
- * Updates and sets the screen position for the menu. Currently set in the middle.
+ * Updates and sets the screen space position for the menu. Currently set in the middle.
  * @param guiManager The guiManager to update.
  */
 void GuiManager_setMenuPosition(GuiManager *guiManager, float divideW, float divideH);
 
 /**
- * Sets the state and pushes it onto the stateManager stack.
+ * Starts the game by setting the state and pushes it onto the stateManager stack.
  */
 void GuiManager_startGame(void);
 
 /**
- * Pops the state from the stateManager stack.
+ * Stops the game by setting the state manager to end safely.
  */
 void GuiManager_stopGame(void);
 
@@ -159,7 +161,7 @@ void GuiManager_stopGame(void);
 void GuiManager_exitMenu(GuiManager *guiManager);
 
 /**
- * Draws the in game hud menu
+ * Draws the in game hud menu.
  * @param guiManager the gui manager to draw from
  */
 void GuiManager_drawHUD(GuiManager *guiManager);

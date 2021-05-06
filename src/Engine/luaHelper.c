@@ -390,6 +390,51 @@ int LuaHelper_GUIGameOver(lua_State *L) {
     return 0;
 }
 
+int LuaHelper_RegisterAudioSource(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    GameObject_registerSoundSource(gameObject);
+    lua_pop(L, 1);
+    return 0;
+}
+
+int LuaHelper_PlaySound(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    size_t length = 0;
+    const char* soundName = luaL_checklstring(L, 2,  &length);
+    bool repeatSound = lua_toboolean(L, 3);
+    ALuint unlock = 0;
+    if (AudioManager_findSound(&engine.audioManager, soundName, &unlock)) {
+        Sound *sound = AudioManager_getSound(&engine.audioManager, unlock);
+        if (sound != NULL) {
+            GameObject_registerSoundSource(gameObject);
+            AudioEngine_play(gameObject->SoundID, sound);
+            AudioEngine_setRepeat(gameObject->SoundID, repeatSound);
+        }
+    }
+    lua_pop(L, 3);
+    return 0;
+}
+
+int LuaHelper_SetSourceVolume(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    float volume = lua_tonumber(L, 2);
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    AudioEngine_setVolume(gameObject->SoundID, volume);
+    lua_pop(L, 2);
+    return 0;
+}
+
 void LuaHelper_PlayerConfig() {
     lua_pushnumber(engine.lua, engine.playerConfig.horizontalSens);
     lua_setglobal(engine.lua, "PlayerConfig_mouseXSensitivity");
@@ -465,6 +510,15 @@ void LuaHelper_init() {
     lua_pushcfunction(engine.lua, LuaHelper_GUIGameOver);
     lua_setglobal(engine.lua, "GUIGameOver");
 
+    //Audio
+    lua_pushcfunction(engine.lua, LuaHelper_RegisterAudioSource);
+    lua_setglobal(engine.lua, "AudioRegisterSource");
+    lua_pushcfunction(engine.lua, LuaHelper_PlaySound);
+    lua_setglobal(engine.lua, "AudioPlaySound");
+    lua_pushcfunction(engine.lua, LuaHelper_SetSourceVolume);
+    lua_setglobal(engine.lua, "AudioSetSourceVolume");
+
+    //Global variables
     lua_pushnumber(engine.lua, engine.playerConfig.seed);
     lua_setglobal(engine.lua, "PlayerConfig_seed");
     lua_pushnumber(engine.lua, engine.playerConfig.levels);

@@ -33,10 +33,18 @@ function EndNode:CheckEndTrigger(player)
             self.finishedLevel = true
             player.playerMoveOn = false
             PhysicsStopCB(player.gameObjectID)
+            self:CentrePlayer(player)
             return true
         end
     end
     return false
+end
+
+function EndNode:CentrePlayer(player)
+    player.position = GameObjectGetPosition(player.gameObjectID)
+    player.position.x = self.position.x + 0.5
+    player.position.z = self.position.z + 0.5
+    GameObjectSetPosition(player.gameObjectID, player.position.x, player.position.y, player.position.z)
 end
 
 return EndNode

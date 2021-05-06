@@ -32,6 +32,7 @@ function EndNode:CheckEndTrigger(player)
         if (self.position.z < player.position.z + self.width and self.position.z + 1 > player.position.z) then
             self.finishedLevel = true
             player.playerMoveOn = false
+            PhysicsStopCB(player.gameObjectID)
             return true
         end
     end

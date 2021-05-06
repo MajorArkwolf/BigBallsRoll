@@ -13,7 +13,6 @@ typedef struct Texture {
     int Height;
     int Channels;
     unsigned int GLTextureID;
-
 } Texture;
 
 /// Texture Manager Structure

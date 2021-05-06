@@ -162,6 +162,17 @@ int PhysicsLuaInterface_addForce(lua_State *L) {
     return 0;
 }
 
+int PhysicsInterface_stopCollisionBody(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    if (gameObject->collisionBody != NULL) {
+        CollisionBody_stop(gameObject->collisionBody);
+    }
+    return 0;
+}
 
 int PhysicsLuaInterface_resetPhysicsWorld(lua_State *L) {
     PhysicsEngine *pe = &engine.physicsEngine;
@@ -187,5 +198,6 @@ void PhysicsLuaInterface_init() {
     lua_setglobal(engine.lua, "PhysicsCollisionBodySetStatic");
     lua_pushcfunction(engine.lua, PhysicsLuaInterface_addForce);
     lua_setglobal(engine.lua, "PhysicsAddForce");
-
+    lua_pushcfunction(engine.lua, PhysicsInterface_stopCollisionBody);
+    lua_setglobal(engine.lua, "PhysicsStopCB");
 }

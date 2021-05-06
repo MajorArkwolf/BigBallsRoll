@@ -162,6 +162,9 @@ void CollisionBody_stop(CollisionBody *collisionBody){
     collisionBody->velocity.data[0] = 0;
     collisionBody->velocity.data[1] = 0;
     collisionBody->velocity.data[2] = 0;
+    collisionBody->force.data[0] = 0;
+    collisionBody->force.data[1] = 0;
+    collisionBody->force.data[2] = 0;
 }
 
 BoxColliderVerts getBoxColliderVerts(BoxCollider* boxCollider, Matrix41 transCollisionBodyPos){

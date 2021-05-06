@@ -58,11 +58,12 @@ end
 function Player:IsPlayerDead()
     if (self.position.y < -20) then
         self.playerLives = self.playerLives - 1
-        if (self.playerLives == 0) then
-             GUIGameOver("Ripperoni Pepperoni...", level - 1);
-        else
-            self.position = self.startPosition
-        end
+        self.position = self.startPosition
+    end
+    if self.playerLives <= 0 then
+        return true
+    else
+        return false
     end
 end
 

@@ -179,6 +179,6 @@ void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int 
  */
 void GuiManager_closeInactiveWindows(GuiManager *guiManager);
 
-void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int levels);
+void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int level);
 
 void GuiManager_gameOver(GuiManager *guiManager);

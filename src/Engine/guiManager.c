@@ -404,7 +404,10 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
         //Quit
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
-            GuiManager_initGameOver(guiManager, "Woah, why would you quit :(" , guiManager->hud.nextLevel - 1);
+            GuiManager_optionsReset(guiManager);
+            guiManager->inGame = false;
+            guiManager->options.menu = true;
+            GuiManager_stopGame();
         }
     }
     nk_end(guiManager->ctx);

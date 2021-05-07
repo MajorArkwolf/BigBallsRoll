@@ -159,6 +159,18 @@ PVec3 crossProductPVec3(const PVec3* vec1, const PVec3* vec2);
  */
 PVec3 PVec3MultiplyScalar(const PVec3* vec, float scalar);
 
+/**
+ * Give two values and get the max from the two
+ * @param a first value
+ * @param b second value
+ * @return the larger of the two
+ */
 float getMax(float a, float b);
 
+/**
+ * Give two values and get the min from the two
+ * @param a first value
+ * @param b second value
+ * @return the smaller of the two
+ */
 float getMin(float a, float b);

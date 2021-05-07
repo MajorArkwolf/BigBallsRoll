@@ -183,39 +183,18 @@ bool testSphereColliderCollision(SphereCollider *a, SphereCollider *b, PVec3* fn
 }
 
 bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float* pen){
-    // alg from https://stackoverflow.com/questions/27517250/sphere-cube-collision-detection-in-opengl
-
-    // distances from centre of box collider
-    float sphereXDistance = fabsf(b->xPostRot - a->AABBx1 + a->xLen/2);
-    float sphereYDistance = fabsf(b->yPostRot - a->AABBy1 + a->yLen/2);
-    float sphereZDistance = fabsf(b->zPostRot - a->AABBz1 + a->zLen/2);
-
-    // easier-to-detect checks
-    if(sphereXDistance >= fabsf(a->xLen + b->radius)){
+    float x = getMax(a->AABBx1, getMin(b->xPostRot, a->AABBx2));
+    float y = getMax(a->AABBy1, getMin(b->yPostRot, a->AABBy2));
+    float z = getMax(a->AABBz1, getMin(b->zPostRot, a->AABBz2));
+    float distance = sqrtf(  (x - b->xPostRot) * (x - b->xPostRot) +
+                             (y - b->yPostRot) * (y - b->yPostRot) +
+                             (z - b->zPostRot) * (z - b->zPostRot));
+    if (distance < b->radius) {
+        *pen = b->radius - distance;
+        return true;
+    } else {
         return false;
     }
-    if(sphereYDistance >= fabsf(a->yLen + b->radius)){
-        return false;
-    }
-    if(sphereZDistance >= fabsf(a->zLen + b->radius)){
-        return false;
-    }
-
-    if(sphereXDistance < a->xLen){
-        return true;
-    }
-    if(sphereYDistance < a->yLen){
-        return true;
-    }
-    if(sphereZDistance < a->zLen){
-        return true;
-    }
-
-    // more comprehensive check
-    float sqCornerDistance = powf(sphereXDistance - a->xLen, 2) +
-        powf(sphereZDistance - a->yLen, 2) +
-        powf(sphereZDistance - a->zLen, 2);
-    return (sqCornerDistance < powf(b->radius, 2));
 }
 
 bool testNarrowPhaseCollision(CollisionBody* a, CollisionBody* b, PVec3* fn, float* pen){
@@ -279,11 +258,15 @@ void collisionsDetection(PhysicsWorld* physicsWorld, CollisionArrayContainer *ca
                 PVec3 fn;
                 float pen;
                 if(testNarrowPhaseCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j], &fn, &pen)){
-                    if(cac->numOfCollisions == 0){
-                        cac->collisionArray = calloc(1, sizeof(Collision));
+                    if(cac->collisionArray == NULL){
+                        if (cac->numOfCollisions == 0) {
+                            cac->collisionArray = calloc(1, sizeof(Collision));
+                        } else {
+                            assert(false);
+                        }
                     }
                     else{
-                        cac->collisionArray = realloc(cac->collisionArray, sizeof(Collision) * cac->numOfCollisions + 1);
+                        cac->collisionArray = realloc(cac->collisionArray, sizeof(Collision) * (cac->numOfCollisions + 1));
                     }
                     cac->collisionArray[cac->numOfCollisions].body1 = physicsWorld->collisionBodies[i];
                     cac->collisionArray[cac->numOfCollisions].body2 = physicsWorld->collisionBodies[j];

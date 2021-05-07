@@ -100,6 +100,22 @@ void minMax(float val1, float val2, float* min, float* max){
     }
 }
 
+float getMax(float a, float b) {
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+float getMin(float a, float b) {
+    if (a < b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
 void checkMin(float val, float* min){
     if(val < *min){
         *min = val;

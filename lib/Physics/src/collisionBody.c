@@ -11,7 +11,6 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->numOfSphereColliders = 0;
     collisionBody->BoxColliders = NULL;
     collisionBody->SphereColliders = NULL;
-    collisionBody->idCount = 0;
     collisionBody->id = -1;
     collisionBody->xPos = 0.0f;
     collisionBody->yPos = 0.0f;

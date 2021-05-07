@@ -183,39 +183,26 @@ bool testSphereColliderCollision(SphereCollider *a, SphereCollider *b, PVec3* fn
 }
 
 bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float* pen){
-    // alg from https://stackoverflow.com/questions/27517250/sphere-cube-collision-detection-in-opengl
+    // wrap coords of box collider aabb in new box collider to utilise getBoxColliderVerts
+    BoxCollider temp;
+    temp.xOffset = a->AABBx1;
+    temp.yOffset = a->AABBy1;
+    temp.zOffset = a->AABBz1;
+    temp.xLen = a->AABBx2 - a->AABBx1;
+    temp.yLen = a->AABBy2 - a->AABBy1;
+    temp.zLen = a->AABBz2 - a->AABBz1;
 
-    // distances from centre of box collider
-    float sphereXDistance = fabsf(b->xPostRot - a->AABBx1 + a->xLen/2);
-    float sphereYDistance = fabsf(b->yPostRot - a->AABBy1 + a->yLen/2);
-    float sphereZDistance = fabsf(b->zPostRot - a->AABBz1 + a->zLen/2);
+    BoxColliderVerts verts = getBoxColliderVerts(&temp);
 
-    // easier-to-detect checks
-    if(sphereXDistance >= fabsf(a->xLen + b->radius)){
-        return false;
-    }
-    if(sphereYDistance >= fabsf(a->yLen + b->radius)){
-        return false;
-    }
-    if(sphereZDistance >= fabsf(a->zLen + b->radius)){
-        return false;
-    }
-
-    if(sphereXDistance < a->xLen){
-        return true;
-    }
-    if(sphereYDistance < a->yLen){
-        return true;
-    }
-    if(sphereZDistance < a->zLen){
-        return true;
+    for(size_t i = 0; i < 8; ++i){
+        if(b->xPostRot - verts.verts[i].elem[0] < b->radius &&
+            b->yPostRot - verts.verts[i].elem[1] < b->radius &&
+            b->zPostRot - verts.verts[i].elem[2] < b->radius){
+            return true;
+        }
     }
 
-    // more comprehensive check
-    float sqCornerDistance = powf(sphereXDistance - a->xLen, 2) +
-        powf(sphereZDistance - a->yLen, 2) +
-        powf(sphereZDistance - a->zLen, 2);
-    return (sqCornerDistance < powf(b->radius, 2));
+    return false;
 }
 
 bool testNarrowPhaseCollision(CollisionBody* a, CollisionBody* b, PVec3* fn, float* pen){
@@ -283,7 +270,7 @@ void collisionsDetection(PhysicsWorld* physicsWorld, CollisionArrayContainer *ca
                         cac->collisionArray = calloc(1, sizeof(Collision));
                     }
                     else{
-                        cac->collisionArray = realloc(cac->collisionArray, sizeof(Collision) * cac->numOfCollisions + 1);
+                        cac->collisionArray = realloc(cac->collisionArray, sizeof(Collision) * (cac->numOfCollisions + 1));
                     }
                     cac->collisionArray[cac->numOfCollisions].body1 = physicsWorld->collisionBodies[i];
                     cac->collisionArray[cac->numOfCollisions].body2 = physicsWorld->collisionBodies[j];

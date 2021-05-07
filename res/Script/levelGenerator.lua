@@ -207,7 +207,7 @@ function Generator:RegisterGameObjects()
                     length.x = 1
                     length.y = 1
                     length.z = 1
-                    PhysicsAddAABBCollider(object, position, length, rotation)
+                    PhysicsAddAABBCollider(object, position, length)
                     local total = keyx + keyy + keyz
                     if (keyx == self.startPoint[1] and keyy == self.startPoint[2] and keyz == self.startPoint[3]) then
                         GameObjectSetModel(object, "Obj/Terrain/redcube.obj")

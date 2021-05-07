@@ -76,7 +76,6 @@ function DeInit()
     player = nil
     gen = nil
     gg_lights = nil
-
 end
 
 function Update()

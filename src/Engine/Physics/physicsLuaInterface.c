@@ -140,6 +140,40 @@ int PhysicsLuaInterface_AddSphereCollider(lua_State *L) {
     return 0;
 }
 
+int PhysicsLuaInterface_addForce(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    if (gameObject->collisionBody != NULL) {
+        float force[3];
+        lua_getfield(L, -1, "x");
+        force[0] = lua_tonumber(L, -1);
+        lua_pop(L, 1);
+        lua_getfield(L, -1, "y");
+        force[1] = lua_tonumber(L, -1);
+        lua_pop(L, 1);
+        lua_getfield(L, -1, "z");
+        force[2] = lua_tonumber(L, -1);
+        lua_pop(L, 2);
+        CollisionBody_addForce(gameObject->collisionBody, force[0], force[1], force[2]);
+    }
+    return 0;
+}
+
+int PhysicsInterface_stopCollisionBody(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    if (gameObject->collisionBody != NULL) {
+        CollisionBody_stop(gameObject->collisionBody);
+    }
+    return 0;
+}
+
 int PhysicsLuaInterface_resetPhysicsWorld(lua_State *L) {
     PhysicsEngine *pe = &engine.physicsEngine;
     PhysicsWorld *pw = StateManager_top(&engine.sM)->physicsWorld;
@@ -162,4 +196,8 @@ void PhysicsLuaInterface_init() {
     lua_setglobal(engine.lua, "PhysicsWorldReset");
     lua_pushcfunction(engine.lua, PhysicsLuaInterface_setCollisionBodyStatic);
     lua_setglobal(engine.lua, "PhysicsCollisionBodySetStatic");
+    lua_pushcfunction(engine.lua, PhysicsLuaInterface_addForce);
+    lua_setglobal(engine.lua, "PhysicsAddForce");
+    lua_pushcfunction(engine.lua, PhysicsInterface_stopCollisionBody);
+    lua_setglobal(engine.lua, "PhysicsStopCB");
 }

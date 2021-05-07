@@ -102,3 +102,16 @@ CollisionBody *PhysicsWorld_registerCollisionBody(PhysicsWorld *physicsWorld);
  * @param deltaTime the time since last update
  */
 void PhysicsWorld_update(PhysicsWorld *physicsWorld, float deltaTime);
+
+/**
+ * Applies a collision bodies current force to it as an impulse.
+ * @param cb the collision body to apply the impulse to.
+ * @param deltaTime how much of the force to apply relative to the delta time.
+ */
+void PhysicsWorld_forceImpulse(CollisionBody *cb, float deltaTime);
+
+/**
+ * Applies a non realistic air resistance to a collision body of 0.995f;
+ * @param cb the collision body to apply the air resistance.
+ */
+void PhysicsWorld_forceDrag(CollisionBody *cb);

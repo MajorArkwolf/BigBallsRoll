@@ -59,6 +59,8 @@ function Player:IsPlayerDead()
     if self.position.y < -20 then
         self.playerLives = self.playerLives - 1
         self.position = self.startPosition
+        GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+        PhysicsStopCB(self.gameObjectID)
     end
     if self.playerLives <= 0 then
         return true

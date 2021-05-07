@@ -167,6 +167,15 @@ PVec3 PVec3MultiplyScalar(const PVec3* vec, float scalar);
 PVec3 PVec3NormaliseVec3(PVec3 const *vec3);
 
 /**
+ * Compare to Vectors
+ * @param vec1 vector 1 to compare
+ * @param vec2 vector 2 to compare
+ * @param tolerance the tolerance allowed between the true
+ * @return true if they are identical with tolerance
+ */
+bool PVec3Compare(PVec3 const *vec1, PVec3 const *vec2, float tolerance);
+
+/**
  * Give two values and get the max from the two
  * @param a first value
  * @param b second value
@@ -182,3 +191,11 @@ float getMax(float a, float b);
  */
 float getMin(float a, float b);
 
+/**
+ * Clamp a value to either a min or max value
+ * @param d the value to clamp
+ * @param min minimium value it can be
+ * @param max maximium value it can be
+ * @return d or either depending on the range.
+ */
+float clamp(float d, float min, float max);

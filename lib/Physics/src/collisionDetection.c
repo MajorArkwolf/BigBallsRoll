@@ -141,7 +141,7 @@ void determineCollisionNormalBoxToSphere(BoxCollider *a, SphereCollider *b, PVec
         }
     }
     PVec3 normal = subtractPVec3(&mag, &closest);
-    float dp = dotProductPVec3(&mag, &closest);
+    float dp = sqrtf(powf(normal.data[0], 2) + powf(normal.data[1], 2) + powf(normal.data[2], 2));
     *fn = PVec3NormaliseVec3(&normal);
     if (isInside) {
         fn->data[0] *= -1;

@@ -116,7 +116,7 @@ void Game_init(State *state) {
     state->mouseKeys = Game_mouseKey;
     state->destroy = Game_destroy;
     state->physicsWorld = PhysicsEngine_newPhysicsWorld(&engine.physicsEngine);
-    PhysicsWorld_updateGravityNormal(state->physicsWorld, 0, -0.1f, 0);
+    PhysicsWorld_updateGravityNormal(state->physicsWorld, 0, -9.8f, 0);
     state->skyboxDraw = true;
     char file[] = "game.lua";
     mouse[0] = 0.0;

@@ -194,6 +194,7 @@ function Generator:RegisterGameObjects()
                     --Register Physics for gameobjects
                     PhysicsRegisterCollisionBody(object)
                     PhysicsCollisionBodySetStatic(object, true)
+                    PhysicsSetMass(object, 0)
                     PhysicsSetPosition(object, keyx, keyy, keyz)
                     local position = {}
                     position.x = 0

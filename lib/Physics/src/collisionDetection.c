@@ -167,7 +167,7 @@ bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float*
         sphere.data[0] = b->xPostRot;
         sphere.data[1] = b->yPostRot;
         sphere.data[2] = b->zPostRot;
-        PVec3 mag = subtractPVec3(&aabbCentre, &sphere);
+        PVec3 mag = subtractPVec3(&sphere, &aabbCentre);
         *fn = PVec3NormaliseVec3(&mag);
         *pen = b->radius - distance_between;
         return true;

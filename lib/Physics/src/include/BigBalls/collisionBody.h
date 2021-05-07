@@ -201,3 +201,10 @@ void CollisionBody_addForce(CollisionBody *cb, float xForce, float yForce, float
  * @param cb collision body whose force to reset
  */
 void CollisionBody_resetForce(CollisionBody *cb);
+
+/**
+ * Sets the mass for a given body
+ * @param cb collision body to set the mass of
+ * @param mass the mass to set it too
+ */
+void CollisionBody_setMass(CollisionBody *cb, float mass);

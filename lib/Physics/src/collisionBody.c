@@ -315,3 +315,7 @@ void CollisionBody_resetForce(CollisionBody *cb) {
     cb->force.data[1] = 0;
     cb->force.data[2] = 0;
 }
+
+void CollisionBody_setMass(CollisionBody *cb, float mass) {
+    cb->mass = mass;
+}

@@ -160,6 +160,13 @@ PVec3 crossProductPVec3(const PVec3* vec1, const PVec3* vec2);
 PVec3 PVec3MultiplyScalar(const PVec3* vec, float scalar);
 
 /**
+ * Normalise the vector
+ * @param vec3 vector to normalise
+ * @return normalised vector
+ */
+PVec3 PVec3NormaliseVec3(PVec3 const *vec3);
+
+/**
  * Give two values and get the max from the two
  * @param a first value
  * @param b second value
@@ -174,3 +181,4 @@ float getMax(float a, float b);
  * @return the smaller of the two
  */
 float getMin(float a, float b);
+

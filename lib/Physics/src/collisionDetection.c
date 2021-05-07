@@ -67,38 +67,7 @@ void determineCollisionDetails_BB(CollisionBody* ca, BoxCollider* ba, CollisionB
 }
 
 void determineCollisionDetails_BS(CollisionBody* ca, BoxCollider* ba, CollisionBody* cb, SphereCollider* sb, float* pen, PVec3* norm){
-    // find box verts closest to sphere centre
-    BoxColliderVerts bcv1 = getBoxVerts(ca, ba);
-    PVec3 cenb = getSphereCentre(cb, sb);
-
-    Matrix41 mcenb;
-    mcenb.elem[0] = cenb.data[0];
-    mcenb.elem[1] = cenb.data[1];
-    mcenb.elem[2] = cenb.data[2];
-
-    // find closest two verts
-    float d = distance(bcv1.verts[0], mcenb);
-    float cD = d;
-    Matrix41 ca1 = bcv1.verts[0];
-    for(size_t i = 1; i < 8; ++i){
-        d = distance(bcv1.verts[i], mcenb);
-        if(d < cD){
-            ca1 = bcv1.verts[i];
-            cD = d;
-        }
-    }
-
-    // norm
-    norm->data[0] = ca1.elem[0] - mcenb.elem[0];
-    norm->data[1] = ca1.elem[1] - mcenb.elem[1];
-    norm->data[2] = ca1.elem[2] - mcenb.elem[2];
-
-    // pen
-    float minV = FLT_MAX;
-    checkMin(ca1.elem[0] - mcenb.elem[0], &minV);
-    checkMin(ca1.elem[1] - mcenb.elem[1], &minV);
-    checkMin(ca1.elem[2] - mcenb.elem[2], &minV);
-    *pen = minV;
+    return;
 }
 
 void determineCollisionDetails_SS(CollisionBody* ca, SphereCollider* sa, CollisionBody* cb, SphereCollider* sb, float* pen, PVec3* norm){
@@ -190,6 +159,16 @@ bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float*
                              (y - b->yPostRot) * (y - b->yPostRot) +
                              (z - b->zPostRot) * (z - b->zPostRot));
     if (distance_between < b->radius) {
+        PVec3 aabbCentre = PVec3_init();
+        aabbCentre.data[0] = ((a->AABBx2 - a->AABBx1) / 2 ) + a->AABBx1;
+        aabbCentre.data[1] = ((a->AABBy2 - a->AABBy1) / 2 ) + a->AABBy1;
+        aabbCentre.data[2] = ((a->AABBz2 - a->AABBz1) / 2 ) + a->AABBz1;
+        PVec3 sphere;
+        sphere.data[0] = b->xPostRot;
+        sphere.data[1] = b->yPostRot;
+        sphere.data[2] = b->zPostRot;
+        PVec3 mag = subtractPVec3(&aabbCentre, &sphere);
+        *fn = PVec3NormaliseVec3(&mag);
         *pen = b->radius - distance_between;
         return true;
     } else {

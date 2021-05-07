@@ -32,6 +32,7 @@ target_sources(${PROJECT_NAME} PRIVATE
     Engine/playerConfig.c
     Engine/Physics/physicsLuaInterface.c
     Engine/skybox.c
+    Engine/OpenGL.c
 
     ## Physics
     Engine/Physics/physicsInterface.c

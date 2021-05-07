@@ -186,11 +186,11 @@ bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float*
     float x = getMax(a->AABBx1, getMin(b->xPostRot, a->AABBx2));
     float y = getMax(a->AABBy1, getMin(b->yPostRot, a->AABBy2));
     float z = getMax(a->AABBz1, getMin(b->zPostRot, a->AABBz2));
-    float distance = sqrtf(  (x - b->xPostRot) * (x - b->xPostRot) +
+    float distance_between = sqrtf(  (x - b->xPostRot) * (x - b->xPostRot) +
                              (y - b->yPostRot) * (y - b->yPostRot) +
                              (z - b->zPostRot) * (z - b->zPostRot));
-    if (distance < b->radius) {
-        *pen = b->radius - distance;
+    if (distance_between < b->radius) {
+        *pen = b->radius - distance_between;
         return true;
     } else {
         return false;
@@ -255,8 +255,8 @@ void collisionsDetection(PhysicsWorld* physicsWorld, CollisionArrayContainer *ca
             // (avoids repeat inverse tests eg. checking 1-0 AND 0-1 would be redundant and inefficient)
             if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
                 // broad phase collision detected
-                PVec3 fn;
-                float pen;
+                PVec3 fn = PVec3_init();
+                float pen = 0.0f;
                 if(testNarrowPhaseCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j], &fn, &pen)){
                     if(cac->collisionArray == NULL){
                         if (cac->numOfCollisions == 0) {

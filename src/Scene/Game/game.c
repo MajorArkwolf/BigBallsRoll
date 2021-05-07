@@ -99,6 +99,10 @@ int Game_destroy() {
     }
     State_deregisterLights(StateManager_top(&engine.sM));
     PhysicsEngine_freePhysicsWorld(&engine.physicsEngine, StateManager_top(&engine.sM)->physicsWorld);
+    State *state = StateManager_top(&engine.sM);
+    for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        GameObject_free(&state->gameObjects[i]);
+    }
     return 0;
 }
 

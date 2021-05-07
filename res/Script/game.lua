@@ -14,7 +14,7 @@ function Init()
     gen:RegisterGameObjects()
     local position = {}
     position.x = gen.startPoint[1] + 0.5
-    position.y = gen.startPoint[2] + 1.5
+    position.y = gen.startPoint[2] + 2.0
     position.z = gen.startPoint[3] + 0.5
     player = dofile("res/Script/Player.lua")
     player:Init(position)

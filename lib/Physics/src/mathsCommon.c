@@ -8,7 +8,6 @@
 #endif
 
 bool fTolerance(float a, float b, float tolerance){
-    assert(tolerance >= 0);
     if(fabsf(a-b) < tolerance){
         return true;
     }
@@ -97,6 +96,22 @@ void minMax(float val1, float val2, float* min, float* max){
     else{
         *min = val2;
         *max = val1;
+    }
+}
+
+float getMax(float a, float b) {
+    if (a > b) {
+        return a;
+    } else {
+        return b;
+    }
+}
+
+float getMin(float a, float b) {
+    if (a < b) {
+        return a;
+    } else {
+        return b;
     }
 }
 
@@ -221,4 +236,30 @@ PVec3 PVec3MultiplyScalar(const PVec3* vec, float scalar) {
     result.data[1] = vec->data[1] * scalar;
     result.data[2] = vec->data[2] * scalar;
     return result;
+}
+
+PVec3 PVec3NormaliseVec3(PVec3 const *vec3) {
+    PVec3 newVec = PVec3_init();
+    float mag = sqrtf(powf(vec3->data[0], 2.0f) + powf(vec3->data[1], 2.0f) + powf(vec3->data[2], 2.0f));
+    if (mag >= 0.0f) {
+        newVec.data[0] = vec3->data[0] / mag;
+        newVec.data[1] = vec3->data[1] / mag;
+        newVec.data[2] = vec3->data[2] / mag;
+    }
+    return newVec;
+}
+
+bool PVec3Compare(PVec3 const *vec1, PVec3 const *vec2, float tolerance) {
+    if (fTolerance(vec1->data[0], vec2->data[0], tolerance) &&
+        fTolerance(vec1->data[1], vec2->data[1], tolerance) &&
+        fTolerance(vec1->data[2], vec2->data[2], tolerance)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+float clamp(float d, float min, float max) {
+    const float t = d < min ? min : d;
+    return t > max ? max : t;
 }

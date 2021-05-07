@@ -12,7 +12,6 @@ typedef struct CollisionBody{
     SphereCollider **SphereColliders;
     size_t numOfSphereColliders;
     size_t numOfColliders; // TODO: may be redundant
-    int idCount;
     int id;
     float xPos; // give position so collider positions are relative to CollisionBody position
     float yPos;
@@ -202,3 +201,10 @@ void CollisionBody_addForce(CollisionBody *cb, float xForce, float yForce, float
  * @param cb collision body whose force to reset
  */
 void CollisionBody_resetForce(CollisionBody *cb);
+
+/**
+ * Sets the mass for a given body
+ * @param cb collision body to set the mass of
+ * @param mass the mass to set it too
+ */
+void CollisionBody_setMass(CollisionBody *cb, float mass);

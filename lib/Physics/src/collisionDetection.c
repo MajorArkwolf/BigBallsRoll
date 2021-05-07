@@ -67,38 +67,7 @@ void determineCollisionDetails_BB(CollisionBody* ca, BoxCollider* ba, CollisionB
 }
 
 void determineCollisionDetails_BS(CollisionBody* ca, BoxCollider* ba, CollisionBody* cb, SphereCollider* sb, float* pen, PVec3* norm){
-    // find box verts closest to sphere centre
-    BoxColliderVerts bcv1 = getBoxVerts(ca, ba);
-    PVec3 cenb = getSphereCentre(cb, sb);
-
-    Matrix41 mcenb;
-    mcenb.elem[0] = cenb.data[0];
-    mcenb.elem[1] = cenb.data[1];
-    mcenb.elem[2] = cenb.data[2];
-
-    // find closest two verts
-    float d = distance(bcv1.verts[0], mcenb);
-    float cD = d;
-    Matrix41 ca1 = bcv1.verts[0];
-    for(size_t i = 1; i < 8; ++i){
-        d = distance(bcv1.verts[i], mcenb);
-        if(d < cD){
-            ca1 = bcv1.verts[i];
-            cD = d;
-        }
-    }
-
-    // norm
-    norm->data[0] = ca1.elem[0] - mcenb.elem[0];
-    norm->data[1] = ca1.elem[1] - mcenb.elem[1];
-    norm->data[2] = ca1.elem[2] - mcenb.elem[2];
-
-    // pen
-    float minV = FLT_MAX;
-    checkMin(ca1.elem[0] - mcenb.elem[0], &minV);
-    checkMin(ca1.elem[1] - mcenb.elem[1], &minV);
-    checkMin(ca1.elem[2] - mcenb.elem[2], &minV);
-    *pen = minV;
+    return;
 }
 
 void determineCollisionDetails_SS(CollisionBody* ca, SphereCollider* sa, CollisionBody* cb, SphereCollider* sb, float* pen, PVec3* norm){
@@ -119,6 +88,67 @@ void determineCollisionDetails_SS(CollisionBody* ca, SphereCollider* sa, Collisi
     norm->data[0] = cenb.data[0] - cena.data[0];
     norm->data[1] = cenb.data[1] - cena.data[1];
     norm->data[2] = cenb.data[2] - cena.data[2];
+}
+
+void determineCollisionNormalBoxToSphere(BoxCollider *a, SphereCollider *b, PVec3* fn, float* pen) {
+    // Calculate the extents of our box
+    PVec3 aabbExtents;
+    aabbExtents.data[0] = a->xLen / 2 ;
+    aabbExtents.data[1] = a->yLen / 2 ;
+    aabbExtents.data[2] = a->zLen / 2 ;
+    // Calculate the centre point of our cube
+    PVec3 aabbCentre;
+    aabbCentre.data[0] = aabbExtents.data[0] + a->AABBx1;
+    aabbCentre.data[1] = aabbExtents.data[1] + a->AABBy1;
+    aabbCentre.data[2] = aabbExtents.data[2] + a->AABBz1;
+    // Convert our sphere into a PVec for simplicity later
+    PVec3 sphere;
+    sphere.data[0] = b->xPostRot;
+    sphere.data[1] = b->yPostRot;
+    sphere.data[2] = b->zPostRot;
+
+    // Get our normal from ->AB
+    PVec3 mag = subtractPVec3(&sphere, &aabbCentre);
+    PVec3 closest = PVec3_init();
+    closest.data[0] = clamp(mag.data[0], -aabbExtents.data[0], aabbExtents.data[0]);
+    closest.data[1] = clamp(mag.data[1], -aabbExtents.data[1], aabbExtents.data[1]);
+    closest.data[2] = clamp(mag.data[2], -aabbExtents.data[2], aabbExtents.data[2]);
+
+    bool isInside = false;
+
+    if (PVec3Compare(&mag, &closest, 0.001f)) {
+        isInside = true;
+        if (fabsf(mag.data[0]) > fabsf(mag.data[1]) &&
+            fabsf(mag.data[0]) > fabsf(mag.data[2])) {
+            if (closest.data[0] > 0) {
+                closest.data[0] = aabbExtents.data[0];
+            } else {
+                closest.data[0] = -aabbExtents.data[0];
+            }
+        } else if (fabsf(mag.data[1]) > fabsf(mag.data[2])) {
+            // Clamp to closest extent
+            if (closest.data[1] > 0) {
+                closest.data[1] = aabbExtents.data[1];
+            } else {
+                closest.data[1] = -aabbExtents.data[1];
+            }
+        } else {
+            if (closest.data[2] > 0) {
+                closest.data[2] = aabbExtents.data[2];
+            } else {
+                closest.data[2] = -aabbExtents.data[2];
+            }
+        }
+    }
+    PVec3 normal = subtractPVec3(&mag, &closest);
+    float dp = sqrtf(powf(normal.data[0], 2) + powf(normal.data[1], 2) + powf(normal.data[2], 2));
+    *fn = PVec3NormaliseVec3(&normal);
+    if (isInside) {
+        fn->data[0] *= -1;
+        fn->data[1] *= -1;
+        fn->data[2] *= -1;
+    }
+    *pen = b->radius - dp;
 }
 
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
@@ -183,39 +213,18 @@ bool testSphereColliderCollision(SphereCollider *a, SphereCollider *b, PVec3* fn
 }
 
 bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float* pen){
-    // alg from https://stackoverflow.com/questions/27517250/sphere-cube-collision-detection-in-opengl
-
-    // distances from centre of box collider
-    float sphereXDistance = fabsf(b->xPostRot - a->AABBx1 + a->xLen/2);
-    float sphereYDistance = fabsf(b->yPostRot - a->AABBy1 + a->yLen/2);
-    float sphereZDistance = fabsf(b->zPostRot - a->AABBz1 + a->zLen/2);
-
-    // easier-to-detect checks
-    if(sphereXDistance >= fabsf(a->xLen + b->radius)){
+    float x = getMax(a->AABBx1, getMin(b->xPostRot, a->AABBx2));
+    float y = getMax(a->AABBy1, getMin(b->yPostRot, a->AABBy2));
+    float z = getMax(a->AABBz1, getMin(b->zPostRot, a->AABBz2));
+    float distance_between = sqrtf(powf(x - b->xPostRot, 2) +
+                             powf(y - b->yPostRot, 2) +
+                             powf(z - b->zPostRot, 2));
+    if (distance_between < b->radius) {
+        determineCollisionNormalBoxToSphere(a, b, fn, pen);
+        return true;
+    } else {
         return false;
     }
-    if(sphereYDistance >= fabsf(a->yLen + b->radius)){
-        return false;
-    }
-    if(sphereZDistance >= fabsf(a->zLen + b->radius)){
-        return false;
-    }
-
-    if(sphereXDistance < a->xLen){
-        return true;
-    }
-    if(sphereYDistance < a->yLen){
-        return true;
-    }
-    if(sphereZDistance < a->zLen){
-        return true;
-    }
-
-    // more comprehensive check
-    float sqCornerDistance = powf(sphereXDistance - a->xLen, 2) +
-        powf(sphereZDistance - a->yLen, 2) +
-        powf(sphereZDistance - a->zLen, 2);
-    return (sqCornerDistance < powf(b->radius, 2));
 }
 
 bool testNarrowPhaseCollision(CollisionBody* a, CollisionBody* b, PVec3* fn, float* pen){
@@ -276,14 +285,18 @@ void collisionsDetection(PhysicsWorld* physicsWorld, CollisionArrayContainer *ca
             // (avoids repeat inverse tests eg. checking 1-0 AND 0-1 would be redundant and inefficient)
             if(testAABBCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j])) {
                 // broad phase collision detected
-                PVec3 fn;
-                float pen;
+                PVec3 fn = PVec3_init();
+                float pen = 0.0f;
                 if(testNarrowPhaseCollision(physicsWorld->collisionBodies[i], physicsWorld->collisionBodies[j], &fn, &pen)){
-                    if(cac->numOfCollisions == 0){
-                        cac->collisionArray = calloc(1, sizeof(Collision));
+                    if(cac->collisionArray == NULL){
+                        if (cac->numOfCollisions == 0) {
+                            cac->collisionArray = calloc(1, sizeof(Collision));
+                        } else {
+                            assert(false);
+                        }
                     }
                     else{
-                        cac->collisionArray = realloc(cac->collisionArray, sizeof(Collision) * cac->numOfCollisions + 1);
+                        cac->collisionArray = realloc(cac->collisionArray, sizeof(Collision) * (cac->numOfCollisions + 1));
                     }
                     cac->collisionArray[cac->numOfCollisions].body1 = physicsWorld->collisionBodies[i];
                     cac->collisionArray[cac->numOfCollisions].body2 = physicsWorld->collisionBodies[j];

@@ -158,3 +158,44 @@ PVec3 crossProductPVec3(const PVec3* vec1, const PVec3* vec2);
  * @return the result of the operation
  */
 PVec3 PVec3MultiplyScalar(const PVec3* vec, float scalar);
+
+/**
+ * Normalise the vector
+ * @param vec3 vector to normalise
+ * @return normalised vector
+ */
+PVec3 PVec3NormaliseVec3(PVec3 const *vec3);
+
+/**
+ * Compare to Vectors
+ * @param vec1 vector 1 to compare
+ * @param vec2 vector 2 to compare
+ * @param tolerance the tolerance allowed between the true
+ * @return true if they are identical with tolerance
+ */
+bool PVec3Compare(PVec3 const *vec1, PVec3 const *vec2, float tolerance);
+
+/**
+ * Give two values and get the max from the two
+ * @param a first value
+ * @param b second value
+ * @return the larger of the two
+ */
+float getMax(float a, float b);
+
+/**
+ * Give two values and get the min from the two
+ * @param a first value
+ * @param b second value
+ * @return the smaller of the two
+ */
+float getMin(float a, float b);
+
+/**
+ * Clamp a value to either a min or max value
+ * @param d the value to clamp
+ * @param min minimium value it can be
+ * @param max maximium value it can be
+ * @return d or either depending on the range.
+ */
+float clamp(float d, float min, float max);

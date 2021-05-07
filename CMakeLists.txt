@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.15)
 # Set the project details.
 set(PROJECT_NAME BigBalls)
 project(${PROJECT_NAME} LANGUAGES C)
+set(SANITIZER_OS "Darwin,Linux")
+set(SANITIZER_FLAGS "-fsanitize=address,undefined,leak")
 
 # Treat warnings as errors.
 option(WarningsAsErrors "WarningsAsErrors" OFF)

@@ -4,6 +4,7 @@
 
 CollisionBody *PhysicsWorld_registerCollisionBody(PhysicsWorld *physicsWorld) {
     CollisionBody *cp = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(cp);
     PhysicsWorld_addCollisionBody(physicsWorld, cp);
     return cp;
 }

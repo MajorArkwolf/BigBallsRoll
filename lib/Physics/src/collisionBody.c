@@ -11,7 +11,6 @@ void CollisionBody_init(CollisionBody *collisionBody){
     collisionBody->numOfSphereColliders = 0;
     collisionBody->BoxColliders = NULL;
     collisionBody->SphereColliders = NULL;
-    collisionBody->idCount = 0;
     collisionBody->id = -1;
     collisionBody->xPos = 0.0f;
     collisionBody->yPos = 0.0f;
@@ -315,4 +314,8 @@ void CollisionBody_resetForce(CollisionBody *cb) {
     cb->force.data[0] = 0;
     cb->force.data[1] = 0;
     cb->force.data[2] = 0;
+}
+
+void CollisionBody_setMass(CollisionBody *cb, float mass) {
+    cb->mass = mass;
 }

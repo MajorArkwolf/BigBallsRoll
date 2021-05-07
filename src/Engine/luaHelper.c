@@ -381,6 +381,15 @@ int LuaHelper_GUIHUDUpdate(lua_State *L) {
     return 0;
 }
 
+int LuaHelper_GUIGameOver(lua_State *L) {
+    //Message, levels
+    const char *message = lua_tostring(L, 1);
+    int levels = lua_tonumber(L, 2);
+    GuiManager_initGameOver(&engine.guiManager, message, levels);
+    lua_pop(L, 2);
+    return 0;
+}
+
 int LuaHelper_RegisterAudioSource(lua_State *L) {
     size_t id = lua_tonumber(L, 1);
     if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
@@ -498,6 +507,8 @@ void LuaHelper_init() {
     //GUI
     lua_pushcfunction(engine.lua, LuaHelper_GUIHUDUpdate);
     lua_setglobal(engine.lua, "GUIUpdateHUD");
+    lua_pushcfunction(engine.lua, LuaHelper_GUIGameOver);
+    lua_setglobal(engine.lua, "GUIGameOver");
 
     //Audio
     lua_pushcfunction(engine.lua, LuaHelper_RegisterAudioSource);

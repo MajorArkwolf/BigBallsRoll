@@ -2,15 +2,27 @@
 #include <stdbool.h>
 typedef struct GLFWwindow GLFWwindow;
 
+#define GUI_BUFFER_SIZE 256
+
 typedef struct menuOption {
     bool menu, level, settings, exit;
 } menuOption;
 
+typedef  struct GameOver {
+    char buffer[GUI_BUFFER_SIZE];
+    char seed[GUI_BUFFER_SIZE];
+    char message[GUI_BUFFER_SIZE];
+    char name[GUI_BUFFER_SIZE];
+    char time[GUI_BUFFER_SIZE];
+    char lives[GUI_BUFFER_SIZE];
+    char levels[GUI_BUFFER_SIZE];
+} GameOver;
+
 typedef struct Hud {
-    char buffer[256];
-    char time[256];
-    char lives[256];
-    char levels[256];
+    char buffer[GUI_BUFFER_SIZE];
+    char time[GUI_BUFFER_SIZE];
+    char lives[GUI_BUFFER_SIZE];
+    char levels[GUI_BUFFER_SIZE];
     int nextLives;
     int nextLevel;
     float nextSeconds;
@@ -25,7 +37,9 @@ typedef struct GuiManager {
     struct nk_font_atlas *atlas;
     menuOption options;
     Hud hud;
+    GameOver gameOver;
     bool inGame;
+    bool isGameOver;
     int glfwHeight;
     int glfwWidth;
     float height;
@@ -162,7 +176,23 @@ void GuiManager_drawHUD(GuiManager *guiManager);
 void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int level);
 
 /**
- * Closes any inactive windows.
+ * Closes all inactive windows.
  * @param guiManager the guiManager with the windows to close.
  */
 void GuiManager_closeInactiveWindows(GuiManager *guiManager);
+
+/**
+ * initialises the game over data and sets isGameOver to false which triggers the draw call.
+ * A message can be passed and displayed at the top of the screen, i.e. you won, or you lost, etc.
+ * @param guiManager with the data to init
+ * @param message to display to the player
+ * @param level the levels the player completed
+ */
+void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int level);
+
+/**
+ * Menu that displays the game over screen. GuiManager_initGameOver prepares the data that is displayed
+ * on this screen.
+ * @param guiManager with the ctx to draw to
+ */
+void GuiManager_gameOver(GuiManager *guiManager);

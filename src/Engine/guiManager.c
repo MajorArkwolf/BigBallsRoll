@@ -44,9 +44,10 @@ void GuiManager_init(GuiManager *guiManager) {
     //Set main menu to draw first
     guiManager->options.menu = true;
     guiManager->inGame = false;
+    guiManager->isGameOver = false;
     guiManager->guiDraw = false;
-    guiManager->hud.prevLevel = 0;
-    guiManager->hud.prevLives = 0;
+    guiManager->hud.prevLevel = -1;
+    guiManager->hud.prevLives = -1;
     guiManager->hud.prevSeconds = 0.0f;
     guiManager->hud.updateHUD = false;
 }
@@ -68,7 +69,7 @@ void GuiManager_drawToggle(GuiManager *guiManager) {
     guiManager->guiDraw = !guiManager->guiDraw;
     engine.lockCamera = guiManager->inGame;
 
-    if(guiManager->inGame && guiManager->guiDraw) {
+    if(guiManager->inGame && guiManager->guiDraw || guiManager->isGameOver) {
         engine.lockCamera = false;
     }
 
@@ -91,6 +92,9 @@ void GuiManager_closeInactiveWindows(GuiManager *guiManager) {
     }
     if(!guiManager->options.settings) {
         nk_window_close(guiManager->ctx,"Big Balls Roll! - Settings Menu");
+    }
+    if(!guiManager->isGameOver) {
+        nk_window_close(guiManager->ctx, "Game Complete");
     }
     if(!guiManager->inGame) {
         nk_window_close(guiManager->ctx, "GUI");
@@ -116,7 +120,7 @@ void GuiManager_draw(GuiManager *guiManager) {
             GuiManager_drawHUD(guiManager);
         }
 
-        if(guiManager->guiDraw) {
+        if(guiManager->guiDraw && !guiManager->isGameOver) {
             if (guiManager->options.level) {
                 GuiManager_levelMenu(guiManager);
             } else if (guiManager->options.settings) {
@@ -128,6 +132,10 @@ void GuiManager_draw(GuiManager *guiManager) {
             } else if (guiManager->options.exit) {
                 GuiManager_exitMenu(guiManager);
             }
+        }
+
+        if(guiManager->isGameOver) {
+            GuiManager_gameOver(guiManager);
         }
         nk_glfw3_render(NK_ANTI_ALIASING_ON);
         glEnable(GL_LIGHTING);
@@ -183,9 +191,9 @@ void GuiManager_drawHUD(GuiManager *guiManager) {
             guiManager->hud.prevLives = guiManager->hud.nextLives;
         }
 
-        if (guiManager->hud.prevLevel != guiManager->hud.nextLevel ) {
+        if (guiManager->hud.prevLevel != guiManager->hud.nextLevel) {
             strcpy(guiManager->hud.levels, "Level: ");
-            sprintf(guiManager->hud.buffer, "%i", guiManager->hud.nextLevel );
+            sprintf(guiManager->hud.buffer, "%i", guiManager->hud.nextLevel);
             strcat(guiManager->hud.levels, guiManager->hud.buffer);
             guiManager->hud.prevLevel = guiManager->hud.nextLevel ;
         }
@@ -396,10 +404,10 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
         //Quit
         nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 5, 1);
         if (nk_button_label(guiManager->ctx, "QUIT")) {
-            GuiManager_stopGame();
             GuiManager_optionsReset(guiManager);
-            guiManager->options.menu = true;
             guiManager->inGame = false;
+            guiManager->options.menu = true;
+            GuiManager_stopGame();
         }
     }
     nk_end(guiManager->ctx);
@@ -428,6 +436,92 @@ void GuiManager_exitMenu(GuiManager *guiManager) {
         nk_layout_row_static(guiManager->ctx, 54, 240, 1);
         if (nk_button_label(guiManager->ctx, "EXIT")) {
             engine.running = false;
+        }
+    }
+    nk_end(guiManager->ctx);
+}
+
+void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int level) {
+    assert(guiManager != NULL && message != NULL);
+    //Seed
+    strcpy(guiManager->gameOver.seed, "Seed: ");
+    sprintf(guiManager->gameOver.buffer, "%i", engine.playerConfig.seed);
+    strcat(guiManager->gameOver.seed, guiManager->gameOver.buffer);
+
+    //Message
+    strcpy(guiManager->gameOver.message, message);
+
+    //Name
+    strcpy(guiManager->gameOver.name, "Good game ");
+    strcat(guiManager->gameOver.name, engine.playerConfig.name);
+    strcat(guiManager->gameOver.name, "!");
+
+    //Time
+    strcpy(guiManager->gameOver.time, guiManager->hud.time);
+    strcpy(guiManager->gameOver.time, "Time taken: ");
+    sprintf(guiManager->gameOver.buffer, "%0.2f", guiManager->hud.prevSeconds);
+    strcat(guiManager->gameOver.time, guiManager->gameOver.buffer);
+    strcpy(guiManager->gameOver.buffer, " seconds!");
+    strcat(guiManager->gameOver.time, guiManager->gameOver.buffer);
+
+    //Lives
+    strcpy(guiManager->gameOver.lives, "Lives remaining: ");
+    sprintf(guiManager->gameOver.buffer, "%i", guiManager->hud.nextLives);
+    strcat(guiManager->gameOver.lives, guiManager->gameOver.buffer);
+
+    //Levels
+    strcpy(guiManager->gameOver.levels, "Levels complete: ");
+    sprintf(guiManager->gameOver.buffer, "%i", level);
+    strcat(guiManager->gameOver.levels, guiManager->gameOver.buffer);
+
+    guiManager->isGameOver = true;
+    engine.lockCamera = false;
+}
+
+void GuiManager_gameOver(GuiManager *guiManager) {
+    assert(guiManager != NULL);
+    GuiManager_setHeightWidth(guiManager, 4, 2.5f);
+
+    if (nk_begin(guiManager->ctx, "Game Complete", nk_rect(guiManager->xPos * 1.5f, guiManager->yPos, guiManager->width, guiManager->height),
+                 NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR)) {
+        //Message
+        nk_layout_row_dynamic(guiManager->ctx, guiManager->height/10, 1);
+        nk_label_wrap(guiManager->ctx, guiManager->gameOver.message);
+
+        //Player name
+        nk_layout_row_dynamic(guiManager->ctx, guiManager->height/10, 1);
+        nk_label(guiManager->ctx, guiManager->gameOver.name, NK_TEXT_LEFT);
+
+        //Stats
+        nk_layout_row_dynamic(guiManager->ctx, guiManager->height/1.6f, 1);
+        if (nk_group_begin(guiManager->ctx, "STATS:", NK_WINDOW_BORDER | NK_WINDOW_TITLE)) {
+
+            //Seed
+            nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 10, 1);
+            nk_label(guiManager->ctx, guiManager->gameOver.seed, NK_TEXT_LEFT);
+
+            //Time
+            nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 10, 1);
+            nk_label(guiManager->ctx, guiManager->gameOver.time, NK_TEXT_LEFT);
+            //Lives
+            nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 10, 1);
+            nk_label(guiManager->ctx, guiManager->gameOver.lives, NK_TEXT_LEFT);
+            //Levels
+            nk_layout_row_dynamic(guiManager->ctx, guiManager->height / 10, 1);
+            nk_label(guiManager->ctx, guiManager->gameOver.levels, NK_TEXT_LEFT);
+
+            nk_group_end(guiManager->ctx);
+        }
+
+        //Menu Button
+        nk_layout_row_dynamic(guiManager->ctx, guiManager->height/10, 3);
+        nk_label_wrap(guiManager->ctx, "");
+        if (nk_button_label(guiManager->ctx, "MENU")) {
+            GuiManager_optionsReset(guiManager);
+            guiManager->isGameOver = false;
+            guiManager->inGame = false;
+            guiManager->options.menu = true;
+            GuiManager_stopGame();
         }
     }
     nk_end(guiManager->ctx);

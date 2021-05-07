@@ -83,6 +83,8 @@ bool compareMatrix41(Matrix41 a, Matrix41 b);
  */
 void minMax(float val1, float val2, float* min, float* max);
 
+void checkMin(float val, float* min);
+
 /**
  * Determines if a point and its extension produces a new min or max value
  * @param pos the position of the point on one axis

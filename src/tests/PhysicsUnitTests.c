@@ -184,39 +184,13 @@ void testRotationOverflow(void){
     collider->xLen = 1.f;
     collider->yLen = 2.f;
     collider->zLen = 3.f;
-    collider->xRot = 360;
-    collider->yRot = 360;
-    collider->zRot = 360;
     CollisionBody_addBoxCollider(collisionBody, collider);
-    TEST_ASSERT_TRUE(fTolerance(collisionBody->BoxColliders[0]->xRot == 0, 0, 0.0001) &&
-                     fTolerance(collisionBody->BoxColliders[0]->yRot == 0, 0, 0.0001) &&
-                     fTolerance(collisionBody->BoxColliders[0]->zRot == 0, 0, 0.0001));
-    CollisionBody_setRot(collisionBody, 360.f, 360.f, 360.f);
-    TEST_ASSERT_TRUE(fTolerance(collisionBody->xRot, 0.f, 0.0001f) &&
-                     fTolerance(collisionBody->yRot, 0.f, 0.0001f) &&
-                     fTolerance(collisionBody->zRot, 0.f, 0.0001f));
-}
 
-void testColliderRotation(void){
-    // create CollisionBody for object
-    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
-    CollisionBody_init(collisionBody);
-    // create collider
-    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
-    BoxCollider_init(collider);
-    collider->xLen = 1.f;
-    collider->yLen = 2.f;
-    collider->zLen = 3.f;
-    collider->xRot = 45;
-    collider->yRot = 45;
-    collider->zRot = 45;
-    CollisionBody_addBoxCollider(collisionBody, collider);
-    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, -0.3f, 0.1f) &&
-                     fTolerance(collisionBody->AABBy1, -0.4f, 0.1f) &&
-                     fTolerance(collisionBody->AABBz1, -0.7f, 0.1f) &&
-                     fTolerance(collisionBody->AABBx2, 3.f, 0.1f) &&
-                     fTolerance(collisionBody->AABBy2, 2.2f, 0.1f) &&
-                     fTolerance(collisionBody->AABBz2, 2.5f, 0.1f));
+    CollisionBody_rotate(collisionBody, 361, 361, 361);
+
+    TEST_ASSERT_TRUE(fTolerance(collisionBody->xRot, 1.f, 0.0001f) &&
+                     fTolerance(collisionBody->yRot, 1.f, 0.0001f) &&
+                     fTolerance(collisionBody->zRot, 1.f, 0.0001f));
 }
 
 void testCollisionBodyRotation(void){
@@ -239,38 +213,12 @@ void testCollisionBodyRotation(void){
                      fTolerance(collisionBody->AABBz2, 2.5f, 0.1f));
 }
 
-void testCombinedRotation(void){
-    // create CollisionBody for object
-    CollisionBody* collisionBody = calloc(1, sizeof(CollisionBody));
-    CollisionBody_init(collisionBody);
-    // create collider
-    BoxCollider* collider = calloc(1, sizeof(BoxCollider));
-    BoxCollider_init(collider);
-    collider->xLen = 10.f;
-    collider->yLen = 1.f;
-    collider->zOffset = -1;
-    collider->zLen = 1.f;
-    collider->xRot = 45;
-    collider->yRot = 45;
-    collider->zRot = 45;
-    CollisionBody_addBoxCollider(collisionBody, collider);
-    CollisionBody_rotate(collisionBody, -45, -45, -45);
-    TEST_ASSERT_TRUE(fTolerance(collisionBody->AABBx1, 0.f, 1.f) &&
-                     fTolerance(collisionBody->AABBy1, -8.f, 1.f) &&
-                     fTolerance(collisionBody->AABBz1, -4.f, 1.f) &&
-                     fTolerance(collisionBody->AABBx2, 6.f, 1.f) &&
-                     fTolerance(collisionBody->AABBy2, 0.6f, 1.f) &&
-                     fTolerance(collisionBody->AABBz2, 0.f, 1.f));
-}
-
 void testRotation(void){
     RUN_TEST(testRotationX);
     RUN_TEST(testRotationY);
     RUN_TEST(testRotationZ);
     RUN_TEST(testRotationOverflow);
-    RUN_TEST(testColliderRotation);
     RUN_TEST(testCollisionBodyRotation);
-    RUN_TEST(testCombinedRotation);
 }
 
 void testColliderTranslation(void){
@@ -369,7 +317,128 @@ void testCombinedTransformation(void){
                      fTolerance(collisionBody->AABBz2, 8.9f, 0.1f));
 }
 
-void test_Physics(void){
+void testNarrowPhase_BB(){
+    PhysicsWorld pw;
+    PhysicsWorld_init(&pw);
+
+    // create CollisionBody for object
+    CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody1);
+    // create collider
+    BoxCollider *collider1 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider1);
+    collider1->xOffset = -5;
+    collider1->yOffset = 0;
+    collider1->zOffset = 0;
+    collider1->xLen = 1.f;
+    collider1->yLen = 1.f;
+    collider1->zLen = 1.f;
+    CollisionBody_addBoxCollider(collisionBody1, collider1);
+
+    BoxCollider *collider2 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(collider2);
+    collider2->xOffset = 5;
+    collider2->xLen = 1.f;
+    collider2->yLen = 1.f;
+    collider2->zLen = 1.f;
+    CollisionBody_addBoxCollider(collisionBody1, collider2);
+
+    PhysicsWorld_addCollisionBody(&pw, collisionBody1);
+
+    CollisionBody* collisionBody2 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody2);
+    // create collider
+    BoxCollider *oCollider1 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(oCollider1);
+    oCollider1->xLen = 1.f;
+    oCollider1->yLen = 1.f;
+    oCollider1->zLen = 1.f;
+    CollisionBody_addBoxCollider(collisionBody2, oCollider1);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody2);
+
+    CollisionArrayContainer cac = collisionArrayContainer_init();
+    collisionsDetection(&pw, &cac);
+
+    TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
+}
+
+void testNarrowPhase_BS(){
+    PhysicsWorld pw;
+    PhysicsWorld_init(&pw);
+
+    // create CollisionBody for object
+    CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody1);
+    // create collider
+    SphereCollider *collider1 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(collider1);
+    collider1->xOffset = -5;
+    collider1->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody1, collider1);
+
+    SphereCollider *collider2 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(collider2);
+    collider2->xOffset = 5;
+    collider2->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody1, collider2);
+
+    PhysicsWorld_addCollisionBody(&pw, collisionBody1);
+
+    CollisionBody* collisionBody2 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody2);
+    // create collider
+    BoxCollider *oCollider1 = calloc(1, sizeof(BoxCollider));
+    BoxCollider_init(oCollider1);
+    oCollider1->xLen = 1.f;
+    oCollider1->yLen = 1.f;
+    oCollider1->zLen = 1.f;
+    CollisionBody_addBoxCollider(collisionBody2, oCollider1);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody2);
+
+    CollisionArrayContainer cac = collisionArrayContainer_init();
+    collisionsDetection(&pw, &cac);
+
+    TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
+}
+
+void testNarrowPhase_SS(){
+    PhysicsWorld pw;
+    PhysicsWorld_init(&pw);
+
+    // create CollisionBody for object
+    CollisionBody* collisionBody1 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody1);
+    // create collider
+    SphereCollider *collider1 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(collider1);
+    collider1->xOffset = -5;
+    collider1->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody1, collider1);
+
+    SphereCollider *collider2 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(collider2);
+    collider2->xOffset = 5;
+    collider2->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody1, collider2);
+
+    PhysicsWorld_addCollisionBody(&pw, collisionBody1);
+
+    CollisionBody* collisionBody2 = calloc(1, sizeof(CollisionBody));
+    CollisionBody_init(collisionBody2);
+    // create collider
+    SphereCollider *oCollider1 = calloc(1, sizeof(SphereCollider));
+    SphereCollider_init(oCollider1);
+    oCollider1->radius = 1.f;
+    CollisionBody_addSphereCollider(collisionBody2, oCollider1);
+    PhysicsWorld_addCollisionBody(&pw, collisionBody2);
+
+    CollisionArrayContainer cac = collisionArrayContainer_init();
+    collisionsDetection(&pw, &cac);
+
+    TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
+}
+
+void test_Physics(){
     RUN_TEST(testIdentity44);
     RUN_TEST(testMatrixMultiplication44_44);
     RUN_TEST(testMatrixMultiplication44_41);
@@ -378,4 +447,7 @@ void test_Physics(void){
     RUN_TEST(testRotation);
     RUN_TEST(testTranslation);
     RUN_TEST(testCombinedTransformation);
+    RUN_TEST(testNarrowPhase_BB);
+    RUN_TEST(testNarrowPhase_BS);
+    RUN_TEST(testNarrowPhase_SS);
 }

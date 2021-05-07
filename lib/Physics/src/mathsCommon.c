@@ -1,8 +1,11 @@
 #include "include/BigBalls/mathsCommon.h"
-#define _USE_MATH_DEFINES
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265359
+#endif
 
 bool fTolerance(float a, float b, float tolerance){
     assert(tolerance >= 0);
@@ -19,10 +22,23 @@ float toRad(float deg){
 }
 
 Matrix44 identity44() {
-    Matrix44 res = {.elem[0] = {1, 0, 0, 0},
-                    .elem[1] = {0, 1, 0, 0},
-                    .elem[2] = {0, 0, 1, 0},
-                    .elem[3] = {0, 0, 0, 1}};
+    Matrix44 res;
+    res.elem[0][0] = 1;
+    res.elem[0][1] = 0;
+    res.elem[0][2] = 0;
+    res.elem[0][3] = 0;
+    res.elem[1][0] = 0;
+    res.elem[1][1] = 1;
+    res.elem[1][2] = 0;
+    res.elem[1][3] = 0;
+    res.elem[2][0] = 0;
+    res.elem[2][1] = 0;
+    res.elem[2][2] = 1;
+    res.elem[2][3] = 0;
+    res.elem[3][0] = 0;
+    res.elem[3][1] = 0;
+    res.elem[3][2] = 0;
+    res.elem[3][3] = 1;
     return res;
 }
 
@@ -84,6 +100,12 @@ void minMax(float val1, float val2, float* min, float* max){
     }
 }
 
+void checkMin(float val, float* min){
+    if(val < *min){
+        *min = val;
+    }
+}
+
 void testPointMinMax(const float pos, const float len, float* min, float* max){
     if(len > 0){ // positive length
         if(pos + len > *max){
@@ -104,7 +126,14 @@ void testPointMinMax(const float pos, const float len, float* min, float* max){
 }
 
 Matrix44 rotateAboutVec(float xVec, float yVec, float zVec, float rotDeg){
-    Matrix44 res = {.elem[0][3] = 0, .elem[1][3] = 0, .elem[2][3] = 0, .elem[3] = {0, 0, 0, 1}};
+    Matrix44 res;
+    res.elem[0][3] = 0;
+    res.elem[1][3] = 0;
+    res.elem[2][3] = 0;
+    res.elem[3][3] = 1;
+    res.elem[3][0] = 0;
+    res.elem[3][1] = 0;
+    res.elem[3][2] = 0;
     float rot = rotDeg * M_PI/180;
     // rotation implementation taken from OpenGL documentation https://docs.gl/gl2/glRotate
     res.elem[0][0] = (powf(xVec, 2) * (1 - cosf(rot))) + cosf(rot);

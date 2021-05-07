@@ -16,6 +16,7 @@ void GameObject_init(GameObject *gameObject) {
 
 void GameObject_free(GameObject *gameObject) {
     free(gameObject->Name);
+    free(gameObject->collisionBody);
     GameObject_init(gameObject);
 }
 

@@ -91,18 +91,23 @@ void determineCollisionDetails_SS(CollisionBody* ca, SphereCollider* sa, Collisi
 }
 
 void determineCollisionNormalBoxToSphere(BoxCollider *a, SphereCollider *b, PVec3* fn, float* pen) {
-    PVec3 aabbExtents = PVec3_init();
-    aabbExtents.data[0] = ((a->AABBx2 - a->AABBx1) / 2 );
-    aabbExtents.data[1] = ((a->AABBy2 - a->AABBy1) / 2 );
-    aabbExtents.data[2] = ((a->AABBz2 - a->AABBz1) / 2 );
-    PVec3 aabbCentre = PVec3_init();
+    // Calculate the extents of our box
+    PVec3 aabbExtents;
+    aabbExtents.data[0] = a->xLen / 2 ;
+    aabbExtents.data[1] = a->yLen / 2 ;
+    aabbExtents.data[2] = a->zLen / 2 ;
+    // Calculate the centre point of our cube
+    PVec3 aabbCentre;
     aabbCentre.data[0] = aabbExtents.data[0] + a->AABBx1;
     aabbCentre.data[1] = aabbExtents.data[1] + a->AABBy1;
     aabbCentre.data[2] = aabbExtents.data[2] + a->AABBz1;
+    // Convert our sphere into a PVec for simplicity later
     PVec3 sphere;
     sphere.data[0] = b->xPostRot;
     sphere.data[1] = b->yPostRot;
     sphere.data[2] = b->zPostRot;
+
+    // Get our normal from ->AB
     PVec3 mag = subtractPVec3(&sphere, &aabbCentre);
     PVec3 closest = PVec3_init();
     closest.data[0] = clamp(mag.data[0], -aabbExtents.data[0], aabbExtents.data[0]);

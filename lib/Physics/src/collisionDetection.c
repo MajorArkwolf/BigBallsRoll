@@ -216,9 +216,9 @@ bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float*
     float x = getMax(a->AABBx1, getMin(b->xPostRot, a->AABBx2));
     float y = getMax(a->AABBy1, getMin(b->yPostRot, a->AABBy2));
     float z = getMax(a->AABBz1, getMin(b->zPostRot, a->AABBz2));
-    float distance_between = sqrtf(  (x - b->xPostRot) * (x - b->xPostRot) +
-                             (y - b->yPostRot) * (y - b->yPostRot) +
-                             (z - b->zPostRot) * (z - b->zPostRot));
+    float distance_between = sqrtf(powf(x - b->xPostRot, 2) +
+                             powf(y - b->yPostRot, 2) +
+                             powf(z - b->zPostRot, 2));
     if (distance_between < b->radius) {
         determineCollisionNormalBoxToSphere(a, b, fn, pen);
         return true;

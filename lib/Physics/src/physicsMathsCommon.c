@@ -10,6 +10,7 @@ CollisionArrayContainer collisionArrayContainer_init() {
 
 void collisionArrayContainer_free(CollisionArrayContainer* cac) {
     cac->numOfCollisions = 0;
+    free(cac->collisionArray);
     cac->collisionArray = NULL;
 }
 

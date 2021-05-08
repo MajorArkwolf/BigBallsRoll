@@ -4,6 +4,20 @@
 #include <math.h>
 #include <float.h>
 
+PVec3 getAABBCenter(BoxCollider* a){
+    PVec3 res = PVec3_init();
+
+    res.data[0] = ((a->AABBx2 - a->AABBx1) / 2 ) + a->AABBx1;
+    res.data[1] = ((a->AABBy2 - a->AABBy1) / 2 ) + a->AABBy1;
+    res.data[2] = ((a->AABBz2 - a->AABBz1) / 2 ) + a->AABBz1;
+
+    return res;
+}
+
+float getVectorMagnitude(PVec3* incV){
+    return sqrtf(powf(incV->data[0], 2) + powf(incV->data[1], 2) + powf(incV->data[2], 2));
+}
+
 BoxColliderVerts getBoxVerts(CollisionBody* c, BoxCollider* b){
     // apply all transforms to boxcollider
     Matrix44 T1 = createRotMat(c->xRot, c->yRot,c-> zRot);
@@ -103,41 +117,82 @@ bool testAABBCollision(CollisionBody *a, CollisionBody *b){
 bool testBoxColliderCollision(BoxCollider *a, BoxCollider *b, PVec3* fn, float* pen){
     assert(a != NULL && b != NULL);
 
-    // the min and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
-    float x1min, x1max, y1min, y1max, z1min, z1max, x2min, x2max, y2min, y2max, z2min, z2max;
+    // alg from https://gamedevelopment.tutsplus.com/tutorials/how-to-create-a-custom-2d-physics-engine-the-basics-and-impulse-resolution--gamedev-6331
+    PVec3 cenA = getAABBCenter(a);
+    PVec3 cenB = getAABBCenter(b);
+    PVec3 n = subtractPVec3(&cenB, &cenA);
 
-    // determine which coordinate is larger than the other, for each coordinate pair of each CollisionBody
-    minMax(a->AABBx1, a->AABBx2, &x1min, &x1max);
-    minMax(a->AABBy1, a->AABBy2, &y1min, &y1max);
-    minMax(a->AABBz1, a->AABBz2, &z1min, &z1max);
+    // calculate half-extents along x for each object
+    float a_extent = (a->AABBx2 - a->AABBx1) / 2;
+    float b_extent = (b->AABBx2 - b->AABBx1) / 2;
 
-    minMax(b->AABBx1, b->AABBx2, &x2min, &x2max);
-    minMax(b->AABBy1, b->AABBy2, &y2min, &y2max);
-    minMax(b->AABBz1, b->AABBz2, &z2min, &z2max);
+    // calculate x overlap
+    float x_overlap = a_extent + b_extent - fabsf(n.data[0]);
 
-    if((x1min <= x2max && x1max >= x2min) &&
-        (y1min <= y2max && y1max >= y2min) &&
-        (z1min <= z2max && z1max >= z2min)){
+    // SAT test on X axis
+    if(x_overlap > 0){
+        // calculate half-extents along y for each object
+        a_extent = (a->AABBy2 - a->AABBy1) / 2;
+        b_extent = (b->AABBy2 - b->AABBy1) / 2;
 
-        // normal = vector BA
-        PVec3 aCen = PVec3_init();
-        aCen.data[0] = ((a->AABBx2 - a->AABBx1) / 2 ) + a->AABBx1;
-        aCen.data[1] = ((a->AABBy2 - a->AABBy1) / 2 ) + a->AABBy1;
-        aCen.data[2] = ((a->AABBz2 - a->AABBz1) / 2 ) + a->AABBz1;
-        PVec3 bCen = PVec3_init();
-        bCen.data[0] = ((b->AABBx2 - b->AABBx1) / 2 ) + b->AABBx1;
-        bCen.data[1] = ((b->AABBy2 - b->AABBy1) / 2 ) + b->AABBy1;
-        bCen.data[2] = ((b->AABBz2 - b->AABBz1) / 2 ) + b->AABBz1;
-        PVec3 norm = subtractPVec3(&bCen, &aCen);
+        // calculate y overlap
+        float y_overlap = a_extent + b_extent - fabsf(n.data[1]);
 
-        *fn = PVec3NormaliseVec3(&norm);
-        *pen = getMin(norm.data[0], getMin(norm.data[1], norm.data[2]));
+        if(y_overlap > 0){
+            // calculate half-extents along z for each object
+            a_extent = (a->AABBz2 - a->AABBz1) / 2;
+            b_extent = (b->AABBz2 - b->AABBz1) / 2;
 
-        return true;
+            // calculate z overlap
+            float z_overlap = a_extent + b_extent - fabsf(n.data[2]);
+
+            if(z_overlap > 0){
+                // determine axis of most pen
+                float min = getMin(x_overlap, getMin(y_overlap, z_overlap));
+                if(min == x_overlap){
+                    if(n.data[0] < 0){
+                        fn->data[0] = -1;
+                        fn->data[1] = 0;
+                        fn->data[2] = 0;
+                    }
+                    else{
+                        fn->data[0] = 1;
+                        fn->data[1] = 0;
+                        fn->data[2] = 0;
+                    }
+                    *pen = x_overlap;
+                }
+                else if (min == y_overlap){
+                    if(n.data[1] < 0){
+                        fn->data[0] = 0;
+                        fn->data[1] = -1;
+                        fn->data[2] = 0;
+                    }
+                    else{
+                        fn->data[0] = 0;
+                        fn->data[1] = 1;
+                        fn->data[2] = 0;
+                    }
+                    *pen = y_overlap;
+                }
+                else{
+                    if(n.data[2] < 0){
+                        fn->data[0] = 0;
+                        fn->data[1] = 0;
+                        fn->data[2] = -1;
+                    }
+                    else{
+                        fn->data[0] = 0;
+                        fn->data[1] = 0;
+                        fn->data[2] = 1;
+                    }
+                    *pen = z_overlap;
+                }
+                return true;
+            }
+        }
     }
-    else{
-        return false;
-    }
+    return false;
 }
 
 bool testSphereColliderCollision(SphereCollider *a, SphereCollider *b, PVec3* fn, float* pen){

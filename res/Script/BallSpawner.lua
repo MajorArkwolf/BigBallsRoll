@@ -53,10 +53,6 @@ function BallSpawner:AddPhysicsBody(id, position, scale, force, coneSpread)
     randomForce.y = 0
     randomForce.x = math.random(0, force) * math.random(-1 * coneSpread, coneSpread)
     randomForce.z = math.random(0, force) * math.random(-1 * coneSpread, coneSpread)
-    print("start")
-    print(randomForce.x)
-    print(randomForce.z)
-    print("end")
     PhysicsAddForce(id, randomForce)
 end
 

@@ -34,48 +34,6 @@ BoxColliderVerts getBoxVerts(CollisionBody* c, BoxCollider* b){
     return tbcv;
 }
 
-PVec3 getSphereCentre(CollisionBody* c, SphereCollider* s){
-    // apply all transforms to boxcollider
-    Matrix44 T1 = createRotMat(c->xRot, c->yRot,c-> zRot);
-    Matrix41 cPos = {c->xPos, c->yPos, c->zPos};
-    Matrix41 newCPos = matrixMultiplication44_41(T1, cPos);
-
-    PVec3 newSPos;
-    newSPos.data[0] = newCPos.elem[0] + s->xOffset;
-    newSPos.data[1] = newCPos.elem[1] + s->yOffset;
-    newSPos.data[2] = newCPos.elem[2] + s->zOffset;
-
-    return newSPos;
-}
-
-void determineCollisionDetails_BB(CollisionBody* ca, BoxCollider* ba, CollisionBody* cb, BoxCollider* bb, float* pen, PVec3* norm){
-    return;
-}
-
-void determineCollisionDetails_BS(CollisionBody* ca, BoxCollider* ba, CollisionBody* cb, SphereCollider* sb, float* pen, PVec3* norm){
-    return;
-}
-
-void determineCollisionDetails_SS(CollisionBody* ca, SphereCollider* sa, CollisionBody* cb, SphereCollider* sb, float* pen, PVec3* norm){
-    PVec3 cena = getSphereCentre(ca, sa);
-    PVec3 cenb = getSphereCentre(cb, sb);
-
-    Matrix41 mcena;
-    mcena.elem[0] = cena.data[0];
-    mcena.elem[1] = cena.data[1];
-    mcena.elem[2] = cena.data[2];
-    Matrix41 mcenb;
-    mcenb.elem[0] = cenb.data[0];
-    mcenb.elem[1] = cenb.data[1];
-    mcenb.elem[2] = cenb.data[2];
-
-    *pen = sa->radius + sb->radius - distance(mcena, mcenb);
-
-    norm->data[0] = cenb.data[0] - cena.data[0];
-    norm->data[1] = cenb.data[1] - cena.data[1];
-    norm->data[2] = cenb.data[2] - cena.data[2];
-}
-
 void determineCollisionNormalBoxToSphere(BoxCollider *a, SphereCollider *b, PVec3* fn, float* pen) {
     // Calculate the extents of our box
     PVec3 aabbExtents;
@@ -247,6 +205,22 @@ bool testSphereColliderCollision(SphereCollider *a, SphereCollider *b, PVec3* fn
             a->yPostRot - a->radius <= b->yPostRot + b->radius){
             if(a->zPostRot + a->radius >= b->zPostRot - b->radius &&
                a->zPostRot - a->radius <= b->zPostRot + b->radius){
+
+                Matrix41 cenA;
+                cenA.elem[0] = a->xPostRot;
+                cenA.elem[1] = a->yPostRot;
+                cenA.elem[2] = a->zPostRot;
+                Matrix41 cenB;
+                cenB.elem[0] = a->xPostRot;
+                cenB.elem[1] = a->yPostRot;
+                cenB.elem[2] = a->zPostRot;
+
+                *pen = a->radius + b->radius - distance(cenB, cenA);
+
+                fn->data[0] = cenB.elem[0] - cenA.elem[0];
+                fn->data[1] = cenB.elem[1] - cenA.elem[1];
+                fn->data[2] = cenB.elem[2] - cenA.elem[2];
+
                 return true;
             }
         }
@@ -276,7 +250,6 @@ bool testNarrowPhaseCollision(CollisionBody* a, CollisionBody* b, PVec3* fn, flo
     for(size_t i = 0; i < a->numOfBoxColliders; ++i){
         for(size_t j = 0; j < b->numOfBoxColliders; ++j){
             if(testBoxColliderCollision(a->BoxColliders[i], b->BoxColliders[j], fn, pen)){
-                determineCollisionDetails_BB(a, a->BoxColliders[i], b, b->BoxColliders[j], pen, fn);
                 return true;
             }
         }
@@ -286,7 +259,6 @@ bool testNarrowPhaseCollision(CollisionBody* a, CollisionBody* b, PVec3* fn, flo
     for(size_t i = 0; i < a->numOfSphereColliders; ++i){
         for(size_t j = 0; j < b->numOfSphereColliders; ++j){
             if(testSphereColliderCollision(a->SphereColliders[i], b->SphereColliders[j], fn, pen)){
-                determineCollisionDetails_SS(a, a->SphereColliders[i], b, b->SphereColliders[j], pen, fn);
                 return true;
             }
         }
@@ -296,7 +268,6 @@ bool testNarrowPhaseCollision(CollisionBody* a, CollisionBody* b, PVec3* fn, flo
     for(size_t i = 0; i < a->numOfBoxColliders; ++i){
         for(size_t j = 0; j < b->numOfSphereColliders; ++j){
             if(testBoxSphereCollision(a->BoxColliders[i], b->SphereColliders[j], fn, pen)){
-                determineCollisionDetails_BS(a, a->BoxColliders[i], b, b->SphereColliders[j], pen, fn);
                 return true;
             }
         }
@@ -306,7 +277,6 @@ bool testNarrowPhaseCollision(CollisionBody* a, CollisionBody* b, PVec3* fn, flo
     for(size_t i = 0; i < a->numOfSphereColliders; ++i){
         for(size_t j = 0; j < b->numOfBoxColliders; ++j){
             if(testBoxSphereCollision(b->BoxColliders[j], a->SphereColliders[i], fn, pen)){
-                determineCollisionDetails_BS(b, b->BoxColliders[j], a, a->SphereColliders[i], pen, fn);
                 return true;
             }
         }

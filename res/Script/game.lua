@@ -72,7 +72,6 @@ function GenerateNextLevel()
 end
 
 function DeInit()
-    camera = nil
     player = nil
     gen = nil
     gg_lights = nil

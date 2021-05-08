@@ -98,6 +98,8 @@ int MainMenu_keyUp(InputType inputType) {
         case KEY_ESC:
             GuiManager_drawToggle(&engine.guiManager);
             break;
+        case KEY_T:
+            PhysicsWorld_debugToggle(StateManager_top(&engine.sM)->physicsWorld);
         default:
             break;
     }
@@ -122,6 +124,8 @@ void MainMenu_init(State *state) {
     state->keyUp = MainMenu_keyUp;
     state->mouseMovement = MainMenu_mouseMovement;
     state->skyboxDraw = true;
+    state->physicsWorld = PhysicsEngine_newPhysicsWorld(&engine.physicsEngine);
+    PhysicsWorld_updateGravityNormal(state->physicsWorld, 0, -9.8f, 0);
     engine.lockCamera = false;
     char file[] = "mainMenu.lua";
     LuaHelper_loadScript(file);

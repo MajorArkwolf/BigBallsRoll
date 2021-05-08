@@ -57,9 +57,6 @@ end
 
 function GetRandomDirection()
     local direction = {}
-    direction.x = {}
-    direction.y = {}
-    direction.z = {}
     direction.x = 0
     direction.y = 0
     direction.z = 0
@@ -141,9 +138,9 @@ function NextNode(currentNode, endNode, gridMaxX, gridMaxY, gridMaxZ)
         local count = 0
         local dir = GetRandomDirection()
         while (count <= 6) do
-            x = dir.x + currentNode[1]
-            y = dir.y + currentNode[2]
-            z = dir.z + currentNode[3]
+            local x = dir.x + currentNode[1]
+            local y = dir.y + currentNode[2]
+            local z = dir.z + currentNode[3]
             if (x > 0 and y > 0 and  z > 0 and x <= gridMaxX and y <= gridMaxY and z <= gridMaxZ) then
                 local nextNode = {x, y, z}
                 if (not HasBeenVisited(nextNode) and NextNode(nextNode, endNode, gridMaxX, gridMaxY, gridMaxZ)) then

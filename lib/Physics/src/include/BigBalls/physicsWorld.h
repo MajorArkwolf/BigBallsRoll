@@ -10,6 +10,7 @@ typedef struct PhysicsWorld {
     int collisionBodyIdCount;
     PVec3 gravity;
     bool debug;
+    bool sleepWorld;
 } PhysicsWorld;
 
 /**
@@ -115,3 +116,9 @@ void PhysicsWorld_forceImpulse(CollisionBody *cb, float deltaTime);
  * @param cb the collision body to apply the air resistance.
  */
 void PhysicsWorld_forceDrag(CollisionBody *cb);
+
+/**
+ * Sleeps the world so no updates are performed
+ * @param sleepWorld true to put the world to sleep. Unsleeping resumes the world from before it was paused.
+ */
+void PhysicsWorld_sleepWorld(PhysicsWorld *pw, bool sleepWorld);

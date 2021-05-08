@@ -32,6 +32,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     physicsWorld->gravity = PVec3_init();
     physicsWorld->gravity.data[1] = -9.8f;
     physicsWorld->debug = false;
+    physicsWorld->sleepWorld = false;
 }
 
 void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
@@ -168,4 +169,10 @@ void PhysicsWorld_forceDrag(CollisionBody *cb) {    //TODO: improve or find bett
     cb->velocity.data[0] *= airResistance;
     cb->velocity.data[1] *= airResistance;
     cb->velocity.data[2] *= airResistance;
+}
+
+void PhysicsWorld_sleepWorld(PhysicsWorld *pw, bool sleepWorld) {
+    if (pw != NULL) {
+        pw->sleepWorld = sleepWorld;
+    }
 }

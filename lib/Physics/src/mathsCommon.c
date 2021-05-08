@@ -8,7 +8,6 @@
 #endif
 
 bool fTolerance(float a, float b, float tolerance){
-    assert(tolerance >= 0);
     if(fabsf(a-b) < tolerance){
         return true;
     }
@@ -248,4 +247,19 @@ PVec3 PVec3NormaliseVec3(PVec3 const *vec3) {
         newVec.data[2] = vec3->data[2] / mag;
     }
     return newVec;
+}
+
+bool PVec3Compare(PVec3 const *vec1, PVec3 const *vec2, float tolerance) {
+    if (fTolerance(vec1->data[0], vec2->data[0], tolerance) &&
+        fTolerance(vec1->data[1], vec2->data[1], tolerance) &&
+        fTolerance(vec1->data[2], vec2->data[2], tolerance)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+float clamp(float d, float min, float max) {
+    const float t = d < min ? min : d;
+    return t > max ? max : t;
 }

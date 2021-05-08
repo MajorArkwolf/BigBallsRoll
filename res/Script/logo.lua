@@ -18,19 +18,19 @@ function Logo:Init(boardPosition)
     AudioRegisterSource(self.gameObjectID)
     AudioPlaySound(self.gameObjectID, "trance.ogg", true)
     AudioSetSourceVolume(self.gameObjectID, 10)
-    PhysicsRegisterCollisionBody(self.gameObjectID)
-    PhysicsCollisionBodySetStatic(self.gameObjectID, true)
-    PhysicsSetMass(self.gameObjectID, 0)
-    PhysicsSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
-    local length = {}
-    length.x = 2
-    length.y = 0.5
-    length.z = 3.2
-    local localPos = {}
-    localPos.x = -1
-    localPos.y = 0
-    localPos.z = -1.5
-    PhysicsAddAABBCollider(self.gameObjectID, localPos, length)
+    --PhysicsRegisterCollisionBody(self.gameObjectID)
+    --PhysicsCollisionBodySetStatic(self.gameObjectID, true)
+    --PhysicsSetMass(self.gameObjectID, 0)
+    --PhysicsSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+    --local length = {}
+    --length.x = 2
+    --length.y = 0.5
+    --length.z = 3.2
+    --local localPos = {}
+    --localPos.x = -1
+    --localPos.y = 0
+    --localPos.z = -1.5
+    --PhysicsAddAABBCollider(self.gameObjectID, localPos, length)
     self:ExitLogo(boardPosition)
 end
 

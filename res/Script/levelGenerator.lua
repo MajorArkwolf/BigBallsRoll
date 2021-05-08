@@ -85,7 +85,7 @@ function GetRandomDirection()
 end
 
 function RotateDirection(direction)
-    if (diagnialEnabled) then
+    if (diagonalEnabled) then
         direction.x = direction.x + 1
         if (direction.x > 1) then
             direction.x = -1

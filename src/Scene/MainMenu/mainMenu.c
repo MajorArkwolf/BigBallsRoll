@@ -125,7 +125,6 @@ void MainMenu_init(State *state) {
     state->mouseMovement = MainMenu_mouseMovement;
     state->skyboxDraw = true;
     state->physicsWorld = PhysicsEngine_newPhysicsWorld(&engine.physicsEngine);
-    PhysicsWorld_updateGravityNormal(state->physicsWorld, 0, -9.8f, 0);
     engine.lockCamera = false;
     char file[] = "mainMenu.lua";
     LuaHelper_loadScript(file);

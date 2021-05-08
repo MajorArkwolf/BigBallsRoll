@@ -9,8 +9,10 @@ typedef struct CollisionBody{
     // implementation of stack
     BoxCollider **BoxColliders;
     size_t numOfBoxColliders;
+    size_t boxCollidersAlloced;
     SphereCollider **SphereColliders;
     size_t numOfSphereColliders;
+    size_t sphereCollidersAlloced;
     size_t numOfColliders; // TODO: may be redundant
     int id;
     float xPos; // give position so collider positions are relative to CollisionBody position

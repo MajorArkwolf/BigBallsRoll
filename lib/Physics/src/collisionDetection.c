@@ -303,12 +303,14 @@ void collisionsDetection(PhysicsWorld* physicsWorld, CollisionArrayContainer *ca
                     if(cac->collisionArray == NULL){
                         if (cac->numOfCollisions == 0) {
                             cac->collisionArray = calloc(1, sizeof(Collision));
+                            cac->collisionsAlloced = 1;
                         } else {
                             assert(false);
                         }
                     }
-                    else{
-                        cac->collisionArray = realloc(cac->collisionArray, sizeof(Collision) * (cac->numOfCollisions + 1));
+                    else if(cac->collisionsAlloced < cac->numOfCollisions + 1){
+                        cac->collisionArray = realloc(cac->collisionArray, sizeof(Collision) * (cac->collisionsAlloced * 2));
+                        cac->collisionsAlloced *= 2;
                     }
                     cac->collisionArray[cac->numOfCollisions].body1 = physicsWorld->collisionBodies[i];
                     cac->collisionArray[cac->numOfCollisions].body2 = physicsWorld->collisionBodies[j];

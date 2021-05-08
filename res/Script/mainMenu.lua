@@ -19,10 +19,6 @@ function Init()
     CameraUpdateView()
     titleLogo = dofile("res/Script/logo.lua")
     titleLogo:Init(boardDimensions)
-    local escMenu = GameObjectRegister()
-    GameObjectSetPosition(escMenu, -5, boardDimensions.y + 10, 1)
-    GameObjectSetRotation(escMenu,0, -90, 0)
-    GameObjectSetModel(escMenu, "Obj/EscMenu.obj")
     ballSpawner = dofile("res/Script/BallSpawner.lua")
     local ballSpawnerPos = {}
     ballSpawnerPos.x = 0

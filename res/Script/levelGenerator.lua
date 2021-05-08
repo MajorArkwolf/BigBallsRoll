@@ -22,6 +22,7 @@ function Generator:Init(seed)
 end
 
 function Generator:Setup(xlength, ylength, zlength, tolerance)
+   diagnialEnabled = false
    if xlength <= tolerance then
        xlength = tolerance * 2
    end
@@ -84,14 +85,29 @@ function GetRandomDirection()
 end
 
 function RotateDirection(direction)
-    direction.x = direction.x + 1
-    if (direction.x > 1) then
-        direction.x = -1
-    end
+    if (diagnialEnabled) then
+        direction.x = direction.x + 1
+        if (direction.x > 1) then
+            direction.x = -1
+        end
 
-    direction.z = direction.z + 1
-    if (direction.z > 1) then
-        direction.z = -1
+        direction.z = direction.z + 1
+        if (direction.z > 1) then
+            direction.z = -1
+        end
+    else
+        local nextDir = math.random(1, 2)
+        if (nextDir == 1) then
+            direction.x = direction.x + 1
+            if (direction.x > 1) then
+                direction.x = -1
+            end
+        else
+            direction.z = direction.z + 1
+            if (direction.z > 1) then
+                direction.z = -1
+            end
+        end
     end
     return direction
 end

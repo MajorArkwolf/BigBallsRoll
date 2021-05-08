@@ -41,7 +41,6 @@ end
 
 function BallSpawner:AddPhysicsBody(id, position, scale, force, coneSpread)
     --Register Physics
-    print("start")
     PhysicsRegisterCollisionBody(id)
     PhysicsSetPosition(id, position.x, position.y, position.z)
     local localPosition = {}

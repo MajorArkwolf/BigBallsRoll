@@ -76,6 +76,67 @@ void determineCollisionDetails_SS(CollisionBody* ca, SphereCollider* sa, Collisi
     norm->data[2] = cenb.data[2] - cena.data[2];
 }
 
+void determineCollisionNormalBoxToSphere(BoxCollider *a, SphereCollider *b, PVec3* fn, float* pen) {
+    // Calculate the extents of our box
+    PVec3 aabbExtents;
+    aabbExtents.data[0] = a->xLen / 2 ;
+    aabbExtents.data[1] = a->yLen / 2 ;
+    aabbExtents.data[2] = a->zLen / 2 ;
+    // Calculate the centre point of our cube
+    PVec3 aabbCentre;
+    aabbCentre.data[0] = aabbExtents.data[0] + a->AABBx1;
+    aabbCentre.data[1] = aabbExtents.data[1] + a->AABBy1;
+    aabbCentre.data[2] = aabbExtents.data[2] + a->AABBz1;
+    // Convert our sphere into a PVec for simplicity later
+    PVec3 sphere;
+    sphere.data[0] = b->xPostRot;
+    sphere.data[1] = b->yPostRot;
+    sphere.data[2] = b->zPostRot;
+
+    // Get our normal from ->AB
+    PVec3 mag = subtractPVec3(&sphere, &aabbCentre);
+    PVec3 closest = PVec3_init();
+    closest.data[0] = clamp(mag.data[0], -aabbExtents.data[0], aabbExtents.data[0]);
+    closest.data[1] = clamp(mag.data[1], -aabbExtents.data[1], aabbExtents.data[1]);
+    closest.data[2] = clamp(mag.data[2], -aabbExtents.data[2], aabbExtents.data[2]);
+
+    bool isInside = false;
+
+    if (PVec3Compare(&mag, &closest, 0.001f)) {
+        isInside = true;
+        if (fabsf(mag.data[0]) > fabsf(mag.data[1]) &&
+            fabsf(mag.data[0]) > fabsf(mag.data[2])) {
+            if (closest.data[0] > 0) {
+                closest.data[0] = aabbExtents.data[0];
+            } else {
+                closest.data[0] = -aabbExtents.data[0];
+            }
+        } else if (fabsf(mag.data[1]) > fabsf(mag.data[2])) {
+            // Clamp to closest extent
+            if (closest.data[1] > 0) {
+                closest.data[1] = aabbExtents.data[1];
+            } else {
+                closest.data[1] = -aabbExtents.data[1];
+            }
+        } else {
+            if (closest.data[2] > 0) {
+                closest.data[2] = aabbExtents.data[2];
+            } else {
+                closest.data[2] = -aabbExtents.data[2];
+            }
+        }
+    }
+    PVec3 normal = subtractPVec3(&mag, &closest);
+    float dp = sqrtf(powf(normal.data[0], 2) + powf(normal.data[1], 2) + powf(normal.data[2], 2));
+    *fn = PVec3NormaliseVec3(&normal);
+    if (isInside) {
+        fn->data[0] *= -1;
+        fn->data[1] *= -1;
+        fn->data[2] *= -1;
+    }
+    *pen = b->radius - dp;
+}
+
 bool testAABBCollision(CollisionBody *a, CollisionBody *b){
     assert(a != NULL && b != NULL);
     // the min and max points of each CollisionBody, which will be used to determine if the two AABB's of the CollisionBodies are intersecting (colliding)
@@ -197,18 +258,11 @@ bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float*
     float x = getMax(a->AABBx1, getMin(b->xPostRot, a->AABBx2));
     float y = getMax(a->AABBy1, getMin(b->yPostRot, a->AABBy2));
     float z = getMax(a->AABBz1, getMin(b->zPostRot, a->AABBz2));
-    float distance_between = sqrtf(  (x - b->xPostRot) * (x - b->xPostRot) +
-                             (y - b->yPostRot) * (y - b->yPostRot) +
-                             (z - b->zPostRot) * (z - b->zPostRot));
+    float distance_between = sqrtf(powf(x - b->xPostRot, 2) +
+                             powf(y - b->yPostRot, 2) +
+                             powf(z - b->zPostRot, 2));
     if (distance_between < b->radius) {
-        PVec3 aabbCentre = getAABBCenter(a);
-        PVec3 sphere;
-        sphere.data[0] = b->xPostRot;
-        sphere.data[1] = b->yPostRot;
-        sphere.data[2] = b->zPostRot;
-        PVec3 mag = subtractPVec3(&sphere, &aabbCentre);
-        *fn = PVec3NormaliseVec3(&mag);
-        *pen = b->radius - distance_between;
+        determineCollisionNormalBoxToSphere(a, b, fn, pen);
         return true;
     } else {
         return false;

@@ -174,6 +174,14 @@ int PhysicsInterface_setMass(lua_State *L) {
     lua_pop(L, 2);
     return 0;
 }
+int PhysicsInterface_sleepWorld(lua_State *L) {
+    bool sleepWorld = lua_toboolean(L, 1);
+    State* state = StateManager_top(&engine.sM);
+    PhysicsWorld_sleepWorld(state->physicsWorld ,sleepWorld);
+    lua_pop(L, 1);
+    return 0;
+}
+
 
 int PhysicsLuaInterface_resetPhysicsWorld(lua_State *L) {
     PhysicsEngine *pe = &engine.physicsEngine;
@@ -203,4 +211,6 @@ void PhysicsLuaInterface_init() {
     lua_setglobal(engine.lua, "PhysicsStopCB");
     lua_pushcfunction(engine.lua, PhysicsInterface_setMass);
     lua_setglobal(engine.lua, "PhysicsSetMass");
+    lua_pushcfunction(engine.lua, PhysicsInterface_sleepWorld);
+    lua_setglobal(engine.lua, "PhysicsSleepWorld");
 }

@@ -58,13 +58,13 @@ function StartNode:CheckStartTrigger(player, deltaTime)
     -- Check to see if the player has landed, if not the player is still falling
     if (not self.boardIsReady) then
         self.boardIsReady = self:EnableBlock()
-    elseif (not self.playerStarted and player.position.y < self.position.y + 1.6) then
-        player.position.y = self.position.y + 1.5
-        GameObjectSetPosition(player.gameObjectID, player.position.x, player.position.y, player.position.z)
-        player.playerMoveOn = true;
-        self.playerStarted = true
+        PhysicsSleepWorld(true)
     elseif (not self.playerStarted) then
-        player:Fall(deltaTime)
+        PhysicsSleepWorld(false)
+        if(player.position.y < self.position.y + 1.6) then
+            player.playerMoveOn = true;
+            self.playerStarted = true
+        end
     end
     return self.playerStarted
 end

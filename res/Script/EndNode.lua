@@ -40,6 +40,7 @@ function EndNode:CheckEndTrigger(player)
             player.playerMoveOn = false
             PhysicsStopCB(player.gameObjectID)
             self:CentrePlayer(player)
+            PhysicsSleepWorld(true)
             return true
         end
     end

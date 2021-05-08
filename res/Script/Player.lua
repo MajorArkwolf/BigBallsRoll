@@ -49,12 +49,6 @@ function CalculateRightVector(front)
     return CrossProductVec(result, worldUp)
 end
 
-function Player:Fall(deltaTime)
-    self.position = GameObjectGetPosition(self.gameObjectID)
-    self.position.y = self.position.y - (7 * deltaTime)
-    GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
-end
-
 function Player:IsPlayerDead()
     if self.position.y < -20 then
         self.playerLives = self.playerLives - 1

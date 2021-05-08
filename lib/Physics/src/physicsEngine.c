@@ -56,7 +56,7 @@ void PhysicsEngine_freePhysicsWorld(PhysicsEngine *physicsEngine, PhysicsWorld *
 }
 
 void PhysicsEngine_updateWorld(PhysicsWorld *physicsWorld, double deltaTime) {
-    if (physicsWorld != NULL) {
+    if (physicsWorld != NULL && !physicsWorld->sleepWorld) {
         CollisionArrayContainer cac = collisionArrayContainer_init();
         PhysicsWorld_update(physicsWorld, (float)deltaTime);
         collisionsDetection(physicsWorld, &cac);

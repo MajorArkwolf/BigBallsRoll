@@ -22,7 +22,7 @@ function Generator:Init(seed)
 end
 
 function Generator:Setup(xlength, ylength, zlength, tolerance)
-   diagnialEnabled = false
+   diagonalEnabled = false
    if xlength <= tolerance then
        xlength = tolerance * 2
    end

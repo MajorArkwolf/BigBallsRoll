@@ -25,11 +25,13 @@ void PhysicsEngine_free(PhysicsEngine *physicsEngine) {
 
 PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine) {
     assert(physicsEngine != NULL);
-    if(physicsEngine->numOfPhysicsWorlds == 0){
+    if(physicsEngine->numOfPhysicsWorlds == 0 || physicsEngine->physicsWorld == NULL){
+        physicsEngine->physicsWorld = calloc(1, sizeof(PhysicsWorld*));
         physicsEngine->physicsWorld[0] = calloc(1, sizeof(PhysicsWorld));
     }
     else{
-        physicsEngine->physicsWorld = realloc(physicsEngine->physicsWorld, sizeof(PhysicsWorld) * physicsEngine->numOfPhysicsWorlds);
+        physicsEngine->physicsWorld = realloc(physicsEngine->physicsWorld, sizeof(PhysicsWorld) * (physicsEngine->numOfPhysicsWorlds + 1));
+        physicsEngine->physicsWorld[physicsEngine->numOfPhysicsWorlds] = calloc(1, sizeof(PhysicsWorld));
     }
     //initialise new Physics World
     PhysicsWorld_init(physicsEngine->physicsWorld[physicsEngine->numOfPhysicsWorlds]);

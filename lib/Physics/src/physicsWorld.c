@@ -54,27 +54,44 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
     if (physicsWorld->collisionBodies == NULL) {
         physicsWorld->collisionBodies = calloc(1, sizeof(CollisionBody *));
     } else {
-        physicsWorld->collisionBodies = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody *) * (physicsWorld->numCollisionBodies + 1));
+        CollisionBody **temp = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody *) * (physicsWorld->numCollisionBodies + 1));
+        if (temp != NULL) {
+            physicsWorld->collisionBodies = temp;
+        } else {
+            assert(false);
+        }
     }
-    // Copy BoxCollider object into array
-    physicsWorld->collisionBodies[physicsWorld->numCollisionBodies] = collisionBody;
-    // Assign ID to BoxCollider
-    physicsWorld->collisionBodies[physicsWorld->numCollisionBodies]->id = PhysicsWorld_newCollisionBodyID(physicsWorld);
-    ++physicsWorld->numCollisionBodies;
+    if (physicsWorld->collisionBodies != NULL) {
+        // Copy BoxCollider object into array
+        physicsWorld->collisionBodies[physicsWorld->numCollisionBodies] = collisionBody;
+        // Assign ID to BoxCollider
+        physicsWorld->collisionBodies[physicsWorld->numCollisionBodies]->id = PhysicsWorld_newCollisionBodyID(physicsWorld);
+        ++physicsWorld->numCollisionBodies;
+    } else {
+        assert(false);
+    }
 }
 
 void PhysicsWorld_removeCollisionBody(PhysicsWorld *physicsWorld, const int ID) {
     assert(physicsWorld != NULL && ID >= 0);
-    for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
-        if (physicsWorld->collisionBodies[i]->id == ID) {
-            CollisionBody_free(physicsWorld->collisionBodies[i]);
-            for (size_t j = i + 1; j < physicsWorld->numCollisionBodies; ++j) { // for each collisionbody after match index
-                physicsWorld->collisionBodies[j - 1] = physicsWorld->collisionBodies[j];
+    if (physicsWorld != NULL && physicsWorld->collisionBodies != NULL) {
+        for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
+            if (physicsWorld->collisionBodies[i]->id == ID) {
+                CollisionBody_free(physicsWorld->collisionBodies[i]);
+                for (size_t j = i + 1; j < physicsWorld->numCollisionBodies; ++j) {// for each collisionbody after match index
+                    physicsWorld->collisionBodies[j - 1] = physicsWorld->collisionBodies[j];
+                }
+                physicsWorld->collisionBodies[physicsWorld->numCollisionBodies - 1] = NULL;
+                --physicsWorld->numCollisionBodies;
+                // reduce size of memory allocation (shouldn't be costly if realloc() realises whats going on)
+                CollisionBody **temp = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * physicsWorld->numCollisionBodies);
+                if (temp != NULL) {
+                    physicsWorld->collisionBodies = temp;
+                } else {
+                    assert(false);
+                }
+                return;
             }
-            physicsWorld->collisionBodies[physicsWorld->numCollisionBodies - 1] = NULL;
-            --physicsWorld->numCollisionBodies;
-            // reduce size of memory allocation (shouldn't be costly if realloc() realises whats going on)
-            physicsWorld->collisionBodies = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody) * physicsWorld->numCollisionBodies);
         }
     }
 }

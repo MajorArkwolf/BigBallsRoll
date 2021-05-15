@@ -35,7 +35,9 @@ function Player:AddPhysicsBody()
     --PhysicsCollisionBodySetStatic(self.gameObjectID, true)
 end
 
-function Player:ReInit()
+function Player:ReInit(newPlayerPositions)
+    self.position = newPlayerPositions.position
+    self.startPosition = newPlayerPositions.respawnPosition
     self.gameObjectID = GameObjectRegister()
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)

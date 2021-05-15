@@ -29,7 +29,7 @@ PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine) {
         physicsEngine->physicsWorld = calloc(1, sizeof(PhysicsWorld*));
     }
     else{
-        PhysicsWorld *temp = realloc(physicsEngine->physicsWorld, sizeof(PhysicsWorld*) * (physicsEngine->numOfPhysicsWorlds + 1));
+        PhysicsWorld **temp = realloc(physicsEngine->physicsWorld, sizeof(PhysicsWorld*) * (physicsEngine->numOfPhysicsWorlds + 1));
         if (temp != NULL) {
             physicsEngine->physicsWorld = temp;
         } else {

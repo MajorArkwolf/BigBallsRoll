@@ -32,9 +32,16 @@ function StartNode:FreshBoard(height, player, endNode)
     offsetFromFinish.x = player.position.x - endNode.position.x
     offsetFromFinish.y = 0
     offsetFromFinish.z = player.position.z - endNode.position.z
-    player.position.x = position.x + offsetFromFinish.x
-    player.position.y = position.y + 1.5
-    player.position.z = position.z + offsetFromFinish.z
+    local newPlayerPositions = {}
+    newPlayerPositions.position = {}
+    newPlayerPositions.respawnPosition = {}
+    newPlayerPositions.position.x = position.x + offsetFromFinish.x
+    newPlayerPositions.position.y = position.y + 1.5
+    newPlayerPositions.position.z = position.z + offsetFromFinish.z
+    newPlayerPositions.respawnPosition.x = newPlayerPositions.position.x
+    newPlayerPositions.respawnPosition.y = self.position.y + 1.5
+    newPlayerPositions.respawnPosition.z = newPlayerPositions.position.z
+    return newPlayerPositions
 end
 
 function DisableBoard(board)

@@ -111,8 +111,8 @@ void GuiManager_optionsReset(GuiManager *guiManager)  {
 
 void GuiManager_draw(GuiManager *guiManager) {
     assert(guiManager != NULL);
-
     if(guiManager->guiDraw || guiManager->inGame) {
+        glPushAttrib(GL_ENABLE_BIT);
         glDisable(GL_LIGHTING);
         GuiManager_update(guiManager);
         nk_glfw3_new_frame();
@@ -138,7 +138,7 @@ void GuiManager_draw(GuiManager *guiManager) {
             GuiManager_gameOver(guiManager);
         }
         nk_glfw3_render(NK_ANTI_ALIASING_ON);
-        glEnable(GL_LIGHTING);
+        glPopAttrib(GL_ENABLE_BIT);
    }
 }
 
@@ -155,11 +155,14 @@ void GuiManager_setMenuPosition(GuiManager *guiManager, float divideW, float div
 }
 
 void GuiManager_startGame(void) {
+    glPopAttrib(GL_ENABLE_BIT);
     State *state;
     state = malloc(sizeof (State));
     State_init(state);
     StateManager_push(&engine.sM, state);
     Game_init(state);
+    glPushAttrib(GL_ENABLE_BIT);
+    glDisable(GL_LIGHTING);
 }
 
 void GuiManager_stopGame(void) {

@@ -23,6 +23,8 @@ int ClosingScreen_keyUp(InputType inputType) {
 }
 
 int ClosingScreen_destroy() {
+    glPopAttrib(GL_LIGHTING_BIT);
+    glPopAttrib(GL_ENABLE_BIT);
     return 0;
 }
 
@@ -40,6 +42,9 @@ int ClosingScreen_mouseKeys(int button, int buttonState) {
 
 
 void ClosingScreen_init(State *state) {
+    glPushAttrib(GL_LIGHTING_BIT);
+    glPushAttrib(GL_ENABLE_BIT);
+    glDisable(GL_LIGHTING);
     Engine_cameraLock(true);
     state->update = ClosingScreen_update;
     state->draw = ClosingScreen_draw;

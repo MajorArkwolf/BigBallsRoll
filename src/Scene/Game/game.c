@@ -97,16 +97,21 @@ int Game_destroy() {
     if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
-    State_deregisterLights(StateManager_top(&engine.sM));
     PhysicsEngine_freePhysicsWorld(&engine.physicsEngine, StateManager_top(&engine.sM)->physicsWorld);
     State *state = StateManager_top(&engine.sM);
     for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
         GameObject_free(&state->gameObjects[i]);
     }
+    glPopAttrib(GL_LIGHTING_BIT);
+    //glPopAttrib(GL_ENABLE_BIT);
     return 0;
 }
 
 void Game_init(State *state) {
+    glPushAttrib(GL_LIGHTING_BIT);
+    //glPushAttrib(GL_ENABLE_BIT);
+    //glEnable(GL_LIGHTING);
+    //deregisterLights();
     Engine_cameraLock(true);
     state->update = Game_update;
     state->draw = Game_draw;

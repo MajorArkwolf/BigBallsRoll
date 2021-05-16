@@ -12,25 +12,6 @@ InputType konamiCode[] = {KEY_UP_ARROW, KEY_UP_ARROW, KEY_DOWN_ARROW,
 size_t konamiCodeTracker = 0;
 bool konamiCodeEntered = false;
 
-void PauseMenu(bool desiredState) {
-    if (desiredState != paused) {
-        if (paused) {
-            lua_getglobal(engine.lua, "MainMenuUnpause");
-            if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
-                lua_pop(engine.lua, lua_gettop(engine.lua));
-            }
-            paused = false;
-        } else {
-            lua_getglobal(engine.lua, "MainMenuPause");
-            if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
-                lua_pop(engine.lua, lua_gettop(engine.lua));
-            }
-            State_deregisterLights(StateManager_top(&engine.sM));
-            paused = true;
-        }
-    }
-}
-
 void ActivateKonami(InputType inputType) {
     if (konamiCodeEntered == false && inputType == konamiCode[konamiCodeTracker]) {
         ++konamiCodeTracker;
@@ -61,7 +42,6 @@ void ActivateKonami(InputType inputType) {
 }
 
 int MainMenu_draw(float deltaTime) {
-    PauseMenu(false);
     lua_getglobal(engine.lua, "MainMenuDraw");
     if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
@@ -73,7 +53,6 @@ int MainMenu_draw(float deltaTime) {
 }
 
 int MainMenu_update(float deltaTime) {
-    PauseMenu(false);
     Camera_update(&StateManager_top(&engine.sM)->camera, (float) deltaTime);
     lua_pushnumber(engine.lua, deltaTime);
     lua_setglobal(engine.lua, "deltaTime");

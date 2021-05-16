@@ -3,12 +3,14 @@ function Init()
     mm_lights[1] = dofile("res/Script/light.lua")
     mm_lights[1]:Init(false)
     mm_lights[1]:SetAmbient(0.6, 0.6, 0.6)
+    mm_lights[1]:Enable()
     mm_lights[2] = dofile("res/Script/light.lua")
     mm_lights[2]:Init(true)
     mm_lights[2]:SetAmbient(0.8, 0.8, 0.8)
     mm_lights[2]:SetDiffuse(1.0, 1.0, 1.0)
     mm_lights[2]:SetSpecular(1.0, 1.0, 1.0)
     mm_lights[2]:SetPosition(0, 1, 0)
+    mm_lights[2]:Enable()
     local boardDimensions = {}
     boardDimensions.x = 20
     boardDimensions.y = -5

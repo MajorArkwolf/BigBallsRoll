@@ -103,15 +103,11 @@ int Game_destroy() {
         GameObject_free(&state->gameObjects[i]);
     }
     glPopAttrib(GL_LIGHTING_BIT);
-    //glPopAttrib(GL_ENABLE_BIT);
     return 0;
 }
 
 void Game_init(State *state) {
     glPushAttrib(GL_LIGHTING_BIT);
-    //glPushAttrib(GL_ENABLE_BIT);
-    //glEnable(GL_LIGHTING);
-    //deregisterLights();
     Engine_cameraLock(true);
     state->update = Game_update;
     state->draw = Game_draw;

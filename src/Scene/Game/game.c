@@ -102,7 +102,7 @@ int Game_destroy() {
     for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
         GameObject_free(&state->gameObjects[i]);
     }
-    glPopAttrib(GL_LIGHTING_BIT);
+    glPopAttrib();
     return 0;
 }
 

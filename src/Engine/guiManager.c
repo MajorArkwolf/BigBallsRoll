@@ -138,7 +138,7 @@ void GuiManager_draw(GuiManager *guiManager) {
             GuiManager_gameOver(guiManager);
         }
         nk_glfw3_render(NK_ANTI_ALIASING_ON);
-        glPopAttrib(GL_ENABLE_BIT);
+        glPopAttrib();
    }
 }
 
@@ -155,7 +155,7 @@ void GuiManager_setMenuPosition(GuiManager *guiManager, float divideW, float div
 }
 
 void GuiManager_startGame(void) {
-    glPopAttrib(GL_ENABLE_BIT);
+    glPopAttrib();
     State *state;
     state = malloc(sizeof (State));
     State_init(state);

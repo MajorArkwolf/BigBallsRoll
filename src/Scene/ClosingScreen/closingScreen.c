@@ -23,8 +23,8 @@ int ClosingScreen_keyUp(InputType inputType) {
 }
 
 int ClosingScreen_destroy() {
-    glPopAttrib(GL_LIGHTING_BIT);
-    glPopAttrib(GL_ENABLE_BIT);
+    glPopAttrib();
+    glPopAttrib();
     return 0;
 }
 

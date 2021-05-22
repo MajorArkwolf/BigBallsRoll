@@ -84,6 +84,7 @@ function Update()
     player:Update(deltaTime)
     if player:IsPlayerDead() then
         GUIGameOver("Ripperoni Pepperoni...", level - 1, player.playerLives)
+        player.playerMoveOn = false
     -- Check to see if the player is in the end zone
     elseif endNode:CheckEndTrigger(player) or skipLevel then
         endNode:BeginEndStep(player)

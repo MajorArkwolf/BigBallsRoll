@@ -441,7 +441,7 @@ void GuiManager_exitMenu(GuiManager *guiManager) {
     nk_end(guiManager->ctx);
 }
 
-void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int level) {
+void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int level, int lives) {
     assert(guiManager != NULL && message != NULL);
     //Seed
     strcpy(guiManager->gameOver.seed, "Seed: ");
@@ -466,7 +466,7 @@ void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int le
 
     //Lives
     strcpy(guiManager->gameOver.lives, "Lives remaining: ");
-    sprintf(guiManager->gameOver.buffer, "%i", guiManager->hud.nextLives);
+    sprintf(guiManager->gameOver.buffer, "%i", lives);
     strcat(guiManager->gameOver.lives, guiManager->gameOver.buffer);
 
     //Levels

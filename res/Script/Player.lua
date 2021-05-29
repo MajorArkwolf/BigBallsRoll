@@ -18,6 +18,7 @@ function Player:Init(position)
     self.playerLives = 3
     self.mouseSensitivityX = 3
     self.mouseSensitivityY = 3
+    self.isJumping = false
     self.camera:Update(0.0, self.gameObjectID, self.mouseSensitivityX)
     self:AddPhysicsBody()
 end
@@ -31,8 +32,6 @@ function Player:AddPhysicsBody()
     position.y = 0
     position.z = 0
     PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
-    -- Temp added to disable gravity
-    --PhysicsCollisionBodySetStatic(self.gameObjectID, true)
 end
 
 function Player:ReInit(newPlayerPositions)
@@ -109,6 +108,23 @@ function Player:Update(deltaTime)
     --GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
     self.camera:Update(deltaTime, self.gameObjectID, PlayerConfig_mouseYSensitivity)
+end
+
+function Player:Jump()
+    local currentVelocity = PhysicsGetVelocity(self.gameObjectID)
+    if currentVelocity.y < 0.05 and currentVelocity.y >= 0.0 and self.isJumping == true then
+        self.isJumping = false
+    end
+    if self.isJumping == false then
+        local force = {}
+        force.x = 0.0
+        force.y = 500.0
+        force.z = 0.0
+        PhysicsAddForce(self.gameObjectID, force)
+        AudioPlaySound(self.gameObjectID, "collision.ogg", false)
+        AudioSetSourceVolume(self.gameObjectID, 100)
+        self.isJumping = true
+    end
 end
 
 return Player

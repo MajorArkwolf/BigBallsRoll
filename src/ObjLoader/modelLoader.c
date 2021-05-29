@@ -163,7 +163,12 @@ Model ModelLoader_loadModel(char *workingDir, const char *fileName) {
     FILE *fptr;
     fptr = fopen(fullDir, "r");
     //Failed to open a file with the given name.
-    assert(fptr != NULL);
+    if (fptr == NULL) {
+        printf("Model: %s failed to load\n", fullDir);
+        free(fullDir);
+        fullDir = NULL;
+        return model;
+    }
     // Send of to the appropriate loader
     char *ext = getFileTypeFromPath(fullDir);
     if (strcmp(ext, "off") == 0) {

@@ -153,6 +153,36 @@ int LuaHelper_getRotation(lua_State *L)  {
     return 1;
 }
 
+int LuaHelper_setScale(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    gameObject->Transform.Scale.X = lua_tonumber(L, 2);
+    gameObject->Transform.Scale.Y = lua_tonumber(L, 3);
+    gameObject->Transform.Scale.Z = lua_tonumber(L, 4);
+    lua_pop(L, 4);
+    return 0;
+}
+
+int LuaHelper_getScale(lua_State *L)  {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    lua_pop(L, 1);
+    lua_newtable(L);
+    lua_pushnumber(L, gameObject->Transform.Scale.X);
+    lua_setfield(L, 1, "x");
+    lua_pushnumber(L, gameObject->Transform.Scale.Y);
+    lua_setfield(L, 1, "y");
+    lua_pushnumber(L, gameObject->Transform.Scale.Z);
+    lua_setfield(L, 1, "z");
+    return 1;
+}
+
 int LuaHelper_setModel(lua_State *L) {
     size_t id = lua_tonumber(L, 1);
     if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
@@ -385,8 +415,9 @@ int LuaHelper_GUIGameOver(lua_State *L) {
     //Message, levels
     const char *message = lua_tostring(L, 1);
     int levels = lua_tonumber(L, 2);
-    GuiManager_initGameOver(&engine.guiManager, message, levels);
-    lua_pop(L, 2);
+    int lives = lua_tonumber(L, 3);
+    GuiManager_initGameOver(&engine.guiManager, message, levels, lives);
+    lua_pop(L, 3);
     return 0;
 }
 
@@ -467,6 +498,10 @@ void LuaHelper_init() {
     lua_setglobal(engine.lua, "GameObjectSetRotation");
     lua_pushcfunction(engine.lua, LuaHelper_getRotation);
     lua_setglobal(engine.lua, "GameObjectGetRotation");
+    lua_pushcfunction(engine.lua, LuaHelper_setScale);
+    lua_setglobal(engine.lua, "GameObjectSetScale");
+    lua_pushcfunction(engine.lua, LuaHelper_getScale);
+    lua_setglobal(engine.lua, "GameObjectGetScale");
     lua_pushcfunction(engine.lua, LuaHelper_setModel);
     lua_setglobal(engine.lua, "GameObjectSetModel");
     lua_pushcfunction(engine.lua, lua_toggleGameObjectRender);

@@ -188,7 +188,7 @@ void GuiManager_closeInactiveWindows(GuiManager *guiManager);
  * @param message to display to the player
  * @param level the levels the player completed
  */
-void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int level);
+void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int level, int lives);
 
 /**
  * Menu that displays the game over screen. GuiManager_initGameOver prepares the data that is displayed

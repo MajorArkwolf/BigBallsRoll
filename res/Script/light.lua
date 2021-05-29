@@ -15,7 +15,6 @@ function Light:SetAmbient(x, y, z)
     self.ambient.x = x
     self.ambient.y = y
     self.ambient.z = z
-    LightAmbient(self.id, x, y, z)
 end
 
 function Light:SetDiffuse(x, y, z)
@@ -24,7 +23,6 @@ function Light:SetDiffuse(x, y, z)
         self.diffuse.x = x
         self.diffuse.y = y
         self.diffuse.z = z
-        LightDiffuse(self.id, x, y, z)
     end
 end
 
@@ -34,7 +32,6 @@ function Light:SetSpecular(x, y, z)
         self.specular.x = x
         self.specular.y = y
         self.specular.z = z
-        LightSpecular(self.id, x, y, z)
     end
 end
 
@@ -44,7 +41,6 @@ function Light:SetPosition(x, y, z)
         self.position.x = x
         self.position.y = y
         self.position.z = z
-        LightPosition(self.id, x, y, z)
     end
 end
 
@@ -55,8 +51,8 @@ function Light:Disable()
 end
 
 function Light:Enable()
-    if (self.localLight == true) then
-        self.id = LightRegister()
+    if (self.id == nil) then
+        return
     end
     if (self.ambient ~= nil) then
         LightAmbient(self.id, self.ambient.x, self.ambient.y, self.ambient.z)

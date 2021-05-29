@@ -106,7 +106,6 @@ function Player:RollBall(deltaTime)
     rotation.x = math.fmod(rotation.x, 360)
     rotation.z = math.fmod(rotation.z, 360)
     GameObjectSetRotation(self.gameObjectID, rotation.x, rotation.y, rotation.z)
-    print(rotation.x)
 end
 
 function Player:Update(deltaTime)

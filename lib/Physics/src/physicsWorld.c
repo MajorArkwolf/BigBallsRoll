@@ -104,6 +104,9 @@ bool PhysicsWorld_draw(PhysicsWorld *physicsWorld, DebugData *debug) {
 
         for (size_t i = 0; i < physicsWorld->numCollisionBodies; ++i) {
             PhysicsDebug_generateAABBBox(physicsWorld->collisionBodies[i], debug);
+            if (physicsWorld->collisionBodies[i]->numOfSphereColliders > 0) {
+                PhysicsDebug_generateSphereData(physicsWorld->collisionBodies[i], debug);
+            }
         }
         debug->numVertices = debug->vertices->size;
         debug->numFaces = debug->faceIndexes->size;

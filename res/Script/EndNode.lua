@@ -53,6 +53,7 @@ end
 function EndNode:CentrePlayer(player)
     player.position = GameObjectGetPosition(player.gameObjectID)
     player.position.x = self.position.x + 0.5
+    player.position.y = self.position.y + 1.5
     player.position.z = self.position.z + 0.5
     GameObjectSetPosition(player.gameObjectID, player.position.x, player.position.y, player.position.z)
 end

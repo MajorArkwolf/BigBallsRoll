@@ -415,8 +415,9 @@ int LuaHelper_GUIGameOver(lua_State *L) {
     //Message, levels
     const char *message = lua_tostring(L, 1);
     int levels = lua_tonumber(L, 2);
-    GuiManager_initGameOver(&engine.guiManager, message, levels);
-    lua_pop(L, 2);
+    int lives = lua_tonumber(L, 3);
+    GuiManager_initGameOver(&engine.guiManager, message, levels, lives);
+    lua_pop(L, 3);
     return 0;
 }
 

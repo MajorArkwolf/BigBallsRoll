@@ -83,12 +83,13 @@ function Update()
     GenerateNextLevel()
     player:Update(deltaTime)
     if player:IsPlayerDead() then
-        GUIGameOver("Ripperoni Pepperoni...", level - 1)
+        GUIGameOver("Ripperoni Pepperoni...", level - 1, player.playerLives)
+        player.playerMoveOn = false
     -- Check to see if the player is in the end zone
     elseif endNode:CheckEndTrigger(player) or skipLevel then
         endNode:BeginEndStep(player)
         if level == PlayerConfig_levels then
-            GUIGameOver("Congratulations gamer! You won!", level)
+            GUIGameOver("Congratulations gamer! You won!", level, player.playerLives)
         -- Begin destroying the world every tick, returns true when there is no more blocks to destroy
         elseif endNode:DestroyRandomBlock() then
             -- Progress to next level

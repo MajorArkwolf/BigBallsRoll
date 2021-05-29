@@ -5,7 +5,7 @@
 //Global Debug Data
 DebugData dd;
 //Global debug sphere Model
-Model *debugSphere;
+Model *debugSphere = NULL;
 
 void PhysicsInterface_init() {
     PhysicsEngine_init(&engine.physicsEngine);
@@ -58,13 +58,16 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
         }
 
         // Draw sphere colliders
-        for (size_t i = 0; i < dd.sphereData->size; i += 4) {
-            glPushMatrix();
+        if (debugSphere != NULL) {
+            for (size_t i = 0; i < dd.sphereData->size; i += 4) {
+                glPushMatrix();
                 glTranslatef(dd.sphereData->array[i + 1], dd.sphereData->array[i + 2], dd.sphereData->array[i + 3]);
                 glScalef(dd.sphereData->array[i], dd.sphereData->array[i], dd.sphereData->array[i]);
                 Model_draw(debugSphere);
-            glPopMatrix();
+                glPopMatrix();
+            }
         }
+
         glPopAttrib();
     }
 }

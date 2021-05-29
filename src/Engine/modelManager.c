@@ -28,7 +28,11 @@ void ModelManager_loadModels(ModelManager *modelManger, char *cwd) {
     strcpy(fulldir, cwd);
     strcat(fulldir, "res/Loader/modelloading.txt");
     FILE *fptr = fopen(fulldir, "r");
-    assert(fptr != NULL);
+    if (fptr == NULL) {
+        free(fulldir);
+        fulldir = NULL;
+        return;
+    }
     char buff[MAX_BUFF_SIZE];
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);

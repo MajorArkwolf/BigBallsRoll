@@ -15,6 +15,7 @@ typedef struct DebugData {
     size_t numVertices;
     FloatArray *vertices;
     SizeTArray *faceIndexes;
+    FloatArray *sphereData;     //r, X, Y, Z
 } DebugData;
 
 
@@ -43,3 +44,5 @@ void PhysicsDebug_dataFree(DebugData *debug);
  * @param dd The debug object to store this info in.
  */
 void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd);
+
+void PhysicsDebug_generateSphereData(CollisionBody *collisionBody, DebugData *dd);

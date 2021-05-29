@@ -40,7 +40,7 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
     if(physicsWorld != NULL && PhysicsWorld_draw(physicsWorld, &dd)) {
         glPushAttrib(GL_ENABLE_BIT|GL_LINE_BIT|GL_POLYGON_BIT);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glLineWidth(3);
+        glLineWidth(2);
         glDisable(GL_LIGHTING);
         glDisable(GL_TEXTURE_2D);
 

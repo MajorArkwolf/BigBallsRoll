@@ -40,44 +40,44 @@ void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd) {
     const size_t beforeMaxLengthVert = dd->vertices->size;
 
     //0 (vertices)
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2 + 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2 + 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2 + 0.001f);
 
     //1
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2 + 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2 + 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1 - 0.001f);
 
     //2
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2 + 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1 - 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1 - 0.001f);
 
     //3
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx2 + 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1 - 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2 + 0.001f);
 
     //4
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1 - 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2 + 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1 - 0.001f);
 
     //5
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1 - 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1 - 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz1 - 0.001f);
 
     //6
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1 - 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy2 + 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2 + 0.001f);
 
     //7
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1);
-    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBx1 - 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBy1 - 0.001f);
+    DynamicArray_pushBackFloat(dd->vertices, collisionBody->AABBz2 + 0.001f);
 
     const size_t numFaces = 12;
 

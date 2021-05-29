@@ -45,4 +45,10 @@ void PhysicsDebug_dataFree(DebugData *debug);
  */
 void PhysicsDebug_generateAABBBox(CollisionBody *collisionBody, DebugData *dd);
 
+/**
+ * Stores the sphere collider radius and coordinates (x,y,z) into the debugData's
+ * sphereData array. Stores in order radius, x, y, z.
+ * @param collisionBody The collision body to retrieve the coordinates and radius from.
+ * @param dd The debug object to store this info in.
+ */
 void PhysicsDebug_generateSphereData(CollisionBody *collisionBody, DebugData *dd);

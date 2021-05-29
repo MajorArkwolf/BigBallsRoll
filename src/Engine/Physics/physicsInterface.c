@@ -1,15 +1,16 @@
 #include "physicsInterface.h"
 #include "Engine/OpenGL.h"
 #include "Engine/engine.h"
-#include "Engine/stateManager.h"
-#include <BigBalls/collisionBody.h>
 
 //Global Debug Data
 DebugData dd;
+//Global debug sphere Model
+Model *debugSphere;
 
 void PhysicsInterface_init() {
     PhysicsEngine_init(&engine.physicsEngine);
     PhysicsDebug_dataInit(&dd);
+    debugSphere = ModelManager_getModel(&engine.modelManager, ModelManager_findModel(&engine.modelManager, "Off/debugSphere.off"));
 }
 
 void PhysicsInterface_update(double deltaTime) {
@@ -44,6 +45,7 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
         glDisable(GL_LIGHTING);
         glDisable(GL_TEXTURE_2D);
 
+        // Draw AABB
         for(size_t i = 0; i < dd.numFaces; i += 6) {
             glColor3ub(dd.faceIndexes->array[i + 0], dd.faceIndexes->array[i + 1], dd.faceIndexes->array[i + 2]);
             glBegin(GL_TRIANGLES);
@@ -53,6 +55,15 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
                            dd.vertices->array[dd.faceIndexes->array[j] + 2]);
             }
             glEnd();
+        }
+
+        // Draw sphere colliders
+        for (size_t i = 0; i < dd.sphereData->size; i += 4) {
+            glPushMatrix();
+                glTranslatef(dd.sphereData->array[i + 1], dd.sphereData->array[i + 2], dd.sphereData->array[i + 3]);
+                glScalef(dd.sphereData->array[i], dd.sphereData->array[i], dd.sphereData->array[i]);
+                Model_draw(debugSphere);
+            glPopMatrix();
         }
         glPopAttrib();
     }

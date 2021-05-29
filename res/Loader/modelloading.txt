@@ -5,4 +5,5 @@ Off/darkbluecube.off
 Off/greencube.off
 Off/redcube.off
 Off/boxtorus.off
+Off/debugSphere.off
 Obj/Goblin/goblin_warrior_spear.obj

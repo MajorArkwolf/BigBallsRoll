@@ -57,7 +57,7 @@ size_t ModelManager_findModel(ModelManager *modelManger, const char *modelName) 
 Model* ModelManager_getModel(ModelManager *modelManger, size_t index) {
     assert(modelManger != NULL);
     if (index >= modelManger->NumOfModels) {
-        printf("Index greater then number of models, return 0 index");
+        printf("Index greater than number of models, return 0 index");
         assert(false);
         return &modelManger->Models[0];
     }

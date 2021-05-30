@@ -41,3 +41,9 @@ void gluLookAt(GLfloat eyeX, GLfloat eyeY, GLfloat eyeZ, GLfloat centerX, GLfloa
     glLoadMatrixf(Mat);
     glTranslated(-eyeX, -eyeY, -eyeZ);
 }
+
+void deregisterLights() {
+    for (size_t i = 0; i < 10; ++i) {
+        glDisable(GL_LIGHT0 + i);
+    }
+}

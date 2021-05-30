@@ -151,6 +151,23 @@ int PhysicsLuaInterface_addForce(lua_State *L) {
     return 0;
 }
 
+int PhysicsLuaInterface_getVelocity(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    lua_pop(L, 1);
+    lua_newtable(L);
+    lua_pushnumber(L, gameObject->collisionBody->velocity.data[0]);
+    lua_setfield(L, 1, "x");
+    lua_pushnumber(L, gameObject->collisionBody->velocity.data[1]);
+    lua_setfield(L, 1, "y");
+    lua_pushnumber(L, gameObject->collisionBody->velocity.data[2]);
+    lua_setfield(L, 1, "z");
+    return 1;
+}
+
 int PhysicsInterface_stopCollisionBody(lua_State *L) {
     size_t id = lua_tonumber(L, 1);
     if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
@@ -213,4 +230,6 @@ void PhysicsLuaInterface_init() {
     lua_setglobal(engine.lua, "PhysicsSetMass");
     lua_pushcfunction(engine.lua, PhysicsInterface_sleepWorld);
     lua_setglobal(engine.lua, "PhysicsSleepWorld");
+    lua_pushcfunction(engine.lua, PhysicsLuaInterface_getVelocity);
+    lua_setglobal(engine.lua, "PhysicsGetVelocity");
 }

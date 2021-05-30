@@ -211,9 +211,9 @@ bool testSphereColliderCollision(SphereCollider *a, SphereCollider *b, PVec3* fn
                 cenA.elem[1] = a->yPostRot;
                 cenA.elem[2] = a->zPostRot;
                 Matrix41 cenB;
-                cenB.elem[0] = a->xPostRot;
-                cenB.elem[1] = a->yPostRot;
-                cenB.elem[2] = a->zPostRot;
+                cenB.elem[0] = b->xPostRot;
+                cenB.elem[1] = b->yPostRot;
+                cenB.elem[2] = b->zPostRot;
 
                 *pen = a->radius + b->radius - distance(cenB, cenA);
 
@@ -245,7 +245,6 @@ bool testBoxSphereCollision(BoxCollider *a, SphereCollider *b, PVec3* fn, float*
 
 bool testNarrowPhaseCollision(CollisionBody* a, CollisionBody* b, PVec3* fn, float* pen){
     assert(a != NULL && b != NULL);
-
     // compare all box colliders with each other
     for(size_t i = 0; i < a->numOfBoxColliders; ++i){
         for(size_t j = 0; j < b->numOfBoxColliders; ++j){

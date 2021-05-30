@@ -1,0 +1,5 @@
+# Exported from 3D Builder
+
+newmtl Metallic_0_0
+Kd 0.078431 0.639216 0.254902
+map_Kd green.png

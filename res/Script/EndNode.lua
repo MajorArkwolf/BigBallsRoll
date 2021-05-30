@@ -11,7 +11,9 @@ function EndNode:Init(x, y, z, board)
     self.board = board
     self.finishedLevel = false
     self.endLevelSound = "levelcomplete.ogg"
-    AudioRegisterSource(self.gameObjectID)
+    self.flag = GameObjectRegister()
+    GameObjectSetPosition(self.flag, x - 0.35, y + 2.345, z + 0.25)     -- centered
+    GameObjectSetModel(self.flag, "Obj/Flag.obj")
 end
 
 function EndNode:DestroyRandomBlock()
@@ -51,6 +53,7 @@ function EndNode:BeginEndStep(player)
 end
 
 function EndNode:CentrePlayer(player)
+    GameObjectToggleRender(self.flag, true)
     player.position = GameObjectGetPosition(player.gameObjectID)
     player.position.x = self.position.x + 0.5
     player.position.z = self.position.z + 0.5

@@ -7,6 +7,7 @@
 typedef struct PhysicsWorld {
     CollisionBody **collisionBodies;
     size_t numCollisionBodies;
+    size_t collisionBodiesAlloced;
     int collisionBodyIdCount;
     PVec3 gravity;
     bool debug;

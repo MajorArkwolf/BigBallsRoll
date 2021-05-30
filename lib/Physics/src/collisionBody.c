@@ -72,8 +72,14 @@ void CollisionBody_addBoxCollider(CollisionBody *collisionBody,
         collisionBody->boxCollidersAlloced = 1;
     }
     else if (collisionBody->boxCollidersAlloced < collisionBody->numOfBoxColliders + 1){
-        collisionBody->BoxColliders = realloc(collisionBody->BoxColliders, (sizeof(BoxCollider *)) * (collisionBody->boxCollidersAlloced * 2));
-        collisionBody->boxCollidersAlloced *= 2;
+        BoxCollider** temp = realloc(collisionBody->BoxColliders, (sizeof(BoxCollider *)) * (collisionBody->boxCollidersAlloced * 2));
+        if(temp != NULL){
+            collisionBody->BoxColliders = temp;
+            collisionBody->boxCollidersAlloced *= 2;
+        }
+        else{
+            assert(false);
+        }
     }
     // Copy BoxCollider object into array
     collisionBody->BoxColliders[collisionBody->numOfBoxColliders] = boxCollider;
@@ -92,8 +98,14 @@ void CollisionBody_addSphereCollider(CollisionBody *collisionBody,
         collisionBody->sphereCollidersAlloced = 1;
     }
     else if (collisionBody->sphereCollidersAlloced < collisionBody->numOfSphereColliders + 1){
-        collisionBody->SphereColliders = realloc(collisionBody->SphereColliders, sizeof(SphereCollider *) * (collisionBody->sphereCollidersAlloced * 2));
-        collisionBody->sphereCollidersAlloced *= 2;
+        SphereCollider** temp = realloc(collisionBody->SphereColliders, sizeof(SphereCollider *) * (collisionBody->sphereCollidersAlloced * 2));
+        if(temp != NULL){
+            collisionBody->SphereColliders = temp;
+            collisionBody->sphereCollidersAlloced *= 2;
+        }
+        else{
+            assert(false);
+        }
     }
     // Copy SphereCollider object into array
     collisionBody->SphereColliders[collisionBody->numOfSphereColliders] = sphereCollider;

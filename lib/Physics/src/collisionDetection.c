@@ -308,8 +308,14 @@ void collisionsDetection(PhysicsWorld* physicsWorld, CollisionArrayContainer *ca
                         }
                     }
                     else if(cac->collisionsAlloced < cac->numOfCollisions + 1){
-                        cac->collisionArray = realloc(cac->collisionArray, sizeof(Collision) * (cac->collisionsAlloced * 2));
-                        cac->collisionsAlloced *= 2;
+                        Collision* temp = realloc(cac->collisionArray, sizeof(Collision) * (cac->collisionsAlloced * 2));
+                        if(temp != NULL) {
+                            cac->collisionArray = temp;
+                            cac->collisionsAlloced *= 2;
+                        }
+                        else{
+                            assert(false);
+                        }
                     }
                     cac->collisionArray[cac->numOfCollisions].body1 = physicsWorld->collisionBodies[i];
                     cac->collisionArray[cac->numOfCollisions].body2 = physicsWorld->collisionBodies[j];

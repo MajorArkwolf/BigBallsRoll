@@ -36,7 +36,7 @@ function EndNode:CheckEndTrigger(player)
                 return true
             end
         end
-     end
+    end
     return false
 end
 

@@ -64,6 +64,7 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
         } else {
             assert(false);
         }
+    }
 
     if (physicsWorld->collisionBodies != NULL) {
         // Copy BoxCollider object into array
@@ -71,7 +72,8 @@ void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *co
         // Assign ID to BoxCollider
         physicsWorld->collisionBodies[physicsWorld->numCollisionBodies]->id = PhysicsWorld_newCollisionBodyID(physicsWorld);
         ++physicsWorld->numCollisionBodies;
-    } else {
+    }
+    else {
         assert(false);
     }
 }

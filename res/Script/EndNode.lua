@@ -32,9 +32,11 @@ function EndNode:DestroyRandomBlock()
 end
 
 function EndNode:CheckEndTrigger(player)
-    if (self.position.x < player.position.x + self.width and self.position.x + 1 > player.position.x) then
-        if (self.position.z < player.position.z + self.width and self.position.z + 1 > player.position.z) then
-            return true
+    if (self.position.y <= player.position.y) then  -- Check player isn't under node
+        if (self.position.x < player.position.x + self.width and self.position.x + 1 > player.position.x) then
+            if (self.position.z < player.position.z + self.width and self.position.z + 1 > player.position.z) then
+                return true
+            end
         end
     end
     return false
@@ -56,6 +58,7 @@ function EndNode:CentrePlayer(player)
     GameObjectToggleRender(self.flag, true)
     player.position = GameObjectGetPosition(player.gameObjectID)
     player.position.x = self.position.x + 0.5
+    player.position.y = self.position.y + 1.5
     player.position.z = self.position.z + 0.5
     GameObjectSetPosition(player.gameObjectID, player.position.x, player.position.y, player.position.z)
 end

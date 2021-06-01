@@ -3,6 +3,7 @@
 #include "Engine/camera.h"
 #include "Engine/GameObjects/gameObject.h"
 #include "Engine/InputManager.h"
+#include <BigBalls/physicsEngine.h>
 
 #define MAX_GAME_OBJECTS 1000000
 
@@ -22,6 +23,8 @@ typedef struct State {
     GameObject gameObjects[MAX_GAME_OBJECTS];
     Camera camera;
     size_t NumOfGameObjects;
+    size_t registeredLightIDs;
+    PhysicsWorld* physicsWorld;
     fnPtr init;
     fnPtrFl update;
     fnPtrFl draw;
@@ -30,6 +33,9 @@ typedef struct State {
     fnPtrInput keyUp;
     fnPtrDblDbl mouseMovement;
     fnPtrIntInt mouseKeys;
+    bool endStateSafely;
+    bool isStatePaused;
+    bool skyboxDraw;
 } State;
 
 /// A Stack implementation that holds a stack of states
@@ -56,15 +62,15 @@ int StateManager_free(StateManager *stateManager);
 /**
  * Push a new state onto the stack
  * @param stateManager State Manager to push onto
- * @param state State to be added, the lifetime of the state must exceed that of the State Manager for memory safety.
+ * @param state State to be added, Ownership is transferred to the state manager and the lifetime of the state must exceed that of the State Manager for memory safety.
  * @return 0 on success and 1 on failure
  */
 int StateManager_push(StateManager *stateManager, State *state);
 
 /**
  * Pop the top state off the stack
- * @param stateManager
- * @return
+ * @param stateManager State Manager to pop off, the state is freed and set to NULL
+ * @return  0 on success and 1 on failure
  */
 int StateManager_pop(StateManager *stateManager);
 
@@ -126,7 +132,27 @@ int StateManager_mouseMove(StateManager *stateManager, double x, double y);
 int StateManager_mouseKeys(StateManager *stateManager, int button, int buttonState);
 
 /**
+ * Checks to see if the state has requested it to end and will safely remove itself
+ * at the end of the loop to ensure nothing is referencing it before it terminates.
+ * @param stateManager the current active state manager.
+ */
+void StateManager_safeStateRemoval(StateManager *stateManager);
+
+/**
  * Initialises a base state for use
  * @param state State to initialise, must be allocated prior to being passed in
  */
 void State_init(State *state);
+
+/**
+ * Register a new light
+ * @param state Current game state
+ * @return return an ID between 1 and the max opengl lights possible, 0 is an error.
+ */
+size_t State_registerLight(State *state);
+
+/**
+ * Deregister all lights in a given scene
+ * @param state the state to deregister lights from
+ */
+void State_deregisterLights(State *state);

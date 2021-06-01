@@ -28,7 +28,11 @@ void ModelManager_loadModels(ModelManager *modelManger, char *cwd) {
     strcpy(fulldir, cwd);
     strcat(fulldir, "res/Loader/modelloading.txt");
     FILE *fptr = fopen(fulldir, "r");
-    assert(fptr != NULL);
+    if (fptr == NULL) {
+        free(fulldir);
+        fulldir = NULL;
+        return;
+    }
     char buff[MAX_BUFF_SIZE];
     while (fgets(buff, sizeof buff, fptr) != NULL) {
         removeNewLine(buff);
@@ -56,8 +60,12 @@ size_t ModelManager_findModel(ModelManager *modelManger, const char *modelName) 
 
 Model* ModelManager_getModel(ModelManager *modelManger, size_t index) {
     assert(modelManger != NULL);
-    if (index > modelManger->NumOfModels) {
-        printf("Index greater then number of models, return 0 index");
+    if (modelManger == NULL) {
+        Model *model = calloc(1, sizeof(Model));
+        Model_init(model);
+        return model;
+    } else if (index >= modelManger->NumOfModels) {
+        printf("Index greater than number of models, return 0 index");
         assert(false);
         return &modelManger->Models[0];
     }

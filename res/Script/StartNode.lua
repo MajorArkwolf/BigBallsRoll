@@ -20,7 +20,7 @@ function StartNode:FreshBoard(height, player, endNode)
     DisableBoard(self.board)
     -- Create a fake end block to make it seem like the player never moved.
     self.oldEndBlock = GameObjectRegister()
-    GameObjectSetModel(self.oldEndBlock, "Off/greencube.off")
+    GameObjectSetModel(self.oldEndBlock, "Obj/Terrain/greencube.obj")
     -- Set the end position above the start position
     local position = {}
     position.x = self.position.x
@@ -32,9 +32,16 @@ function StartNode:FreshBoard(height, player, endNode)
     offsetFromFinish.x = player.position.x - endNode.position.x
     offsetFromFinish.y = 0
     offsetFromFinish.z = player.position.z - endNode.position.z
-    player.position.x = position.x + offsetFromFinish.x
-    player.position.y = position.y + 1.5
-    player.position.z = position.z + offsetFromFinish.z
+    local newPlayerPositions = {}
+    newPlayerPositions.position = {}
+    newPlayerPositions.respawnPosition = {}
+    newPlayerPositions.position.x = position.x + offsetFromFinish.x
+    newPlayerPositions.position.y = position.y + 1.5
+    newPlayerPositions.position.z = position.z + offsetFromFinish.z
+    newPlayerPositions.respawnPosition.x = newPlayerPositions.position.x
+    newPlayerPositions.respawnPosition.y = self.position.y + 1.5
+    newPlayerPositions.respawnPosition.z = newPlayerPositions.position.z
+    return newPlayerPositions
 end
 
 function DisableBoard(board)
@@ -58,13 +65,13 @@ function StartNode:CheckStartTrigger(player, deltaTime)
     -- Check to see if the player has landed, if not the player is still falling
     if (not self.boardIsReady) then
         self.boardIsReady = self:EnableBlock()
-    elseif (not self.playerStarted and player.position.y < self.position.y + 1.6) then
-        player.position.y = self.position.y + 1.5
-        GameObjectSetPosition(player.gameObjectID, player.position.x, player.position.y, player.position.z)
-        player.playerMoveOn = true;
-        self.playerStarted = true
+        PhysicsSleepWorld(true)
     elseif (not self.playerStarted) then
-        player:Fall(deltaTime)
+        PhysicsSleepWorld(false)
+        if(player.position.y < self.position.y + 1.6) then
+            player.playerMoveOn = true;
+            self.playerStarted = true
+        end
     end
     return self.playerStarted
 end

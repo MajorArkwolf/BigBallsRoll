@@ -4,4 +4,4 @@ fov = 60
 fullscreen = false
 --seed = 452 //this seed has a broken level 2
 seed = 42069
-master_volume = 0
+master_volume = 50

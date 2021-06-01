@@ -17,6 +17,7 @@ int Game_draw(float deltaTime) {
 }
 
 int Game_update(float deltaTime) {
+    State *state = StateManager_top(&engine.sM);
     lua_pushnumber(engine.lua, deltaTime);
     lua_setglobal(engine.lua, "deltaTime");
     lua_getglobal(engine.lua, "Update");
@@ -27,7 +28,7 @@ int Game_update(float deltaTime) {
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
-    Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
+    Camera_update(&state->camera, deltaTime);
     mouse[0] = 0.0;
     mouse[1] = 0.0;
     return 0;
@@ -50,27 +51,14 @@ int Game_keyUp(InputType inputType) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     switch (inputType) {
-//        case KEY_UP_ARROW:
-//        case KEY_W:
-//            cam->MoveForward = false;
-//            break;
-//        case KEY_DOWN_ARROW:
-//        case KEY_S:
-//            cam->MoveBackward = false;
-//            break;
-//        case KEY_LEFT_ARROW:
-//        case KEY_A:
-//            cam->MoveLeft = false;
-//            break;
-//        case KEY_RIGHT_ARROW:
-//        case KEY_D:
-//            cam->MoveRight = false;
-//            break;
         case KEY_F1:
             Engine_toggleCameraLock();
             break;
         case KEY_ESC:
-            StateManager_pop(&engine.sM);
+            GuiManager_drawToggle(&engine.guiManager);
+            break;
+        case KEY_T:
+            PhysicsWorld_debugToggle(StateManager_top(&engine.sM)->physicsWorld);
             break;
         default:
             break;
@@ -97,7 +85,29 @@ int Game_mouseKey(int button, int buttonState) {
     return 0;
 }
 
+void Game_NextLevel(State *state) {
+    for (size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        GameObject_free(&state->gameObjects[i]);
+    }
+    state->NumOfGameObjects = 0;
+}
+
+int Game_destroy() {
+    lua_getglobal(engine.lua, "DeInit");
+    if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
+    PhysicsEngine_freePhysicsWorld(&engine.physicsEngine, StateManager_top(&engine.sM)->physicsWorld);
+    State *state = StateManager_top(&engine.sM);
+    for(size_t i = 0; i < state->NumOfGameObjects; ++i) {
+        GameObject_free(&state->gameObjects[i]);
+    }
+    glPopAttrib();
+    return 0;
+}
+
 void Game_init(State *state) {
+    glPushAttrib(GL_LIGHTING_BIT);
     Engine_cameraLock(true);
     state->update = Game_update;
     state->draw = Game_draw;
@@ -105,16 +115,13 @@ void Game_init(State *state) {
     state->keyUp = Game_keyUp;
     state->mouseMovement = Game_mouseMovement;
     state->mouseKeys = Game_mouseKey;
+    state->destroy = Game_destroy;
+    state->physicsWorld = PhysicsEngine_newPhysicsWorld(&engine.physicsEngine);
+    PhysicsWorld_updateGravityNormal(state->physicsWorld, 0, -9.8f, 0);
+    state->skyboxDraw = true;
     char file[] = "game.lua";
     mouse[0] = 0.0;
     mouse[1] = 0.0;
     LuaHelper_loadScript(file);
     LuaHelper_init();
-}
-
-void Game_NextLevel(State *state) {
-    for (size_t i = 0; i < state->NumOfGameObjects; ++i) {
-        GameObject_free(&state->gameObjects[i]);
-    }
-    state->NumOfGameObjects = 0;
 }

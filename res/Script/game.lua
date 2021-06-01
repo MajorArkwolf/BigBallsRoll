@@ -9,7 +9,7 @@ function Init()
     -- 0 = not running, 1 = running, 2 = done
     generation_running = 0
     level = 1
-    gen:Init(seed)
+    gen:Init(PlayerConfig_seed)
     gen:Setup(50, 1, 50, 10)
     gen:RegisterGameObjects()
     local position = {}
@@ -25,6 +25,19 @@ function Init()
     startNode:Init(gen.startPoint[1], gen.startPoint[2], gen.startPoint[3], gen.boardID)
     startNode.playerStarted = true
     startNode.boardIsReady = true
+    gg_lights = {}
+    gg_lights[1] = dofile("res/Script/light.lua")
+    gg_lights[1]:Init(false)
+    gg_lights[1]:SetAmbient(0.6, 0.6, 0.6)
+    gg_lights[1]:Enable()
+    gg_lights[2] = dofile("res/Script/light.lua")
+    gg_lights[2]:Init(true)
+    gg_lights[2]:SetAmbient(0.8, 0.8, 0.8)
+    gg_lights[2]:SetDiffuse(1.0, 1.0, 1.0)
+    gg_lights[2]:SetSpecular(1.0, 1.0, 1.0)
+    gg_lights[2]:SetPosition(0, 1, 0)
+    gg_lights[2]:Enable()
+    skipLevel = false
 end
 
 function NextLevel()
@@ -32,13 +45,17 @@ function NextLevel()
         GenerateNextLevel()
     end
     generation_running = 0
+    PhysicsWorldReset()
     -- This next function is a C API call
     GameNextLevel()
     gen:RegisterGameObjects()
     startNode:Init(gen.startPoint[1], gen.startPoint[2], gen.startPoint[3], gen.boardID)
-    startNode:FreshBoard(5, player, endNode)
+    local playerpos = startNode:FreshBoard(5, player, endNode)
     endNode:Init(gen.endPoint[1], gen.endPoint[2], gen.endPoint[3], gen.boardID)
-    player:ReInit()
+    if level == PlayerConfig_levels then
+        endNode.endLevelSound = "win.ogg"
+    end
+    player:ReInit(playerpos)
     level = level + 1
 end
 
@@ -57,21 +74,37 @@ function GenerateNextLevel()
     end
 end
 
+function DeInit()
+    camera = nil
+    player = nil
+    gen = nil
+    gg_lights = nil
+end
+
 function Update()
     GenerateNextLevel()
     player:Update(deltaTime)
-    if endNode:CheckEndTrigger(player) then
-        if endNode:DestroyRandomBlock() then
+    if player:IsPlayerDead() then
+        GUIGameOver("Ripperoni Pepperoni...", level - 1, player.playerLives)
+        player.playerMoveOn = false
+    -- Check to see if the player is in the end zone
+    elseif endNode:CheckEndTrigger(player) or skipLevel then
+        endNode:BeginEndStep(player)
+        if level == PlayerConfig_levels then
+            GUIGameOver("Congratulations gamer! You won!", level, player.playerLives)
+        -- Begin destroying the world every tick, returns true when there is no more blocks to destroy
+        elseif endNode:DestroyRandomBlock() then
+            -- Progress to next level
+            skipLevel = false
             NextLevel()
         end
-    else
-        if startNode:CheckStartTrigger(player, deltaTime) then
-            -- If game has started then let the timer continue
-            timer = timer + deltaTime
-        end
+    -- Check if the player has landed on the start node, if so we begin
+    elseif startNode:CheckStartTrigger(player, deltaTime) then
+        -- If game has started then let the timer continue
+        timer = timer + deltaTime
+        GUIUpdateHUD(level, player.playerLives, timer)
     end
 end
-
 
 function Draw()
 
@@ -98,6 +131,10 @@ function InputKeyboardUp(input)
         player.left = false
     elseif input == 3 then
         player.right = false
+    elseif input == 2 then
+        skipLevel = true
+    elseif input == 46 then
+        player:Jump()
     end
 end
 

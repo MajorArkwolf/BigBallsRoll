@@ -3,6 +3,7 @@ local Player = {}
 function Player:Init(position)
     self.gameObjectID = GameObjectRegister()
     self.position = position
+    self.startPosition = position
     GameObjectSetPosition(self.gameObjectID, position.x, position.y, position.z)
     GameObjectSetModel(self.gameObjectID, "Ball.obj")
     self.camera = dofile("res/Script/ArcBallCamera.lua")
@@ -13,17 +14,34 @@ function Player:Init(position)
     self.right = false
     self.playerMoveOn = false
     self.rotatePlayerOn = false
-    self.velocity = 4
+    self.velocity = 10
+    self.playerLives = 3
     self.mouseSensitivityX = 3
     self.mouseSensitivityY = 3
+    self.isJumping = false
     self.camera:Update(0.0, self.gameObjectID, self.mouseSensitivityX)
+    self:AddPhysicsBody()
 end
 
-function Player:ReInit()
+function Player:AddPhysicsBody()
+    --Register Physics
+    PhysicsRegisterCollisionBody(self.gameObjectID)
+    PhysicsSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+    local position = {}
+    position.x = 0
+    position.y = 0
+    position.z = 0
+    PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
+end
+
+function Player:ReInit(newPlayerPositions)
+    self.position = newPlayerPositions.position
+    self.startPosition = newPlayerPositions.respawnPosition
     self.gameObjectID = GameObjectRegister()
     GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
     GameObjectSetModel(self.gameObjectID, "Ball.obj")
+    self:AddPhysicsBody()
     self:Update(0.0)
 end
 
@@ -32,10 +50,18 @@ function CalculateRightVector(front)
     return CrossProductVec(result, worldUp)
 end
 
-function Player:Fall(deltaTime)
-    self.position = GameObjectGetPosition(self.gameObjectID)
-    self.position.y = self.position.y - (7 * deltaTime)
-    GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+function Player:IsPlayerDead()
+    if self.position.y < -20 then
+        self.playerLives = self.playerLives - 1
+        self.position = self.startPosition
+        GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+        PhysicsStopCB(self.gameObjectID)
+    end
+    if self.playerLives <= 0 then
+        return true
+    else
+        return false
+    end
 end
 
 function Player:Move(deltaTime)
@@ -44,36 +70,61 @@ function Player:Move(deltaTime)
     front.y = 0.0
     front.z = math.cos(math.rad(self.rotation.y))
     local rightNormal = CalculateRightVector(front)
+    local force = {}
+    force.x = 0.0
+    force.y = 0.0
+    force.z = 0.0
     if self.forward == true then
-        self.position.x = self.position.x + (front.x * self.velocity * deltaTime)
-        self.position.z = self.position.z + (front.z * self.velocity * deltaTime)
+        force.x = (front.x * self.velocity)
+        force.z = (front.z * self.velocity)
     end
     if self.backward == true then
-        self.position.x = self.position.x + (front.x * self.velocity * deltaTime * -1)
-        self.position.z = self.position.z + (front.z * self.velocity * deltaTime * -1)
+        force.x = (front.x * self.velocity * -1)
+        force.z = (front.z * self.velocity * -1)
     end
     if self.right == true then
-        self.position.x = self.position.x + (rightNormal.x * self.velocity * deltaTime * -1)
-        self.position.z = self.position.z + (rightNormal.z * self.velocity * deltaTime * -1)
+        force.x = (rightNormal.x * self.velocity * -1)
+        force.z = (rightNormal.z * self.velocity * -1)
     end
     if self.left == true then
-        self.position.x = self.position.x + (rightNormal.x * self.velocity * deltaTime)
-        self.position.z = self.position.z + (rightNormal.z * self.velocity * deltaTime)
+        force.x = (rightNormal.x * self.velocity)
+        force.z = (rightNormal.z * self.velocity)
+    end
+    if force.x ~= 0 or force.y ~= 0 or force.z ~= 0 then
+        PhysicsAddForce(self.gameObjectID, force)
     end
 end
 
 function Player:Update(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
     self.rotation = GameObjectGetRotation(self.gameObjectID)
-    if self.rotatePlayerOn then
-        self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime * self.mouseSensitivityX)
+    if self.rotatePlayerOn or not PlayerConfig_mouseXLock then
+        self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime * PlayerConfig_mouseXSensitivity)
     end
     if self.playerMoveOn then
         self:Move(deltaTime)
     end
-    GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
+    self:IsPlayerDead()
+    --GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
     GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
-    self.camera:Update(deltaTime, self.gameObjectID, self.mouseSensitivityY)
+    self.camera:Update(deltaTime, self.gameObjectID, PlayerConfig_mouseYSensitivity)
+end
+
+function Player:Jump()
+    local currentVelocity = PhysicsGetVelocity(self.gameObjectID)
+    if currentVelocity.y < 0.05 and currentVelocity.y >= 0.0 and self.isJumping == true then
+        self.isJumping = false
+    end
+    if self.isJumping == false then
+        local force = {}
+        force.x = 0.0
+        force.y = 500.0
+        force.z = 0.0
+        PhysicsAddForce(self.gameObjectID, force)
+        AudioPlaySound(self.gameObjectID, "collision.ogg", false)
+        AudioSetSourceVolume(self.gameObjectID, 100)
+        self.isJumping = true
+    end
 end
 
 return Player

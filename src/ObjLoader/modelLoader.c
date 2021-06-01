@@ -44,6 +44,22 @@ bool ModelLoader_allocateMesh(Mesh *mesh, size_t faces, size_t vertices, size_t 
     return true;
 }
 
+bool ModelLoader_generateNormals(Mesh *mesh, size_t numOfVertices) {
+    if (mesh->Normals != NULL) {
+        free(mesh->Normals);
+    }
+    mesh->Normals = calloc(numOfVertices, sizeof(struct Vertex));
+    mesh->NumOfNormals = numOfVertices;
+
+    for(size_t i = 0; i < mesh->NumOfFaces; ++i) {
+        for(size_t faceID = 0; faceID < mesh->Faces[i].NumFaces; ++faceID) {
+
+        }
+    }
+
+    return true;
+}
+
 bool ModelLoader_loadOff(Model *model, FILE *fptr) {
     assert(model != NULL && fptr != NULL);
     char buff[MAX_BUFF_SIZE] = {"\0"};
@@ -147,7 +163,12 @@ Model ModelLoader_loadModel(char *workingDir, const char *fileName) {
     FILE *fptr;
     fptr = fopen(fullDir, "r");
     //Failed to open a file with the given name.
-    assert(fptr != NULL);
+    if (fptr == NULL) {
+        printf("Model: %s failed to load\n", fullDir);
+        free(fullDir);
+        fullDir = NULL;
+        return model;
+    }
     // Send of to the appropriate loader
     char *ext = getFileTypeFromPath(fullDir);
     if (strcmp(ext, "off") == 0) {

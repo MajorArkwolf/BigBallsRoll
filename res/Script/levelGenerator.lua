@@ -22,6 +22,7 @@ function Generator:Init(seed)
 end
 
 function Generator:Setup(xlength, ylength, zlength, tolerance)
+   diagonalEnabled = false
    if xlength <= tolerance then
        xlength = tolerance * 2
    end
@@ -57,9 +58,6 @@ end
 
 function GetRandomDirection()
     local direction = {}
-    direction.x = {}
-    direction.y = {}
-    direction.z = {}
     direction.x = 0
     direction.y = 0
     direction.z = 0
@@ -87,14 +85,29 @@ function GetRandomDirection()
 end
 
 function RotateDirection(direction)
-    direction.x = direction.x + 1
-    if (direction.x > 1) then
-        direction.x = -1
-    end
+    if (diagonalEnabled) then
+        direction.x = direction.x + 1
+        if (direction.x > 1) then
+            direction.x = -1
+        end
 
-    direction.z = direction.z + 1
-    if (direction.z > 1) then
-        direction.z = -1
+        direction.z = direction.z + 1
+        if (direction.z > 1) then
+            direction.z = -1
+        end
+    else
+        local nextDir = math.random(1, 2)
+        if (nextDir == 1) then
+            direction.x = direction.x + 1
+            if (direction.x > 1) then
+                direction.x = -1
+            end
+        else
+            direction.z = direction.z + 1
+            if (direction.z > 1) then
+                direction.z = -1
+            end
+        end
     end
     return direction
 end
@@ -141,9 +154,9 @@ function NextNode(currentNode, endNode, gridMaxX, gridMaxY, gridMaxZ)
         local count = 0
         local dir = GetRandomDirection()
         while (count <= 6) do
-            x = dir.x + currentNode[1]
-            y = dir.y + currentNode[2]
-            z = dir.z + currentNode[3]
+            local x = dir.x + currentNode[1]
+            local y = dir.y + currentNode[2]
+            local z = dir.z + currentNode[3]
             if (x > 0 and y > 0 and  z > 0 and x <= gridMaxX and y <= gridMaxY and z <= gridMaxZ) then
                 local nextNode = {x, y, z}
                 if (not HasBeenVisited(nextNode) and NextNode(nextNode, endNode, gridMaxX, gridMaxY, gridMaxZ)) then
@@ -191,20 +204,38 @@ function Generator:RegisterGameObjects()
                 if (valuez == true) then
                     local object = GameObjectRegister()
                     GameObjectSetPosition(object, keyx, keyy, keyz)
+                    --Register Physics for gameobjects
+                    PhysicsRegisterCollisionBody(object)
+                    PhysicsCollisionBodySetStatic(object, true)
+                    PhysicsSetMass(object, 0)
+                    PhysicsSetPosition(object, keyx, keyy, keyz)
+                    local position = {}
+                    position.x = 0
+                    position.y = 0
+                    position.z = 0
+                    local rotation = {}
+                    rotation.x = 0
+                    rotation.y = 0
+                    rotation.z = 0
+                    local length = {}
+                    length.x = 1
+                    length.y = 1
+                    length.z = 1
+                    PhysicsAddAABBCollider(object, position, length)
                     local total = keyx + keyy + keyz
                     if (keyx == self.startPoint[1] and keyy == self.startPoint[2] and keyz == self.startPoint[3]) then
-                        GameObjectSetModel(object, "Off/redcube.off")
+                        GameObjectSetModel(object, "Obj/Terrain/redcube.obj")
                         self.boardID[id] = object
                         id = id + 1
                     elseif (keyx == self.endPoint[1] and keyy == self.endPoint[2] and keyz == self.endPoint[3]) then
-                        GameObjectSetModel(object, "Off/greencube.off")
+                        GameObjectSetModel(object, "Obj/Terrain/greencube.obj")
                         self.boardID[1] = object
                     elseif (math.fmod(total, 2) == 0) then
-                        GameObjectSetModel(object, "Off/bluecube.off")
+                        GameObjectSetModel(object, "Obj/Terrain/lightbluecube.obj")
                         self.boardID[id] = object
                         id = id + 1
                     else
-                        GameObjectSetModel(object, "Off/darkbluecube.off")
+                        GameObjectSetModel(object, "Obj/Terrain/darkbluecube.obj")
                         self.boardID[id] = object
                         id = id + 1
                     end

@@ -4,6 +4,8 @@ cmake_minimum_required(VERSION 3.15)
 # Set the project details.
 set(PROJECT_NAME BigBalls)
 project(${PROJECT_NAME} LANGUAGES C)
+set(SANITIZER_OS "Darwin,Linux")
+set(SANITIZER_FLAGS "-fsanitize=address,undefined,leak")
 
 # Treat warnings as errors.
 option(WarningsAsErrors "WarningsAsErrors" OFF)
@@ -79,11 +81,11 @@ target_link_options(${PROJECT_NAME} PRIVATE
 )
 
 if (LINUX)
-    target_link_libraries(${PROJECT_NAME} PRIVATE -lm -ldl -lpthread)
+    target_link_libraries(${PROJECT_NAME} PUBLIC -lm -ldl -lpthread)
 endif()
 
 # Include and link against dependencies.
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL OpenGL::GLU glfw stb OpenAL SndFile::sndfile BigBalls::Physics lua unity ${CMAKE_DL_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL glfw glad stb OpenAL SndFile::sndfile BigBalls::Physics lua unity ${CMAKE_DL_LIBS})
 
 if (GenerateDoxygen)
     find_package(Doxygen)

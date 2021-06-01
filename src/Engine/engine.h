@@ -4,9 +4,12 @@
 #include "Engine/modelManager.h"
 #include "Engine/stateManager.h"
 #include "Engine/textureManager.h"
+#include "BigBalls/physicsEngine.h"
 #include <stdbool.h>
 #include <lua.h>
 #include "Engine/OpenGL.h"
+#include "playerConfig.h"
+#include "guiManager.h"
 
 typedef struct Engine {
     int timeSinceStart;
@@ -16,13 +19,16 @@ typedef struct Engine {
     AudioEngine audioEngine;
     AudioPresets audioPresets;
     AudioManager audioManager;
+    PlayerConfig playerConfig;
+    PhysicsEngine physicsEngine;
+    GuiManager guiManager;
     char *cwd;
     int width;
     int height;
     float fov;
     bool lockCamera;
     bool fullScreen;
-    int seed;
+    bool running;
     lua_State *lua;
     GLFWwindow* window;
 } Engine;
@@ -57,3 +63,8 @@ void Engine_stop();
  * Load the config lua to set the default values.
  */
 void Engine_loadConfig();
+
+/**
+ * Updates the config settings and pushes them to their appropriate spots
+ */
+void Engine_updateConfig();

@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
+#include "OpenGL.h"
+
+#define MAX_OPENGL_LIGHTS 10
 
 int StateManager_scale(StateManager *stateManager) {
     stateManager->capacity *= 2;
@@ -45,7 +48,8 @@ int StateManager_push(StateManager *stateManager, State *state) {
 int StateManager_pop(StateManager *stateManager) {
     if (stateManager->top == -1) return 0;
     State *top = StateManager_top(stateManager);
-    if (top->destroy != NULL) top->destroy();
+    if (top->destroy != NULL) { top->destroy(); }
+    free(stateManager->stack[stateManager->top]);
     stateManager->stack[stateManager->top] = NULL;
     stateManager->top--;
     return stateManager->top;
@@ -114,4 +118,31 @@ void State_init(State *state) {
     state->mouseMovement = NULL;
     state->mouseKeys = NULL;
     state->camera = Camera_construct();
+    state->physicsWorld = NULL;
+    state->registeredLightIDs = 0;
+    state->endStateSafely = false;
+    state->isStatePaused = false;
+}
+
+size_t State_registerLight(State *state) {
+    if (state->registeredLightIDs < MAX_OPENGL_LIGHTS) {
+        glEnable(GL_LIGHT0 + state->registeredLightIDs);
+        state->registeredLightIDs++;
+        return state->registeredLightIDs;
+    }
+    return 0;
+}
+
+void State_deregisterLights(State *state) {
+    for (size_t i = 0; i < state->registeredLightIDs; ++i) {
+        glDisable(GL_LIGHT0 + i);
+    }
+    state->registeredLightIDs = 0;
+}
+
+void StateManager_safeStateRemoval(StateManager *stateManager) {
+    State* state = StateManager_top(stateManager);
+    if (state->endStateSafely) {
+        StateManager_pop(stateManager);
+    }
 }

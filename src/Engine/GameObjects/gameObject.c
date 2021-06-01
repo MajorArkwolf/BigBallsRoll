@@ -4,11 +4,11 @@
 #include "Engine/modelManager.h"
 #include "Engine/engine.h"
 
-
 void GameObject_init(GameObject *gameObject) {
     gameObject->Name = NULL;
     gameObject->ModelID = 0;
     gameObject->SoundID = 0;
+    gameObject->collisionBody = NULL;
     gameObject->Transform = Transformation_construct();
     gameObject->StaticObject = false;
     gameObject->DisableRendering = false;

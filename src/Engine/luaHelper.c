@@ -7,6 +7,7 @@
 #include "Scene/Game/game.h"
 #include "Engine/engine.h"
 #include "Math/vectorMath.h"
+#include "Engine/Physics/physicsLuaInterface.h"
 
 static void print_table(lua_State *L)
 {
@@ -152,6 +153,36 @@ int LuaHelper_getRotation(lua_State *L)  {
     return 1;
 }
 
+int LuaHelper_setScale(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    gameObject->Transform.Scale.X = lua_tonumber(L, 2);
+    gameObject->Transform.Scale.Y = lua_tonumber(L, 3);
+    gameObject->Transform.Scale.Z = lua_tonumber(L, 4);
+    lua_pop(L, 4);
+    return 0;
+}
+
+int LuaHelper_getScale(lua_State *L)  {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    lua_pop(L, 1);
+    lua_newtable(L);
+    lua_pushnumber(L, gameObject->Transform.Scale.X);
+    lua_setfield(L, 1, "x");
+    lua_pushnumber(L, gameObject->Transform.Scale.Y);
+    lua_setfield(L, 1, "y");
+    lua_pushnumber(L, gameObject->Transform.Scale.Z);
+    lua_setfield(L, 1, "z");
+    return 1;
+}
+
 int LuaHelper_setModel(lua_State *L) {
     size_t id = lua_tonumber(L, 1);
     if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
@@ -273,8 +304,183 @@ int LuaHelper_CrossProductVec3(lua_State *L) {
 
 }
 
+int LuaHelper_RegisterLight(lua_State *L) {
+    State *state = StateManager_top(&engine.sM);
+    // Light ID always 1 higher then the OpenGL ID, this allows us to use a 0 value for global lighting.
+    // However if this function returns a 0, then it errored out.
+    size_t lightID = State_registerLight(state);
+    if (lightID == 0) {
+        lua_pushnumber(L, -1);
+    } else {
+        lua_pushnumber(L, lightID);
+    }
+    return 1;
+}
+
+int LuaHelper_DisableLight(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    if (id > 0) {
+        --id;
+        glDisable(GL_LIGHT0 + id);
+    }
+    return 0;
+}
+
+int LuaHelper_LightDiffuse(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    GLfloat light_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    light_diffuse[0] = lua_tonumber(L, 2);
+    light_diffuse[1] = lua_tonumber(L, 3);
+    light_diffuse[2] = lua_tonumber(L, 4);
+    if (id == 0) {
+        printf("Cant set the diffuse of a global light.\n");
+    }
+    if (id > 0) {
+        --id;
+        glLightfv(GL_LIGHT0 + id, GL_DIFFUSE, light_diffuse);
+    }
+    lua_pop(L, 4);
+    return 0;
+}
+
+int LuaHelper_LightAmbient(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    GLfloat light_ambient[] = {0.8f, 0.8f, 0.8f, 1.0f};
+    light_ambient[0] = lua_tonumber(L, 2);
+    light_ambient[1] = lua_tonumber(L, 3);
+    light_ambient[2] = lua_tonumber(L, 4);
+    if (id == 0) {
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light_ambient);
+        glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);
+    }
+    if (id > 0) {
+        --id;
+        glLightfv(GL_LIGHT0 + id, GL_AMBIENT, light_ambient);
+    }
+    lua_pop(L, 4);
+    return 0;
+}
+
+int LuaHelper_LightSpecular(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    GLfloat light_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    light_specular[0] = lua_tonumber(L, 2);
+    light_specular[1] = lua_tonumber(L, 3);
+    light_specular[2] = lua_tonumber(L, 4);
+    if (id == 0) {
+        printf("Cant set the specular of a global light.\n");
+    }
+    if (id > 0) {
+        --id;
+        glLightfv(GL_LIGHT0 + id, GL_SPECULAR, light_specular);
+    }
+    lua_pop(L, 4);
+    return 0;
+}
+
+int LuaHelper_LightPosition(lua_State *L) {
+    int id = lua_tonumber(L, 1);
+    GLfloat light_position[] = {0.0f, 1.0f, 0.0f, 0.0f};
+    light_position[0] = lua_tonumber(L, 2);
+    light_position[1] = lua_tonumber(L, 3);
+    light_position[2] = lua_tonumber(L, 4);
+    if (id == 0) {
+        printf("Cant set the position of a global light.\n");
+    }
+    if (id > 0) {
+        --id;
+        glLightfv(GL_LIGHT0 + id, GL_POSITION, light_position);
+    }
+    lua_pop(L, 4);
+    return 0;
+}
+
+int LuaHelper_ExitGame(lua_State *L) {
+    State *state = StateManager_top(&engine.sM);
+    state->endStateSafely = true;
+    return 0;
+}
+
+int LuaHelper_GUIHUDUpdate(lua_State *L) {
+    // Level, Lives, Time
+    int level = lua_tonumber(L, 1);
+    int lives = lua_tonumber(L, 2);
+    float time = lua_tonumber(L, 3);
+    GuiManager_updateHUD(&engine.guiManager, time, lives, level);
+    lua_pop(L, 3);
+    return 0;
+}
+
+int LuaHelper_GUIGameOver(lua_State *L) {
+    //Message, levels
+    const char *message = lua_tostring(L, 1);
+    int levels = lua_tonumber(L, 2);
+    int lives = lua_tonumber(L, 3);
+    GuiManager_initGameOver(&engine.guiManager, message, levels, lives);
+    lua_pop(L, 3);
+    return 0;
+}
+
+int LuaHelper_RegisterAudioSource(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    GameObject_registerSoundSource(gameObject);
+    lua_pop(L, 1);
+    return 0;
+}
+
+int LuaHelper_PlaySound(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    size_t length = 0;
+    const char* soundName = luaL_checklstring(L, 2,  &length);
+    bool repeatSound = lua_toboolean(L, 3);
+    ALuint unlock = 0;
+    if (AudioManager_findSound(&engine.audioManager, soundName, &unlock)) {
+        Sound *sound = AudioManager_getSound(&engine.audioManager, unlock);
+        if (sound != NULL) {
+            GameObject_registerSoundSource(gameObject);
+            AudioEngine_play(gameObject->SoundID, sound);
+            AudioEngine_setRepeat(gameObject->SoundID, repeatSound);
+        }
+    }
+    lua_pop(L, 3);
+    return 0;
+}
+
+int LuaHelper_SetSourceVolume(lua_State *L) {
+    size_t id = lua_tonumber(L, 1);
+    if (id > StateManager_top(&engine.sM)->NumOfGameObjects) {
+        return 0;
+    }
+    float volume = lua_tonumber(L, 2);
+    GameObject *gameObject = &StateManager_top(&engine.sM)->gameObjects[id];
+    AudioEngine_setVolume(gameObject->SoundID, volume);
+    lua_pop(L, 2);
+    return 0;
+}
+
+void LuaHelper_PlayerConfig() {
+    lua_pushnumber(engine.lua, engine.playerConfig.horizontalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXSensitivity");
+    lua_pushnumber(engine.lua, engine.playerConfig.verticalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseYSensitivity");
+    lua_pushboolean(engine.lua, engine.playerConfig.horizontalLock);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXLock");
+}
+
 void LuaHelper_init() {
-    //Register functions for lua.
+
+    // Register functions for lua.
+    //Register physics interface functions.
+    PhysicsLuaInterface_init();
+
     // Math
     lua_pushcfunction(engine.lua, LuaHelper_NormaliseVec3);
     lua_setglobal(engine.lua, "NormaliseVec");
@@ -292,6 +498,10 @@ void LuaHelper_init() {
     lua_setglobal(engine.lua, "GameObjectSetRotation");
     lua_pushcfunction(engine.lua, LuaHelper_getRotation);
     lua_setglobal(engine.lua, "GameObjectGetRotation");
+    lua_pushcfunction(engine.lua, LuaHelper_setScale);
+    lua_setglobal(engine.lua, "GameObjectSetScale");
+    lua_pushcfunction(engine.lua, LuaHelper_getScale);
+    lua_setglobal(engine.lua, "GameObjectGetScale");
     lua_pushcfunction(engine.lua, LuaHelper_setModel);
     lua_setglobal(engine.lua, "GameObjectSetModel");
     lua_pushcfunction(engine.lua, lua_toggleGameObjectRender);
@@ -312,9 +522,50 @@ void LuaHelper_init() {
     // Scene
     lua_pushcfunction(engine.lua, LuaHelper_GameNextLevel);
     lua_setglobal(engine.lua, "GameNextLevel");
+    lua_pushcfunction(engine.lua, LuaHelper_ExitGame);
+    lua_setglobal(engine.lua, "ExitGame");
 
-    lua_pushnumber(engine.lua, engine.seed);
-    lua_setglobal(engine.lua, "seed");
+    //Light
+    lua_pushcfunction(engine.lua, LuaHelper_RegisterLight);
+    lua_setglobal(engine.lua, "LightRegister");
+    lua_pushcfunction(engine.lua, LuaHelper_DisableLight);
+    lua_setglobal(engine.lua, "LightDisable");
+    lua_pushcfunction(engine.lua, LuaHelper_LightDiffuse);
+    lua_setglobal(engine.lua, "LightDiffuse");
+    lua_pushcfunction(engine.lua, LuaHelper_LightAmbient);
+    lua_setglobal(engine.lua, "LightAmbient");
+    lua_pushcfunction(engine.lua, LuaHelper_LightSpecular);
+    lua_setglobal(engine.lua, "LightSpecular");
+    lua_pushcfunction(engine.lua, LuaHelper_LightPosition);
+    lua_setglobal(engine.lua, "LightPosition");
+
+    //GUI
+    lua_pushcfunction(engine.lua, LuaHelper_GUIHUDUpdate);
+    lua_setglobal(engine.lua, "GUIUpdateHUD");
+    lua_pushcfunction(engine.lua, LuaHelper_GUIGameOver);
+    lua_setglobal(engine.lua, "GUIGameOver");
+
+    //Audio
+    lua_pushcfunction(engine.lua, LuaHelper_RegisterAudioSource);
+    lua_setglobal(engine.lua, "AudioRegisterSource");
+    lua_pushcfunction(engine.lua, LuaHelper_PlaySound);
+    lua_setglobal(engine.lua, "AudioPlaySound");
+    lua_pushcfunction(engine.lua, LuaHelper_SetSourceVolume);
+    lua_setglobal(engine.lua, "AudioSetSourceVolume");
+
+    //Global variables
+    lua_pushnumber(engine.lua, engine.playerConfig.seed);
+    lua_setglobal(engine.lua, "PlayerConfig_seed");
+    lua_pushnumber(engine.lua, engine.playerConfig.levels);
+    lua_setglobal(engine.lua, "PlayerConfig_levels");
+    lua_pushstring(engine.lua, engine.playerConfig.name);
+    lua_setglobal(engine.lua, "PlayerConfig_name");
+    lua_pushnumber(engine.lua, engine.playerConfig.horizontalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXSensitivity");
+    lua_pushnumber(engine.lua, engine.playerConfig.verticalSens);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseYSensitivity");
+    lua_pushboolean(engine.lua, engine.playerConfig.horizontalLock);
+    lua_setglobal(engine.lua, "PlayerConfig_mouseXLock");
     lua_getglobal(engine.lua, "Init");
     if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));

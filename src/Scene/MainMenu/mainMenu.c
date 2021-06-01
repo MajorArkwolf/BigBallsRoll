@@ -22,8 +22,11 @@ void ActivateKonami(InputType inputType) {
         konamiCodeTracker = 0;
         konamiCodeEntered = true;
         size_t konami = TextureManager_findTextureID(&engine.textureManager, "Konami.png");
-        size_t modelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
-        Model *model = ModelManager_getModel(&engine.modelManager, modelID);
+        size_t menuModelID = ModelManager_findModel(&engine.modelManager, "Ball_menu.obj");
+        size_t gameModelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
+        Model *model = ModelManager_getModel(&engine.modelManager, menuModelID);
+        model->Mesh->Materials->DiffuseTexture = TextureManager_getTextureUsingID(&engine.textureManager, konami);
+        model = ModelManager_getModel(&engine.modelManager, gameModelID);
         model->Mesh->Materials->DiffuseTexture = TextureManager_getTextureUsingID(&engine.textureManager, konami);
         ALuint unlock = 0;
         if (AudioManager_findSound(&engine.audioManager, "unlock.ogg", &unlock)) {

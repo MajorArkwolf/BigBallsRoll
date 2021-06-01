@@ -26,7 +26,7 @@ function Init()
     ballSpawnerPos.x = 0
     ballSpawnerPos.y = 20
     ballSpawnerPos.z = 0
-    ballSpawner:Init(ballSpawnerPos, "Ball.obj")
+    ballSpawner:Init(ballSpawnerPos, "Ball_menu.obj")
     ballSpawner:Configure(30, 100, 10, 0.5, 1)
     ballSpawner:Activate(true);
 end

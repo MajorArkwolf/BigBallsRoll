@@ -33,7 +33,7 @@ function Player:AddPhysicsBody()
     position.x = 0
     position.y = 0
     position.z = 0
-    PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
+    PhysicsAddSphereCollider(self.gameObjectID, position, 0.325)
 end
 
 function Player:ReInit(newPlayerPositions)

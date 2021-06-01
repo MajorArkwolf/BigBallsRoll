@@ -29,14 +29,14 @@ function Init()
     gg_lights[1] = dofile("res/Script/light.lua")
     gg_lights[1]:Init(false)
     gg_lights[1]:SetAmbient(0.6, 0.6, 0.6)
-    gg_lights[1]:Enable()
+   -- gg_lights[1]:Enable()
     gg_lights[2] = dofile("res/Script/light.lua")
     gg_lights[2]:Init(true)
     gg_lights[2]:SetAmbient(0.8, 0.8, 0.8)
     gg_lights[2]:SetDiffuse(1.0, 1.0, 1.0)
     gg_lights[2]:SetSpecular(1.0, 1.0, 1.0)
     gg_lights[2]:SetPosition(0, 1, 0)
-    gg_lights[2]:Enable()
+   -- gg_lights[2]:Enable()
     skipLevel = false
 end
 

@@ -1,5 +1,7 @@
-# Blender MTL File: 'volley_ball_for_export.blend'
-# Material Count: 1
+# 
+# Wavefront material file
+# Created with Kaydara FBX
+# 
 
 newmtl Tex_Ball
 map_Kd Tex_Ball.png

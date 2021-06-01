@@ -24,10 +24,10 @@ function Init()
     ballSpawner = dofile("res/Script/BallSpawner.lua")
     local ballSpawnerPos = {}
     ballSpawnerPos.x = 0
-    ballSpawnerPos.y = 20
+    ballSpawnerPos.y = 25
     ballSpawnerPos.z = 0
     ballSpawner:Init(ballSpawnerPos, "Ball.obj")
-    ballSpawner:Configure(30, 100, 10, 0.5, 1)
+    ballSpawner:Configure(30, 100, 10, 1, 1)
     ballSpawner:Activate(true);
 end
 
@@ -65,7 +65,11 @@ function MainMenuInputMouseButton(button, buttonState)
     if button == 67 then
         if buttonState == 1 then
             local ball_position = ballSpawner.position
-            ballSpawner:SpawnBall(ball_position, 1, 300, 5)
+            ball_position.x = 0;
+            ball_position.y = 20;
+            ball_position.z = 0;
+            local scale = math.random(10, 500) / 100
+            ballSpawner:SpawnBall(ball_position, scale, 50, 300, 5)
         end
     end
 end

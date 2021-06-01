@@ -165,8 +165,15 @@ void GuiManager_startGame(void) {
     glDisable(GL_LIGHTING);
 }
 
-void GuiManager_stopGame(void) {
+void GuiManager_stopGame(GuiManager *guiManager) {
+    GuiManager_resetHUD(guiManager);
     StateManager_top(&engine.sM)->endStateSafely = true;
+}
+
+void GuiManager_resetHUD(GuiManager *guiManager) {
+    guiManager->hud.prevSeconds = 0.0f;
+    guiManager->hud.prevLives = -1;
+    guiManager->hud.prevLevel = -1;
 }
 
 void GuiManager_updateHUD(GuiManager *guiManager, float seconds, int lives, int level) {
@@ -412,7 +419,7 @@ void GuiManager_gameMenu(GuiManager *guiManager) {
             GuiManager_optionsReset(guiManager);
             guiManager->inGame = false;
             guiManager->options.menu = true;
-            GuiManager_stopGame();
+            GuiManager_stopGame(guiManager);
         }
     }
     nk_end(guiManager->ctx);
@@ -526,7 +533,7 @@ void GuiManager_gameOver(GuiManager *guiManager) {
             guiManager->isGameOver = false;
             guiManager->inGame = false;
             guiManager->options.menu = true;
-            GuiManager_stopGame();
+            GuiManager_stopGame(guiManager);
         }
     }
     nk_end(guiManager->ctx);

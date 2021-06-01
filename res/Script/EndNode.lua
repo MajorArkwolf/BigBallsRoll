@@ -42,8 +42,11 @@ function EndNode:CheckEndTrigger(player)
     return false
 end
 
-function EndNode:BeginEndStep(player)
+function EndNode:BeginEndStep(player, level, PC_level)
     if (self.finishedLevel == false) then
+        if level == PC_level then
+            self.endLevelSound = "win.ogg"
+        end
         AudioPlaySound(self.gameObjectID, self.endLevelSound, false)
         AudioSetSourceVolume(self.gameObjectID, 100)
         self.finishedLevel = true
@@ -58,7 +61,7 @@ function EndNode:CentrePlayer(player)
     GameObjectToggleRender(self.flag, true)
     player.position = GameObjectGetPosition(player.gameObjectID)
     player.position.x = self.position.x + 0.5
-    player.position.y = self.position.y + 1.5
+    player.position.y = self.position.y + 1.325
     player.position.z = self.position.z + 0.5
     GameObjectSetPosition(player.gameObjectID, player.position.x, player.position.y, player.position.z)
 end

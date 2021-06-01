@@ -16,11 +16,12 @@ function Player:Init(position)
     self.right = false
     self.playerMoveOn = false
     self.rotatePlayerOn = false
-    self.velocity = 10
+    self.velocity = 5
     self.playerLives = 3
     self.mouseSensitivityX = 3
     self.mouseSensitivityY = 3
     self.isJumping = false
+    self.jumpTimer = 0.0
     self.camera:Update(0.0, self.gameObjectID, self.mouseSensitivityX, self.rotation)
     self:AddPhysicsBody()
 end
@@ -33,7 +34,7 @@ function Player:AddPhysicsBody()
     position.x = 0
     position.y = 0
     position.z = 0
-    PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
+    PhysicsAddSphereCollider(self.gameObjectID, position, 0.325)
 end
 
 function Player:ReInit(newPlayerPositions)
@@ -113,6 +114,7 @@ end
 
 function Player:Update(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
+    self.jumpTimer = self.jumpTimer - deltaTime
     if self.rotatePlayerOn or not PlayerConfig_mouseXLock then
         self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime * PlayerConfig_mouseXSensitivity)
     end
@@ -126,7 +128,7 @@ end
 
 function Player:Jump()
     local currentVelocity = PhysicsGetVelocity(self.gameObjectID)
-    if currentVelocity.y < 0.05 and currentVelocity.y >= 0.0 and self.isJumping == true then
+    if self.jumpTimer <= 0.0 and self.isJumping == true then
         self.isJumping = false
     end
     if self.isJumping == false then
@@ -138,6 +140,10 @@ function Player:Jump()
         AudioPlaySound(self.gameObjectID, "collision.ogg", false)
         AudioSetSourceVolume(self.gameObjectID, 100)
         self.isJumping = true
+        self.jumpTimer = 4.0
+        self.jumpReady = false
+        AudioPlaySound(self.gameObjectID, "chargeUp.ogg", false)
+        AudioSetSourceVolume(self.gameObjectID, 5)
     end
 end
 

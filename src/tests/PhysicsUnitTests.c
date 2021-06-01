@@ -317,7 +317,7 @@ void testCombinedTransformation(void){
                      fTolerance(collisionBody->AABBz2, 8.9f, 0.1f));
 }
 
-void testNarrowPhase_BB(){
+void testNarrowPhase_BB(void){
     PhysicsWorld pw;
     PhysicsWorld_init(&pw);
 
@@ -362,7 +362,7 @@ void testNarrowPhase_BB(){
     TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
 }
 
-void testNarrowPhase_BS(){
+void testNarrowPhase_BS(void){
     PhysicsWorld pw;
     PhysicsWorld_init(&pw);
 
@@ -401,7 +401,7 @@ void testNarrowPhase_BS(){
     TEST_ASSERT_EQUAL(0, cac.numOfCollisions);
 }
 
-void testNarrowPhase_SS(){
+void testNarrowPhase_SS(void){
     PhysicsWorld pw;
     PhysicsWorld_init(&pw);
 

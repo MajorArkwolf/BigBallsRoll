@@ -40,6 +40,37 @@ function MainMenuDraw()
 
 end
 
+function MainMenuInputKeyboardDown(input)
+    if input == 22 then
+        player.forward = true
+    elseif input == 18 then
+        player.backward = true
+    elseif input == 0 then
+        player.left = true
+    elseif input == 3 then
+        player.right = true
+    end
+end
+
+function MainMenuInputKeyboardUp(input)
+
+end
+
+function MainMenuInputMouseButton(button, buttonState)
+    -- Left Mouse Button
+    if button == 66 then
+
+    end
+    --Right Mouse Button
+    if button == 67 then
+        if buttonState == 1 then
+            local ball_position = ballSpawner.position
+            ballSpawner:SpawnBall(ball_position, 1, 300, 5)
+        end
+    end
+end
+
+
 function RegisterCollisionShape(id, position, scale)
     PhysicsRegisterCollisionBody(id)
     PhysicsCollisionBodySetStatic(id, true)

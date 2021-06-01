@@ -3,3 +3,4 @@ unlock.ogg
 win.ogg
 levelcomplete.ogg
 collision.ogg
+chargeUp.ogg

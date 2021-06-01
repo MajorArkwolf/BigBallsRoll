@@ -5,6 +5,7 @@
 typedef struct PhysicsEngine{
     PhysicsWorld **physicsWorld;
     size_t numOfPhysicsWorlds;
+    size_t physicsWorldsAlloced;
 } PhysicsEngine;
 
 /**

@@ -12,6 +12,7 @@ typedef struct Collision {
 typedef struct CollisionArrayContainer {
     Collision *collisionArray;
     size_t numOfCollisions;
+    size_t collisionsAlloced;
 }CollisionArrayContainer;
 
 /**

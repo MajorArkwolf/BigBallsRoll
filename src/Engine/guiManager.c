@@ -198,6 +198,8 @@ void GuiManager_drawHUD(GuiManager *guiManager) {
             strcpy(guiManager->hud.levels, "Level: ");
             sprintf(guiManager->hud.buffer, "%i", guiManager->hud.nextLevel);
             strcat(guiManager->hud.levels, guiManager->hud.buffer);
+            sprintf(guiManager->hud.buffer, "/%i", engine.playerConfig.levels);
+            strcat(guiManager->hud.levels, guiManager->hud.buffer);
             guiManager->hud.prevLevel = guiManager->hud.nextLevel ;
         }
         guiManager->hud.updateHUD = false;

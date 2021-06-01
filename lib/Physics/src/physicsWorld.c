@@ -28,6 +28,7 @@ void PhysicsWorld_init(PhysicsWorld *physicsWorld) {
     assert(physicsWorld != NULL);
     physicsWorld->collisionBodies = NULL;
     physicsWorld->numCollisionBodies = 0;
+    physicsWorld->collisionBodiesAlloced = 0;
     physicsWorld->collisionBodyIdCount = 0;
     physicsWorld->gravity = PVec3_init();
     physicsWorld->gravity.data[1] = -9.8f;
@@ -50,24 +51,29 @@ void PhysicsWorld_free(PhysicsWorld *physicsWorld) {
 
 void PhysicsWorld_addCollisionBody(PhysicsWorld *physicsWorld, CollisionBody *collisionBody) {
     assert(physicsWorld != NULL && collisionBody != NULL);
-    // Allocate new, larger array
+    // Allocate new, larger array if needed
     if (physicsWorld->collisionBodies == NULL) {
         physicsWorld->collisionBodies = calloc(1, sizeof(CollisionBody *));
-    } else {
-        CollisionBody **temp = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody *) * (physicsWorld->numCollisionBodies + 1));
+        physicsWorld->collisionBodiesAlloced = 1;
+    }
+    else if (physicsWorld->collisionBodiesAlloced < physicsWorld->numCollisionBodies + 1) {
+        CollisionBody **temp = realloc(physicsWorld->collisionBodies, sizeof(CollisionBody *) * (physicsWorld->numCollisionBodies * 2));
         if (temp != NULL) {
             physicsWorld->collisionBodies = temp;
+            physicsWorld->collisionBodiesAlloced *= 2;
         } else {
             assert(false);
         }
     }
+
     if (physicsWorld->collisionBodies != NULL) {
         // Copy BoxCollider object into array
         physicsWorld->collisionBodies[physicsWorld->numCollisionBodies] = collisionBody;
         // Assign ID to BoxCollider
         physicsWorld->collisionBodies[physicsWorld->numCollisionBodies]->id = PhysicsWorld_newCollisionBodyID(physicsWorld);
         ++physicsWorld->numCollisionBodies;
-    } else {
+    }
+    else {
         assert(false);
     }
 }

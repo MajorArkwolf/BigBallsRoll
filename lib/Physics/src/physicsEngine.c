@@ -10,6 +10,7 @@ void PhysicsEngine_init(PhysicsEngine *physicsEngine) {
     assert(physicsEngine != NULL && physicsEngine->physicsWorld == NULL); // would cause leaks if PhysicsWorld is not NULL
     physicsEngine->physicsWorld = NULL;
     physicsEngine->numOfPhysicsWorlds = 0;
+    physicsEngine->physicsWorldsAlloced = 0;
 }
 
 void PhysicsEngine_free(PhysicsEngine *physicsEngine) {
@@ -21,21 +22,26 @@ void PhysicsEngine_free(PhysicsEngine *physicsEngine) {
     }
     free(physicsEngine->physicsWorld);
     physicsEngine->numOfPhysicsWorlds = 0;
+    physicsEngine->physicsWorldsAlloced = 0;
 }
 
 PhysicsWorld* PhysicsEngine_newPhysicsWorld(PhysicsEngine *physicsEngine) {
     assert(physicsEngine != NULL);
     if(physicsEngine->numOfPhysicsWorlds == 0){
         physicsEngine->physicsWorld = calloc(1, sizeof(PhysicsWorld*));
+        physicsEngine->physicsWorldsAlloced = 1;
     }
-    else{
-        PhysicsWorld **temp = realloc(physicsEngine->physicsWorld, sizeof(PhysicsWorld*) * (physicsEngine->numOfPhysicsWorlds + 1));
-        if (temp != NULL) {
+    else if(physicsEngine->physicsWorldsAlloced < physicsEngine->numOfPhysicsWorlds + 1){
+        PhysicsWorld **temp = realloc(physicsEngine->physicsWorld, sizeof(PhysicsWorld) * physicsEngine->physicsWorldsAlloced * 2);
+        if(temp != NULL){
             physicsEngine->physicsWorld = temp;
-        } else {
+            physicsEngine->physicsWorldsAlloced *= 2;
+        }
+        else{
             assert(false);
         }
     }
+
     if (physicsEngine->physicsWorld != NULL) {
 
         //initialise new Physics World

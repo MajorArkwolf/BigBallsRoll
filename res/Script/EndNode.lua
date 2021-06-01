@@ -42,8 +42,11 @@ function EndNode:CheckEndTrigger(player)
     return false
 end
 
-function EndNode:BeginEndStep(player)
+function EndNode:BeginEndStep(player, level, PC_level)
     if (self.finishedLevel == false) then
+        if level == PC_level then
+            self.endLevelSound = "win.ogg"
+        end
         AudioPlaySound(self.gameObjectID, self.endLevelSound, false)
         AudioSetSourceVolume(self.gameObjectID, 100)
         self.finishedLevel = true

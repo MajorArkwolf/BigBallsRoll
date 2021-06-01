@@ -88,7 +88,7 @@ function Update()
         player.playerMoveOn = false
     -- Check to see if the player is in the end zone
     elseif endNode:CheckEndTrigger(player) or skipLevel then
-        endNode:BeginEndStep(player)
+        endNode:BeginEndStep(player, level, PlayerConfig_levels)
         if level == PlayerConfig_levels then
             GUIGameOver("Congratulations gamer! You won!", level, player.playerLives)
         -- Begin destroying the world every tick, returns true when there is no more blocks to destroy

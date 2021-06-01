@@ -52,9 +52,6 @@ function NextLevel()
     startNode:Init(gen.startPoint[1], gen.startPoint[2], gen.startPoint[3], gen.boardID)
     local playerpos = startNode:FreshBoard(5, player, endNode)
     endNode:Init(gen.endPoint[1], gen.endPoint[2], gen.endPoint[3], gen.boardID)
-    if level == PlayerConfig_levels then
-        endNode.endLevelSound = "win.ogg"
-    end
     player:ReInit(playerpos)
     level = level + 1
 end

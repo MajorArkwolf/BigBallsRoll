@@ -1,9 +1,23 @@
 # Blender MTL File: 'volley_ball_for_export.blend'
-# Material Count: 1
+# Material Count: 2
 
-newmtl Tex_Ball
+newmtl VolleyBallBlue
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.024122 0.230736 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl VolleyBallYellow
 map_Kd Tex_Ball.png
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-illum 1
-Tr 1.000000
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.703352 0.049284
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2

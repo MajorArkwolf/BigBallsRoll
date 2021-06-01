@@ -2,7 +2,7 @@
 # Wavefront OBJ file
 # Created with Autodesk FBX SDK
 # 
-mtllib Ball.mtl
+mtllib Ball_.mtl
 
 g Ball
 v 0.074389 -0.493844 -0.024170

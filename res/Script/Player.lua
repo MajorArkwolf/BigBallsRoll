@@ -143,7 +143,7 @@ function Player:Jump()
         self.jumpTimer = 4.0
         self.jumpReady = false
         AudioPlaySound(self.gameObjectID, "chargeUp.ogg", false)
-        AudioSetSourceVolume(self.gameObjectID, 10)
+        AudioSetSourceVolume(self.gameObjectID, 5)
     end
 end
 

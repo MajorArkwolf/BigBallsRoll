@@ -4,8 +4,8 @@
 
 void positionalCorrection( Collision* collision, float inv_massA, float inv_massB )
 {
-    const float percent = 0.2f; // usually 20% to 80%
-    const float slop = 0.01f;// usually 0.01 to 0.1
+    const float percent = 0.2f; // around 0.2 to 0.8 is ideal
+    const float slop = 0.01f;// around 0.01 to 0.1 is ideal
     float fixFactor = getMax(collision->penetration - slop, 0.0f) / ((inv_massA + inv_massB) / percent);
     PVec3 correction = PVec3MultiplyScalar(&collision->normal, fixFactor);
     collision->body1->xPos -= inv_massA * correction.data[0];
@@ -45,15 +45,11 @@ void resolveCollision( Collision* collision )
 
     // Calculate impulse scalar
     float j = (-1.0f *(1.0f + e)) * velAlongNormal;
-    float invMassSum = inv_massA + inv_massB; /*+ Sqr( raCrossN ) * A->iI + Sqr( rbCrossN ) * B->iI;*/
-    //j /= 1 / collision->body1->mass + 1 / collision->body2->mass;
+    float invMassSum = inv_massA + inv_massB;
     j /= invMassSum;
 
     // Apply impulse
     PVec3 impulse = PVec3MultiplyScalar(&collision->normal, j);
-
-    //TODO: Static objects will most likely need to be accounted for here.
-
     PVec3 aDiff = PVec3MultiplyScalar(&impulse, inv_massA);
     collision->body1->velocity = subtractPVec3(&collision->body1->velocity , &aDiff);
     PVec3 bDiff = PVec3MultiplyScalar(&impulse, inv_massB);

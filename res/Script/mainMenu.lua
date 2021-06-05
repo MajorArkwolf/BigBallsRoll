@@ -69,7 +69,7 @@ function MainMenuInputMouseButton(button, buttonState)
             ball_position.y = 20;
             ball_position.z = 0;
             local scale = math.random(10, 500) / 100
-            ballSpawner:SpawnBall(ball_position, scale, 50, 300, 5)
+            --ballSpawner:SpawnBall(ball_position, scale, 50, 300, 5)
         end
     end
 end

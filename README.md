@@ -28,8 +28,8 @@ git lfs install
 ```
 ### First time cloning
 ``` 
-git clone https://github.com/MajorArkwolf/ICT289.git 
-cd ICT289
+git clone https://github.com/MajorArkwolf/BigBallsRoll.git
+cd BigBallsRoll
 git submodule update --init --recursive
 git checkout develop
 ```

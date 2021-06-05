@@ -4,8 +4,8 @@
 
 void positionalCorrection( Collision* collision, float inv_massA, float inv_massB )
 {
-    const float percent = 0.2f; // usually 20% to 80%
-    const float slop = 0.01f;// usually 0.01 to 0.1
+    const float percent = 0.2f; // around 0.2 to 0.8 is ideal
+    const float slop = 0.01f;// around 0.01 to 0.1 is ideal
     float fixFactor = getMax(collision->penetration - slop, 0.0f) / ((inv_massA + inv_massB) / percent);
     PVec3 correction = PVec3MultiplyScalar(&collision->normal, fixFactor);
     collision->body1->xPos -= inv_massA * correction.data[0];

@@ -22,12 +22,12 @@ void GameObject_free(GameObject *gameObject) {
 void GameObject_draw(GameObject *gameObject) {
     if (!gameObject->DisableRendering) {
         glPushMatrix();
-        glScalef(gameObject->Transform.Scale.X, gameObject->Transform.Scale.Y, gameObject->Transform.Scale.Z);
         glTranslatef(gameObject->Transform.Position.X, gameObject->Transform.Position.Y,
                      gameObject->Transform.Position.Z);
         glRotatef(gameObject->Transform.Rotation.Z, 0, 0, 1);
         glRotatef(gameObject->Transform.Rotation.Y, 0, 1, 0);
         glRotatef(gameObject->Transform.Rotation.X, 1, 0, 0);
+        glScalef(gameObject->Transform.Scale.X, gameObject->Transform.Scale.Y, gameObject->Transform.Scale.Z);
         Model_draw(ModelManager_getModel(&engine.modelManager, gameObject->ModelID));
         glPopMatrix();
     }

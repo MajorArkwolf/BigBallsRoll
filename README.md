@@ -1,13 +1,10 @@
 <h1 align="center">
-   ICT289 - Team Big Balls
+   Big Balls Roll
    <br>
    <br>
    <img src="https://i.imgur.com/xumKzG5.png" alt="plum" width="200"></a>
 </h1>
 
-
-
-[![Build Status](https://www.travis-ci.com/MajorArkwolf/ICT289.svg?token=cpQtXoFFuizqCsLDGgMe&branch=main)](https://www.travis-ci.com/MajorArkwolf/ICT289)
 
 ## Dependencies
 Linux: ```sudo apt install clang ninja-build libglew-dev libsndio-dev libflac-dev libspeex-dev libopus-dev libogg-dev libvorbis-dev libasound2-dev libvorbis-dev libxinerama-dev

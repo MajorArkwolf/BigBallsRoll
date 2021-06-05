@@ -11,7 +11,7 @@ ___
 
 Clone the whole project;
 
-`git clone https://github.com/MajorArkwolf/ICT289.git` 
+`git clone https://github.com/MajorArkwolf/BigBallsRoll.git` 
 
 Grab this `lib/Physics` folder
 

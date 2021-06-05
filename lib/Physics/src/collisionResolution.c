@@ -45,15 +45,11 @@ void resolveCollision( Collision* collision )
 
     // Calculate impulse scalar
     float j = (-1.0f *(1.0f + e)) * velAlongNormal;
-    float invMassSum = inv_massA + inv_massB; /*+ Sqr( raCrossN ) * A->iI + Sqr( rbCrossN ) * B->iI;*/
-    //j /= 1 / collision->body1->mass + 1 / collision->body2->mass;
+    float invMassSum = inv_massA + inv_massB;
     j /= invMassSum;
 
     // Apply impulse
     PVec3 impulse = PVec3MultiplyScalar(&collision->normal, j);
-
-    //TODO: Static objects will most likely need to be accounted for here.
-
     PVec3 aDiff = PVec3MultiplyScalar(&impulse, inv_massA);
     collision->body1->velocity = subtractPVec3(&collision->body1->velocity , &aDiff);
     PVec3 bDiff = PVec3MultiplyScalar(&impulse, inv_massB);

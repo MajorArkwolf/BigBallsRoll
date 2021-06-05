@@ -151,8 +151,10 @@ void GuiManager_startGame(void);
 
 /**
  * Stops the game by setting the state manager to end safely.
+ * Resets the HUD to default values.
+ * @param guiManager, the guiManager with the hud to reset
  */
-void GuiManager_stopGame(void);
+void GuiManager_stopGame(GuiManager *guiManager);
 
 /**
  * Displays two buttons at the exit screen of the game, an exit confirmation.
@@ -196,3 +198,9 @@ void GuiManager_initGameOver(GuiManager *guiManager, const char *message, int le
  * @param guiManager with the ctx to draw to
  */
 void GuiManager_gameOver(GuiManager *guiManager);
+
+/**
+ * Resets the hud to default values.
+ * @param guiManager, the guiManager to reset
+ */
+void GuiManager_resetHUD(GuiManager *guiManager);

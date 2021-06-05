@@ -62,7 +62,7 @@ void PhysicsInterface_draw(PhysicsWorld *physicsWorld) {
             for (size_t i = 0; i < dd.sphereData->size; i += 4) {
                 glPushMatrix();
                 glTranslatef(dd.sphereData->array[i + 1], dd.sphereData->array[i + 2], dd.sphereData->array[i + 3]);
-                glScalef(dd.sphereData->array[i], dd.sphereData->array[i], dd.sphereData->array[i]);
+                glScalef(dd.sphereData->array[i] + 0.01f, dd.sphereData->array[i] + 0.01f, dd.sphereData->array[i] + 0.01f);
                 Model_draw(debugSphere);
                 glPopMatrix();
             }

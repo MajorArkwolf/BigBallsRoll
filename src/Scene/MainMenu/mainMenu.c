@@ -5,6 +5,7 @@
 #include "Scene/Game/game.h"
 
 bool paused = false;
+double mouse[2];
 
 InputType konamiCode[] = {KEY_UP_ARROW, KEY_UP_ARROW, KEY_DOWN_ARROW,
                         KEY_DOWN_ARROW, KEY_LEFT_ARROW, KEY_RIGHT_ARROW,
@@ -22,8 +23,11 @@ void ActivateKonami(InputType inputType) {
         konamiCodeTracker = 0;
         konamiCodeEntered = true;
         size_t konami = TextureManager_findTextureID(&engine.textureManager, "Konami.png");
-        size_t modelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
-        Model *model = ModelManager_getModel(&engine.modelManager, modelID);
+        size_t menuModelID = ModelManager_findModel(&engine.modelManager, "Ball_menu.obj");
+        size_t gameModelID = ModelManager_findModel(&engine.modelManager, "Ball.obj");
+        Model *model = ModelManager_getModel(&engine.modelManager, menuModelID);
+        model->Mesh->Materials->DiffuseTexture = TextureManager_getTextureUsingID(&engine.textureManager, konami);
+        model = ModelManager_getModel(&engine.modelManager, gameModelID);
         model->Mesh->Materials->DiffuseTexture = TextureManager_getTextureUsingID(&engine.textureManager, konami);
         ALuint unlock = 0;
         if (AudioManager_findSound(&engine.audioManager, "unlock.ogg", &unlock)) {
@@ -43,7 +47,7 @@ void ActivateKonami(InputType inputType) {
 
 int MainMenu_draw(float deltaTime) {
     lua_getglobal(engine.lua, "MainMenuDraw");
-    if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+    if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     for (size_t index = 0; index < StateManager_top(&engine.sM)->NumOfGameObjects; ++index) {
@@ -57,7 +61,11 @@ int MainMenu_update(float deltaTime) {
     lua_pushnumber(engine.lua, deltaTime);
     lua_setglobal(engine.lua, "deltaTime");
     lua_getglobal(engine.lua, "MainMenuUpdate");
-    if (lua_pcall(engine.lua, 0, 0, 0) == LUA_OK) {
+    lua_pushnumber(engine.lua, mouse[0]);
+    lua_setglobal(engine.lua, "MouseDeltaX");
+    lua_pushnumber(engine.lua, mouse[1]);
+    lua_setglobal(engine.lua, "MouseDeltaY");
+    if (lua_pcall(engine.lua, 0, 1, 0) == LUA_OK) {
         lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     Camera_update(&StateManager_top(&engine.sM)->camera, deltaTime);
@@ -65,14 +73,20 @@ int MainMenu_update(float deltaTime) {
 }
 
 int MainMenu_keyDown(InputType inputType) {
-    switch (inputType) {
-        default:
-            break;
+    lua_getglobal(engine.lua, "MainMenuInputKeyboardDown");
+    lua_pushinteger(engine.lua, inputType);
+    if (lua_pcall(engine.lua, 1, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
     }
     return 0;
 }
 
 int MainMenu_keyUp(InputType inputType) {
+    lua_getglobal(engine.lua, "MainMenuInputKeyboardUp");
+    lua_pushinteger(engine.lua, (int)inputType);
+    if (lua_pcall(engine.lua, 1, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
+    }
     switch (inputType) {
         case KEY_ESC:
             GuiManager_drawToggle(&engine.guiManager);
@@ -86,12 +100,19 @@ int MainMenu_keyUp(InputType inputType) {
     return 0;
 }
 
-int MainMenu_mouseMovement(double x, double y) {
-    //Camera *cam = &StateManager_top(&engine.sM)->camera;
-    // If cursor is locked, let the camera move, else ignore movement
-    if (engine.lockCamera) {
-       // Camera_mouseLook(cam, x, y);
+int MainMenu_mouseKey(int button, int buttonState) {
+    lua_getglobal(engine.lua, "MainMenuInputMouseButton");
+    lua_pushinteger(engine.lua, button);
+    lua_pushinteger(engine.lua, buttonState);
+    if (lua_pcall(engine.lua, 2, 0, 0) == LUA_OK) {
+        lua_pop(engine.lua, lua_gettop(engine.lua));
     }
+    return 0;
+}
+
+int MainMenu_mouseMovement(double x, double y) {
+    mouse[0] = x;
+    mouse[1] = y;
     return 0;
 }
 
@@ -102,6 +123,7 @@ void MainMenu_init(State *state) {
     state->keyDown = MainMenu_keyDown;
     state->keyUp = MainMenu_keyUp;
     state->mouseMovement = MainMenu_mouseMovement;
+    state->mouseKeys = MainMenu_mouseKey;
     state->skyboxDraw = true;
     state->physicsWorld = PhysicsEngine_newPhysicsWorld(&engine.physicsEngine);
     engine.lockCamera = false;

@@ -4,7 +4,9 @@ function Player:Init(position)
     self.gameObjectID = GameObjectRegister()
     self.position = position
     self.startPosition = position
+    self.oldPosition = position
     GameObjectSetPosition(self.gameObjectID, position.x, position.y, position.z)
+    self.rotation = GameObjectGetRotation(self.gameObjectID)
     GameObjectSetModel(self.gameObjectID, "Ball.obj")
     self.camera = dofile("res/Script/ArcBallCamera.lua")
     self.camera:Init(20)
@@ -14,12 +16,13 @@ function Player:Init(position)
     self.right = false
     self.playerMoveOn = false
     self.rotatePlayerOn = false
-    self.velocity = 10
+    self.velocity = 5
     self.playerLives = 3
     self.mouseSensitivityX = 3
     self.mouseSensitivityY = 3
     self.isJumping = false
-    self.camera:Update(0.0, self.gameObjectID, self.mouseSensitivityX)
+    self.jumpTimer = 0.0
+    self.camera:Update(0.0, self.gameObjectID, self.mouseSensitivityX, self.rotation)
     self:AddPhysicsBody()
 end
 
@@ -31,7 +34,7 @@ function Player:AddPhysicsBody()
     position.x = 0
     position.y = 0
     position.z = 0
-    PhysicsAddSphereCollider(self.gameObjectID, position, 0.5)
+    PhysicsAddSphereCollider(self.gameObjectID, position, 0.325)
 end
 
 function Player:ReInit(newPlayerPositions)
@@ -95,9 +98,23 @@ function Player:Move(deltaTime)
     end
 end
 
+function Player:RollBall(deltaTime)
+    --local newVelocity = PhysicsGetVelocity(self.gameObjectID)
+    --local circumferance = 2 * math.pi * 0.5
+    local xDistance = self.position.x - self.oldPosition.x
+    local zDistance = self.position.z - self.oldPosition.z
+    self.oldPosition = self.position
+    local rotation = GameObjectGetRotation(self.gameObjectID)
+    rotation.x = rotation.x + ((zDistance / (2 * math.pi * 0.5)) * -360)
+    rotation.z = rotation.z + ((xDistance / (2 * math.pi * 0.5)) * -360)
+    rotation.x = math.fmod(rotation.x, 360)
+    rotation.z = math.fmod(rotation.z, 360)
+    GameObjectSetRotation(self.gameObjectID, rotation.x, rotation.y, rotation.z)
+end
+
 function Player:Update(deltaTime)
     self.position = GameObjectGetPosition(self.gameObjectID)
-    self.rotation = GameObjectGetRotation(self.gameObjectID)
+    self.jumpTimer = self.jumpTimer - deltaTime
     if self.rotatePlayerOn or not PlayerConfig_mouseXLock then
         self.rotation.y = self.rotation.y + (MouseDeltaX * deltaTime * PlayerConfig_mouseXSensitivity)
     end
@@ -105,14 +122,13 @@ function Player:Update(deltaTime)
         self:Move(deltaTime)
     end
     self:IsPlayerDead()
-    --GameObjectSetPosition(self.gameObjectID, self.position.x, self.position.y, self.position.z)
-    GameObjectSetRotation(self.gameObjectID, self.rotation.x, self.rotation.y, self.rotation.z)
-    self.camera:Update(deltaTime, self.gameObjectID, PlayerConfig_mouseYSensitivity)
+    self:RollBall(deltaTime)
+    self.camera:Update(deltaTime, self.gameObjectID, PlayerConfig_mouseYSensitivity, self.rotation)
 end
 
 function Player:Jump()
     local currentVelocity = PhysicsGetVelocity(self.gameObjectID)
-    if currentVelocity.y < 0.05 and currentVelocity.y >= 0.0 and self.isJumping == true then
+    if self.jumpTimer <= 0.0 and self.isJumping == true then
         self.isJumping = false
     end
     if self.isJumping == false then
@@ -124,6 +140,10 @@ function Player:Jump()
         AudioPlaySound(self.gameObjectID, "collision.ogg", false)
         AudioSetSourceVolume(self.gameObjectID, 100)
         self.isJumping = true
+        self.jumpTimer = 4.0
+        self.jumpReady = false
+        AudioPlaySound(self.gameObjectID, "chargeUp.ogg", false)
+        AudioSetSourceVolume(self.gameObjectID, 5)
     end
 end
 

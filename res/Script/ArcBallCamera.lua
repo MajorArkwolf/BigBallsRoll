@@ -14,7 +14,7 @@ function ArcBallCamera:Init(newRadius)
     self.pitch = -20
 end
 
-function ArcBallCamera:Update(deltaTime, trackingID, mouseSensitivity)
+function ArcBallCamera:Update(deltaTime, trackingID, mouseSensitivity, rotation)
     -- There is a chance that MouseDeltaY will not be set on first load
     -- however we need the camera to update to calculate its position, this stops a nil from occuring.
     if MouseDeltaY ~= nil then
@@ -24,7 +24,7 @@ function ArcBallCamera:Update(deltaTime, trackingID, mouseSensitivity)
         self.radius = 5
     end
     local trackingPosition = GameObjectGetPosition(trackingID)
-    local trackingRotation = GameObjectGetRotation(trackingID)
+    local trackingRotation = rotation
     local theta = trackingRotation.y + self.rotationAround
     local horizontalDistance = CalculateHorizontalDistance(self.radius, self.pitch)
     local offsetX = horizontalDistance * math.sin(math.rad(theta))
